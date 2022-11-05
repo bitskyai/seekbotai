@@ -1,0 +1,21 @@
+{
+	"extends": "@tsconfig/recommended/tsconfig.json",
+	"compilerOptions": {
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext"
+		],
+		"jsx": "react", // JSX code generation
+		"removeComments": true, // Do not emit comments to output.
+		"declaration": false,
+		"isolatedModules": true,
+		/* Additional Checks */
+		"useDefineForClassFields": true,
+	},
+	"include": [
+		"source",
+		"webpack.config.js"
+	],
+	"exclude": ["node_modules"]
+}
