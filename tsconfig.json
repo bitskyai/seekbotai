@@ -15,11 +15,7 @@
 		"declaration": false,
 		"isolatedModules": true,
 		/* Additional Checks */
-		"useDefineForClassFields": true,
-		"paths": {
-			"source": ["source/*"],
-			"views": ["views/*"]
-		}
+		"useDefineForClassFields": true
 	},
 	"include": [
 		"source",

@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+
 import { browser, Tabs } from 'webextension-polyfill-ts';
-import {
-  Button, DatePicker, Space, version,
-} from 'antd';
+import { Button, Input, Space, version } from 'antd';
+import {addTag} from '../storage';
 
 import './styles.scss';
 
@@ -10,7 +10,10 @@ function openWebPage(url: string): Promise<Tabs.Tab> {
   return browser.tabs.create({ url });
 }
 
+
 function Popup() {
+  const [tag, setTag] = useState('');
+
   return (
     <section id="popup">
       <h2>Smart Bookmarks</h2>
@@ -23,14 +26,10 @@ function Popup() {
       </button>
 
       <div className="App">
-        <h1>
-          antd version:
-          {' '}
-          {version}
-        </h1>
+        <h1>antd version: {version}</h1>
         <Space>
-          <DatePicker />
-          <Button type="primary">Primary Button</Button>
+          <Input value={tag} onChange={e=>setTag(e?.target?.value)} placeholder="Tag name" />
+          <Button type="primary" onClick={()=>addTag(tag)}>Add</Button>
         </Space>
       </div>
     </section>

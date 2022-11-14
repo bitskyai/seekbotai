@@ -1,7 +1,8 @@
 {
 	"extends": [
 		"airbnb",
-		"airbnb-typescript"
+		"airbnb-typescript",
+		"prettier"
 	],
 	"parserOptions": {
 		"project": [
@@ -18,7 +19,17 @@
 		"max-classes-per-file": "off",
 		"node/no-missing-import": "off",
 		"node/no-unpublished-import": "off",
-		"node/no-unsupported-features/es-syntax": "off"
+		"node/no-unsupported-features/es-syntax": "off",
+		"@typescript-eslint/comma-dangle": "off",
+		"@typescript-eslint/no-explicit-any": "warn",
+		"@typescript-eslint/naming-convention": [
+			"error",
+			{
+				"leadingUnderscore": "allow"
+			}
+		]
+		
+		
 	},
 	"env": {
 		"webextensions": true
