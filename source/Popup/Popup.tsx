@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { browser, Tabs } from 'webextension-polyfill-ts';
+import {
+  Button, DatePicker, Space, version,
+} from 'antd';
 
 import './styles.scss';
 
@@ -18,6 +21,18 @@ function Popup() {
       >
         Options Page
       </button>
+
+      <div className="App">
+        <h1>
+          antd version:
+          {' '}
+          {version}
+        </h1>
+        <Space>
+          <DatePicker />
+          <Button type="primary">Primary Button</Button>
+        </Space>
+      </div>
     </section>
   );
 }

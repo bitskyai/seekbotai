@@ -2,16 +2,24 @@
 	"extends": "@tsconfig/recommended/tsconfig.json",
 	"compilerOptions": {
 		"lib": [
+			"ES2019",
+			"ES2020",
 			"dom",
 			"dom.iterable",
-			"esnext"
+			"WebWorker",
+			"esnext.asynciterable"
 		],
+		"allowJs": true,
 		"jsx": "react", // JSX code generation
 		"removeComments": true, // Do not emit comments to output.
 		"declaration": false,
 		"isolatedModules": true,
 		/* Additional Checks */
 		"useDefineForClassFields": true,
+		"paths": {
+			"source": ["source/*"],
+			"views": ["views/*"]
+		}
 	},
 	"include": [
 		"source",

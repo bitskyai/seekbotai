@@ -1,4 +1,7 @@
 import * as React from 'react';
+import {
+  Button, DatePicker, Space, version,
+} from 'antd';
 
 import './styles.scss';
 
@@ -21,6 +24,18 @@ function Options() {
           <p>cool cool cool</p>
         </p>
       </form>
+
+      <div className="App">
+        <h1>
+          antd version:
+          {' '}
+          {version}
+        </h1>
+        <Space>
+          <DatePicker />
+          <Button type="primary">Primary Button</Button>
+        </Space>
+      </div>
     </div>
   );
 }
