@@ -1,0 +1,13 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/extension": true,
+    "yarn.lock": true
+  },
+  "stylelint.enable": true,
+  "eslint.probe": ["javascript", "javascriptreact"],
+  "tslint.enable": true,
+  "editor.formatOnSave": true,
+  "eslint.validate": ["typescript", "javascript"],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

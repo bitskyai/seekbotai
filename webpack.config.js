@@ -17,20 +17,21 @@ const destPath = path.join(__dirname, 'extension');
 const nodeEnv = process.env.NODE_ENV || 'development';
 const targetBrowser = process.env.TARGET_BROWSER;
 
-const extensionReloaderPlugin = nodeEnv === 'development'
-  ? new ExtensionReloader({
-    port: 9090,
-    reloadPage: true,
-    entries: {
-      // TODO: reload manifest on update
-      contentScript: 'contentScript',
-      background: 'background',
-      extensionPage: ['popup', 'options'],
-    },
-  })
-  : () => {
-    this.apply = () => {};
-  };
+const extensionReloaderPlugin =
+  nodeEnv === 'development'
+    ? new ExtensionReloader({
+        port: 9090,
+        reloadPage: true,
+        entries: {
+          // TODO: reload manifest on update
+          contentScript: 'contentScript',
+          background: 'background',
+          extensionPage: ['popup', 'options'],
+        },
+      })
+    : () => {
+        this.apply = () => {};
+      };
 
 const getExtensionFileType = (browser) => {
   if (browser === 'opera') {
@@ -58,10 +59,10 @@ module.exports = {
 
   entry: {
     manifest: path.join(sourcePath, 'manifest.json'),
-    background: path.join(sourcePath, 'Background', 'index.ts'),
-    contentScript: path.join(sourcePath, 'ContentScript', 'index.ts'),
-    popup: path.join(sourcePath, 'Popup', 'index.tsx'),
-    options: path.join(sourcePath, 'Options', 'index.tsx'),
+    background: path.join(sourcePath, 'background', 'index.ts'),
+    contentScript: path.join(sourcePath, 'content-script', 'index.ts'),
+    popup: path.join(sourcePath, 'popup', 'index.tsx'),
+    options: path.join(sourcePath, 'options', 'index.tsx'),
   },
 
   output: {

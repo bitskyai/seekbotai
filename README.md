@@ -1,4 +1,5 @@
 ## Smart Bookmarks
+
 Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine
 
 ## 🚀 Quick Start
@@ -94,4 +95,3 @@ if the vendor is `chrome` or `opera`, this compiles to:
   "name": "SuperBlink"
 }
 ```
-
