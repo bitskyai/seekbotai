@@ -1,4 +1,6 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+This is a [Bookmark Intelligence](https://www.bitsky.ai/) browser extension, automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine
+
+Based on [plasmo](https://github.com/PlasmoHQ/plasmo)
 
 ## Getting Started
 
@@ -8,6 +10,8 @@ First, run the development server:
 pnpm dev
 # or
 npm run dev
+# or
+yarn dev
 ```
 
 Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
@@ -24,10 +28,8 @@ Run the following:
 pnpm build
 # or
 npm run build
+# or
+yarn build
 ```
 
 This should create a production bundle for your extension, ready to be zipped and published to the stores.
-
-## Submit to the webstores
-
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/workflows/submit) and you should be on your way for automated submission!
