@@ -1,8 +1,8 @@
-import { Button, DatePicker, Space } from "antd"
+import { Button, DatePicker, Space } from "antd";
 // import { useState } from "react"
-import React from "react"
+import React from "react";
 
-import { ThemeProvider } from "~common-ui/theme"
+import { ThemeProvider } from "~packages/antd-theme";
 
 function IndexNewtab() {
   // const [data, setData] = useState("")
@@ -32,7 +32,7 @@ function IndexNewtab() {
         </Space>
       </div>
     </ThemeProvider>
-  )
+  );
 }
 
-export default IndexNewtab
+export default IndexNewtab;

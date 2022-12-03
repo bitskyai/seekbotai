@@ -1,2 +1,2 @@
-export {}
-console.log("HELLO WORLD FROM Bookmark Intelligence")
+export {};
+console.log("HELLO WORLD FROM Bookmark Intelligence");

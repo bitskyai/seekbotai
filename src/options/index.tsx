@@ -1,7 +1,7 @@
-import { Button } from "antd"
-import * as React from "react"
+import { Button } from "antd";
+import * as React from "react";
 
-import { ThemeProvider } from "~common-ui/theme"
+import { ThemeProvider } from "~packages/antd-theme";
 
 function IndexOption() {
   return (
@@ -21,7 +21,7 @@ function IndexOption() {
         <Button type="primary">Fascinating</Button>
       </div>
     </ThemeProvider>
-  )
+  );
 }
 
-export default IndexOption
+export default IndexOption;

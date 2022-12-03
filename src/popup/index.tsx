@@ -1,11 +1,11 @@
-import { Button } from "antd"
-import * as React from "react"
-import { Tabs, browser } from "webextension-polyfill-ts"
+import { Button } from "antd";
+import * as React from "react";
+import { Tabs, browser } from "webextension-polyfill-ts";
 
-import { ThemeProvider } from "~common-ui/theme"
+import { ThemeProvider } from "~packages/antd-theme";
 
 function openWebPage(url: string): Promise<Tabs.Tab> {
-  return browser.tabs.create({ url })
+  return browser.tabs.create({ url });
 }
 
 function IndexPopup() {
@@ -32,7 +32,7 @@ function IndexPopup() {
         <Button type="primary">Live long and prosper</Button>
       </div>
     </ThemeProvider>
-  )
+  );
 }
 
-export default IndexPopup
+export default IndexPopup;
