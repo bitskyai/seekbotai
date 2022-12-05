@@ -2048,6 +2048,18 @@
     lodash.clone "4.5.0"
     lodash.isequal "4.5.0"
 
+"@plasmohq/redux-persist@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@plasmohq/redux-persist/-/redux-persist-6.1.0.tgz#ab94a3b000f5fff133cf03e821776437eea7de81"
+  integrity sha512-12mDmEotgMH/+4g9Hput5DDAIVAnmo8cZGPBsi106i8t/GuySX439XF8gEdEY2sEZaFkminq2smXnMTNysfD+A==
+
+"@plasmohq/storage@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@plasmohq/storage/-/storage-0.13.0.tgz#dcecd0210270928be9e7e7f07668838871aa2346"
+  integrity sha512-GrJ1jR323NbFjtxcRbR4E5/+nMqvcM+iecCbdVQ489o9u1dAOo4G0KLu3QRbIkIZJmMV9R+ce4CQ6j0D44p6fw==
+  dependencies:
+    webextension-polyfill "0.10.0"
+
 "@pnpm/network.ca-file@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@pnpm/network.ca-file/-/network.ca-file-1.0.1.tgz#16f88d057c68cd5419c1ef3dfa281296ea80b047"
@@ -7995,12 +8007,17 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-redux-thunk@^2.4.2:
+redux-persist-webextension-storage@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/redux-persist-webextension-storage/-/redux-persist-webextension-storage-1.0.2.tgz#3021f49e5e5e0c359a64e6192edfe884f693a215"
+  integrity sha512-WGiK6sNIMLtvZaWqDOZF7Yzz53LOx5YzE9I2bwjZeACtp6+VvfyP57J5czXtTSe9KVSTTPlLmX96jS4agYfwsQ==
+
+redux-thunk@2.4.2, redux-thunk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.4.2.tgz#b9d05d11994b99f7a91ea223e8b04cf0afa5ef3b"
   integrity sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==
 
-redux@^4.2.0:
+redux@4.2.0, redux@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.0.tgz#46f10d6e29b6666df758780437651eeb2b969f13"
   integrity sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==
@@ -8206,7 +8223,14 @@ rxdb@13.13.5:
     ws "8.8.1"
     z-schema "5.0.4"
 
-rxjs@7.5.7, rxjs@^7.5.7:
+rxjs@7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.6.0.tgz#361da5362b6ddaa691a2de0b4f2d32028f1eb5a2"
+  integrity sha512-DDa7d8TFNUalGC9VqXvQ1euWNN7sc63TrUCuM9J998+ViviahMIjKSOU7rfcgFOF+FCD71BhDRv4hrFz+ImDLQ==
+  dependencies:
+    tslib "^2.1.0"
+
+rxjs@^7.5.7:
   version "7.5.7"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.7.tgz#2ec0d57fdc89ece220d2e702730ae8f1e49def39"
   integrity sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==
@@ -9103,6 +9127,11 @@ webextension-polyfill-ts@0.26.0:
   integrity sha512-XEFL+aYVEsm/d4RajVwP75g56c/w2aSHnPwgtUv8/nCzbLNSzRQIix6aj1xqFkA5yr7OIDkk3OD/QTnPp8ThYA==
   dependencies:
     webextension-polyfill "^0.8.0"
+
+webextension-polyfill@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/webextension-polyfill/-/webextension-polyfill-0.10.0.tgz#ccb28101c910ba8cf955f7e6a263e662d744dbb8"
+  integrity sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==
 
 webextension-polyfill@^0.8.0:
   version "0.8.0"

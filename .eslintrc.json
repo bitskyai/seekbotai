@@ -24,7 +24,13 @@
         "format": ["camelCase", "PascalCase"],
         "leadingUnderscore": "allow"
       }
-    ]
+    ],
+    "no-param-reassign": ["error", {
+      "props": true,
+      "ignorePropertyModificationsFor": [
+        "state"
+      ]
+    }],
   },
   "env": {
     "webextensions": true
