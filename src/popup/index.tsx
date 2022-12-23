@@ -6,7 +6,7 @@ import { store } from "~packages/helpers/store";
 
 import App from "./App";
 
-function IndexPopup() {
+function Popup() {
   return (
     <ThemeProvider>
       <React.StrictMode>
@@ -18,4 +18,4 @@ function IndexPopup() {
   );
 }
 
-export default IndexPopup;
+export default Popup;

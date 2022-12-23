@@ -1,3 +1,4 @@
-import IndexPopup from "~newtab/index";
+import NewTab from "~newtab/index";
 
-export default IndexPopup;
+const Options = NewTab;
+export default Options;
