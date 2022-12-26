@@ -2,7 +2,9 @@ import { HomeOutlined, StarOutlined } from "@ant-design/icons";
 import { Button, Card, Input } from "antd";
 import React, { useEffect, useState } from "react";
 
-import { getBookmarkStatus } from "~packages/apis/bookmarks";
+import { sendToBackground } from "@plasmohq/messaging";
+
+import { MESSAGE_NAMES } from "~background";
 import Logo from "~packages/components/logo";
 
 import "./app.less";
@@ -18,17 +20,24 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getBookmarkStatus("http://bitsky.ai");
-      console.log(data);
+      console.log(`App -> bookmarks/status`);
+      const data = await sendToBackground({
+        name: MESSAGE_NAMES.BOOKMARKS_GET_STATUS,
+        body: {
+          url: "http://bitsky.ai"
+        }
+      });
+      console.log(`App:`, data);
     };
     setIsBookmarked("loading");
+
     fetchData().catch((err) => {
       console.error(err);
     });
   });
 
   return (
-    <div className={"popup"}>
+    <div className="popup">
       <Card
         title={
           <>
@@ -44,7 +53,7 @@ const App: React.FC = () => {
         }
         extra={
           <>
-            <Button className={"card-extra-action"} icon={<StarOutlined />} />
+            <Button className="card-extra-action" icon={<StarOutlined />} />
             <Button className="card-extra-action" icon={<HomeOutlined />} />
           </>
         }

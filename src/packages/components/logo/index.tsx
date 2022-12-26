@@ -16,7 +16,7 @@ const Logo: React.FC<Props> = ({ className }) => {
   return (
     <div
       className={logoClassName}
-      style={{ backgroundImage: `url(${logoData})` }}
+      // style={{ backgroundImage: `url(${logoData})` }}
     />
   );
 };
