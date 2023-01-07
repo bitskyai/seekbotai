@@ -15,7 +15,7 @@ const onSearch = (value: string) => console.log(value);
 
 const goHomePage = () => {};
 
-const App: React.FC = () => {
+const App: React.FC = function App() {
   const [isBookmarked, setIsBookmarked] = useState(`null`);
 
   useEffect(() => {

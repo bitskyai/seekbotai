@@ -4,7 +4,7 @@ import * as React from "react";
 
 import "./antd.less";
 
-export function ThemeProvider({ children = null as ReactNode }) {
+export function ThemeProvider({ children = null }: { children: ReactNode }) {
   return (
     <ConfigProvider
       theme={{
@@ -16,3 +16,5 @@ export function ThemeProvider({ children = null as ReactNode }) {
     </ConfigProvider>
   );
 }
+
+export default ThemeProvider;

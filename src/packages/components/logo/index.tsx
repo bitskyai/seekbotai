@@ -7,7 +7,7 @@ type Props = {
   className?: string;
 };
 
-const Logo: React.FC<Props> = ({ className }) => {
+const Logo: React.FC<Props> = function Logo({ className }) {
   let logoClassName = "logo";
   if (className) {
     logoClassName = `logo ${className}`;
@@ -16,7 +16,7 @@ const Logo: React.FC<Props> = ({ className }) => {
   return (
     <div
       className={logoClassName}
-      // style={{ backgroundImage: `url(${logoData})` }}
+      style={{ backgroundImage: `url(${logoData})` }}
     />
   );
 };
