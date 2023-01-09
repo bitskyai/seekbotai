@@ -3,6 +3,8 @@ import { sendToActiveContentScript } from "@plasmohq/messaging";
 import logger from "./helpers/logger";
 import DB from "./storage";
 
+export type { BookmarksStatusResBody } from "./messages/bookmarks/status";
+
 // define the message name for @plasmohq/messaging
 export const MESSAGE_NAMES = {
   BOOKMARKS_GET_STATUS: "bookmarks/status",

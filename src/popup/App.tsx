@@ -1,11 +1,11 @@
 import { HomeOutlined, StarOutlined } from "@ant-design/icons";
+import { useMount } from "ahooks";
 import { Button, Card, Input } from "antd";
 import React, { useEffect, useState } from "react";
 
-import { sendToBackground } from "@plasmohq/messaging";
-
-import { MESSAGE_NAMES } from "~background";
+import { checkWhetherBookmarked } from "~packages/apis/bookmarks";
 import Logo from "~packages/components/logo";
+import { getActiveTab } from "~packages/helpers/tab";
 
 import "./app.less";
 
@@ -15,24 +15,29 @@ const onSearch = (value: string) => console.log(value);
 
 const goHomePage = () => {};
 
+enum BOOKMARK_STATUS {
+  Loading,
+  Bookmarked,
+  NotBookmarked
+}
+
 const App: React.FC = function App() {
-  const [isBookmarked, setIsBookmarked] = useState(`null`);
+  const [isBookmarked, setIsBookmarked] = useState(BOOKMARK_STATUS.Loading);
 
-  useEffect(() => {
+  useMount(() => {
     const fetchData = async () => {
-      console.log(`App -> bookmarks/status`);
-      const data = await sendToBackground({
-        name: MESSAGE_NAMES.BOOKMARKS_GET_STATUS,
-        body: {
-          url: "http://bitsky.ai"
-        }
-      });
-      console.log(`App:`, data);
+      const tab = await getActiveTab();
+      const data = await checkWhetherBookmarked(tab?.url);
+      if (data?.status) {
+        setIsBookmarked(BOOKMARK_STATUS.Bookmarked);
+      } else {
+        setIsBookmarked(BOOKMARK_STATUS.NotBookmarked);
+      }
     };
-    setIsBookmarked("loading");
-
+    // setIsBookmarked(BOOKMARK_STATUS.Loading);
     fetchData().catch((err) => {
       console.error(err);
+      setIsBookmarked(BOOKMARK_STATUS.NotBookmarked);
     });
   });
 
@@ -53,7 +58,16 @@ const App: React.FC = function App() {
         }
         extra={
           <>
-            <Button className="card-extra-action" icon={<StarOutlined />} />
+            <Button
+              type={
+                isBookmarked === BOOKMARK_STATUS.Bookmarked
+                  ? "primary"
+                  : "default"
+              }
+              className="card-extra-action"
+              icon={<StarOutlined />}
+              loading={isBookmarked === BOOKMARK_STATUS.Loading ? true : false}
+            />
             <Button className="card-extra-action" icon={<HomeOutlined />} />
           </>
         }
