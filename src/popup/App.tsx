@@ -1,16 +1,22 @@
 import {
   DeleteOutlined,
-  LoadingOutlined,
   SearchOutlined,
   SettingOutlined,
   StarOutlined
 } from "@ant-design/icons";
 import { useMount } from "ahooks";
-import { Avatar, Button, Card, List } from "antd";
+import { Button, Card } from "antd";
+import type { MenuProps } from "antd/es/menu";
 import React, { useState } from "react";
 import browser from "webextension-polyfill";
 
+import {
+  sendToActiveContentScript,
+  sendToBackground
+} from "@plasmohq/messaging";
+
 import { checkWhetherBookmarked } from "~packages/apis/bookmarks";
+import MESSAGE_NAMES from "~packages/helpers/messageNames";
 import { getActiveTab } from "~packages/helpers/tab";
 
 import "./app.less";
@@ -27,14 +33,17 @@ enum MENU_KEYS {
   Search
 }
 
+type MenuItem = Required<MenuProps>["items"][number];
+
 function getItem(optionObj: {
-  title: React.ReactNode;
+  label: React.ReactNode;
   key: React.Key;
-  icon: React.ReactNode;
-  description: React.ReactNode;
-  click: Function;
-}) {
-  return optionObj;
+  icon?: React.ReactNode;
+  children?: MenuItem[];
+  type?: "group";
+  disabled?: Boolean;
+}): MenuItem {
+  return optionObj as MenuItem;
 }
 
 const App: React.FC = function App() {
@@ -56,49 +65,31 @@ const App: React.FC = function App() {
     closePopup();
   };
 
-  const deleteBookmark = async () => {
-    console.log(`deleteBookmark`);
+  const bookmarkCurrentPage = async () => {
+    console.log("bookmarkCurrentPage");
+    const content = await sendToActiveContentScript({
+      name: MESSAGE_NAMES.CONTENT_SCRIPTS_GET_PAGE_CONTENT
+    });
+    const bookmark = await sendToBackground({
+      name: MESSAGE_NAMES.BOOKMARKS_CREATE,
+      body: content
+    });
+    console.log(`popup -> content: `, content);
+    console.log(`popup -> bookmark: `, bookmark);
   };
 
-  const addBookmark = async () => {
-    console.log(`addBookmark`);
+  const removeCurrentPageBookmark = async () => {
+    console.log("removeCurrentPageBookmark");
+    const content = await sendToActiveContentScript({
+      name: MESSAGE_NAMES.CONTENT_SCRIPTS_GET_PAGE_CONTENT
+    });
+    await sendToBackground({
+      name: MESSAGE_NAMES.BOOKMARKS_DELETE,
+      body: {
+        url: content.url
+      }
+    });
   };
-
-  let items = [];
-  if (isBookmarked === BOOKMARK_STATUS.Bookmarked) {
-    items.push(
-      getItem({
-        title: chrome.i18n.getMessage("deleteBookmark"),
-        description: "option+s",
-        key: MENU_KEYS.DeleteBookmark,
-        icon: <DeleteOutlined />,
-        click: deleteBookmark
-      })
-    );
-  } else {
-    let option = {
-      title: chrome.i18n.getMessage("addBookmark"),
-      description: "option+s",
-      key: MENU_KEYS.AddBookmark,
-      icon: <StarOutlined />,
-      click: addBookmark
-    };
-    if (isBookmarked === BOOKMARK_STATUS.Loading) {
-      option.click = async () => {};
-      option.icon = <LoadingOutlined />;
-    }
-    items.push(getItem(option));
-  }
-
-  items.push(
-    getItem({
-      title: chrome.i18n.getMessage("search"),
-      description: "option+f",
-      key: MENU_KEYS.Search,
-      icon: <SearchOutlined />,
-      click: goSearchPage
-    })
-  );
 
   useMount(() => {
     const fetchData = async () => {
@@ -131,24 +122,34 @@ const App: React.FC = function App() {
           </>
         }
         className="card-without-radius">
-        <List
-          itemLayout="horizontal"
-          dataSource={items}
-          renderItem={(item) => (
-            <List.Item onClick={() => item.click(item)}>
-              <List.Item.Meta
-                avatar={
-                  <Avatar
-                    style={{ backgroundColor: "#1890ff" }}
-                    icon={item.icon}
-                  />
-                }
-                title={item.title}
-                description={item.description}
-              />
-            </List.Item>
-          )}
-        />
+        {isBookmarked === BOOKMARK_STATUS.Bookmarked ? (
+          <Button
+            type="text"
+            style={{ width: "100%", height: "auto" }}
+            icon={<DeleteOutlined />}
+            size="large"
+            onClick={removeCurrentPageBookmark}>
+            {chrome.i18n.getMessage("tooltipBookmarked")}
+          </Button>
+        ) : (
+          <Button
+            type="text"
+            style={{ width: "100%", height: "auto" }}
+            icon={<StarOutlined />}
+            loading={isBookmarked === BOOKMARK_STATUS.Loading}
+            size="large"
+            onClick={bookmarkCurrentPage}>
+            {chrome.i18n.getMessage("tooltipBookmark")}
+          </Button>
+        )}
+        <Button
+          type="text"
+          style={{ width: "100%", height: "auto" }}
+          icon={<SearchOutlined />}
+          onClick={goSearchPage}
+          size="large">
+          {chrome.i18n.getMessage("search")}
+        </Button>
       </Card>
     </div>
   );

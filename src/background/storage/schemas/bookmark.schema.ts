@@ -33,7 +33,7 @@ const BookmarkSchema = mergeSchema(BaseSchema, {
       type: "boolean"
     }
   },
-  required: ["url", "name", "description"]
+  required: ["url", "name"]
 });
 
 export default BookmarkSchema;

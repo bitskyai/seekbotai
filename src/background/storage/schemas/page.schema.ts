@@ -14,9 +14,14 @@ const PageSchema = mergeSchema(BaseSchema, {
     bookmark_id: {
       type: "string",
       format: "uuid"
+    },
+    url: {
+      type: "string",
+      format: "url",
+      maxLength: 2048
     }
   },
-  required: ["bookmark_id", "content"]
+  required: ["bookmark_id", "content", "url"]
 });
 
 export default PageSchema;

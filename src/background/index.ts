@@ -1,4 +1,4 @@
-import { sendToActiveContentScript } from "@plasmohq/messaging";
+// import { sendToActiveContentScript } from "@plasmohq/messaging";
 
 import logger from "./helpers/logger";
 import DB from "./storage";
@@ -25,26 +25,26 @@ async function init() {
     await DB();
 
     // test sendToActiveContentScript
-    let eventHandler;
-    setInterval(async () => {
-      if (!eventHandler) {
-        try {
-          eventHandler = true;
-          console.log("send to cs");
-          const result = await sendToActiveContentScript({
-            name: "getContent",
-            body: {
-              data: "test"
-            }
-          });
-          eventHandler = false;
-          console.log("result: ", result);
-        } catch (err) {
-          console.error(err);
-          eventHandler = false;
-        }
-      }
-    }, 5 * 1000);
+    // let eventHandler;
+    // setInterval(async () => {
+    //   if (!eventHandler) {
+    //     try {
+    //       eventHandler = true;
+    //       console.log("send to cs");
+    //       // const result = await sendToActiveContentScript({
+    //       //   name: "getContent",
+    //       //   body: {
+    //       //     data: "test"
+    //       //   }
+    //       // });
+    //       eventHandler = false;
+    //       console.log("result: ", result);
+    //     } catch (err) {
+    //       console.error(err);
+    //       eventHandler = false;
+    //     }
+    //   }
+    // }, 5 * 1000);
   } catch (err) {
     logger.error("init background failed. ", err);
   }
