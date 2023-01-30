@@ -12,6 +12,7 @@ function Popup() {
       <React.StrictMode>
         <Provider store={store}>
           <App />
+          {/* <div>Test .... </div> */}
         </Provider>
       </React.StrictMode>
     </ThemeProvider>

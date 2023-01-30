@@ -1,0 +1,9 @@
+{
+  "name": "bi-desktop-app",
+  "version": "0.1.0",
+  "description": "Desktop Application",
+  "main": "index.js",
+  "private": true,
+  "author": "",
+  "license": "ISC"
+}

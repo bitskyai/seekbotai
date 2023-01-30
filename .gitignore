@@ -1,39 +1,47 @@
+# Include your project-specific ignores in this file
+# Read about how to use .gitignore: https://help.github.com/articles/ignoring-files
 
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Compiled output
+/*/dist/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# Yarn package manager with PnP
+# https://yarnpkg.com/getting-started/qa/#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+node_modules
 
-# testing
-/coverage
-
-#cache
-.turbo
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
+# Logs
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# local env files
-.env
+# Cache
+/.cache
+.eslintcache
 
-out/
-build/
-dist/
+# Testing
+/coverage
+*.lcov
 
-# plasmo - https://www.plasmo.com
-.plasmo
+# Environment variables
+*.override.env
 
-# bpp - http://bpp.browser.market/
-keys.json
+# Visual Studio Code
+# https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/react.code-snippets
 
-# typescript
-.tsbuildinfo
+# WebStorm
+.idea
+
+# macOS
+# https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
+.DS_Store

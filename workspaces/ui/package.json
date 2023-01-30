@@ -1,0 +1,9 @@
+{
+  "name": "bi-ui",
+  "version": "0.1.0",
+  "description": "ui",
+  "main": "index.js",
+  "private": true,
+  "author": "",
+  "license": "ISC"
+}

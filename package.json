@@ -1,92 +1,24 @@
 {
-  "name": "bookmark-intelligence",
-  "displayName": "Bookmark intelligence",
-  "version": "0.1.0",
-  "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine",
-  "private": true,
-  "repository": "https://github.com/bitskyai/smart-bookmarks.git",
-  "author": "help.bitskyai@gmail.com",
-  "license": "GPL-3.0",
-  "engines": {
-    "node": ">=16.0.0",
-    "yarn": ">= 1.0.0"
-  },
-  "scripts": {
-    "dev": "plasmo dev",
-    "build": "plasmo build",
-    "package": "plasmo package",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write ."
-  },
-  "dependencies": {
-    "plasmo": "0.60.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "antd": "5.1.0",
-    "ahooks": "3.7.4",
-    "@ant-design/icons": "4.8.0",
-    "rxdb": "13.16.0",
-    "rxjs": "7.8.0",
-    "webextension-polyfill-ts": "0.26.0",
-    "@reduxjs/toolkit": "1.9.1",
-    "react-redux": "8.0.5",
-    "@plasmohq/redux-persist": "6.1.0",
-    "@plasmohq/storage": "0.13.1",
-    "@plasmohq/messaging": "0.0.2",
-    "redux": "4.2.0",
-    "redux-persist-webextension-storage": "1.0.2",
-    "redux-thunk": "2.4.2",
-    "axios": "1.2.1",
-    "uuid": "9.0.0",
-    "lodash": "4.17.21"
-  },
-  "devDependencies": {
-    "@types/chrome": "0.0.206",
-    "@types/node": "18.11.17",
-    "@types/react": "18.0.26",
-    "@types/react-dom": "18.0.10",
-    "@types/lodash": "4.14.191",
-    "prettier": "2.8.1",
-    "typescript": "4.9.4",
-    "@plasmohq/prettier-plugin-sort-imports": "3.6.1",
-    "@plasmohq/rps": "1.8.1",
-    "eslint": "8.30.0",
-    "eslint-config-airbnb": "19.0.4",
-    "eslint-config-airbnb-typescript": "17.0.0",
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jsx-a11y": "6.6.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-react": "7.31.11",
-    "eslint-plugin-react-hooks": "4.6.0",
-    "@typescript-eslint/eslint-plugin": "5.47.0",
-    "@typescript-eslint/parser": "5.47.0",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/jest": "29.2.4",
-    "jest": "29.3.1"
-  },
-  "manifest": {
-    "default_locale": "en",
-    "host_permissions": [
-      "<all_urls>"
+    "name": "bookmark-intelligence",
+    "displayName": "Bookmark intelligence",
+    "version": "0.1.0",
+    "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine",
+    "private": true,
+    "repository": "https://github.com/bitskyai/smart-bookmarks.git",
+    "author": "help.bitskyai@gmail.com",
+    "license": "GPL-3.0",
+    "workspaces": [
+        "workspaces/*"
     ],
-    "permissions": [
-      "alarms",
-      "bookmarks",
-      "history",
-      "scripting",
-      "tabs",
-      "activeTab",
-      "contextMenus",
-      "unlimitedStorage",
-      "webNavigation",
-      "notifications",
-      "storage"
-    ]
-  }
+    "engines": {
+        "node": ">=16.0.0",
+        "yarn": ">= 1.0.0"
+    },
+    "scripts": {
+        "lint": "eslint . --ext .ts,.tsx",
+        "lint:fix": "eslint . --ext .ts,.tsx --fix",
+        "format": "prettier --check .",
+        "format:fix": "prettier --write ."
+    },
+    "packageManager": "yarn@3.3.1"
 }

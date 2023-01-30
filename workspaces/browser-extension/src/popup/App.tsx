@@ -8,7 +8,8 @@ import { useMount } from "ahooks";
 import { Button, Card } from "antd";
 import type { MenuProps } from "antd/es/menu";
 import React, { useState } from "react";
-import browser from "webextension-polyfill";
+
+// import browser from "webextension-polyfill";
 
 import {
   sendToActiveContentScript,
@@ -52,16 +53,26 @@ const App: React.FC = function App() {
   const closePopup = () => window.close();
 
   const goSettingsPage = () => {
-    browser.tabs.create({
-      url: `/options.html#/settings`
-    });
+    // browser.tabs.create({
+    //   url: `/options.html#/settings`
+    // });
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL("options.html"));
+    }
     closePopup();
   };
 
   const goSearchPage = () => {
-    browser.tabs.create({
-      url: `/options.html#/search`
-    });
+    // browser.tabs.create({
+    //   url: `/options.html#/search`
+    // });
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL("options.html"));
+    }
     closePopup();
   };
 
