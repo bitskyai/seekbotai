@@ -4486,9 +4486,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bi-browser-extension@workspace:workspaces/browser-extension":
+"bi-browser-extension@workspace:projects/browser-extension":
   version: 0.0.0-use.local
-  resolution: "bi-browser-extension@workspace:workspaces/browser-extension"
+  resolution: "bi-browser-extension@workspace:projects/browser-extension"
   dependencies:
     "@ant-design/icons": 5.0.1
     "@plasmohq/messaging": 0.0.2
@@ -4539,21 +4539,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"bi-desktop-app@workspace:workspaces/desktop-app":
+"bi-desktop-app@workspace:projects/desktop-app":
   version: 0.0.0-use.local
-  resolution: "bi-desktop-app@workspace:workspaces/desktop-app"
+  resolution: "bi-desktop-app@workspace:projects/desktop-app"
   languageName: unknown
   linkType: soft
 
-"bi-server@workspace:workspaces/server":
+"bi-server@workspace:projects/server":
   version: 0.0.0-use.local
-  resolution: "bi-server@workspace:workspaces/server"
+  resolution: "bi-server@workspace:projects/server"
   languageName: unknown
   linkType: soft
 
-"bi-ui@workspace:workspaces/ui":
+"bi-ui@workspace:projects/ui":
   version: 0.0.0-use.local
-  resolution: "bi-ui@workspace:workspaces/ui"
+  resolution: "bi-ui@workspace:projects/ui"
   languageName: unknown
   linkType: soft
 
