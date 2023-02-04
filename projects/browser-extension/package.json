@@ -1,87 +1,35 @@
 {
-  "name": "bi-browser-extension",
-  "version": "0.1.0",
-  "description": "Browser extension",
-  "main": "index.js",
-  "private": true,
-  "dependencies": {
-    "@ant-design/icons": "5.0.1",
-    "@plasmohq/messaging": "0.0.2",
-    "@plasmohq/redux-persist": "6.1.0",
-    "@plasmohq/storage": "0.13.1",
-    "@reduxjs/toolkit": "1.9.1",
-    "ahooks": "3.7.4",
-    "antd": "5.1.0",
-    "axios": "1.2.1",
-    "lodash": "4.17.21",
-    "plasmo": "0.60.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-redux": "8.0.5",
-    "redux": "4.2.0",
-    "redux-thunk": "2.4.2",
-    "rxdb": "13.16.0",
-    "rxjs": "7.8.0",
-    "uuid": "9.0.0"
-  },
-  "devDependencies": {
-    "@plasmohq/prettier-plugin-sort-imports": "3.6.1",
-    "@plasmohq/rps": "1.8.1",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/chrome": "0.0.206",
-    "@types/jest": "29.2.4",
-    "@types/lodash": "4.14.191",
-    "@types/node": "18.11.17",
-    "@types/react": "18.0.26",
-    "@types/react-dom": "18.0.10",
-    "@typescript-eslint/eslint-plugin": "5.47.0",
-    "@typescript-eslint/parser": "5.47.0",
-    "eslint": "8.30.0",
-    "eslint-config-airbnb": "19.0.4",
-    "eslint-config-airbnb-typescript": "17.0.0",
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jsx-a11y": "6.6.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-react": "7.31.11",
-    "eslint-plugin-react-hooks": "4.6.0",
-    "jest": "29.3.1",
-    "prettier": "2.8.1",
-    "redux-persist-webextension-storage": "1.0.2",
-    "tsconfig-paths": "^4.1.2",
-    "typescript": "4.9.4"
-  },
+  "name": "bookmark-intelligence",
+  "displayName": "Bookmark Intelligence",
+  "version": "0.0.1",
+  "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine",
+  "author": "help.bitskyai@gmail.com",
+  "license": "GPL-3.0",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "plasmo": "0.64.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.210",
+    "@types/node": "18.11.18",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "prettier": "2.8.3",
+    "typescript": "4.9.4",
+    "@plasmohq/prettier-plugin-sort-imports": "3.6.1"
   },
   "manifest": {
-    "default_locale": "en",
     "host_permissions": [
-      "<all_urls>"
+      "https://*/*"
     ],
     "permissions": [
-      "alarms",
-      "bookmarks",
-      "history",
-      "scripting",
-      "tabs",
-      "activeTab",
-      "contextMenus",
-      "unlimitedStorage",
-      "webNavigation",
-      "notifications",
-      "storage"
+      "tabs"
     ]
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }

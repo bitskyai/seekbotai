@@ -4,16 +4,6 @@
 # Compiled output
 /*/dist/
 
-# Yarn package manager with PnP
-# https://yarnpkg.com/getting-started/qa/#which-files-should-be-gitignored
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-node_modules
 
 # Logs
 yarn-debug.log*
@@ -45,3 +35,5 @@ yarn-error.log*
 # macOS
 # https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
 .DS_Store
+
+**/node_modules

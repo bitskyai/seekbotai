@@ -1,9 +1,0 @@
-{
-    "name": "bi-server",
-    "version": "0.1.0",
-    "description": "web server",
-    "main": "index.js",
-    "private": true,
-    "author": "",
-    "license": "ISC"
-}

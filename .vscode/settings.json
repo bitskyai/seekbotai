@@ -23,15 +23,15 @@
   "files.exclude": {
     "**/.cache": true,
     "**/.DS_Store": true,
-    "**/.editorconfig": true,
+    "**/.editorconfig": false,
     "**/.eslintcache": true,
     "**/.git": true,
-    "**/.gitattributes": true,
+    "**/.gitattributes": false,
     "**/.husky": true,
-    "**/.pnp.*": true,
-    "**/.prettierignore": true,
+    "**/.pnp.*": false,
+    "**/.prettierignore": false,
     "**/node_modules": true,
-    "**/yarn.lock": true
+    "**/yarn.lock": false
   },
   "search.exclude": {
     "**/dist/": true,
