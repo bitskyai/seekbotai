@@ -1,5 +1,0 @@
-## Schema
-
-### Bookmark
-
-### Tag
