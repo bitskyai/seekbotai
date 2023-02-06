@@ -1,7 +1,0 @@
-/.cache
-/.husky
-/.yarn
-/*/dist/
-/app/queries/
-/.pnp.*
-/tsconfig.base.json
