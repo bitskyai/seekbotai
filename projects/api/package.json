@@ -1,8 +1,9 @@
 {
-  "name": "graphql-server",
+  "name": "bi-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",

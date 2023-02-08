@@ -75,5 +75,8 @@
     "plasmo",
     "webextension",
     "plasmohq"
-  ]
+  ],
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }

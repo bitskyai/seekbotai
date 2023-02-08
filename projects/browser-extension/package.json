@@ -1,6 +1,7 @@
 {
-  "name": "bookmark-intelligence",
+  "name": "bi-browser-extension",
   "displayName": "Bookmark Intelligence",
+  "private": true,
   "version": "0.1.0",
   "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine",
   "author": "help.bitskyai@gmail.com",

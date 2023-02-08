@@ -1,8 +1,13 @@
 {
-  "name": "desktop-app",
+  "name": "bi-desktop-app",
   "productName": "desktop-app",
   "version": "1.0.0",
   "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
