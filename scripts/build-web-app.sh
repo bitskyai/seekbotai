@@ -27,7 +27,7 @@ cd $UI_PATH && yarn build
 cd $SCRIPT_DIR
 echo ">>>> Remove previous build"
 echo "TARGET_PATH: ${TARGET_PATH}"
-rm -rf $TARGET_PATH/dist/ui
+rm -rf $TARGET_PATH/dist/src/ui
 
 echo ">>>> Copy new build"
-mkdir -p $TARGET_PATH/dist/ui/ && cp -rf $UI_PATH/dist/* $TARGET_PATH/dist/ui/
+mkdir -p $TARGET_PATH/dist/src/ui/ && cp -rf $UI_PATH/dist/* $TARGET_PATH/dist/src/ui/
