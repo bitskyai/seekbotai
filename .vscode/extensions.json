@@ -11,6 +11,7 @@
     "mikestead.dotenv",
     "orta.vscode-jest",
     "streetsidesoftware.code-spell-checker",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "Prisma.prisma"
   ]
 }

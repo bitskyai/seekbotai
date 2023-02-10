@@ -5,11 +5,13 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "sh ./scripts/build.sh",
     "seed": "prisma db seed",
-    "migration:latest": "prisma migrate dev"
+    "migration:dev": "prisma migrate dev",
+    "migration:deploy": "prisma migrate deploy"
   },
   "prisma": {
     "seed": "ts-node-dev prisma/seed.ts"

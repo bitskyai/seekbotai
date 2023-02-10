@@ -20,6 +20,10 @@ if [ -z "${UI_PATH}" ]; then
   UI_PATH="../projects/ui"
 fi
 
+echo ">>>> Build API"
+cd $TARGET_PATH && yarn build
+cd $SCRIPT_DIR
+
 echo ">>>> Build UI"
 echo "UI_PATH: ${UI_PATH}"
 cd $UI_PATH && yarn build
