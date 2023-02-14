@@ -1,2 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-export const prisma = new PrismaClient();
+import { getAppConfig } from "./helpers/config";
+export const prisma = new PrismaClient({
+  datasources: { db: { url: getAppConfig().DATABASE_URL } },
+});

@@ -74,7 +74,8 @@
     "yarnrc",
     "plasmo",
     "webextension",
-    "plasmohq"
+    "plasmohq",
+    "datasources"
   ],
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"

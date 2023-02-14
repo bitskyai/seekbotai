@@ -42,10 +42,18 @@
     "style-loader": "^3.0.0",
     "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "@types/lodash": "4.14.191",
+    "@types/uuid": "9.0.0",
+    "@types/detect-port": "1.3.2"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "get-port": "^6.1.2"
+    "electron-devtools-installer": "3.2.0",
+    "electron-default-menu": "1.0.2",
+    "lodash": "4.17.21",
+    "uuid": "9.0.0",
+    "electron-log": "5.0.0-beta.16",
+    "detect-port": "1.5.1"
   }
 }
