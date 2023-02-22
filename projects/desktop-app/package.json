@@ -8,12 +8,12 @@
       "**"
     ]
   },
-  "description": "My Electron application description",
-  "main": "./build/main/main",
+  "description": "Bookmark intelligence desktop app",
+  "main": "./dist/main/main",
   "scripts": {
     "tsc": "node ./scripts/tsc.js",
     "copy": "sh ./scripts/copy.sh",
-    "dev": "cross-env WATCH=true && rimraf ./build && npm run tsc && rimraf ./build/web-app && npm run copy && electron-forge start",
+    "dev": "cross-env WATCH=true && rimraf ./dist && npm run tsc && rimraf ./dist/web-app && npm run copy && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
