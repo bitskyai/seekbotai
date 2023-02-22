@@ -1,5 +1,4 @@
 import { app } from "electron";
-import { isDevMode } from "../helpers/devmode";
 import { setupAboutPanel } from "../helpers/set-about-panel";
 import { setupDevTools } from "./devtools";
 import { setUpEventListeners } from "./events";
@@ -9,7 +8,8 @@ import { listenForProtocolHandler, setupProtocolHandler } from "./protocol";
 import { shouldQuit } from "./squirrel";
 // import { setupUpdates } from "./update";
 import logger from "../helpers/logger";
-import supplier from "../helpers/supplier";
+// import webApp from "../helpers/web-app";
+import { startServer } from "../web-app/src/server";
 import { getOrCreateMainWindow } from "./windows";
 
 /**
@@ -27,13 +27,15 @@ export async function onReady() {
     // };
 
     await onFirstRunMaybe();
-    if (!isDevMode()) process.env.NODE_ENV = "production";
+    // if (!isDevMode()) process.env.NODE_ENV = "production";
     try {
-      await supplier.startSupplier();
-      process.env.BITSKY_BASE_URL = `http://localhost:${supplier.supplierPort}`;
+      // await webApp.start();
+      await startServer({});
+      // process.env.BITSKY_BASE_URL = `http://localhost:${webApp.port}`;
       // setup headless producer
     } catch (err) {
-      logger.error("start supplier file. error: ", err);
+      console.log(`start web app error: `, err);
+      logger.error("start webApp file. error: ", err);
     }
 
     // Temp comment to fix https://github.com/bitskyai/bitsky-builder/issues/41

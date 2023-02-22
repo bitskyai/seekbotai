@@ -1,44 +1,39 @@
 import { dialog } from "electron";
 import { getPreferencesJSON, updateProcessEnvs } from "../main/preferences";
 import { getOrCreateMainWindow } from "../main/windows";
-import { startServer, stopServer } from "../web-app/build/server.js";
+import { startServer, stopServer } from "../web-app/src/server";
 import { APP_HOME_FOLDER } from "./constants";
 import { getAvailablePort } from "./index";
 import logger from "./logger";
 
 class WebApp {
-  public supplierPort = 9099;
+  public port = 9099;
   constructor() {
     console.log("WebApp constructor");
   }
 
-  public async startSupplier() {
+  public async start() {
     try {
       const preferences = getPreferencesJSON();
       updateProcessEnvs(preferences);
       logger.info(
-        "main->main.js->onReady, TYPEORM_DATABASE: ",
-        process.env.TYPEORM_DATABASE
-      );
-      logger.info(
         "main->main.js->onReady, LOG_FILES_PATH: ",
         process.env.LOG_FILES_PATH
       );
-      this.supplierPort = await getAvailablePort(this.supplierPort);
-      process.env.PORT = this.supplierPort;
+      this.port = await getAvailablePort(this.port);
       // start
-      await startServer();
+      await startServer({});
       logger.info(
         "main->main.js->onReady, bitsky-supplier successfully started."
       );
       const mainWindow = getOrCreateMainWindow();
-      mainWindow.loadURL(`http://localhost:${this.supplierPort}`);
-      process.env.BITSKY_BASE_URL = `http://localhost:${this.supplierPort}`;
+      mainWindow.loadURL(`http://localhost:${this.port}`);
+      process.env.BITSKY_BASE_URL = `http://localhost:${this.port}`;
       // Only used for UI Develop
       // mainWindow.loadURL(`http://localhost:8000`);
 
       logger.info(
-        `main->main.js->onReady, load http://localhost:${this.supplierPort} in main browser`
+        `main->main.js->onReady, load http://localhost:${this.port} in main browser`
       );
     } catch (err) {
       dialog.showErrorBox(
@@ -51,10 +46,10 @@ class WebApp {
     }
   }
 
-  public async restartSupplier() {
+  public async restart() {
     try {
-      this.stopSupplier();
-      this.startSupplier();
+      this.stop();
+      this.start();
     } catch (err) {
       dialog.showErrorBox(
         "Restart BitSky Failed",
@@ -66,7 +61,7 @@ class WebApp {
     }
   }
 
-  public async stopSupplier() {
+  public async stop() {
     try {
       await stopServer();
     } catch (err) {

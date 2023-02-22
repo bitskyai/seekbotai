@@ -1,6 +1,7 @@
 import * as http from "http";
 import { createApp } from "./app";
-import { getAppConfig } from "./helpers/config";
+import { overwriteAppConfig } from "./helpers/config";
+import { DEFAULT_APP_CONFIG } from "./helpers/constants";
 import getLogger from "./helpers/logger";
 import { ServerOptions } from "./types";
 const enableDestroy = require("server-destroy");
@@ -14,13 +15,15 @@ let processExit = false;
  */
 export async function startServer(serverOptions?: ServerOptions) {
   try {
-    const config = getAppConfig();
-    console.log(`config: `, config);
+    const config = overwriteAppConfig(
+      serverOptions ?? { DATABASE_URL: DEFAULT_APP_CONFIG.DATABASE_URL }
+    );
     const logger = getLogger();
+    logger.info(`config: %s`, config);
     const app = await createApp();
-    // if (server) {
-    //   server.destroy();
-    // }
+    if (server) {
+      server.destroy();
+    }
     server = app.listen(config.PORT, function () {
       console.log(
         `API Server listening on http://localhost:${config.PORT}/ in ${config.NODE_ENV} mode`
@@ -48,7 +51,7 @@ export async function startServer(serverOptions?: ServerOptions) {
     });
 
     server.on("close", () => {
-      logger.info("Supplier Server closed");
+      logger.info("API Server closed");
 
       logger.info("Giving 100ms time to cleanup..");
       // Give a small time frame to clean up

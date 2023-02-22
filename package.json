@@ -25,7 +25,7 @@
   },
   "scripts": {
     "dev": "",
-    "build:desktop-app": "zx ./scripts/build-desktop-app.mjs",
+    "build:copy-web-app": "bash ./scripts/copy-web-app-to-desktop-app.sh",
     "build:web-app": "bash ./scripts/build-web-app.sh",
     "lint": "eslint --cache --report-unused-disable-directives .",
     "test": "jest",

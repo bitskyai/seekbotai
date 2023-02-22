@@ -1,21 +1,22 @@
-import * as electronLogger from "electron-log";
+import log from "electron-log";
 
+// log.initialize({ spyRendererConsole: true });
 // extend electron-log
 const logger = {
-  ...electronLogger,
+  ...log,
   /**
    * Similar idea with console.group. Use this function to console a function start point
    * @param {string} funcationName: function name. Like `copyDefaultRetailer`
    */
   functionStart: (funcationName: string) => {
-    electronLogger.debug(`<----- ${funcationName} `);
+    log.debug(`<----- ${funcationName} `);
   },
   /**
    * Similar idea with console.groupEnd. Use this function to console a function end point
    * @param {string} funcationName: function name. Like `copyDefaultRetailer`
    */
   functionEnd: (funcationName: string) => {
-    electronLogger.debug(` ${funcationName} ----->`);
+    log.debug(` ${funcationName} ----->`);
   },
 };
 

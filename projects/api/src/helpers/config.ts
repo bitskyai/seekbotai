@@ -1,8 +1,12 @@
 import { cleanEnv, num, str } from "envalid";
+import _ from "lodash";
 import { AppConfig } from "../types";
 import { DEFAULT_APP_CONFIG } from "./constants";
-export function getAppConfig(): AppConfig {
-  return cleanEnv(process.env, {
+
+let _app_config = getCleanEnv();
+
+function getCleanEnv(overwriteProcessEnv?: object) {
+  return cleanEnv(_.merge({}, process.env, overwriteProcessEnv ?? {}), {
     APP_HOME_FOLDER: str({
       default: DEFAULT_APP_CONFIG.APP_HOME_FOLDER,
     }),
@@ -31,4 +35,13 @@ export function getAppConfig(): AppConfig {
       default: "1.0.0",
     }),
   });
+}
+
+export function overwriteAppConfig(appConfig: object): AppConfig {
+  _app_config = getCleanEnv(appConfig);
+  return _app_config;
+}
+
+export function getAppConfig(): AppConfig {
+  return _app_config;
 }

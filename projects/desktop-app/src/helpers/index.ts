@@ -174,7 +174,7 @@ export async function getAvailablePort(port?: number): Promise<number> {
       if (err) {
         logger.error("getAvailablePort, error: ", err);
       }
-      logger.debug(`${port} is avaialbe`);
+      logger.debug(`${port} is available`);
       resolve(port);
     });
   });

@@ -88,4 +88,5 @@ typings/
 # Electron-Forge
 out/
 
-web-app
+**/web-app
+build
