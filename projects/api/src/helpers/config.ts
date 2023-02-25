@@ -7,14 +7,14 @@ let _app_config = getCleanEnv();
 
 function getCleanEnv(overwriteProcessEnv?: object) {
   return cleanEnv(_.merge({}, process.env, overwriteProcessEnv ?? {}), {
-    APP_HOME_FOLDER: str({
-      default: DEFAULT_APP_CONFIG.APP_HOME_FOLDER,
+    APP_HOME_PATH: str({
+      default: DEFAULT_APP_CONFIG.APP_HOME_PATH,
     }),
     DATABASE_URL: str({
       default: DEFAULT_APP_CONFIG.DATABASE_URL,
     }),
-    LOG_FILES_PATH: str({
-      default: DEFAULT_APP_CONFIG.LOG_FILES_PATH,
+    LOG_FILES_FOLDER: str({
+      default: DEFAULT_APP_CONFIG.LOG_FILES_FOLDER,
     }),
     LOG_LEVEL: str({
       default: DEFAULT_APP_CONFIG.LOG_LEVEL,

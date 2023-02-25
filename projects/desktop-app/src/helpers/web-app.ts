@@ -1,13 +1,17 @@
 import { dialog } from "electron";
-import { getPreferencesJSON, updateProcessEnvs } from "../main/preferences";
+import {
+  getPreferencesJSON,
+  updatePreferencesJSON,
+  updateProcessEnvs,
+} from "../main/preferences";
 import { getOrCreateMainWindow } from "../main/windows";
 import { startServer, stopServer } from "../web-app/src/server";
-import { APP_HOME_FOLDER } from "./constants";
+import { APP_HOME_PATH, WEB_APP_PORT } from "./constants";
 import { getAvailablePort } from "./index";
 import logger from "./logger";
 
 class WebApp {
-  public port = 9099;
+  public port = WEB_APP_PORT;
   constructor() {
     console.log("WebApp constructor");
   }
@@ -15,14 +19,23 @@ class WebApp {
   public async start() {
     try {
       const preferences = getPreferencesJSON();
-      updateProcessEnvs(preferences);
       logger.info(
         "main->main.js->onReady, LOG_FILES_PATH: ",
         process.env.LOG_FILES_PATH
       );
-      this.port = await getAvailablePort(this.port);
+      this.port = await getAvailablePort(preferences.WEB_APP_PORT);
+      if (this.port != preferences.WEB_APP_PORT) {
+        updatePreferencesJSON({ WEB_APP_PORT: this.port });
+      }
       // start
-      await startServer({});
+      updateProcessEnvs(preferences);
+      await startServer({
+        PORT: preferences.WEB_APP_PORT,
+        DATABASE_URL: preferences.WEB_APP_DATABASE_URL,
+        APP_HOME_PATH: preferences.WEB_APP_HOME_PATH,
+        LOG_LEVEL: preferences.WEB_APP_LOG_LEVEL,
+        LOG_MAX_SIZE: preferences.WEB_APP_LOG_MAX_SIZE,
+      });
       logger.info(
         "main->main.js->onReady, bitsky-supplier successfully started."
       );
@@ -38,7 +51,7 @@ class WebApp {
     } catch (err) {
       dialog.showErrorBox(
         "Open BitSky Failed",
-        `You can try to close BitSky and reopen it again, if still doesn't work, try to delete ${APP_HOME_FOLDER} folder in your home folder. Error:${JSON.stringify(
+        `You can try to close BitSky and reopen it again, if still doesn't work, try to delete ${APP_HOME_PATH} folder in your home folder. Error:${JSON.stringify(
           err
         )}`
       );
@@ -53,7 +66,7 @@ class WebApp {
     } catch (err) {
       dialog.showErrorBox(
         "Restart BitSky Failed",
-        `You can try to close BitSky and reopen it again, if still doesn't work, try to delete ${APP_HOME_FOLDER} folder in your home folder. Error:${JSON.stringify(
+        `You can try to close BitSky and reopen it again, if still doesn't work, try to delete ${APP_HOME_PATH} folder in your home folder. Error:${JSON.stringify(
           err
         )}`
       );

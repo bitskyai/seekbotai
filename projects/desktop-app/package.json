@@ -12,8 +12,8 @@
   "main": "./dist/main/main",
   "scripts": {
     "tsc": "node ./scripts/tsc.js",
-    "copy": "sh ./scripts/copy.sh",
-    "dev": "cross-env WATCH=true && rimraf ./dist && npm run tsc && rimraf ./dist/web-app && npm run copy && electron-forge start",
+    "webapp": "sh ./scripts/build-copy-web-app.sh",
+    "dev": "cross-env WATCH=true && rimraf ./dist && npm run webapp && npm run tsc && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",

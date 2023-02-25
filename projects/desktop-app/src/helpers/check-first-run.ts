@@ -1,11 +1,11 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { APP_HOME_FOLDER, FIRST_TIME_RUN_FILE } from "./constants";
+import { APP_HOME_PATH, FIRST_TIME_RUN_FILE } from "./constants";
 import logger from "./logger";
 
 const getConfigPath = () => {
   const firstRunFilePath = path.join(
-    APP_HOME_FOLDER,
+    APP_HOME_PATH,
     "FirstRun",
     FIRST_TIME_RUN_FILE
   );

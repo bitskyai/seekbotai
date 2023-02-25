@@ -39,7 +39,14 @@ export const enum LogLevel {
   "debug" = "debug",
 }
 
+// Preferences are configurable
 export interface Preferences {
-  version: string;
+  WEB_APP_LOG_LEVEL: LogLevel;
+  WEB_APP_LOG_MAX_SIZE: number;
+  WEB_APP_PORT: number;
+  WEB_APP_HOME_PATH: string;
+  APP_HOME_PATH: string;
+  WEB_APP_DATABASE_URL: string;
   LOG_FILES_PATH: string;
+  version: string;
 }

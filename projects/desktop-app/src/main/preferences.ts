@@ -1,9 +1,18 @@
 // preferences settings only support main process
 import * as fs from "fs-extra";
 import * as _ from "lodash";
-import { LOG_FILES_PATH, PREFERENCES_JSON_PATH } from "../helpers/constants";
+import * as path from "path";
+import {
+  APP_HOME_PATH,
+  LOG_FILES_FOLDER,
+  PREFERENCES_JSON_PATH,
+  WEB_APP_DATABASE_URL,
+  WEB_APP_LOG_MAX_SIZE,
+  WEB_APP_NAME,
+  WEB_APP_PORT,
+} from "../helpers/constants";
 import logger from "../helpers/logger";
-import { Preferences } from "../interfaces";
+import { LogLevel, Preferences } from "../interfaces";
 
 /**
  * Get preferences JSON, if this JSON file doesn't exist, then return default prefrences and write to disk
@@ -62,7 +71,7 @@ export function getPreferencesJSON(): Preferences {
 export function updateProcessEnvs(preferencesJSON: Preferences): boolean {
   try {
     _.forOwn(preferencesJSON, function (value, key) {
-      process.env[key.toUpperCase()] = value;
+      process.env[key.toUpperCase()] = value.toString();
       logger.debug(`process.env.${key.toUpperCase()}: `, value);
     });
     return true;
@@ -78,21 +87,21 @@ export function updateProcessEnvs(preferencesJSON: Preferences): boolean {
  * @returns true
  */
 export function updatePreferencesJSON(
-  preferencesJSON: Preferences
+  preferencesJSON: Partial<Preferences>
 ): Preferences {
   try {
-    const curPreferencesJSON = getPreferencesJSON();
+    let curPreferencesJSON = getPreferencesJSON();
     // preferencesJSON = _.merge(curPreferencesJSON, preferencesJSON, {
     //   version: curPreferencesJSON.version
     // });
-    preferencesJSON = {
+    curPreferencesJSON = {
       ...curPreferencesJSON,
       ...preferencesJSON,
       ...{ version: curPreferencesJSON.version },
     };
-    preferencesJSON = cleanPreferences(preferencesJSON);
-    fs.outputJSONSync(PREFERENCES_JSON_PATH, preferencesJSON);
-    return preferencesJSON;
+    curPreferencesJSON = cleanPreferences(curPreferencesJSON);
+    fs.outputJSONSync(PREFERENCES_JSON_PATH, curPreferencesJSON);
+    return curPreferencesJSON;
   } catch (err) {
     logger.error(
       "updatePreferencesJSON-> Output preferences JSON fail. Path: ",
@@ -106,17 +115,23 @@ export function updatePreferencesJSON(
   }
 }
 
-// Get default prefences
+// Get default preferences
 export function getDefaultPreferences(): Preferences {
   return {
-    LOG_FILES_PATH,
+    WEB_APP_LOG_LEVEL: LogLevel.info,
+    WEB_APP_LOG_MAX_SIZE,
+    WEB_APP_PORT: WEB_APP_PORT,
+    WEB_APP_HOME_PATH: path.join(APP_HOME_PATH, WEB_APP_NAME),
+    APP_HOME_PATH,
+    WEB_APP_DATABASE_URL: WEB_APP_DATABASE_URL,
+    LOG_FILES_PATH: path.join(APP_HOME_PATH, LOG_FILES_FOLDER),
     version: "1.0.0",
   };
 }
 
 /**
  * remove unnecessary field
- * @param prefences
+ * @param Preferences
  */
 export function cleanPreferences(preferences: Preferences): Preferences {
   console.log("cleanPreferences");

@@ -15,8 +15,8 @@ export default function getLogger() {
     }
     const config = getAppConfig();
     const logFilesPath = path.join(
-      config.APP_HOME_FOLDER,
-      config.LOG_FILES_PATH
+      config.APP_HOME_PATH,
+      DEFAULT_APP_CONFIG.LOG_FILES_FOLDER
     );
     fs.ensureDirSync(logFilesPath);
     // console.log('[createLogger] starting...');

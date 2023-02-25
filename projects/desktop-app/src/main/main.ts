@@ -8,8 +8,7 @@ import { listenForProtocolHandler, setupProtocolHandler } from "./protocol";
 import { shouldQuit } from "./squirrel";
 // import { setupUpdates } from "./update";
 import logger from "../helpers/logger";
-// import webApp from "../helpers/web-app";
-import { startServer } from "../web-app/src/server";
+import webApp from "../helpers/web-app";
 import { getOrCreateMainWindow } from "./windows";
 
 /**
@@ -20,31 +19,15 @@ export async function onReady() {
   try {
     logger.info("onReady()");
 
-    // intial global variables
-    // global.browserWindows = {
-    //   retailerEditor: null,
-    //   main: null,
-    // };
-
     await onFirstRunMaybe();
     // if (!isDevMode()) process.env.NODE_ENV = "production";
     try {
-      // await webApp.start();
-      await startServer({});
-      // process.env.BITSKY_BASE_URL = `http://localhost:${webApp.port}`;
-      // setup headless producer
+      await webApp.start();
     } catch (err) {
       console.log(`start web app error: `, err);
       logger.error("start webApp file. error: ", err);
     }
 
-    // Temp comment to fix https://github.com/bitskyai/bitsky-builder/issues/41
-    // if run this, then cannot load browser, seems it was caused by single thread
-    // try {
-    //   RetailerManager.runRetailer();
-    // } catch (err) {
-    //   logger.error("start retailer fail. error: ", err);
-    // }
     // setup menus for main processes
     setupMenu();
     setupAboutPanel();
