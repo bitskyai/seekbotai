@@ -16,7 +16,10 @@
     "nohoist": [
       "**/desktop-app",
       "desktop-app/**",
-      "**/desktop-app/**"
+      "**/desktop-app/**",
+      "**/api",
+      "api/**",
+      "**/api/**"
     ]
   },
   "engines": {

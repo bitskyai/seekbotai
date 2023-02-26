@@ -10,8 +10,14 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     APP_HOME_PATH: str({
       default: DEFAULT_APP_CONFIG.APP_HOME_PATH,
     }),
+    APP_SOURCE_PATH: str({
+      default: DEFAULT_APP_CONFIG.APP_SOURCE_PATH,
+    }),
     DATABASE_URL: str({
       default: DEFAULT_APP_CONFIG.DATABASE_URL,
+    }),
+    DATABASE_PROVIDER: str({
+      default: DEFAULT_APP_CONFIG.DATABASE_PROVIDER,
     }),
     LOG_FILES_FOLDER: str({
       default: DEFAULT_APP_CONFIG.LOG_FILES_FOLDER,

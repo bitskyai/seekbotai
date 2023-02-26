@@ -1,4 +1,5 @@
-import { dialog } from "electron";
+import { app, dialog } from "electron";
+import path from "path";
 import {
   getPreferencesJSON,
   updatePreferencesJSON,
@@ -6,7 +7,7 @@ import {
 } from "../main/preferences";
 import { getOrCreateMainWindow } from "../main/windows";
 import { startServer, stopServer } from "../web-app/src/server";
-import { APP_HOME_PATH, WEB_APP_PORT } from "./constants";
+import { APP_HOME_PATH, WEB_APP_NAME, WEB_APP_PORT } from "./constants";
 import { getAvailablePort } from "./index";
 import logger from "./logger";
 
@@ -33,6 +34,10 @@ class WebApp {
         PORT: preferences.WEB_APP_PORT,
         DATABASE_URL: preferences.WEB_APP_DATABASE_URL,
         APP_HOME_PATH: preferences.WEB_APP_HOME_PATH,
+        APP_SOURCE_PATH: path.join(
+          app.getAppPath().replace("app.asar", "app.asar.unpacked"),
+          WEB_APP_NAME
+        ),
         LOG_LEVEL: preferences.WEB_APP_LOG_LEVEL,
         LOG_MAX_SIZE: preferences.WEB_APP_LOG_MAX_SIZE,
       });

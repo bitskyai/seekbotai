@@ -30,7 +30,7 @@
     "**/.husky": true,
     "**/.pnp.*": false,
     "**/.prettierignore": false,
-    "**/node_modules": true,
+    "**/node_modules": false,
     "**/yarn.lock": false
   },
   "search.exclude": {
