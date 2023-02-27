@@ -6,17 +6,12 @@ function IndexNewtab() {
   const [data, setData] = useState("")
 
   return (
-    <div
-      className="new-tab"
-      style={{
-        padding: 16,
-        display: "flex",
-        flexDirection: "column"
-      }}>
-      <h1>
-        Welcome to your <a href="https://www.plasmo.com">Plasmo</a> Extension!
-      </h1>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
+    <div style={{}}>
+      <iframe
+        src="http://localhost:56789"
+        className="full-screen"
+        style={{ height: window.screen.height }}
+      />
     </div>
   )
 }
