@@ -11,4 +11,4 @@ cp package.json dist/
 find dist/prisma -type f -name "*.ts" -delete
 find dist/prisma -type f -name "*.db" -delete
 cd dist
-npm install --production
+npm install --omit=dev

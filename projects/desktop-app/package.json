@@ -3,17 +3,13 @@
   "productName": "desktop-app",
   "version": "1.0.0",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "description": "Bookmark intelligence desktop app",
   "main": "./dist/main/main",
   "scripts": {
     "tsc": "node ./scripts/tsc.js",
     "webapp": "sh ./scripts/build-copy-web-app.sh",
     "dev": "cross-env WATCH=true && rimraf ./dist && npm run webapp && npm run tsc && electron-forge start",
+    "electron:start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -60,5 +56,8 @@
     "uuid": "9.0.0",
     "electron-log": "5.0.0-beta.16",
     "detect-port": "1.5.1"
+  },
+  "envars": {
+    "cwd": "../../env"
   }
 }

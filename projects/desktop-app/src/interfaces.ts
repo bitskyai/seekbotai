@@ -45,8 +45,10 @@ export interface Preferences {
   WEB_APP_LOG_MAX_SIZE: number;
   WEB_APP_PORT: number;
   WEB_APP_HOME_PATH: string;
-  APP_HOME_PATH: string;
   WEB_APP_DATABASE_URL: string;
+  WEB_APP_SETUP_DB: boolean;
+  WEB_APP_SEED_DB: boolean;
+  APP_HOME_PATH: string;
   LOG_FILES_PATH: string;
   version: string;
 }

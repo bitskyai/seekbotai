@@ -11,15 +11,8 @@
   "workspaces": {
     "packages": [
       "scripts",
-      "projects/*"
-    ],
-    "nohoist": [
-      "**/desktop-app",
-      "desktop-app/**",
-      "**/desktop-app/**",
-      "**/api",
-      "api/**",
-      "**/api/**"
+      "projects/browser-extension",
+      "projects/ui"
     ]
   },
   "engines": {

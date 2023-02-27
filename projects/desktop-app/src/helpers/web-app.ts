@@ -36,8 +36,11 @@ class WebApp {
         APP_HOME_PATH: preferences.WEB_APP_HOME_PATH,
         APP_SOURCE_PATH: path.join(
           app.getAppPath().replace("app.asar", "app.asar.unpacked"),
+          "dist",
           WEB_APP_NAME
         ),
+        SETUP_DB: preferences.WEB_APP_SETUP_DB,
+        SEED_DB: preferences.WEB_APP_SEED_DB,
         LOG_LEVEL: preferences.WEB_APP_LOG_LEVEL,
         LOG_MAX_SIZE: preferences.WEB_APP_LOG_MAX_SIZE,
       });

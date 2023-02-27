@@ -122,8 +122,10 @@ export function getDefaultPreferences(): Preferences {
     WEB_APP_LOG_MAX_SIZE,
     WEB_APP_PORT: WEB_APP_PORT,
     WEB_APP_HOME_PATH: path.join(APP_HOME_PATH, WEB_APP_NAME),
-    APP_HOME_PATH,
     WEB_APP_DATABASE_URL: WEB_APP_DATABASE_URL,
+    WEB_APP_SETUP_DB: true,
+    WEB_APP_SEED_DB: true,
+    APP_HOME_PATH,
     LOG_FILES_PATH: path.join(APP_HOME_PATH, LOG_FILES_FOLDER),
     version: "1.0.0",
   };

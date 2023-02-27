@@ -6,6 +6,8 @@ export interface ServerOptions {
   LOG_LEVEL: string;
   LOG_MAX_SIZE: number;
   APP_SOURCE_PATH: string;
+  SETUP_DB: boolean;
+  SEED_DB: boolean;
 }
 
 export interface AppConfig extends ServerOptions {

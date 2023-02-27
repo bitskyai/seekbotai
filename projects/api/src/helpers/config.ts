@@ -1,4 +1,4 @@
-import { cleanEnv, num, str } from "envalid";
+import { bool, cleanEnv, num, str } from "envalid";
 import _ from "lodash";
 import { AppConfig } from "../types";
 import { DEFAULT_APP_CONFIG } from "./constants";
@@ -18,6 +18,12 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     }),
     DATABASE_PROVIDER: str({
       default: DEFAULT_APP_CONFIG.DATABASE_PROVIDER,
+    }),
+    SETUP_DB: bool({
+      default: DEFAULT_APP_CONFIG.SETUP_DB,
+    }),
+    SEED_DB: bool({
+      default: DEFAULT_APP_CONFIG.SEED_DB,
     }),
     LOG_FILES_FOLDER: str({
       default: DEFAULT_APP_CONFIG.LOG_FILES_FOLDER,

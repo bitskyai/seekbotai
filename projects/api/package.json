@@ -4,11 +4,6 @@
   "description": "",
   "main": "dist/index.js",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "ts-node-dev src/index.ts",
@@ -45,7 +40,11 @@
     "@types/lodash": "4.14.191",
     "@types/server-destroy": "1.0.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "envars": "^0.4.0"
+  },
+  "envars": {
+    "cwd": "../../env"
   },
   "files": [
     "dist"

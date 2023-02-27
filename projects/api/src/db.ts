@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { fork } from "child_process";
-import fs from "fs";
+import fs from "fs-extra";
 import { last, trim } from "lodash";
 import path from "path";
+import seeds from "../prisma/seeds";
 import { getAppConfig } from "./helpers/config";
 import getLogger from "./helpers/logger";
 import { getPlatformName } from "./helpers/utils";
@@ -40,9 +41,17 @@ export const platformToExecutables: any = {
   },
 };
 
+export async function seed(prismaClient?: PrismaClient) {
+  await seeds(prismaClient);
+}
+
 export async function setupDB() {
-  let needsMigration = false;
   const config = getAppConfig();
+  if (!config.SEED_DB) {
+    logger.info(`Don't need to setup DB`);
+    return;
+  }
+  let needsMigration = false;
   if (config.DATABASE_PROVIDER !== "sqlite") {
     // currently setupDB only for sqlite
     return;
@@ -55,7 +64,9 @@ export async function setupDB() {
     needsMigration = true;
     // prisma for whatever reason has trouble if the database file does not exist yet.
     // So just touch it here
-    fs.writeFileSync(dbPath, "");
+    fs.outputFileSync(dbPath, "");
+    const data = fs.readFileSync(dbPath, "utf8");
+    logger.info(data); // => hello!
   } else {
     try {
       const latest: Migration[] =
@@ -87,16 +98,20 @@ export async function setupDB() {
         command: ["migrate", "deploy", "--schema", schemaPath],
         dbUrl: config.DATABASE_URL,
       });
-
-      // seed
-      // logger.info("Seeding...");
-      // await seed(prisma);
     } catch (e) {
       logger.error(e);
       process.exit(1);
     }
   } else {
     logger.info("Does not need migration");
+  }
+
+  if (config.SEED_DB) {
+    // seed
+    logger.info("Seeding...");
+    await seed(prisma);
+  } else {
+    logger.info("Does not need seed");
   }
 }
 
