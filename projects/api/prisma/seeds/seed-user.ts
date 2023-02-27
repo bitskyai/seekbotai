@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { prisma } from "../../src/db";
+import { getPrismaClient } from "../../src/db";
 
 async function seed(prismaClient?: PrismaClient) {
   if (!prismaClient) {
-    prismaClient = prisma;
+    prismaClient = getPrismaClient();
   }
   // Delete all `User` and `Message` records
   await prismaClient.message.deleteMany({});

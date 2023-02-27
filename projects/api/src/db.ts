@@ -8,11 +8,23 @@ import { getAppConfig } from "./helpers/config";
 import getLogger from "./helpers/logger";
 import { getPlatformName } from "./helpers/utils";
 import { Migration } from "./types";
-export const prisma = new PrismaClient({
-  datasources: { db: { url: getAppConfig().DATABASE_URL } },
-});
 
 const logger = getLogger();
+
+let _prismaClient: PrismaClient;
+let databaseURL: string;
+
+export function getPrismaClient() {
+  const latestDatabaseURL = getAppConfig().DATABASE_URL;
+  if (latestDatabaseURL != databaseURL) {
+    databaseURL = latestDatabaseURL;
+    _prismaClient = new PrismaClient({
+      datasources: { db: { url: databaseURL } },
+    });
+  }
+  logger.info(`DATABASE_URL: ${getAppConfig().DATABASE_URL}`);
+  return _prismaClient;
+}
 
 export const LATEST_MIGRATION = "20230206230944_init"; // This needs to be updated every time you create a migration!
 
@@ -47,7 +59,7 @@ export async function seed(prismaClient?: PrismaClient) {
 
 export async function setupDB() {
   const config = getAppConfig();
-  if (!config.SEED_DB) {
+  if (!config.SETUP_DB) {
     logger.info(`Don't need to setup DB`);
     return;
   }
@@ -59,14 +71,16 @@ export async function setupDB() {
   // remove `file:`
   const dbPath = trim(config.DATABASE_URL).substring(5);
   const dbExists = fs.existsSync(dbPath);
+  const prisma = getPrismaClient();
   logger.info(`dbPath: ${dbPath}`);
   if (!dbExists) {
     needsMigration = true;
     // prisma for whatever reason has trouble if the database file does not exist yet.
     // So just touch it here
-    fs.outputFileSync(dbPath, "");
-    const data = fs.readFileSync(dbPath, "utf8");
-    logger.info(data); // => hello!
+    fs.copySync(
+      path.join(config.APP_SOURCE_PATH, "./prisma/bi-latest.db"),
+      dbPath
+    );
   } else {
     try {
       const latest: Migration[] =
@@ -109,7 +123,7 @@ export async function setupDB() {
   if (config.SEED_DB) {
     // seed
     logger.info("Seeding...");
-    await seed(prisma);
+    await seed();
   } else {
     logger.info("Does not need seed");
   }

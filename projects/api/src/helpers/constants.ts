@@ -7,7 +7,7 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   APP_HOME_PATH: appHomePath,
   APP_SOURCE_PATH: path.join(__dirname, "../../"),
   COMBINED_LOG_FILE_NAME: "combined.log",
-  SETUP_DB: false,
+  SETUP_DB: true,
   SEED_DB: false,
   DATABASE_PROVIDER: "sqlite",
   DATABASE_URL: `file:${appHomePath}/${packageJson.name}.db`,

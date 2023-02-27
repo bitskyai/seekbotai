@@ -4,15 +4,19 @@ import { createClient, Provider } from "urql";
 
 import App from "./App";
 import "./index.css";
-
+let url = import.meta.env.VITE_API_URL;
+if (!url) {
+  url = `${window.location.href}graphql`;
+}
 const client = createClient({
-    url: import.meta.env.VITE_API_URL || "http://localhost:4000/graphql",
+  // url: import.meta.env.VITE_API_URL || "http://localhost:4000/graphql",
+  url,
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <React.StrictMode>
-        <Provider value={client}>
-            <App />
-        </Provider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <Provider value={client}>
+      <App />
+    </Provider>
+  </React.StrictMode>
 );
