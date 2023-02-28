@@ -38,26 +38,19 @@ const config: ForgeConfig = {
     new MakerRpm({}),
     new MakerDeb({}),
   ],
-  /*
-  plugins: [
-    new WebpackPlugin({
-      mainConfig,
-      renderer: {
-        config: rendererConfig,
-        entryPoints: [
-          {
-            html: "./src/render/index.html",
-            js: "./src/render/renderer.ts",
-            name: "main_window",
-            preload: {
-              js: "./src/render/preload.ts",
-            },
-          },
-        ],
+  publishers: [
+    {
+      name: "@electron-forge/publisher-github",
+      config: {
+        repository: {
+          owner: "bitskyai",
+          name: "bi",
+        },
+        draft: true,
+        prerelease: true,
       },
-    }),
+    },
   ],
-  */
 };
 
 export default config;
