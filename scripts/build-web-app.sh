@@ -3,35 +3,38 @@ set -e
 ####################################################################################
 # Build `ui` and `api` together to generate web app
 ####################################################################################
-ROOT_DIR=$(pwd)
-echo "Root Folder: $ROOT_DIR"
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-echo "Script dir: $SCRIPT_DIR"
-
-cd $SCRIPT_DIR
+ROOT_DIR=$(dirname "$(readlink -f "$0")")
+cd $ROOT_DIR
+source ./utils.sh
+sh ./setupEnv.sh
 
 if [ -z "${TARGET_PATH}" ]; then
   # Default TARGET_PATH
   TARGET_PATH="../projects/api"
 fi
 
-if [ -z "${UI_PATH}" ]; then
-  # Default UI_PATH
-  UI_PATH="../projects/ui"
-fi
+# Build UI
+sh ./build-ui-to-api.sh
 
-echo ">>>> Build API"
-cd $TARGET_PATH && yarn build
-cd $SCRIPT_DIR
+# Build API
+print "Build API. Path: $TARGET_PATH"
+cd $ROOT_DIR
+cd $TARGET_PATH
+print "Remove previous build"
+rm -rf dist
 
-echo ">>>> Build UI"
-echo "UI_PATH: ${UI_PATH}"
-cd $UI_PATH && yarn build
+print "Copy files"
+mkdir -p dist/prisma
+cp -rf prisma/* ./dist/prisma/
+cp package.json ./dist/
+cp yarn.lock ./dist
+cp -rf src/ui ./dist/src
+# typescript files
+find dist -type f -name "*.ts" -delete
 
-cd $SCRIPT_DIR
-echo ">>>> Remove previous build"
-echo "TARGET_PATH: ${TARGET_PATH}"
-rm -rf $TARGET_PATH/dist/src/ui
+print "Compile Typescript"
+npx tsc
 
-echo ">>>> Copy new build"
-mkdir -p $TARGET_PATH/dist/src/ui/ && cp -rf $UI_PATH/dist/* $TARGET_PATH/dist/src/ui/
+# Copy built UI tto build API
+print "Install node_modules"
+cd ./dist && yarn install --production

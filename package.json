@@ -21,8 +21,11 @@
   },
   "scripts": {
     "dev": "",
+    "build:ui-to-api": "bash ./scripts/build-ui-to-api.sh",
     "build:copy-web-app": "bash ./scripts/copy-web-app-to-desktop-app.sh",
     "build:web-app": "bash ./scripts/build-web-app.sh",
+    "release:desktop-app": "bash ./scripts/release-desktop-app.sh",
+    "release:browser-extension": "bash ./scripts/release-browser-extension.sh",
     "lint": "eslint --cache --report-unused-disable-directives .",
     "test": "jest",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
