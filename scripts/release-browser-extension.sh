@@ -12,4 +12,4 @@ print "Root Folder: $ROOT_DIR"
 # Setup env
 print "$(date +%Y-%m-%d_%H-%M-%S)"
 cd $ROOT_DIR
-sh ./setupEnv.sh
+bash ./setupEnv.sh

@@ -16,7 +16,7 @@ fi
 
 # Build web app to desktop app
 print "Build web app to desktop app"
-sh ./build-web-app-to-desktop-app.sh
+bash ./build-web-app-to-desktop-app.sh
 
 cd $TARGET_PATH
 print "Remove previous build"

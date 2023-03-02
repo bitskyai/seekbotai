@@ -13,7 +13,7 @@ if [ -z "${TARGET_PATH}" ]; then
 fi
 
 # Build UI
-sh ./build-ui-to-api.sh
+bash ./build-ui-to-api.sh
 
 # Build API
 print "Build API. Path: $TARGET_PATH"

@@ -21,7 +21,7 @@ fi
 
 # Build web app
 print "Build web app"
-sh ./build-web-app.sh
+bash ./build-web-app.sh
 
 print "Remove previous web-app"
 cd $TARGET_PATH
