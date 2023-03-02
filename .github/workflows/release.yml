@@ -11,6 +11,10 @@ jobs:
   release_desktop_app:
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        shell: bash
+
     # Platforms to build on/for
     strategy:
       matrix:
