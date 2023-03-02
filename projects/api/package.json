@@ -8,7 +8,7 @@
     "postinstall": "prisma generate",
     "dev": "ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "sh ../../scripts/build-web-app.sh",
+    "build": "bash ../../scripts/build-web-app.sh",
     "seed": "prisma db seed",
     "migration:dev": "prisma migrate dev",
     "migration:deploy": "prisma migrate deploy"

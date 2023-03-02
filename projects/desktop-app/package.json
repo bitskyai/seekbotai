@@ -7,11 +7,11 @@
   "main": "./dist/main/main.js",
   "scripts": {
     "tsc": "node ./scripts/tsc.js",
-    "webapp": "sh ../../scripts/build-web-app-to-desktop-app.sh",
+    "webapp": "bash ../../scripts/build-web-app-to-desktop-app.sh",
     "electron:start": "electron-forge start",
     "dev:build": "npm run webapp && npm run dev",
     "dev": "cross-env WATCH=true && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && npm run electron:start",
-    "build": "sh ../../scripts/build-desktop-app.sh",
+    "build": "bash ../../scripts/build-desktop-app.sh",
     "installProdNodeModules": "cp package.json ./dist && cp yarn.lock ./dist && cd ./dist && yarn --prod && cd ..",
     "copy-make-files": "node ./scripts/generateZip.js",
     "app:package": "npm run build && electron-forge package",
