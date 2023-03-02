@@ -22,6 +22,10 @@ cd $TARGET_PATH
 print "Remove previous build"
 rm -rf dist
 
+print "Compile Typescript"
+npm run prisma:generate
+npx tsc
+
 print "Copy files"
 mkdir -p ./dist/src
 cp -rf ./prisma ./dist/
@@ -32,9 +36,7 @@ cp -rf ./src/public ./dist/src/
 # remove typescript files
 find dist -type f -name "*.ts" -delete
 
-print "Compile Typescript"
-npx tsc
-
-# Copy built UI tto build API
+# Install node_modules
 print "Install node_modules"
 cd ./dist && yarn install --production
+npm run prisma:generate

@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "private": true,
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "npm run prisma:generate",
     "dev": "ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "bash ../../scripts/build-web-app.sh",
+    "prisma:generate": "prisma generate",
     "seed": "prisma db seed",
     "migration:dev": "prisma migrate dev",
     "migration:deploy": "prisma migrate deploy"
