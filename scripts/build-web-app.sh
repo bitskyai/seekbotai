@@ -6,7 +6,6 @@ set -e
 ROOT_DIR=$(dirname "$(readlink -f "$0")")
 cd $ROOT_DIR
 source ./utils.sh
-sh ./setupEnv.sh
 
 if [ -z "${TARGET_PATH}" ]; then
   # Default TARGET_PATH
@@ -14,7 +13,7 @@ if [ -z "${TARGET_PATH}" ]; then
 fi
 
 # Build UI
-# sh ./build-ui-to-api.sh
+sh ./build-ui-to-api.sh
 
 # Build API
 print "Build API. Path: $TARGET_PATH"

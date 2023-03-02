@@ -2,7 +2,7 @@
 set -e
 
 ####################################################################################
-# Build browser extension and desktop-app
+# Build Desktop app
 ####################################################################################
 
 ROOT_DIR=$(dirname "$(readlink -f "$0")")
@@ -14,5 +14,22 @@ if [ -z "${TARGET_PATH}" ]; then
   TARGET_PATH="../projects/desktop-app"
 fi
 
+# Build web app to desktop app
+print "Build web app to desktop app"
+sh ./build-web-app-to-desktop-app.sh
+
 cd $TARGET_PATH
-npm run app:make
+print "Remove previous build"
+rm -rf ./dist
+
+print "Complie Typescript"
+npm run tsc
+
+print "Copy files to dist"
+cp -rf ./src/web-app ./dist/
+cp package.json ./dist
+cp yarn.lock ./dist
+
+print "Install node_modules in dist"
+cd ./dist
+yarn install --prod

@@ -24,14 +24,8 @@ jobs:
         with:
           node-version: "16.x"
           registry-url: https://registry.npmjs.org/
-      - name: Install node_modules
-        run: ls && yarn
-      - name: Install api node_modules
-        run: cd projects/api && yarn && cd ..
-      - name: Install desktop-app node_modules
-        run: cd projects/desktop-app && yarn && cd ..
       - name: Build
-        run: cd projects/desktop-app && npm run app:make
+        run: npm run release:desktop-app
       - name: List generate files
         run: cd ./projects/desktop-app/out && ls
       - name: Get Release
