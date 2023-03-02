@@ -8,7 +8,8 @@ set -e
 ROOT_DIR=$(dirname "$(readlink -f "$0")")
 cd $ROOT_DIR
 source ./utils.sh
-
+print "####################################################################################"
+print "# Setup environment"
 # Setup yarn workspace
 print "Install node_modules in yarn workspace"
 cd $ROOT_DIR
@@ -25,3 +26,4 @@ print "Install node_modules in desktop-app"
 cd $ROOT_DIR
 cd ../projects/desktop-app
 yarn install --frozen-lockfile
+print "####################################################################################\n"

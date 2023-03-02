@@ -14,7 +14,7 @@ if [ -z "${TARGET_PATH}" ]; then
 fi
 
 # Build UI
-sh ./build-ui-to-api.sh
+# sh ./build-ui-to-api.sh
 
 # Build API
 print "Build API. Path: $TARGET_PATH"
@@ -24,12 +24,13 @@ print "Remove previous build"
 rm -rf dist
 
 print "Copy files"
-mkdir -p dist/prisma
-cp -rf prisma/* ./dist/prisma/
+mkdir -p ./dist/src
+cp -rf ./prisma ./dist/
 cp package.json ./dist/
-cp yarn.lock ./dist
-cp -rf src/ui ./dist/src
-# typescript files
+cp yarn.lock ./dist/
+cp -rf ./src/ui ./dist/src/
+cp -rf ./src/public ./dist/src/
+# remove typescript files
 find dist -type f -name "*.ts" -delete
 
 print "Compile Typescript"
