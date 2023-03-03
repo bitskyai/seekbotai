@@ -38,6 +38,7 @@ jobs:
           asset_content_type: application/zip
 
   release_desktop_app:
+    name: Release desktop app
     runs-on: ${{ matrix.os }}
     defaults:
       run:
