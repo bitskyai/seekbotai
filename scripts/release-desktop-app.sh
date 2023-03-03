@@ -18,3 +18,10 @@ cd $TARGET_PATH
 print "desktop-app path: $(pwd)"
 mkdir -p ./out/installer
 npm run app:make
+
+ls -all .
+print "out folder"
+ls -all ./out
+print "out/installer folder"
+ls -all ./out/installer
+npm run copy-make-files

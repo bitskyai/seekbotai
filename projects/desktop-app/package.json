@@ -15,7 +15,7 @@
     "installProdNodeModules": "cp package.json ./dist && cp yarn.lock ./dist && cd ./dist && yarn --prod && cd ..",
     "copy-make-files": "node ./scripts/generateZip.js",
     "app:package": "npm run build && electron-forge package",
-    "app:make": "npm run build && electron-forge make && npm run copy-make-files",
+    "app:make": "npm run build && electron-forge make",
     "app:publish": "npm run build && electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
