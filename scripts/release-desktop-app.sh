@@ -36,7 +36,7 @@ elif [[ "$(uname -o)" == "Msys" ]]; then
   print "Operating system is Windows"
   copyAllFilesWithExtension ./out/make "*.exe" ./out/installer/
   copyAllFilesWithExtension ./out/make "*.nupkg" ./out/installer/
-  zip -r ./out/bi.zip ./out/installer
+  compact /c ./out/installer ./out/bi.zip
 else
   print "Unknown operating system"
 fi

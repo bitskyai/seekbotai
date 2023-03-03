@@ -7,9 +7,11 @@ set -e
 ROOT_DIR=$(dirname "$(readlink -f "$0")")
 cd $ROOT_DIR
 source ./utils.sh
-print "Root Folder: $ROOT_DIR"
-
-# Setup env
-print "$(date +%Y-%m-%d_%H-%M-%S)"
-cd $ROOT_DIR
 bash ./setupEnv.sh
+
+if [ -z "${TARGET_PATH}" ]; then
+  # Default TARGET_PATH
+  TARGET_PATH="../projects/browser-extension"
+fi
+
+cd $TARGET_PATH
