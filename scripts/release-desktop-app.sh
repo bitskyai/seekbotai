@@ -21,7 +21,6 @@ npm run app:make
 
 ls -all .
 print "out folder"
-ls -all ./out
-print "out/installer folder"
-ls -all ./out/installer
+ls -R ./out
+
 npm run copy-make-files
