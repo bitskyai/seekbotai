@@ -9,8 +9,6 @@ import type { ForgeConfig } from "@electron-forge/shared-types";
 // import { mainConfig } from "./webpack.main.config";
 // import { rendererConfig } from "./webpack.renderer.config";
 
-const iconDir = path.resolve(__dirname, "assets", "icons");
-
 const config: ForgeConfig = {
   packagerConfig: {
     name: "bi",
