@@ -2,13 +2,12 @@
 set -e
 
 ####################################################################################
-# Build browser extension and desktop-app
+# Build browser extension
 ####################################################################################
 ROOT_DIR=$(dirname "$(readlink -f "$0")")
 cd $ROOT_DIR
 source ./utils.sh
-
-bash ./build-browser-extension.sh
+bash ./setupEnv.sh
 
 if [ -z "${TARGET_PATH}" ]; then
   # Default TARGET_PATH
@@ -16,8 +15,9 @@ if [ -z "${TARGET_PATH}" ]; then
 fi
 
 cd $TARGET_PATH
-print "Create package"
-npm run package
 
-print "Rename zip file to 'chrome-extension-latest.zip'"
-mv -f ./build/chrome-*.zip ./build/chrome-extension-latest.zip
+print "Remove previous build"
+rm -rf ./build
+
+print "Create build"
+npm run build
