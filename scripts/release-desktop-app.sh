@@ -15,12 +15,28 @@ if [ -z "${TARGET_PATH}" ]; then
 fi
 
 cd $TARGET_PATH
+print "Remove previous out"
+rm -rf ./out
 print "desktop-app path: $(pwd)"
 mkdir -p ./out/installer
 npm run app:make
 
-ls -all .
-print "out folder"
-ls -R ./out
-
-npm run copy-make-files
+if [[ "$(uname)" == "Linux" ]]; then
+  print "Operating system is Linux"
+  copyAllFilesWithExtension ./out/make "*.deb" ./out/installer/
+  copyAllFilesWithExtension ./out/make "*.rpm" ./out/installer/
+  zip -r ./out/installer ./out/bi.zip
+# Check if the operating system is macOS
+elif [[ "$(uname)" == "Darwin" ]]; then
+  print "Operating system is macOS"
+  copyAllFilesWithExtension ./out/make "*.zip" ./out/
+  mv -f ./out/bi-*.zip ./out/bi.zip
+# Check if the operating system is Windows (using MSYS2)
+elif [[ "$(uname -o)" == "Msys" ]]; then
+  print "Operating system is Windows"
+  copyAllFilesWithExtension ./out/make "*.exe" ./out/installer/
+  copyAllFilesWithExtension ./out/make "*.nupkg" ./out/installer/
+  zip -r ./out/installer ./out/bi.zip
+else
+  print "Unknown operating system"
+fi

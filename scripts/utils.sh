@@ -6,3 +6,9 @@ function print() {
   timestamp=$(date +'%H:%M:%S')
   echo "[$timestamp][bi] $@"
 }
+
+function copyAllFilesWithExtension() {
+  print "Files with extesion $2 in path $1"
+  print $(find $1 -type f -name $2)
+  find $1 -type f -name $2 -exec cp {} $3 \;
+}
