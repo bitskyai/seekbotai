@@ -25,7 +25,7 @@ if [[ "$(uname)" == "Linux" ]]; then
   print "Operating system is Linux"
   copyAllFilesWithExtension ./out/make "*.deb" ./out/installer/
   copyAllFilesWithExtension ./out/make "*.rpm" ./out/installer/
-  zip -r ./out/installer ./out/bi.zip
+  zip -r ./out/bi.zip ./out/installer
 # Check if the operating system is macOS
 elif [[ "$(uname)" == "Darwin" ]]; then
   print "Operating system is macOS"
@@ -36,7 +36,7 @@ elif [[ "$(uname -o)" == "Msys" ]]; then
   print "Operating system is Windows"
   copyAllFilesWithExtension ./out/make "*.exe" ./out/installer/
   copyAllFilesWithExtension ./out/make "*.nupkg" ./out/installer/
-  zip -r ./out/installer ./out/bi.zip
+  zip -r ./out/bi.zip ./out/installer
 else
   print "Unknown operating system"
 fi
