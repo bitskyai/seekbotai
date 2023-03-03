@@ -15,4 +15,6 @@ if [ -z "${TARGET_PATH}" ]; then
 fi
 
 cd $TARGET_PATH
+print "desktop-app path: $(pwd)"
+mkdir -p ./out/installer
 npm run app:make
