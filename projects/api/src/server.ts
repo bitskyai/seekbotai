@@ -1,12 +1,11 @@
 import * as http from "http";
+import enableDestroy from "server-destroy";
 import { createApp } from "./app";
 import { setupDB } from "./db";
 import { overwriteAppConfig } from "./helpers/config";
 import { DEFAULT_APP_CONFIG } from "./helpers/constants";
 import getLogger from "./helpers/logger";
 import { ServerOptions } from "./types";
-
-import enableDestroy from "server-destroy";
 
 let server: http.Server;
 let processExit = false;
