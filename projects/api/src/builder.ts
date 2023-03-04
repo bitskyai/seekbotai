@@ -1,8 +1,8 @@
+import { getPrismaClient } from "./db";
 import SchemaBuilder from "@pothos/core";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import { DateResolver } from "graphql-scalars";
-import { getPrismaClient } from "./db";
 
 export const builder = new SchemaBuilder<{
   Scalars: {

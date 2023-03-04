@@ -1,7 +1,6 @@
-import { app, dialog } from "electron";
-
 import { isFirstRun } from "../helpers/check-first-run";
 import { isDevMode } from "../helpers/devmode";
+import { app, dialog } from "electron";
 
 /**
  * Is this the first run of Fiddle? If so, perform

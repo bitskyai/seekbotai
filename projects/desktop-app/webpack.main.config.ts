@@ -1,8 +1,8 @@
+import { rules } from "./webpack.rules";
 import type { Configuration } from "webpack";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CopyPlugin = require("copy-webpack-plugin");
-
-import { rules } from "./webpack.rules";
 
 export const mainConfig: Configuration = {
   /**

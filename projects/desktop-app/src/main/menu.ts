@@ -1,8 +1,9 @@
+// import logger from "../utils/logger";
+import { getOrCreateMainWindow } from "./windows";
 import { BrowserView, Menu, MenuItemConstructorOptions, shell } from "electron";
 // import { defaultMenu } from "electron-default-menu";
 import * as path from "path";
-// import logger from "../utils/logger";
-import { getOrCreateMainWindow } from "./windows";
+
 // const isMac = process.platform === "darwin";
 
 /**

@@ -6,7 +6,6 @@
  *
  *   $ yarn setup
  */
-
 import inquirer from "inquirer";
 
 const questions = [

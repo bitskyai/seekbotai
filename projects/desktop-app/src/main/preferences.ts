@@ -1,7 +1,5 @@
 // preferences settings only support main process
-import * as fs from "fs-extra";
-import * as _ from "lodash";
-import * as path from "path";
+
 import {
   APP_HOME_PATH,
   LOG_FILES_FOLDER,
@@ -13,6 +11,9 @@ import {
 } from "../helpers/constants";
 import logger from "../helpers/logger";
 import { LogLevel, Preferences } from "../interfaces";
+import * as fs from "fs-extra";
+import * as _ from "lodash";
+import * as path from "path";
 
 /**
  * Get preferences JSON, if this JSON file doesn't exist, then return default prefrences and write to disk

@@ -1,8 +1,8 @@
+import { getAppConfig } from "./config";
+import { DEFAULT_APP_CONFIG } from "./constants";
 import fs from "fs-extra";
 import path from "path";
 import { createLogger, format, Logger, transports } from "winston";
-import { getAppConfig } from "./config";
-import { DEFAULT_APP_CONFIG } from "./constants";
 
 // Only need one logger instance in whole system
 let logger: Logger;

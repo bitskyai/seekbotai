@@ -1,8 +1,7 @@
+import { schema } from "./schema";
 import express from "express";
 import { createYoga } from "graphql-yoga";
 import path from "path";
-
-import { schema } from "./schema";
 
 export async function createApp() {
   const app = express();

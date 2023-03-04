@@ -1,5 +1,3 @@
-import { app, dialog } from "electron";
-import path from "path";
 import {
   getPreferencesJSON,
   updatePreferencesJSON,
@@ -10,6 +8,8 @@ import { startServer, stopServer } from "../web-app/src/server";
 import { APP_HOME_PATH, WEB_APP_NAME, WEB_APP_PORT } from "./constants";
 import { getAvailablePort } from "./index";
 import logger from "./logger";
+import { app, dialog } from "electron";
+import path from "path";
 
 class WebApp {
   public port = WEB_APP_PORT;

@@ -8,22 +8,15 @@
     "noImplicitAny": true,
     "outDir": "./dist/",
     "paths": {
-      "*": [
-        "node_modules/*"
-      ]
+      "*": ["node_modules/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "target": "ES6"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/web-app"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "src/web-app"],
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2

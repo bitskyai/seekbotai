@@ -1,9 +1,9 @@
+import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createClient, Provider } from "urql";
-
-import App from "./App";
 import "./index.css";
+
 let url = import.meta.env.VITE_API_URL;
 if (!url) {
   url = `${window.location.href}graphql`;

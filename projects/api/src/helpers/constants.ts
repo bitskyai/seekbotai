@@ -1,5 +1,6 @@
-import path from "path";
 import { AppConfig } from "../types";
+import path from "path";
+
 const packageJson = require("../../package.json");
 
 const appHomePath = path.join(__dirname, "../../", `.${packageJson.name}`);

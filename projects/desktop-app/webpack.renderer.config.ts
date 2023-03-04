@@ -1,11 +1,10 @@
-import type { Configuration } from 'webpack';
-
-import { rules } from './webpack.rules';
-import { plugins } from './webpack.plugins';
+import { plugins } from "./webpack.plugins";
+import { rules } from "./webpack.rules";
+import type { Configuration } from "webpack";
 
 rules.push({
   test: /\.css$/,
-  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+  use: [{ loader: "style-loader" }, { loader: "css-loader" }],
 });
 
 export const rendererConfig: Configuration = {
@@ -14,6 +13,6 @@ export const rendererConfig: Configuration = {
   },
   plugins,
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    extensions: [".js", ".ts", ".jsx", ".tsx", ".css"],
   },
 };

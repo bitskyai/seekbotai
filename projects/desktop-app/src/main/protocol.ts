@@ -1,10 +1,10 @@
+// import { IpcEvents } from '../ipc-events';
+import { isDevMode } from "../helpers/devmode";
 import { app } from "electron";
 import * as fs from "fs";
 import * as path from "path";
 import * as nodeUrl from "url";
 
-// import { IpcEvents } from '../ipc-events';
-import { isDevMode } from "../helpers/devmode";
 // import { ipcMainManager } from './ipc';
 
 const PROTOCOL = "bitsky";

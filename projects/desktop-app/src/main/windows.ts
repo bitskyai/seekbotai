@@ -1,5 +1,5 @@
-import { BrowserWindow, shell } from "electron";
 import { createContextMenu } from "./context-menu";
+import { BrowserWindow, shell } from "electron";
 
 interface browserWindowHash {
   [key: string]: BrowserWindow | null;

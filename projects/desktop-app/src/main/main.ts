@@ -1,15 +1,15 @@
-import { app } from "electron";
+// import { setupUpdates } from "./update";
+import logger from "../helpers/logger";
 import { setupAboutPanel } from "../helpers/set-about-panel";
+import webApp from "../helpers/web-app";
 import { setupDevTools } from "./devtools";
 import { setUpEventListeners } from "./events";
 import { onFirstRunMaybe } from "./first-run";
 import { setupMenu } from "./menu";
 import { listenForProtocolHandler, setupProtocolHandler } from "./protocol";
 import { shouldQuit } from "./squirrel";
-// import { setupUpdates } from "./update";
-import logger from "../helpers/logger";
-import webApp from "../helpers/web-app";
 import { getOrCreateMainWindow } from "./windows";
+import { app } from "electron";
 
 /**
  * Handle the app's "ready" event. This is essentially

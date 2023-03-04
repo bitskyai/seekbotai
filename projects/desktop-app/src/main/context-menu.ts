@@ -1,10 +1,10 @@
+import { isDevMode } from "../helpers/devmode";
 import {
   BrowserWindow,
   ContextMenuParams,
   Menu,
   MenuItemConstructorOptions,
 } from "electron";
-import { isDevMode } from "../helpers/devmode";
 
 /**
  * Possibly returns the `Inspect Element` item.

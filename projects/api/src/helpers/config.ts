@@ -1,7 +1,7 @@
-import { bool, cleanEnv, num, str } from "envalid";
-import _ from "lodash";
 import { AppConfig } from "../types";
 import { DEFAULT_APP_CONFIG } from "./constants";
+import { bool, cleanEnv, num, str } from "envalid";
+import _ from "lodash";
 
 let _app_config = getCleanEnv();
 

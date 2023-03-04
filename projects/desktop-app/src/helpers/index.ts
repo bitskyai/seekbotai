@@ -1,9 +1,9 @@
+import { DirStructure, DirType } from "../interfaces";
+import logger from "./logger";
 import detect from "detect-port";
 import { shell } from "electron";
 import * as fs from "fs-extra";
 import * as path from "path";
-import { DirStructure, DirType } from "../interfaces";
-import logger from "./logger";
 
 /**
  * Sync Copy File

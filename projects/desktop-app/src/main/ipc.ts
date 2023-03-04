@@ -1,12 +1,11 @@
-import { ipcMain } from "electron";
-import { EventEmitter } from "events";
-
 import {
   IpcEvents,
   ipcMainEvents,
   WEBCONTENTS_READY_FOR_IPC_SIGNAL,
 } from "../ipc-events";
 import { getOrCreateMainWindow } from "./windows";
+import { ipcMain } from "electron";
+import { EventEmitter } from "events";
 
 /**
  * The main purpose of this class is to be the central

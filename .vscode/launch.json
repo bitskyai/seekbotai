@@ -1,11 +1,14 @@
 {
   "version": "0.2.0",
-  "compounds": [{
-    "name": "Main + renderer",
-    "configurations": ["Main", "Renderer"],
-    "stopAll": true
-  }],
-  "configurations": [{
+  "compounds": [
+    {
+      "name": "Main + renderer",
+      "configurations": ["Main", "Renderer"],
+      "stopAll": true
+    }
+  ],
+  "configurations": [
+    {
       "name": "Renderer",
       "port": 9222,
       "request": "attach",
