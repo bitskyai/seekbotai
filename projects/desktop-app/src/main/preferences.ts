@@ -36,7 +36,7 @@ export function getPreferencesJSON(): Preferences {
     const mergedPreferencesJSON = _.merge(
       {},
       defaultPreferencesJSON,
-      preferencesJSON
+      preferencesJSON,
     );
 
     if (!_.isEqual(preferencesJSON, mergedPreferencesJSON)) {
@@ -52,7 +52,7 @@ export function getPreferencesJSON(): Preferences {
         "getPreferencesJSON-> Output preferences JSON successful. Path: ",
         PREFERENCES_JSON_PATH,
         "Preference JSON: ",
-        mergedPreferencesJSON
+        mergedPreferencesJSON,
       );
     }
 
@@ -88,7 +88,7 @@ export function updateProcessEnvs(preferencesJSON: Preferences): boolean {
  * @returns true
  */
 export function updatePreferencesJSON(
-  preferencesJSON: Partial<Preferences>
+  preferencesJSON: Partial<Preferences>,
 ): Preferences {
   try {
     let curPreferencesJSON = getPreferencesJSON();
@@ -110,7 +110,7 @@ export function updatePreferencesJSON(
       "Preference JSON: ",
       preferencesJSON,
       "Error: ",
-      err
+      err,
     );
     throw err;
   }

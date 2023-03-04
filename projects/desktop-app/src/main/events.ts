@@ -37,14 +37,14 @@ export function setUpEventListeners() {
           error: err,
         };
       }
-    }
+    },
   );
 
   ipcMainManager.on(
     IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
     async (
       event: { returnValue: { status: boolean; error?: unknown } },
-      arg: { preferences: Preferences }
+      arg: { preferences: Preferences },
     ) => {
       try {
         updatePreferencesJSON(arg.preferences);
@@ -57,6 +57,6 @@ export function setUpEventListeners() {
           error: err,
         };
       }
-    }
+    },
   );
 }

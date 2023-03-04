@@ -11,7 +11,7 @@ const PROTOCOL = "bitsky";
 const squirrelPath = path.resolve(
   path.dirname(process.execPath),
   "..",
-  "bitsky.exe"
+  "bitsky.exe",
 );
 
 const handlePotentialProtocolLaunch = (url: string) => {

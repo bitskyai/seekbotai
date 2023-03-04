@@ -15,5 +15,5 @@ builder.queryField("users", (t) =>
     resolve: async (query, root, args, ctx, info) => {
       return getPrismaClient().user.findMany({ ...query });
     },
-  })
+  }),
 );

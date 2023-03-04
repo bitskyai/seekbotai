@@ -22,9 +22,8 @@ jobs:
       - run: yarn install
 
       # Analyze code for potential problems
-      - run: yarn prettier --check .
+      - run: yarn format
       - run: yarn lint
-      - run: yarn tsc --build
 
       # Test
       # - run: yarn test

@@ -1,11 +1,11 @@
-import * as http from "http";
-import enableDestroy from "server-destroy";
 import { createApp } from "./app";
 import { setupDB } from "./db";
 import { overwriteAppConfig } from "./helpers/config";
 import { DEFAULT_APP_CONFIG } from "./helpers/constants";
 import getLogger from "./helpers/logger";
 import { ServerOptions } from "./types";
+import * as http from "http";
+import enableDestroy from "server-destroy";
 
 let server: http.Server;
 let processExit = false;
@@ -17,7 +17,7 @@ let processExit = false;
 export async function startServer(serverOptions?: ServerOptions) {
   try {
     const config = overwriteAppConfig(
-      serverOptions ?? { DATABASE_URL: DEFAULT_APP_CONFIG.DATABASE_URL }
+      serverOptions ?? { DATABASE_URL: DEFAULT_APP_CONFIG.DATABASE_URL },
     );
     const logger = getLogger();
     logger.info(`config: %s`, config);
@@ -28,12 +28,12 @@ export async function startServer(serverOptions?: ServerOptions) {
     }
     server = app.listen(config.PORT, function () {
       console.log(
-        `API Server listening on http://localhost:${config.PORT}/ in ${config.NODE_ENV} mode`
+        `API Server listening on http://localhost:${config.PORT}/ in ${config.NODE_ENV} mode`,
       );
       logger.info(
         "API Server listening on http://localhost:%d/ in %s mode",
         config.PORT,
-        config.NODE_ENV
+        config.NODE_ENV,
       );
     });
     enableDestroy(server);

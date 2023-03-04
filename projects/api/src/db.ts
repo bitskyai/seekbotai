@@ -79,7 +79,7 @@ export async function setupDB() {
     // So just touch it here
     fs.copySync(
       path.join(config.APP_SOURCE_PATH, "./prisma/bi-latest.db"),
-      dbPath
+      dbPath,
     );
   } else {
     try {
@@ -97,10 +97,10 @@ export async function setupDB() {
       const schemaPath = path.join(
         config.APP_SOURCE_PATH,
         "prisma",
-        "schema.prisma"
+        "schema.prisma",
       );
       logger.info(
-        `Needs a migration. Running prisma migrate with schema path ${schemaPath}`
+        `Needs a migration. Running prisma migrate with schema path ${schemaPath}`,
       );
 
       // first create or migrate the database! If you were deploying prisma to a cloud service, this migrate deploy
@@ -142,11 +142,11 @@ export async function runPrismaCommand({
 
   const qePath = path.join(
     appSourcePath,
-    platformToExecutables[platformName].queryEngine
+    platformToExecutables[platformName].queryEngine,
   );
   const mePath = path.join(
     appSourcePath,
-    platformToExecutables[platformName].migrationEngine
+    platformToExecutables[platformName].migrationEngine,
   );
   logger.info("Migration engine path: %s", mePath);
   logger.info("Query engine path: %s", qePath);
@@ -159,7 +159,7 @@ export async function runPrismaCommand({
       const prismaPath = path.resolve(
         __dirname,
         "..",
-        "node_modules/prisma/build/index.js"
+        "node_modules/prisma/build/index.js",
       );
       logger.info("Prisma path: %s", prismaPath);
 

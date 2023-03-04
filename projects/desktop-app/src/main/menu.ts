@@ -13,7 +13,7 @@ import * as path from "path";
  * @returns {submenu is Array<Electron.MenuItemConstructorOptions>}
  */
 function isSubmenu(
-  submenu?: Array<MenuItemConstructorOptions> | Menu
+  submenu?: Array<MenuItemConstructorOptions> | Menu,
 ): submenu is Array<MenuItemConstructorOptions> {
   return !!submenu && Array.isArray(submenu);
 }

@@ -15,7 +15,7 @@ import {
  */
 export function getInspectItems(
   browserWindow: BrowserWindow,
-  { x, y }: ContextMenuParams
+  { x, y }: ContextMenuParams,
 ): Array<MenuItemConstructorOptions> {
   if (!isDevMode()) return [];
 

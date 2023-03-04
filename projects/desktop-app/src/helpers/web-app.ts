@@ -22,7 +22,7 @@ class WebApp {
       const preferences = getPreferencesJSON();
       logger.info(
         "main->main.js->onReady, LOG_FILES_PATH: ",
-        process.env.LOG_FILES_PATH
+        process.env.LOG_FILES_PATH,
       );
       this.port = await getAvailablePort(preferences.WEB_APP_PORT);
       if (this.port != preferences.WEB_APP_PORT) {
@@ -37,7 +37,7 @@ class WebApp {
         APP_SOURCE_PATH: path.join(
           app.getAppPath().replace("app.asar", "app.asar.unpacked"),
           "dist",
-          WEB_APP_NAME
+          WEB_APP_NAME,
         ),
         SETUP_DB: preferences.WEB_APP_SETUP_DB,
         SEED_DB: preferences.WEB_APP_SEED_DB,
@@ -45,7 +45,7 @@ class WebApp {
         LOG_MAX_SIZE: preferences.WEB_APP_LOG_MAX_SIZE,
       });
       logger.info(
-        "main->main.js->onReady, bitsky-supplier successfully started."
+        "main->main.js->onReady, bitsky-supplier successfully started.",
       );
       const mainWindow = getOrCreateMainWindow();
       mainWindow.loadURL(`http://localhost:${this.port}`);
@@ -54,14 +54,14 @@ class WebApp {
       // mainWindow.loadURL(`http://localhost:8000`);
 
       logger.info(
-        `main->main.js->onReady, load http://localhost:${this.port} in main browser`
+        `main->main.js->onReady, load http://localhost:${this.port} in main browser`,
       );
     } catch (err) {
       dialog.showErrorBox(
         "Open BitSky Failed",
         `You can try to close BitSky and reopen it again, if still doesn't work, try to delete ${APP_HOME_PATH} folder in your home folder. Error:${JSON.stringify(
-          err
-        )}`
+          err,
+        )}`,
       );
       throw err;
     }
@@ -75,8 +75,8 @@ class WebApp {
       dialog.showErrorBox(
         "Restart BitSky Failed",
         `You can try to close BitSky and reopen it again, if still doesn't work, try to delete ${APP_HOME_PATH} folder in your home folder. Error:${JSON.stringify(
-          err
-        )}`
+          err,
+        )}`,
       );
       throw err;
     }
@@ -88,7 +88,7 @@ class WebApp {
     } catch (err) {
       dialog.showErrorBox(
         "Stop BitSky Failed",
-        `You can try to force close BitSky. Error:${JSON.stringify(err)}`
+        `You can try to force close BitSky. Error:${JSON.stringify(err)}`,
       );
       throw err;
     }

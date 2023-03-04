@@ -16,7 +16,7 @@ export default function getLogger() {
     const config = getAppConfig();
     const logFilesPath = path.join(
       config.APP_HOME_PATH,
-      DEFAULT_APP_CONFIG.LOG_FILES_FOLDER
+      DEFAULT_APP_CONFIG.LOG_FILES_FOLDER,
     );
     fs.ensureDirSync(logFilesPath);
     // console.log('[createLogger] starting...');
@@ -27,7 +27,7 @@ export default function getLogger() {
         format.errors({ stack: true }),
         format.timestamp(),
         format.splat(),
-        format.json()
+        format.json(),
       ),
       defaultMeta: {
         service: config.SERVICE_NAME,
@@ -60,7 +60,7 @@ export default function getLogger() {
       logger.add(
         new transports.Console({
           format: format.simple(),
-        })
+        }),
       );
     }
 

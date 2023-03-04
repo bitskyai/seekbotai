@@ -40,7 +40,7 @@ export class IpcMainManager extends EventEmitter {
         for (const item of queue) {
           this.send(item[0], item[1], event.sender);
         }
-      }
+      },
     );
   }
 
@@ -55,7 +55,7 @@ export class IpcMainManager extends EventEmitter {
   public send(
     channel: IpcEvents,
     args?: Array<unknown>,
-    target?: Electron.WebContents
+    target?: Electron.WebContents,
   ) {
     const _target = target || getOrCreateMainWindow().webContents;
     const _args = args || [];

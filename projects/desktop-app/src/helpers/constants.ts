@@ -18,7 +18,7 @@ export const WEB_APP_LOG_MAX_SIZE = 10 * 1024 * 1024; //10mb
 
 export const PREFERENCES_JSON_PATH = path.join(
   APP_HOME_PATH,
-  "preferences.json"
+  "preferences.json",
 );
 
 export const FIRST_TIME_RUN_FILE = "bookmark-intelligence-first-run";

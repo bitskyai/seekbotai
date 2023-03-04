@@ -7,7 +7,7 @@ const getConfigPath = () => {
   const firstRunFilePath = path.join(
     APP_HOME_PATH,
     "FirstRun",
-    FIRST_TIME_RUN_FILE
+    FIRST_TIME_RUN_FILE,
   );
   logger.info("utils->check-first-run->firstRunFilePath: ", firstRunFilePath);
   return firstRunFilePath;
@@ -30,7 +30,7 @@ export function isFirstRun(): boolean {
     fs.outputFileSync(configPath, "");
     logger.info(
       "utils->check-first-run->isFirstRun, writ file to path: ",
-      configPath
+      configPath,
     );
   } catch (error) {
     console.warn(`First run: Unable to write firstRun file`, error);

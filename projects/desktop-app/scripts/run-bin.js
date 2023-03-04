@@ -14,7 +14,7 @@ async function run(name, bin, args = []) {
       {
         cwd: path.resolve(__dirname, ".."),
         stdio: "inherit",
-      }
+      },
     );
 
     child.on("exit", (code) => {

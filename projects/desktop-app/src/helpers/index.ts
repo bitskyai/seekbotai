@@ -26,7 +26,7 @@ export function copyFileSync(source: string, target: string): boolean {
         targetFile = path.join(target, path.basename(source));
         logger.debug(
           "*target* is a directory, will create a file under *target* directory. new *target*: ",
-          targetFile
+          targetFile,
         );
       }
     }
@@ -43,7 +43,7 @@ export function copyFileSync(source: string, target: string): boolean {
 export function copyFolderRecursiveSync(
   source: string,
   target: string,
-  cleanFolder?: boolean
+  cleanFolder?: boolean,
 ): boolean {
   try {
     logger.functionStart("copyFolderRecursiveSync");
@@ -59,7 +59,7 @@ export function copyFolderRecursiveSync(
         fs.mkdirSync(targetFolder);
         logger.debug(
           "*target* directory doesn't, create *target* directory - ",
-          targetFolder
+          targetFolder,
         );
       } else {
         // if need to clean target folder
@@ -67,7 +67,7 @@ export function copyFolderRecursiveSync(
           fs.removeSync(targetFolder);
           fs.mkdirSync(targetFolder);
           logger.debug(
-            `Clean and create *target(${targetFolder})* directory successful`
+            `Clean and create *target(${targetFolder})* directory successful`,
           );
         }
       }
@@ -84,7 +84,7 @@ export function copyFolderRecursiveSync(
       // if not a directory, then it is a file, so direct copy file
       copyFileSync(source, target);
       logger.debug(
-        "*source* is a file, not a directory, so directly copy source file to target"
+        "*source* is a file, not a directory, so directly copy source file to target",
       );
     }
 
@@ -135,7 +135,7 @@ export function readFolderRecursiveSync(source: string, currentPath = ".") {
             path: path.join(currentPath, item),
             children: readFolderRecursiveSync(
               path.join(source, item),
-              path.join(currentPath, item)
+              path.join(currentPath, item),
             ),
           };
 
@@ -149,7 +149,7 @@ export function readFolderRecursiveSync(source: string, currentPath = ".") {
           folderData.push(fileInfo);
         } else {
           logger.warn(
-            `readFolderRecursiveSync, unsupport type ${item}, skip this item`
+            `readFolderRecursiveSync, unsupport type ${item}, skip this item`,
           );
         }
       }
