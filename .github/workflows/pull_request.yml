@@ -1,0 +1,35 @@
+# GitHub Actions workflow
+# https://help.github.com/actions
+
+name: PR
+
+on: [pull_request]
+
+env:
+  VERSION: ${{ github.event.pull_request.number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+
+      # Install dependencies
+      - run: yarn install
+
+      # Analyze code for potential problems
+      - run: yarn format
+      - run: yarn lint
+
+      # Test
+      # - run: yarn test
+
+      # build desktop app include build ui, api
+      - run: yarn build:desktop-app
+
+      # Deploy
+      # - run: yarn deploy

@@ -1,0 +1,39 @@
+{
+  "name": "bi-browser-extension",
+  "displayName": "Bookmark Intelligence",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine",
+  "author": "help.bitskyai@gmail.com",
+  "license": "GPL-3.0",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "plasmo": "0.64.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.210",
+    "@types/node": "^18.11.19",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "prettier": "2.8.3",
+    "typescript": "^4.9.5",
+    "@plasmohq/prettier-plugin-sort-imports": "3.6.1"
+  },
+  "envars": {
+    "cwd": "../../env"
+  },
+  "manifest": {
+    "host_permissions": [
+      "https://*/*"
+    ],
+    "permissions": [
+      "tabs"
+    ]
+  }
+}

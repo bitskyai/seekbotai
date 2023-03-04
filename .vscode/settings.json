@@ -1,0 +1,86 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "eslint.nodePath": ".yarn/sdks",
+  "eslint.runtime": "node",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "jest.jestCommandLine": "yarn node --experimental-vm-modules $(yarn bin jest)",
+  "jestrunner.jestCommand": "yarn node --experimental-vm-modules $(yarn bin jest)",
+  "jestrunner.enableYarnPnpSupport": true,
+  "jestrunner.yarnPnpCommand": "yarn-4.0.0-rc.34.cjs",
+  "jestrunner.debugOptions": {
+    "program": "yarn node $(yarn bin jest)",
+    "env": {
+      "NODE_OPTIONS": "--experimental-vm-modules"
+    }
+  },
+  "files.exclude": {
+    "**/.cache": true,
+    "**/.DS_Store": true,
+    "**/.editorconfig": false,
+    "**/.eslintcache": true,
+    "**/.git": true,
+    "**/.gitattributes": false,
+    "**/.husky": true,
+    "**/.pnp.*": false,
+    "**/.prettierignore": false,
+    "**/node_modules": false,
+    "**/yarn.lock": false
+  },
+  "search.exclude": {
+    "**/dist/": true,
+    "**/.pnp.*": true,
+    "**/.yarn": true,
+    "**/yarn-error.log": true,
+    "**/yarn.lock": true
+  },
+  "cSpell.ignoreWords": [
+    "browserslist",
+    "cloudfunctions",
+    "corejs",
+    "endregion",
+    "entrypoint",
+    "envalid",
+    "envars",
+    "eslintcache",
+    "esmodules",
+    "esnext",
+    "execa",
+    "firebaseapp",
+    "firestore",
+    "globby",
+    "hono",
+    "jamstack",
+    "kriasoft",
+    "miniflare",
+    "oidc",
+    "pathinfo",
+    "pnpify",
+    "reactstarter",
+    "refetch",
+    "refetchable",
+    "sourcemap",
+    "spdx",
+    "tslib",
+    "typechecking",
+    "webflow",
+    "yarnpkg",
+    "yarnrc",
+    "plasmo",
+    "webextension",
+    "plasmohq",
+    "datasources"
+  ],
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
+}

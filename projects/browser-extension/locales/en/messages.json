@@ -1,0 +1,28 @@
+{
+  "extensionName": {
+    "message": "Bookmark Intelligence",
+    "description": "name of the extension"
+  },
+  "extensionDescription": {
+    "message": "test",
+    "description": ""
+  },
+  "tooltipBookmark": {
+    "message": "Click to bookmark current page"
+  },
+  "tooltipBookmarked": {
+    "message": "Click to remove bookmark current page"
+  },
+  "tooltipSettingIcon": {
+    "message": "Jump to settings page"
+  },
+  "deleteBookmark": {
+    "message": "Delete this page's bookmark"
+  },
+  "addBookmark": {
+    "message": "Bookmark this page"
+  },
+  "search": {
+    "message": "Search with Bookmark Intelligence"
+  }
+}

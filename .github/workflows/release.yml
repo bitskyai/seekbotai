@@ -1,0 +1,77 @@
+name: Build/Release
+
+on:
+  release:
+    types:
+      - published
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+
+jobs:
+  release_browser_extensions:
+    name: Release browser extensions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: https://registry.npmjs.org/
+      - name: Build
+        run: npm run release:browser-extension
+      - name: List generate files
+        run: cd ./projects/browser-extension/build && ls
+      - name: Get Release
+        id: get_release
+        uses: bruceadams/get-release@v1.3.2
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./projects/browser-extension/build/chrome-extension-latest.zip
+          asset_name: "chrome-extension-latest.zip"
+          asset_content_type: application/zip
+
+  release_desktop_app:
+    name: Release desktop app
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    # Platforms to build on/for
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        # os: [macos-latest, windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: https://registry.npmjs.org/
+      - name: Build
+        run: npm run release:desktop-app
+      - name: List generate files
+        run: cd ./projects/desktop-app/out && ls
+      - name: Get Release
+        id: get_release
+        uses: bruceadams/get-release@v1.3.2
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./projects/desktop-app/out/bi.zip
+          asset_name: "bi-${{ matrix.os }}.zip"
+          asset_content_type: application/zip

@@ -1,0 +1,53 @@
+{
+  "name": "bi-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm run prisma:generate",
+    "dev": "ts-node-dev src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "bash ../../scripts/build-web-app.sh",
+    "prisma:generate": "prisma generate",
+    "seed": "prisma db seed",
+    "migration:dev": "prisma migrate dev",
+    "migration:deploy": "prisma migrate deploy"
+  },
+  "prisma": {
+    "seed": "ts-node-dev prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pothos/core": "^3.24.1",
+    "@pothos/plugin-prisma": "^3.40.2",
+    "@prisma/client": "^4.9.0",
+    "graphql": "^16.6.0",
+    "graphql-scalars": "^1.20.1",
+    "graphql-yoga": "^3.5.1",
+    "envalid": "^7.3.1",
+    "express": "^4.18.2",
+    "winston": "3.8.2",
+    "fs-extra": "11.1.0",
+    "lodash": "4.17.21",
+    "server-destroy": "1.0.1",
+    "prisma": "^4.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.19",
+    "@types/express": "^4.17.17",
+    "@types/lodash": "4.14.191",
+    "@types/server-destroy": "1.0.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.5",
+    "envars": "^0.4.0"
+  },
+  "envars": {
+    "cwd": "../../env"
+  },
+  "files": [
+    "dist"
+  ]
+}
