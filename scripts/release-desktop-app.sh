@@ -38,7 +38,9 @@ elif [[ "$(uname -o)" == "Msys" ]]; then
   copyAllFilesWithExtension ./out/make "*.nupkg" ./out/installer/
   ls -all ./out/installer
   cd ./out
-  compact /c ./installer
+  compact /c /s ./installer
+  ls -all .
+  ls -all ./installer
   mv -f ./*.zip ./bi.zip
   # Compress-Archive -Path ./out/installer/* -DestinationPath "./out/bi.zip"
 else
