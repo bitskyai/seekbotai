@@ -37,11 +37,15 @@ elif [[ "$(uname -o)" == "Msys" ]]; then
   copyAllFilesWithExtension ./out/make "*.exe" ./out/installer/
   copyAllFilesWithExtension ./out/make "*.nupkg" ./out/installer/
   ls -all ./out/installer
-  cd ./out
-  compact /c /s ./installer
+  cd ./out/installer
+  compact /c /s *.*
+
   ls -all .
-  ls -all ./installer
-  mv -f ./*.zip ./bi.zip
+  ls -all ../
+
+  cd $ROOT_DIR
+  cd $TARGET_PATH
+  mv -f .out/installer/*.zip ./bi.zip
   # Compress-Archive -Path ./out/installer/* -DestinationPath "./out/bi.zip"
 else
   print "Unknown operating system"
