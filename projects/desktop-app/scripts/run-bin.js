@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
 const childProcess = require("child_process");
 const path = require("path");
 const logSymbols = require("log-symbols");

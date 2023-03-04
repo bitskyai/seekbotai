@@ -29,8 +29,8 @@ jobs:
       # Test
       # - run: yarn test
 
-      # Compile
-      - run: yarn build
+      # build desktop app include build ui, api
+      - run: yarn build:desktop-app
 
       # Deploy
       # - run: yarn deploy

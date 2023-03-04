@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
 const { run } = require("./run-bin");
 
 async function compileTypeScript() {
