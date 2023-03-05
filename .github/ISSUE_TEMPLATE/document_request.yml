@@ -1,0 +1,29 @@
+name: Document request
+description: Request add a document for this application
+title: "[Document Request]: "
+labels: ["document"]
+
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the document you want, and that it's not implemented in a recent build/commit.
+      options:
+        - label: I have searched the existing issues and checked the recent builds/commits
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        *Please fill this form with as much information as possible
+  - type: textarea
+    id: feature
+    attributes:
+      label: What would your requested document need to have ?
+      description: Tell us about your requested document in a very clear and simple way, and what problem it would solve
+    validations:
+      required: true
+  - type: textarea
+    id: misc
+    attributes:
+      label: Additional information
+      description: Add any other context or screenshots about the feature request here.
