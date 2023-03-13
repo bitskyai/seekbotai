@@ -15,16 +15,167 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  messages  Message[]
-  createdAt DateTime  @default(now())
+  id                    Int                    @id @default(autoincrement())
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedAt             DateTime               @updatedAt @map("updated_at")
+  name                  String
+  preference            Preference?
+  system                System?
+  backup                Backup?
+  Tag                   Tag?
+  Filter                Filter?
+  Folder                Folder?
+  BookmarkContent       BookmarkContent?
+  Bookmark              Bookmark?
+  BookmarkTag           BookmarkTag?
+  BrowserHistory        BrowserHistory?
+  BrowserHistoryContent BrowserHistoryContent?
+
+  @@map("bk_user")
 }
 
-model Message {
+model Preference {
   id        Int      @id @default(autoincrement())
-  body      String
-  createdAt DateTime @default(now())
-  userId    Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+  logLevel  String   @default("info") @map("log_level")
+  logSize   Int      @default(52428800) @map("log_size") // 50MB
+
+  @@map("bk_preference")
+}
+
+model System {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  @@map("bk_system")
+}
+
+model Backup {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  @@map("bk_backup")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  name        String       @unique
+  BookmarkTag BookmarkTag?
+
+  @@map("bk_tag")
+}
+
+model Filter {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  name String  @unique
+  icon String?
+
+  @@map("bk_filter")
+}
+
+model Folder {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  name     String
+  icon     String?
+  Bookmark Bookmark?
+
+  @@map("bk_folder")
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+  folder    Folder   @relation(fields: [folderId], references: [id])
+  folderId  Int      @unique @map("bk_folder_id")
+
+  name        String
+  description String?
+  favorite    Boolean      @default(false)
+  url         String
+  count       Int          @default(0)
+  BookmarkTag BookmarkTag?
+
+  @@map("bk_bookmark")
+}
+
+model BookmarkContent {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  name String
+  icon String?
+
+  @@map("bk_bookmark_content")
+}
+
+model BookmarkTag {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int      @unique @map("bk_user_id")
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      Int      @unique @map("bk_tag_id")
+  bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
+  bookmarkId Int      @unique @map("bk_bookmark_id")
+
+  @@map("bk_bookmark_tag")
+}
+
+model BrowserHistory {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  name        String
+  description String?
+  url         String
+  count       Int     @default(0)
+
+  @@map("bk_browser_history")
+}
+
+model BrowserHistoryContent {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique @map("bk_user_id")
+
+  name String
+  icon String?
+
+  @@map("bk_browser_history_content")
 }
