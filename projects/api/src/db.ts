@@ -26,7 +26,7 @@ export function getPrismaClient() {
   return _prismaClient;
 }
 
-export const LATEST_MIGRATION = "20230206230944_init"; // This needs to be updated every time you create a migration!
+export const LATEST_MIGRATION = "20230313153628_init"; // This needs to be updated every time you create a migration!
 
 export const platformToExecutables: any = {
   win32: {
