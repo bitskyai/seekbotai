@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { getPrismaClient } from "../../src/db";
+import { PrismaClient } from "@prisma/client";
 
 async function seed(prismaClient?: PrismaClient) {
   if (!prismaClient) {
