@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { getPrismaClient } from "../../src/db";
 import seedProd from "./prod";
+import { PrismaClient } from "@prisma/client";
 
 /**
  * Seed data for production purpose

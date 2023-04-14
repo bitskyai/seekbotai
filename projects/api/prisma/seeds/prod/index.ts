@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import * as path from "path";
 import defaultUser from "../../../src/db/defaultUser";
 import { getFilesByExtNames } from "../../../src/helpers/utils";
+import { PrismaClient } from "@prisma/client";
+import * as path from "path";
 
 async function loadModule(moduleName: string) {
   const myModule = await import(`./${moduleName}`);
