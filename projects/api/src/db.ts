@@ -1,13 +1,13 @@
-import seeds from "../prisma/seeds";
-import { getAppConfig } from "./helpers/config";
-import getLogger from "./helpers/logger";
-import { getPlatformName } from "./helpers/utils";
-import { Migration } from "./types";
 import { PrismaClient } from "@prisma/client";
 import { fork } from "child_process";
 import fs from "fs-extra";
 import { last, trim } from "lodash";
 import path from "path";
+import seeds from "../prisma/seeds";
+import { getAppConfig } from "./helpers/config";
+import getLogger from "./helpers/logger";
+import { getPlatformName } from "./helpers/utils";
+import { Migration } from "./types";
 
 const logger = getLogger();
 
@@ -27,6 +27,7 @@ export function getPrismaClient() {
 }
 
 export const LATEST_MIGRATION = "20230313153628_init"; // This needs to be updated every time you create a migration!
+export const LATEST_SEED = "2023";
 
 export const platformToExecutables: any = {
   win32: {

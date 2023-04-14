@@ -3,7 +3,11 @@ CREATE TABLE "bk_user" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
-    "name" TEXT NOT NULL
+    "username" TEXT NOT NULL,
+    "email" TEXT,
+    "password" TEXT,
+    "first_name" TEXT,
+    "last_name" TEXT
 );
 
 -- CreateTable
@@ -24,6 +28,17 @@ CREATE TABLE "bk_system" (
     "updated_at" DATETIME NOT NULL,
     "bk_user_id" INTEGER NOT NULL,
     CONSTRAINT "bk_system_bk_user_id_fkey" FOREIGN KEY ("bk_user_id") REFERENCES "bk_user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "bk_seed" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" DATETIME NOT NULL,
+    "bk_user_id" INTEGER NOT NULL,
+    "seed_name" TEXT NOT NULL,
+    "logs" TEXT,
+    CONSTRAINT "bk_seed_bk_user_id_fkey" FOREIGN KEY ("bk_user_id") REFERENCES "bk_user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -136,6 +151,12 @@ CREATE UNIQUE INDEX "bk_preference_bk_user_id_key" ON "bk_preference"("bk_user_i
 
 -- CreateIndex
 CREATE UNIQUE INDEX "bk_system_bk_user_id_key" ON "bk_system"("bk_user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bk_seed_bk_user_id_key" ON "bk_seed"("bk_user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bk_seed_seed_name_key" ON "bk_seed"("seed_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "bk_backup_bk_user_id_key" ON "bk_backup"("bk_user_id");

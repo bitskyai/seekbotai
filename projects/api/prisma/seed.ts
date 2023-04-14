@@ -1,4 +1,4 @@
 // prisma/seed.ts
-import seed from "./seeds";
+import { seedDev } from "./seeds";
 
-seed();
+seedDev();
