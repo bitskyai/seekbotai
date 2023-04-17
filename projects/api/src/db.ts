@@ -1,13 +1,13 @@
-import seeds from "../prisma/seeds";
-import { getAppConfig } from "./helpers/config";
-import getLogger from "./helpers/logger";
-import { getPlatformName } from "./helpers/utils";
-import { Migration } from "./types";
 import { PrismaClient } from "@prisma/client";
 import { fork } from "child_process";
 import fs from "fs-extra";
 import { last, trim } from "lodash";
 import path from "path";
+import seeds from "../prisma/seeds/prod";
+import { getAppConfig } from "./helpers/config";
+import getLogger from "./helpers/logger";
+import { getPlatformName } from "./helpers/utils";
+import { Migration } from "./types";
 
 const logger = getLogger();
 
@@ -55,6 +55,9 @@ export const platformToExecutables: any = {
 };
 
 export async function seed(prismaClient?: PrismaClient) {
+  if (!prismaClient) {
+    prismaClient = getPrismaClient();
+  }
   await seeds(prismaClient);
 }
 

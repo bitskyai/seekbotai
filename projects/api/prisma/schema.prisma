@@ -16,26 +16,26 @@ datasource db {
 
 // Following is Table Schemas
 model User {
-  id                    Int                    @id @default(autoincrement())
-  createdAt             DateTime               @default(now()) @map("created_at")
-  updatedAt             DateTime               @updatedAt @map("updated_at")
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime                @default(now()) @map("created_at")
+  updatedAt             DateTime                @updatedAt @map("updated_at")
   username              String
   email                 String?
   password              String?
-  firstName             String?                @map("first_name")
-  lastName              String?                @map("last_name")
+  firstName             String?                 @map("first_name")
+  lastName              String?                 @map("last_name")
   preference            Preference?
   system                System?
-  seed                  Seed?
-  backup                Backup?
-  Tag                   Tag?
-  Filter                Filter?
-  Folder                Folder?
-  BookmarkContent       BookmarkContent?
-  Bookmark              Bookmark?
-  BookmarkTag           BookmarkTag?
-  BrowserHistory        BrowserHistory?
-  BrowserHistoryContent BrowserHistoryContent?
+  seed                  Seed[]
+  backup                Backup[]
+  Tag                   Tag[]
+  Filter                Filter[]
+  Folder                Folder[]
+  BookmarkContent       BookmarkContent[]
+  Bookmark              Bookmark[]
+  BookmarkTag           BookmarkTag[]
+  BrowserHistory        BrowserHistory[]
+  BrowserHistoryContent BrowserHistoryContent[]
 
   @@map("bk_user")
 }
@@ -67,7 +67,7 @@ model Seed {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
   seedName  String   @unique @map("seed_name")
   logs      String?
 
@@ -79,17 +79,18 @@ model Backup {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   @@map("bk_backup")
 }
 
+// Tag: Store all the tag information
 model Tag {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   name        String       @unique
   BookmarkTag BookmarkTag?
@@ -102,7 +103,7 @@ model Filter {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   name String  @unique
   icon String?
@@ -115,7 +116,7 @@ model Folder {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   name     String
   icon     String?
@@ -129,7 +130,7 @@ model Bookmark {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
   folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId  Int      @unique @map("bk_folder_id")
 
@@ -148,7 +149,7 @@ model BookmarkContent {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   name String
   icon String?
@@ -175,7 +176,7 @@ model BrowserHistory {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   name        String
   description String?
@@ -190,7 +191,7 @@ model BrowserHistoryContent {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    Int      @map("bk_user_id")
 
   name String
   icon String?

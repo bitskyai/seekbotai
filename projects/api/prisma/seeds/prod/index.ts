@@ -1,7 +1,7 @@
-import defaultUser from "../../../src/db/defaultUser";
-import { getFilesByExtNames } from "../../../src/helpers/utils";
 import { PrismaClient } from "@prisma/client";
 import * as path from "path";
+import { systemUser } from "../../../src/db/seedData/defaultUsers";
+import { getFilesByExtNames } from "../../../src/helpers/utils";
 
 async function loadModule(moduleName: string) {
   const myModule = await import(`./${moduleName}`);
@@ -10,6 +10,7 @@ async function loadModule(moduleName: string) {
 }
 /**
  * Seed data for production purpose
+ * TODO: improve the error handle of seed prod - issue-17
  * @param prismaClient
  */
 async function seed(prismaClient: PrismaClient) {
@@ -35,9 +36,7 @@ async function seed(prismaClient: PrismaClient) {
         orderBy: { createdAt: "desc" },
       })) || [];
     const latestSeededFile = latestSeededFiles[0];
-    console.log("seedFiles: ", seedFiles);
-    console.log("latestSeededFiles: ", latestSeededFiles);
-    console.log("current filename: ", path.basename(__filename));
+
     let startSeeding = false;
     if (!latestSeededFile || !latestSeededFile.seedName) {
       // seed from begin
@@ -50,7 +49,7 @@ async function seed(prismaClient: PrismaClient) {
         await prismaClient.$transaction(async (prisma) => {
           await seedFun(prisma);
           await prisma.seed.create({
-            data: { seedName: seedFileName, userId: defaultUser.id },
+            data: { seedName: seedFileName, userId: systemUser.id },
           });
         });
       } else if (latestSeededFile?.seedName === seedFileName) {
