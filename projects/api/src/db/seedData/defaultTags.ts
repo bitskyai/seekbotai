@@ -63,6 +63,16 @@ export const travel = {
   name: "Travel",
 };
 
+export const knowledge = {
+  id: 14,
+  name: "Knowledge",
+};
+
+export const country = {
+  id: 15,
+  name: "Country",
+};
+
 export default [
   business,
   career,
@@ -77,4 +87,5 @@ export default [
   selfImprovement,
   technology,
   travel,
+  knowledge,
 ];

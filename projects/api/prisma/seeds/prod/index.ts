@@ -18,7 +18,7 @@ async function seed(prismaClient: PrismaClient) {
     const seedFiles = getFilesByExtNames(
       path.join(__dirname, "."),
       [".ts"],
-      [/index\.ts/],
+      [/index\.ts/, /^ignore_/, /files/],
     );
     seedFiles.sort((fileA, fileB) => {
       if (fileA > fileB) {
