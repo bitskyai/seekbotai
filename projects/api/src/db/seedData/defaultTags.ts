@@ -88,4 +88,5 @@ export default [
   technology,
   travel,
   knowledge,
+  country,
 ];

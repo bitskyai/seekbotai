@@ -3,11 +3,8 @@ import { join } from "path";
 import { country, knowledge } from "./defaultTags";
 import { defaultUser } from "./defaultUsers";
 
-let bookmarkId = 0;
-let bookmarkRawId = 0;
-let bookmarkTagId = 0;
 export const usWikipedia = {
-  id: bookmarkId++,
+  id: 1,
   userId: defaultUser.id,
   name: "United States - Wikipedia",
   description: "",
@@ -21,7 +18,7 @@ export const usWikipedia = {
 };
 
 export const usWikipediaRaw = {
-  id: bookmarkRawId++,
+  id: 1,
   raw: readFileSync(join(__dirname, "./files/us_wikipedia_raw.html"), "utf-8"),
   userId: defaultUser.id,
   bookmarkId: usWikipedia.id,
@@ -29,13 +26,13 @@ export const usWikipediaRaw = {
 
 export const usWikipediaTags = [
   {
-    id: bookmarkTagId++,
+    id: 1,
     bookmarkId: usWikipedia.id,
     tagId: knowledge.id,
     userId: defaultUser.id,
   },
   {
-    id: bookmarkTagId++,
+    id: 2,
     bookmarkId: usWikipedia.id,
     tagId: country.id,
     userId: defaultUser.id,
@@ -43,7 +40,7 @@ export const usWikipediaTags = [
 ];
 
 export const indiaWikipedia = {
-  id: bookmarkId++,
+  id: 2,
   userId: defaultUser.id,
   name: "India - Wikipedia",
   description: "",
@@ -57,7 +54,7 @@ export const indiaWikipedia = {
 };
 
 export const indiaWikipediaRaw = {
-  id: bookmarkRawId++,
+  id: 2,
   raw: readFileSync(
     join(__dirname, "./files/india_wikipedia_raw.html"),
     "utf-8",
@@ -68,13 +65,13 @@ export const indiaWikipediaRaw = {
 
 export const indiaWikipediaTags = [
   {
-    id: bookmarkTagId++,
+    id: 3,
     bookmarkId: indiaWikipedia.id,
     tagId: knowledge.id,
     userId: defaultUser.id,
   },
   {
-    id: bookmarkTagId++,
+    id: 4,
     bookmarkId: indiaWikipedia.id,
     tagId: country.id,
     userId: defaultUser.id,

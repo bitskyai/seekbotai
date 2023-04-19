@@ -150,19 +150,8 @@ CREATE TABLE "bk_browser_history" (
     "url" TEXT NOT NULL,
     "icon" TEXT,
     "count" INTEGER NOT NULL DEFAULT 0,
-    CONSTRAINT "bk_browser_history_bk_user_id_fkey" FOREIGN KEY ("bk_user_id") REFERENCES "bk_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "bk_browser_history_content" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL,
-    "bk_user_id" INTEGER NOT NULL,
-    "bk_browser_history_id" INTEGER NOT NULL,
     "content" TEXT NOT NULL,
-    CONSTRAINT "bk_browser_history_content_bk_user_id_fkey" FOREIGN KEY ("bk_user_id") REFERENCES "bk_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "bk_browser_history_content_bk_browser_history_id_fkey" FOREIGN KEY ("bk_browser_history_id") REFERENCES "bk_browser_history" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "bk_browser_history_bk_user_id_fkey" FOREIGN KEY ("bk_user_id") REFERENCES "bk_user" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateIndex
@@ -185,9 +174,3 @@ CREATE UNIQUE INDEX "bk_bookmark_bk_folder_id_key" ON "bk_bookmark"("bk_folder_i
 
 -- CreateIndex
 CREATE UNIQUE INDEX "bk_bookmark_screenshot_bk_bookmark_raw_id_key" ON "bk_bookmark_screenshot"("bk_bookmark_raw_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "bk_bookmark_tag_bk_tag_id_key" ON "bk_bookmark_tag"("bk_tag_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "bk_browser_history_content_bk_browser_history_id_key" ON "bk_browser_history_content"("bk_browser_history_id");

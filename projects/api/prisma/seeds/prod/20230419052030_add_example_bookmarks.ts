@@ -32,7 +32,7 @@ async function seed(prismaClient?: PrismaClient) {
   for (let i = 0; i < bookmarkTags.length; i++) {
     const tags = bookmarkTags[i];
     for (let j = 0; j < tags.length; j++) {
-      const tag = tags[i];
+      const tag = tags[j];
       await prismaClient.bookmarkTag.upsert({
         where: { id: tag.id },
         create: tag,

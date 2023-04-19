@@ -16,27 +16,26 @@ datasource db {
 
 // Following is Table Schemas
 model User {
-  id                     Int                     @id @default(autoincrement())
-  createdAt              DateTime                @default(now()) @map("created_at")
-  updatedAt              DateTime                @updatedAt @map("updated_at")
-  username               String
-  email                  String?
-  password               String?
-  firstName              String?                 @map("first_name")
-  lastName               String?                 @map("last_name")
-  preference             Preference?
-  system                 System?
-  seeds                  Seed[]
-  backups                Backup[]
-  tags                   Tag[]
-  filters                Filter[]
-  folders                Folder[]
-  bookmarks              Bookmark[]
-  bookmarkTags           BookmarkTag[]
-  browserHistories       BrowserHistory[]
-  browserHistoryContents BrowserHistoryContent[]
-  bookmarkRaws           BookmarkRaw[]
-  bookmarkScreenshots    BookmarkScreenshot[]
+  id                  Int                  @id @default(autoincrement())
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  username            String
+  email               String?
+  password            String?
+  firstName           String?              @map("first_name")
+  lastName            String?              @map("last_name")
+  preference          Preference?
+  system              System?
+  seeds               Seed[]
+  backups             Backup[]
+  tags                Tag[]
+  filters             Filter[]
+  folders             Folder[]
+  bookmarks           Bookmark[]
+  bookmarkTags        BookmarkTag[]
+  browserHistories    BrowserHistory[]
+  bookmarkRaws        BookmarkRaw[]
+  bookmarkScreenshots BookmarkScreenshot[]
 
   @@map("bk_user")
 }
@@ -189,7 +188,7 @@ model BookmarkTag {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int      @map("bk_user_id")
   tag        Tag      @relation(fields: [tagId], references: [id])
-  tagId      Int      @unique @map("bk_tag_id")
+  tagId      Int      @map("bk_tag_id")
   bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
   bookmarkId Int      @map("bk_bookmark_id")
 
@@ -203,26 +202,12 @@ model BrowserHistory {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int      @map("bk_user_id")
 
-  name                  String
-  description           String?
-  url                   String
-  icon                  String?
-  count                 Int                    @default(0)
-  browserHistoryContent BrowserHistoryContent?
+  name        String
+  description String?
+  url         String
+  icon        String?
+  count       Int     @default(0)
+  content     String
 
   @@map("bk_browser_history")
-}
-
-model BrowserHistoryContent {
-  id               Int            @id @default(autoincrement())
-  createdAt        DateTime       @default(now()) @map("created_at")
-  updatedAt        DateTime       @updatedAt @map("updated_at")
-  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           Int            @map("bk_user_id")
-  browserHistory   BrowserHistory @relation(fields: [browserHistoryId], references: [id], onDelete: Cascade)
-  browserHistoryId Int            @unique @map("bk_browser_history_id")
-
-  content String
-
-  @@map("bk_browser_history_content")
 }
