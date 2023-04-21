@@ -1,5 +1,4 @@
 import { getPrismaClient } from "../../../src/db";
-import { systemUser } from "../../../src/db/seedData/defaultUsers";
 import { getAppConfig } from "../../../src/helpers/config";
 import getLogger from "../../../src/helpers/logger";
 import { getFilesByExtNames } from "../../../src/helpers/utils";
@@ -36,31 +35,11 @@ async function seed(prismaClient?: PrismaClient) {
       }
       return 0;
     });
-    const latestSeededFiles =
-      (await prismaClient?.seed.findMany({
-        take: 1,
-        orderBy: { createdAt: "desc" },
-      })) || [];
-    const latestSeededFile = latestSeededFiles[0];
-    logger.info(`latestSeededFile: `, latestSeededFile);
-    let startSeeding = false;
-    if (!latestSeededFile || !latestSeededFile.seedName) {
-      // seed from begin
-      startSeeding = true;
-    }
+
     for (let i = 0; i < seedFiles.length; i++) {
       const seedFileName = seedFiles[i];
-      if (startSeeding) {
-        const seedFun = await loadModule(seedFileName);
-        await prismaClient.$transaction(async (prisma) => {
-          await seedFun(prisma);
-          await prisma.seed.create({
-            data: { seedName: seedFileName, userId: systemUser.id },
-          });
-        });
-      } else if (latestSeededFile?.seedName === seedFileName) {
-        startSeeding = true;
-      }
+      const seedFun = await loadModule(seedFileName);
+      await seedFun(prismaClient);
     }
   }
 }

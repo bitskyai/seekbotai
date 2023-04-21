@@ -1,4 +1,5 @@
-import seedProd, { seedDev } from "../prisma/seeds";
+import seedDev from "../prisma/seeds/dev";
+import seedProd from "../prisma/seeds/prod";
 import { getAppConfig } from "./helpers/config";
 import getLogger from "./helpers/logger";
 import { getFolders, getPlatformName } from "./helpers/utils";
@@ -52,13 +53,6 @@ export const platformToExecutables: any = {
   },
 };
 
-export async function seed(prismaClient?: PrismaClient) {
-  if (!prismaClient) {
-    prismaClient = getPrismaClient();
-  }
-  await seedDev(prismaClient);
-}
-
 export async function setupDB() {
   const config = getAppConfig();
   logger.debug(`setupDB->config: ${JSON.stringify(config, null, 2)}`);
@@ -74,7 +68,6 @@ export async function setupDB() {
   // remove `file:`
   const dbPath = trim(config.DATABASE_URL).substring(5);
   const dbExists = fs.existsSync(dbPath);
-  const prisma = getPrismaClient();
   logger.info(`dbPath: ${dbPath}`);
   if (!dbExists) {
     needsMigration = true;
@@ -86,6 +79,7 @@ export async function setupDB() {
     );
   } else {
     try {
+      const prisma = getPrismaClient();
       const latest: Migration[] =
         await prisma.$queryRaw`select * from _prisma_migrations order by finished_at`;
       const latestMigration = last(latest)?.migration_name;
@@ -137,14 +131,14 @@ export async function setupDB() {
   } else {
     logger.info("Does not need migration");
   }
-
+  const prismaClient = getPrismaClient();
   logger.info("seeding prod...");
-  await seedProd();
+  await seedProd(prismaClient);
 
   if (config.SEED_DB) {
     // seed
     logger.info("Seeding...");
-    await seed();
+    await seedDev(prismaClient);
   } else {
     logger.info("Does not need seed");
   }

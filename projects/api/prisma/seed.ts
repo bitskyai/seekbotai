@@ -1,4 +1,7 @@
-// prisma/seed.ts
-import { seedDev } from "./seeds";
+import seedDev from "./seeds/dev";
+import seedProd from "./seeds/prod";
 
-seedDev();
+(async () => {
+  await seedProd();
+  await seedDev();
+})();
