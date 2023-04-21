@@ -11,6 +11,7 @@
     "build": "bash ../../scripts/build-web-app.sh",
     "prisma:generate": "dotenv -e ../../env/.env -c -- prisma generate",
     "seed": "dotenv -e ../../env/.env -c -- prisma db seed",
+    "reset": "dotenv -e ../../env/.env -c -- prisma migrate reset --skip-seed",
     "migration:dev": "dotenv -e ../../env/.env -c -- prisma migrate dev",
     "migration:deploy": "dotenv -e ../../env/.env -c -- prisma migrate deploy"
   },

@@ -5,7 +5,7 @@ builder.prismaObject("User", {
   fields: (t) => ({
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "Date" }),
-    name: t.exposeString("name"),
+    username: t.exposeString("username"),
   }),
 });
 

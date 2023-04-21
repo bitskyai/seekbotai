@@ -7,6 +7,7 @@ let _app_config = getCleanEnv();
 
 function getCleanEnv(overwriteProcessEnv?: object) {
   return cleanEnv(_.merge({}, process.env, overwriteProcessEnv ?? {}), {
+    DESKTOP_MODE: bool({ default: true }),
     APP_HOME_PATH: str({
       default: DEFAULT_APP_CONFIG.APP_HOME_PATH,
     }),

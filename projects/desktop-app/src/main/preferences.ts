@@ -31,12 +31,12 @@ export function getPreferencesJSON(): Preferences {
       // to avoid if user delete preference.json
       preferencesJSON = fs.readJSONSync(PREFERENCES_JSON_PATH);
     } catch (err) {
-      preferencesJSON = defaultPreferencesJSON;
+      logger.error(err);
     }
     const mergedPreferencesJSON = _.merge(
       {},
       defaultPreferencesJSON,
-      preferencesJSON,
+      preferencesJSON ?? {},
     );
 
     if (!_.isEqual(preferencesJSON, mergedPreferencesJSON)) {
