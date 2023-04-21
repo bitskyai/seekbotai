@@ -1,6 +1,6 @@
+import { defaultUser } from "./defaultUsers";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { defaultUser } from "./defaultUsers";
 
 export const reactDevLearn = {
   id: 1,

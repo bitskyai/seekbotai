@@ -33,3 +33,31 @@ export function getFilesByExtNames(
   }
   return files_;
 }
+
+export function getFolders(
+  dir: string,
+  excludePatterns: RegExp[] = [],
+): string[] {
+  const files = fs.readdirSync(dir, { withFileTypes: true });
+  const folders = files
+    .filter(
+      (file) =>
+        file.isDirectory() &&
+        !excludePatterns.find((excludePattern) =>
+          excludePattern.test(file.name ?? file),
+        ),
+    )
+    .map((folder) => folder.name);
+
+  folders.sort((folderA, folderB) => {
+    if (folderA > folderB) {
+      return 1;
+    }
+
+    if (folderA < folderB) {
+      return -1;
+    }
+    return 0;
+  });
+  return folders;
+}

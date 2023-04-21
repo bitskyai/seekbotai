@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
 import { getPrismaClient } from "../../../src/db";
 import {
   bookmarkRaws,
   bookmarkTags,
   bookmarks,
 } from "../../../src/db/seedData/exampleBookmarks";
+import { PrismaClient } from "@prisma/client";
 
 async function seed(prismaClient?: PrismaClient) {
   if (!prismaClient) {

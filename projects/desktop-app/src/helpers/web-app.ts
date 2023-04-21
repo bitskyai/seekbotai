@@ -14,7 +14,7 @@ import path from "path";
 class WebApp {
   public port = WEB_APP_PORT;
   constructor() {
-    console.log("WebApp constructor");
+    logger.log("WebApp constructor");
   }
 
   public async start() {
@@ -31,6 +31,7 @@ class WebApp {
       // start
       updateProcessEnvs(preferences);
       await startServer({
+        DESKTOP_MODE: true,
         PORT: preferences.WEB_APP_PORT,
         DATABASE_URL: preferences.WEB_APP_DATABASE_URL,
         APP_HOME_PATH: preferences.WEB_APP_HOME_PATH,

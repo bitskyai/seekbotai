@@ -1,7 +1,11 @@
+import { systemUser } from "../../../src/db/seedData/defaultUsers";
+import { getAppConfig } from "../../../src/helpers/config";
+import getLogger from "../../../src/helpers/logger";
+import { getFilesByExtNames } from "../../../src/helpers/utils";
 import { PrismaClient } from "@prisma/client";
 import * as path from "path";
-import { systemUser } from "../../../src/db/seedData/defaultUsers";
-import { getFilesByExtNames } from "../../../src/helpers/utils";
+
+const logger = getLogger();
 
 async function loadModule(moduleName: string) {
   const myModule = await import(`./${moduleName}`);
@@ -14,12 +18,15 @@ async function loadModule(moduleName: string) {
  * @param prismaClient
  */
 async function seed(prismaClient: PrismaClient) {
-  if (process.env.DESKTOP_MODE === "true") {
+  const config = getAppConfig();
+  logger.debug(`config: ${JSON.stringify(config, null, 2)}`);
+  if (config.DESKTOP_MODE === true) {
     const seedFiles = getFilesByExtNames(
       path.join(__dirname, "."),
-      [".ts"],
-      [/index\.ts/, /^ignore_/, /files/],
+      [".ts", ".js"],
+      [/index\.ts/, /^ignore_/, /files/, /index\.js/],
     );
+    // console.log(`seedFiles: `, seedFiles);
     seedFiles.sort((fileA, fileB) => {
       if (fileA > fileB) {
         return 1;
@@ -36,7 +43,7 @@ async function seed(prismaClient: PrismaClient) {
         orderBy: { createdAt: "desc" },
       })) || [];
     const latestSeededFile = latestSeededFiles[0];
-
+    logger.info(`latestSeededFile: `, latestSeededFile);
     let startSeeding = false;
     if (!latestSeededFile || !latestSeededFile.seedName) {
       // seed from begin

@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { getPrismaClient } from "../../../src/db";
 import defaultUsers from "../../../src/db/seedData/defaultUsers";
+import { PrismaClient } from "@prisma/client";
 
 async function seed(prismaClient?: PrismaClient) {
   if (!prismaClient) {

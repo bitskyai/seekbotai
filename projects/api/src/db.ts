@@ -1,13 +1,13 @@
+import seedProd, { seedDev } from "../prisma/seeds";
+import { getAppConfig } from "./helpers/config";
+import getLogger from "./helpers/logger";
+import { getFolders, getPlatformName } from "./helpers/utils";
+import { Migration } from "./types";
 import { PrismaClient } from "@prisma/client";
 import { fork } from "child_process";
 import fs from "fs-extra";
 import { last, trim } from "lodash";
 import path from "path";
-import seeds from "../prisma/seeds/prod";
-import { getAppConfig } from "./helpers/config";
-import getLogger from "./helpers/logger";
-import { getPlatformName } from "./helpers/utils";
-import { Migration } from "./types";
 
 const logger = getLogger();
 
@@ -22,12 +22,10 @@ export function getPrismaClient() {
       datasources: { db: { url: databaseURL } },
     });
   }
-  logger.info(`DATABASE_URL: ${getAppConfig().DATABASE_URL}`);
+  logger.info(`getPrismaClient->
+   ${getAppConfig().DATABASE_URL}`);
   return _prismaClient;
 }
-
-export const LATEST_MIGRATION = "20230313153628_init"; // This needs to be updated every time you create a migration!
-export const LATEST_SEED = "2023";
 
 export const platformToExecutables: any = {
   win32: {
@@ -58,11 +56,12 @@ export async function seed(prismaClient?: PrismaClient) {
   if (!prismaClient) {
     prismaClient = getPrismaClient();
   }
-  await seeds(prismaClient);
+  await seedDev(prismaClient);
 }
 
 export async function setupDB() {
   const config = getAppConfig();
+  logger.debug(`setupDB->config: ${JSON.stringify(config, null, 2)}`);
   if (!config.SETUP_DB) {
     logger.info(`Don't need to setup DB`);
     return;
@@ -89,7 +88,22 @@ export async function setupDB() {
     try {
       const latest: Migration[] =
         await prisma.$queryRaw`select * from _prisma_migrations order by finished_at`;
-      needsMigration = last(latest)?.migration_name !== LATEST_MIGRATION;
+      const latestMigration = last(latest)?.migration_name;
+      if (!latestMigration) {
+        needsMigration = true;
+      } else {
+        const migrations = getFolders(
+          path.join(__dirname, "../prisma/migrations"),
+        );
+        logger.debug(
+          `migrations: ${migrations}, latestMigration: ${latestMigration}`,
+        );
+        if (last(migrations) == latestMigration) {
+          needsMigration = false;
+        } else {
+          needsMigration = true;
+        }
+      }
     } catch (e) {
       logger.error(e);
       needsMigration = true;
@@ -123,6 +137,9 @@ export async function setupDB() {
   } else {
     logger.info("Does not need migration");
   }
+
+  logger.info("seeding prod...");
+  await seedProd();
 
   if (config.SEED_DB) {
     // seed

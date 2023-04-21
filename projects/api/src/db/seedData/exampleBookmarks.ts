@@ -1,7 +1,7 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { country, knowledge } from "./defaultTags";
 import { defaultUser } from "./defaultUsers";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 export const usWikipedia = {
   id: 1,

@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { getPrismaClient } from "../../../src/db";
 import { defaultUser } from "../../../src/db/seedData/defaultUsers";
 import browserHistories from "../../../src/db/seedData/exampleBrowserHistories";
+import { PrismaClient } from "@prisma/client";
 
 async function seed(prismaClient?: PrismaClient) {
   if (!prismaClient) {
