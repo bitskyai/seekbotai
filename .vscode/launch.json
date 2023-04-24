@@ -1,13 +1,16 @@
 {
   "version": "0.2.0",
-  "compounds": [
-    {
-      "name": "Main + renderer",
-      "configurations": ["Main", "Renderer"],
-      "stopAll": true
-    }
-  ],
-  "configurations": [
+  "compounds": [{
+    "name": "Main + renderer",
+    "configurations": ["Main", "Renderer"],
+    "stopAll": true
+  }],
+  "configurations": [{
+      "type": "node",
+      "name": "Debug API",
+      "request": "attach",
+      "port": 9229
+    },
     {
       "name": "Renderer",
       "port": 9222,

@@ -1,14 +1,14 @@
-import seedDev from "../prisma/seeds/dev";
-import seedProd from "../prisma/seeds/prod";
-import { getAppConfig } from "./helpers/config";
-import getLogger from "./helpers/logger";
-import { getFolders, getPlatformName } from "./helpers/utils";
-import { Migration } from "./types";
 import { PrismaClient } from "@prisma/client";
 import { fork } from "child_process";
 import fs from "fs-extra";
 import { last, trim } from "lodash";
 import path from "path";
+import seedDev from "../../prisma/seeds/dev";
+import seedProd from "../../prisma/seeds/prod";
+import { getAppConfig } from "../helpers/config";
+import getLogger from "../helpers/logger";
+import { getFolders, getPlatformName } from "../helpers/utils";
+import { Migration } from "../types";
 
 const logger = getLogger();
 
@@ -87,7 +87,7 @@ export async function setupDB() {
         needsMigration = true;
       } else {
         const migrations = getFolders(
-          path.join(__dirname, "../prisma/migrations"),
+          path.join(__dirname, "../../prisma/migrations"),
         );
         logger.debug(
           `migrations: ${migrations}, latestMigration: ${latestMigration}`,
@@ -173,7 +173,7 @@ export async function runPrismaCommand({
     const exitCode = await new Promise((resolve, _) => {
       const prismaPath = path.resolve(
         __dirname,
-        "..",
+        "../..",
         "node_modules/prisma/build/index.js",
       );
       logger.info("Prisma path: %s", prismaPath);
