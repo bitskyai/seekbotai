@@ -27,3 +27,15 @@ export interface Migration {
   started_at: string;
   applied_steps_count: string;
 }
+
+export interface User {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface GQLContext {
+  user: User;
+}

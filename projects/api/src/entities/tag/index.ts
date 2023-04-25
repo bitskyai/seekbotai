@@ -1,2 +1,2 @@
-import init from "./resolver";
-init();
+import "./tag.type";
+import "./tags.query";

@@ -1,5 +1,5 @@
-import { builder } from "../builder";
 import { getPrismaClient } from "../db";
+import { builder } from "../entities/gql-builder";
 
 builder.prismaObject("User", {
   fields: (t) => ({
