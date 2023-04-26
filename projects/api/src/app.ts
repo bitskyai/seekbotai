@@ -1,7 +1,7 @@
+import { defaultUser } from "./db/seedData/defaultUsers";
 import express from "express";
 import { createYoga } from "graphql-yoga";
 import path from "path";
-import { defaultUser } from "./db/seedData/defaultUsers";
 import "./entities";
 import { builder } from "./entities/gql-builder";
 import { getAppConfig } from "./helpers/config";
