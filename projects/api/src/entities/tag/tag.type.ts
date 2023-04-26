@@ -1,3 +1,4 @@
+import { systemShare } from "../../db/seedData/defaultUsers";
 import { schemaBuilder } from "../gql-builder";
 
 schemaBuilder.prismaObject("Tag", {
@@ -5,6 +6,6 @@ schemaBuilder.prismaObject("Tag", {
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "DateTime" }),
     name: t.exposeString("name"),
-    // isSystem: t.boolean({resolve:(parent)=>parent?.isSystem})
+    isSystem: t.boolean({ resolve: (tag) => tag.userId === systemShare.id }),
   }),
 });
