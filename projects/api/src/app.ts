@@ -1,16 +1,16 @@
-import { defaultUser } from "./db/seedData/defaultUsers";
 import express from "express";
 import { createYoga } from "graphql-yoga";
 import path from "path";
+import { defaultUser } from "./db/seedData/defaultUsers";
 import "./entities";
-import { builder } from "./entities/gql-builder";
+import { schemaBuilder } from "./entities";
 import { getAppConfig } from "./helpers/config";
 
 export async function createApp() {
   const config = getAppConfig();
   const app = express();
   const yoga = createYoga({
-    schema: builder.toSchema({}),
+    schema: schemaBuilder.toSchema({}),
     context: () => {
       if (config.DESKTOP_MODE) {
         // if it is desktop mode, then use the default user

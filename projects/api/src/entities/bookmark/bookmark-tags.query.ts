@@ -1,8 +1,8 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
-import { builder } from "../gql-builder";
+import { schemaBuilder } from "../gql-builder";
 
-builder.queryField("bookmarkTags", (t) =>
+schemaBuilder.queryField("bookmarkTags", (t) =>
   t.prismaField({
     type: ["BookmarkTag"],
     resolve: async (query, root, args, ctx, info) => {
