@@ -9,13 +9,6 @@ schemaBuilder.prismaObject("Bookmark", {
     icon: t.exposeString("icon", { nullable: true }),
     url: t.exposeString("url"),
     favorite: t.exposeBoolean("favorite"),
-    // bookmarkTags: t.relation("bookmarkTags", {
-    //   args: {}
-    //   query: (args, ctx) => ({
-    //     orderBy: {
-    //       createdAt: "asc",
-    //     },
-    //   }),
-    // }),
+    bookmarkTags: t.relation("bookmarkTags"),
   }),
 });

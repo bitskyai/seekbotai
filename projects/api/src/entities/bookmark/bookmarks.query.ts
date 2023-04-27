@@ -15,6 +15,20 @@ export async function getBookmarks(ctx: GQLContext) {
   const prismaClient = getPrismaClient();
   const bookmarks = await prismaClient.bookmark.findMany({
     where: { userId: ctx.user.id },
+    include: {
+      bookmarkTags: {
+        include: {
+          tag: {
+            select: {
+              createdAt: true,
+              name: true,
+              id: true,
+              userId: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   return bookmarks;
