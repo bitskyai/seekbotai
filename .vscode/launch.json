@@ -9,6 +9,12 @@
   ],
   "configurations": [
     {
+      "type": "node",
+      "name": "Debug API",
+      "request": "attach",
+      "port": 9229
+    },
+    {
       "name": "Renderer",
       "port": 9222,
       "request": "attach",

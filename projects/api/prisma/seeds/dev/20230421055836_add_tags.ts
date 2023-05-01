@@ -1,5 +1,5 @@
 import { getPrismaClient } from "../../../src/db";
-import { systemShare } from "../../../src/db/seedData/defaultUsers";
+import { defaultUser } from "../../../src/db/seedData/defaultUsers";
 import { PrismaClient } from "@prisma/client";
 
 async function seed(prismaClient?: PrismaClient) {
@@ -18,8 +18,8 @@ async function seed(prismaClient?: PrismaClient) {
     const tag = tags[i];
     await prismaClient.tag.upsert({
       where: { id: tag.id },
-      create: { ...tag, userId: systemShare.id },
-      update: { ...tag, userId: systemShare.id },
+      create: { ...tag, userId: defaultUser.id },
+      update: { ...tag, userId: defaultUser.id },
     });
   }
 }
