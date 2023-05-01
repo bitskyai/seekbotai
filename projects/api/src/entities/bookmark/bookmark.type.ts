@@ -1,3 +1,4 @@
+import { SortOrder } from "../common.type";
 import { schemaBuilder } from "../gql-builder";
 
 schemaBuilder.prismaObject("Bookmark", {
@@ -12,3 +13,14 @@ schemaBuilder.prismaObject("Bookmark", {
     bookmarkTags: t.relation("bookmarkTags"),
   }),
 });
+
+export const BookmarkSortOrderInput = schemaBuilder.inputType(
+  "BookmarkSortOrderInput",
+  {
+    fields: (t) => ({
+      updatedAt: t.field({
+        type: SortOrder,
+      }),
+    }),
+  },
+);

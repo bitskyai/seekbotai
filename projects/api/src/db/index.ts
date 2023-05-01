@@ -1,14 +1,14 @@
+import { PrismaClient } from "@prisma/client";
+import { fork } from "child_process";
+import fs from "fs-extra";
+import { last, trim } from "lodash";
+import path from "path";
 import seedDev from "../../prisma/seeds/dev";
 import seedProd from "../../prisma/seeds/prod";
 import { getAppConfig } from "../helpers/config";
 import getLogger from "../helpers/logger";
 import { getFolders, getPlatformName } from "../helpers/utils";
 import { Migration } from "../types";
-import { PrismaClient } from "@prisma/client";
-import { fork } from "child_process";
-import fs from "fs-extra";
-import { last, trim } from "lodash";
-import path from "path";
 
 const logger = getLogger();
 
@@ -21,6 +21,24 @@ export function getPrismaClient() {
     databaseURL = latestDatabaseURL;
     _prismaClient = new PrismaClient({
       datasources: { db: { url: databaseURL } },
+      log: [
+        {
+          emit: "stdout",
+          level: "query",
+        },
+        {
+          emit: "stdout",
+          level: "error",
+        },
+        {
+          emit: "stdout",
+          level: "info",
+        },
+        {
+          emit: "stdout",
+          level: "warn",
+        },
+      ],
     });
   }
   logger.info(`getPrismaClient->
