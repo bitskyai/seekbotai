@@ -7,36 +7,41 @@ schemaBuilder.queryField("bookmarks", (t) =>
   t.prismaField({
     type: ["Bookmark"],
     args: {
-      searchString: t.arg.string({ required: false }),
-      tags: t.arg.intList({ required: false }),
+      searchString: t.arg.string(),
+      tags: t.arg.intList(),
       skip: t.arg.int(),
       take: t.arg.int(),
+      insensitive: t.arg.boolean(),
       orderBy: t.arg({
         type: BookmarkSortOrderInput,
       }),
     },
     resolve: async (query, parent, args, ctx, info) => {
-      return getBookmarks(
+      return getBookmarks({
         ctx,
-        args.searchString || undefined,
-        args.tags || undefined,
-      );
+        searchString: args.searchString || undefined,
+        tags: args.tags || undefined,
+      });
     },
   }),
 );
 
-export async function getBookmarks(
-  ctx: GQLContext,
-  searchString?: string,
-  tags?: number[],
-) {
+export async function getBookmarks({
+  ctx,
+  searchString,
+  tags,
+}: {
+  ctx: GQLContext;
+  searchString?: string;
+  tags?: number[];
+}) {
   const prismaClient = getPrismaClient();
-  const or = searchString
+  const orSearchByString = searchString
     ? {
-        AND: [
-          // { name: { contains: searchString } },
-          // { description: { contains: searchString } },
-          // { url: { contains: searchString } },
+        OR: [
+          { name: { contains: searchString } },
+          { description: { contains: searchString } },
+          { url: { contains: searchString } },
           { content: { contains: searchString } },
         ],
       }
@@ -63,7 +68,7 @@ export async function getBookmarks(
     };
   }
   const bookmarks = await prismaClient.bookmark.findMany({
-    where: { userId: ctx.user.id, ...or, ...bookmarkIds },
+    where: { userId: ctx.user.id, ...orSearchByString, ...bookmarkIds },
     include: {
       bookmarkTags: {
         include: {
