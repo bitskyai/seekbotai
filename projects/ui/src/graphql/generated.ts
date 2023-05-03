@@ -1,16 +1,9 @@
-import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
-
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -19,70 +12,74 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: any;
+  DateTime: any;
 };
 
-export type Message = {
-  __typename?: "Message";
-  body: Scalars["String"];
-  createdAt: Scalars["Date"];
-  id: Scalars["ID"];
+export type Bookmark = {
+  __typename?: 'Bookmark';
+  bookmarkTags: Array<BookmarkTag>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  favorite: Scalars['Boolean'];
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type BookmarkSortOrderInput = {
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type BookmarkTag = {
+  __typename?: 'BookmarkTag';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  tag: Tag;
 };
 
 export type Query = {
-  __typename?: "Query";
-  users: Array<User>;
+  __typename?: 'Query';
+  bookmarks: Array<Bookmark>;
+  tags: Array<Tag>;
 };
 
-export type User = {
-  __typename?: "User";
-  id: Scalars["ID"];
-  messages: Array<Message>;
-  name: Scalars["String"];
+
+export type QueryBookmarksArgs = {
+  insensitive?: InputMaybe<Scalars['Boolean']>;
+  orderBy?: InputMaybe<BookmarkSortOrderInput>;
+  searchString?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  tags?: InputMaybe<Array<Scalars['Int']>>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
-export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc'
+}
 
-export type GetUsersQuery = {
-  __typename?: "Query";
-  users: Array<{
-    __typename?: "User";
-    name: string;
-    messages: Array<{ __typename?: "Message"; body: string }>;
-  }>;
+export type Tag = {
+  __typename?: 'Tag';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  isSystem: Scalars['Boolean'];
+  name: Scalars['String'];
 };
 
-export const GetUsersDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "GetUsers" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "users" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                { kind: "Field", name: { kind: "Name", value: "name" } },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "messages" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "body" } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetUsersQuery, GetUsersQueryVariables>;
+export type GetBookmarksQueryVariables = Exact<{
+  tags?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+  searchString?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetBookmarksQuery = { __typename?: 'Query', bookmarks: Array<{ __typename?: 'Bookmark', createdAt: any, description?: string | null, favorite: boolean, icon?: string | null, id: string, name: string, url: string, bookmarkTags: Array<{ __typename?: 'BookmarkTag', createdAt: any, id: string, tag: { __typename?: 'Tag', createdAt: any, id: string, isSystem: boolean, name: string } }> }> };
+
+export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', createdAt: any, id: string, isSystem: boolean, name: string }> };
+
+
+export const GetBookmarksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBookmarks"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tags"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchString"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookmarks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"searchString"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchString"}}},{"kind":"Argument","name":{"kind":"Name","value":"tags"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tags"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"favorite"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"bookmarkTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isSystem"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBookmarksQuery, GetBookmarksQueryVariables>;
+export const GetTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isSystem"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetTagsQuery, GetTagsQueryVariables>;

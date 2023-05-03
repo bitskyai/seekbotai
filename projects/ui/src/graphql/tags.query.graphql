@@ -1,0 +1,8 @@
+query GetTags {
+  tags {
+    createdAt
+    id
+    isSystem
+    name
+  }
+}
