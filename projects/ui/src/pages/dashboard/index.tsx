@@ -3,15 +3,30 @@
 
 import { Api, GitHub } from "@mui/icons-material";
 import { Box, Button, Container, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "urql";
 import { usePageEffect } from "../../core/page.js";
+import { GetBookmarksDocument } from "../../graphql/generated";
+import "../../i18n/config";
 
 export default function Home(): JSX.Element {
   usePageEffect({ title: "React App" });
 
+  const { t } = useTranslation();
+
+  const [results] = useQuery({
+    query: GetBookmarksDocument,
+    variables: {
+      tags: [14],
+      searchString: "india",
+    },
+  });
+  console.log(`results: `, results);
+
   return (
     <Container sx={{ py: "20vh" }} maxWidth="sm">
       <Typography sx={{ mb: 2 }} variant="h1" align="center">
-        Welcome to React Starter Kit!
+        Welcome to {t("appName")}
       </Typography>
 
       <Typography sx={{ mb: 4 }} variant="h3" align="center">

@@ -1,15 +1,12 @@
-/* SPDX-FileCopyrightText: 2014-present Kriasoft */
-/* SPDX-License-Identifier: MIT */
-
 import { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { AppLayout } from "../layout/AppLayout.js";
-import { RootError } from "../layout/RootError.js";
+import { AppLayout } from "./layout/AppLayout.js";
+import { RootError } from "./layout/RootError.js";
 
-const Dashboard = lazy(() => import("./dashboard/Dashboard.js"));
+const Dashboard = lazy(() => import("./pages/dashboard/index.js"));
 
-const SettingsLayout = lazy(() => import("./settings/SettingsLayout.js"));
-const AccountDetails = lazy(() => import("./settings/AccountDetails.js"));
+const SettingsLayout = lazy(() => import("./pages/settings/SettingsLayout.js"));
+const AccountDetails = lazy(() => import("./pages/settings/AccountDetails.js"));
 
 /**
  * Application routes

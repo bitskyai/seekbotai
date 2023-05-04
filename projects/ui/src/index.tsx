@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { createClient, Provider } from "urql";
 import "./index.css";
-import { router } from "./routes/index.js";
+import { router } from "./routes.js";
 import { ThemeProvider } from "./theme/index.js";
 
 let url = import.meta.env.VITE_API_URL;
