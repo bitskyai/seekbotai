@@ -1,6 +1,6 @@
+import { GetBookmarksDocument } from "./graphql/generated";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "urql";
-import { GetBookmarksDocument } from "./graphql/generated";
 import "./i18n/config";
 
 function App() {

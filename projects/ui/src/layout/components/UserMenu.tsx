@@ -1,6 +1,8 @@
 /* SPDX-FileCopyrightText: 2014-present Kriasoft */
 /* SPDX-License-Identifier: MIT */
 
+import { useSignOut } from "../../core/auth.js";
+import { useTheme, useToggleTheme } from "../../theme/index.js";
 import { Brightness4, Logout, Settings } from "@mui/icons-material";
 import {
   Link,
@@ -13,8 +15,6 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { Link as NavLink, useNavigate } from "react-router-dom";
-import { useSignOut } from "../../core/auth.js";
-import { useTheme, useToggleTheme } from "../../theme/index.js";
 
 export function UserMenu(props: UserMenuProps): JSX.Element {
   const { PaperProps, MenuListProps, ...other } = props;

@@ -1,7 +1,7 @@
-import { lazy } from "react";
-import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "./layout/AppLayout.js";
 import { RootError } from "./layout/RootError.js";
+import { lazy } from "react";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const Dashboard = lazy(() => import("./pages/dashboard/index.js"));
 

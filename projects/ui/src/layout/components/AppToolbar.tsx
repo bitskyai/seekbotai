@@ -1,6 +1,12 @@
 /* SPDX-FileCopyrightText: 2014-present Kriasoft */
 /* SPDX-License-Identifier: MIT */
 
+import { Link as NavLink } from "../../common/Link.js";
+import { useCurrentUser } from "../../core/auth.js";
+import { Logo } from "./Logo.js";
+import { NotificationsMenu } from "./NotificationsMenu.js";
+import { ThemeButton } from "./ThemeButton.js";
+import { UserMenu } from "./UserMenu.js";
 import { ArrowDropDown, NotificationsNone } from "@mui/icons-material";
 import {
   AppBar,
@@ -13,12 +19,6 @@ import {
   Toolbar,
 } from "@mui/material";
 import * as React from "react";
-import { Link as NavLink } from "../../common/Link.js";
-import { useCurrentUser } from "../../core/auth.js";
-import { Logo } from "./Logo.js";
-import { NotificationsMenu } from "./NotificationsMenu.js";
-import { ThemeButton } from "./ThemeButton.js";
-import { UserMenu } from "./UserMenu.js";
 
 export function AppToolbar(props: AppToolbarProps): JSX.Element {
   const { sx, ...other } = props;

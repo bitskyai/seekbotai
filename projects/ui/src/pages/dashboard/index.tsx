@@ -1,12 +1,12 @@
 /* SPDX-FileCopyrightText: 2014-present Kriasoft */
 /* SPDX-License-Identifier: MIT */
 
+import { usePageEffect } from "../../core/page.js";
+import { GetBookmarksDocument } from "../../graphql/generated";
 import { Api, GitHub } from "@mui/icons-material";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "urql";
-import { usePageEffect } from "../../core/page.js";
-import { GetBookmarksDocument } from "../../graphql/generated";
 import "../../i18n/config";
 
 export default function Home(): JSX.Element {

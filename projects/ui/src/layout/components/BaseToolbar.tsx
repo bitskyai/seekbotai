@@ -1,10 +1,10 @@
 /* SPDX-FileCopyrightText: 2014-present Kriasoft */
 /* SPDX-License-Identifier: MIT */
 
-import { Close } from "@mui/icons-material";
-import { AppBar, AppBarProps, Box, IconButton, Toolbar } from "@mui/material";
 import { Link } from "../../common/Link.js";
 import { Logo } from "./Logo.js";
+import { Close } from "@mui/icons-material";
+import { AppBar, AppBarProps, Box, IconButton, Toolbar } from "@mui/material";
 
 export function BaseToolbar(props: AppBarProps): JSX.Element {
   return (

@@ -1,8 +1,8 @@
 /* SPDX-FileCopyrightText: 2014-present Kriasoft */
 /* SPDX-License-Identifier: MIT */
 
-import { Container, Typography } from "@mui/material";
 import { usePageEffect } from "../../core/page.js";
+import { Container, Typography } from "@mui/material";
 
 export default function AccountDetails(): JSX.Element {
   usePageEffect({ title: "Account Details" });

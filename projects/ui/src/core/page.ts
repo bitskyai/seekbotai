@@ -1,9 +1,9 @@
 /* SPDX-FileCopyrightText: 2014-present Kriasoft */
 /* SPDX-License-Identifier: MIT */
 
+import { config } from "./config.js";
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { config } from "./config.js";
 
 export function usePageEffect(
   options?: Options,

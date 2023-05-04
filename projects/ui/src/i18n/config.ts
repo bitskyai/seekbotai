@@ -1,6 +1,6 @@
+import common from "./en/common.json";
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import common from "./en/common.json";
 
 export const defaultNS = "common";
 
