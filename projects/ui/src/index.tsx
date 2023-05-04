@@ -1,8 +1,12 @@
-import App from "./App";
+import { SnackbarProvider } from "notistack";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 import { createClient, Provider } from "urql";
 import "./index.css";
+import { router } from "./routes/index.js";
+import { ThemeProvider } from "./theme/index.js";
 
 let url = import.meta.env.VITE_API_URL;
 if (!url) {
@@ -15,8 +19,14 @@ const client = createClient({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Provider value={client}>
-      <App />
-    </Provider>
+    <RecoilRoot>
+      <ThemeProvider>
+        <SnackbarProvider>
+          <Provider value={client}>
+            <RouterProvider router={router} />
+          </Provider>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </RecoilRoot>
   </React.StrictMode>,
 );
