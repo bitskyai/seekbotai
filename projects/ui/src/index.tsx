@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { createClient, Provider } from "urql";
+import "./i18n/config";
 import "./index.css";
 import { router } from "./routes.js";
 import { ThemeProvider } from "./theme/index.js";
