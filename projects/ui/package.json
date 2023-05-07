@@ -37,11 +37,8 @@
     "vite": "^4.1.0",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.1.0",
-    "@mui/icons-material": "^5.11.16",
     "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@mui/lab": "^5.0.0-alpha.128",
-    "@mui/material": "^5.12.2"
+    "@emotion/styled": "^11.10.6"
   },
   "envars": {
     "cwd": "../../env"

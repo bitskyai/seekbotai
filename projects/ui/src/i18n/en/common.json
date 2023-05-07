@@ -11,6 +11,9 @@
     },
     "tags": {
       "sectionTitle": "Tags"
+    },
+    "error": {
+      "title": "Error"
     }
 
   }

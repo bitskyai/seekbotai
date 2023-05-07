@@ -1,27 +1,13 @@
-/* SPDX-FileCopyrightText: 2020-present Kriasoft */
-/* SPDX-License-Identifier: MIT */
-
-import { Container, Typography } from "@mui/material";
+import { Result } from "antd";
 import { useRouteError } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function RootError(): JSX.Element {
   const err = useRouteError() as RouteError;
+  const { t } = useTranslation();
 
   return (
-    <Container sx={{ marginTop: "43vh" }} maxWidth="sm">
-      <Typography
-        sx={{
-          fontSize: "2em",
-          fontWeight: 300,
-          "& strong": { fontWeight: 400 },
-        }}
-        variant="h1"
-        align="center"
-      >
-        <strong>Error {err.status || 500}</strong>:{" "}
-        {err.statusText ?? err.message}
-      </Typography>
-    </Container>
+    <Result status={err.status || "error"} title={t("error.title")} subTitle={err.statusText ?? err.message}></Result>
   );
 }
 

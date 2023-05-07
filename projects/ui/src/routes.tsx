@@ -1,12 +1,11 @@
-import { AppLayout } from "./layout/AppLayout.js";
-import { RootError } from "./layout/RootError.js";
 import { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { AppLayout } from "./layout/AppLayout.js";
+import { RootError } from "./layout/RootError.js";
+const SettingsLayout = lazy(() => import("./layout/SettingsLayout.js"));
 
-const Dashboard = lazy(() => import("./pages/dashboard/index.js"));
-
-const SettingsLayout = lazy(() => import("./pages/settings/SettingsLayout.js"));
-const AccountDetails = lazy(() => import("./pages/settings/AccountDetails.js"));
+const Dashboard = lazy(() => import("./pages/search/index.js"));
+const Settings = lazy(() => import("./pages/settings/index.js"));
 
 /**
  * Application routes
@@ -18,14 +17,14 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     errorElement: <RootError />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: "dashboard", element: <Dashboard /> },
+      { index: true, element: <Navigate to="/search" replace /> },
+      { path: "search", element: <Dashboard /> },
       {
-        path: "settings",
+        path: "",
         element: <SettingsLayout />,
         children: [
-          { index: true, element: <Navigate to="/settings/account" /> },
-          { path: "account", element: <AccountDetails /> },
+          { index: true, element: <Navigate to="/settings" /> },
+          { path: "settings", element: <Settings /> },
         ],
       },
     ],
