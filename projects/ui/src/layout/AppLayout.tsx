@@ -1,3 +1,4 @@
+import { GetTagsDocument, Tag } from "../graphql/generated";
 import { BookOutlined, SettingOutlined, TagOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, Skeleton } from "antd";
@@ -5,7 +6,7 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
 import { useQuery } from "urql";
-import { GetTagsDocument, Tag } from "../graphql/generated";
+
 const { Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];

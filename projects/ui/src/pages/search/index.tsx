@@ -1,8 +1,8 @@
+import { usePageEffect } from "../../core/page.js";
+import { GetBookmarksDocument } from "../../graphql/generated.js";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "urql";
-import { usePageEffect } from "../../core/page.js";
-import { GetBookmarksDocument } from "../../graphql/generated.js";
 
 export default function Home(): JSX.Element {
   usePageEffect({ title: "Search" });
