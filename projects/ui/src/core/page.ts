@@ -25,11 +25,7 @@ export function usePageEffect(
     return function () {
       document.title = previousTitle;
     };
-  }, [
-    ...deps /* eslint-disable-line react-hooks/exhaustive-deps */,
-    location,
-    options?.title,
-  ]);
+  }, [...deps, location, options?.title]);
 
   // Send "page view" event to Google Analytics
   // https://support.google.com/analytics/answer/11403294?hl=en

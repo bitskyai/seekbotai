@@ -45,7 +45,7 @@ function getTagItem(tag: Tag): MenuItem {
 export function AppLayout(): JSX.Element {
   const { t } = useTranslation();
   const [collapsed, setCollapsed] = React.useState(false);
-  const [selectedKeys, setSelectedKeys] = React.useState([]);
+  const [selectedKeys] = React.useState([]);
 
   const [{ fetching: fetchTags, data: tagsData }] = useQuery({
     query: GetTagsDocument,

@@ -32,9 +32,9 @@ export default function Home(): JSX.Element {
   const params = new URLSearchParams(window.location.search);
   const tagsStr = params.get("tags");
   const tagsParams = tagsStr?.split(",").map((tag) => parseInt(tag));
-  const [tags, setTags] = useState<number[]>(tagsParams ?? []);
+  const [tags] = useState<number[]>(tagsParams ?? []);
   const [searchString, setSearchString] = useState(params.get("text") ?? "");
-  const [{ data, fetching, error }, fetchBookmarks] = useQuery({
+  const [{ data, fetching }, fetchBookmarks] = useQuery({
     query: GetBookmarksDocument,
     variables: {
       tags: tags,
