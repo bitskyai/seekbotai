@@ -11,9 +11,15 @@
     },
     "tags": {
       "sectionTitle": "Tags"
-    },
-    "error": {
-      "title": "Error"
     }
+  },
+  "error": {
+    "title": "Error"
+  },
+  "search": {
+    "title": "Search",
+    "searchBtn": "Search",
+    "advancedSearch": "Switch to advanced",
+    "basicSearch": "Switch to basic"
   }
 }

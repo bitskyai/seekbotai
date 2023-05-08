@@ -28,7 +28,7 @@ function getItem(
 function getTagItem(tag: Tag): MenuItem {
   return getItem(
     <NavLink
-      to={`/search?tags=[${tag.id}]`}
+      to={`/search?tags=${tag.id}`}
       // className={({ isActive, isPending }) =>
       //   isPending ? "pending" : isActive ? "active" : ""
       // }
