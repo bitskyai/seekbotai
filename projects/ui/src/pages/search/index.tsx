@@ -1,7 +1,18 @@
 import { usePageEffect } from "../../core/page.js";
 import { GetBookmarksDocument } from "../../graphql/generated.js";
-import { Layout, theme, Typography, Input, Button } from "antd";
-import { useState, useEffect } from "react";
+import { FileImageOutlined, TagOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  theme,
+  Typography,
+  Input,
+  Button,
+  Skeleton,
+  Avatar,
+  List,
+  Space,
+} from "antd";
+import { useState, useEffect, createElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "urql";
 import "./style.css";
@@ -30,15 +41,27 @@ export default function Home(): JSX.Element {
       searchString: searchString,
     },
     pause: true,
+    requestPolicy: "network-only",
   });
-
+  console.log(`searchString: `, searchString);
+  console.log(`tags: `, tags);
   console.log("data: ", data);
   console.log("fetching: ", fetching);
-  const onSearch = () => {};
+  const onSearch = (value: string) => {
+    setSearchString(value ?? "");
+    fetchBookmarks({ requestPolicy: "network-only" });
+  };
 
   useEffect(() => {
     fetchBookmarks();
   }, []);
+
+  const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+    <Space>
+      {createElement(icon)}
+      {text}
+    </Space>
+  );
 
   return (
     <Layout
@@ -70,6 +93,50 @@ export default function Home(): JSX.Element {
               </Button>
             </div>
           </div>
+        </div>
+        <div>
+          {fetching ? (
+            <Skeleton active />
+          ) : (
+            <List
+              itemLayout="vertical"
+              size="large"
+              // pagination={{
+              //   onChange: (page) => {
+              //     console.log(page);
+              //   },
+              //   pageSize: 3,
+              // }}
+              dataSource={data?.bookmarks ?? []}
+              renderItem={(item) => (
+                <List.Item
+                  key={item.id}
+                  actions={item.bookmarkTags
+                    .map((item) => (
+                      <IconText
+                        icon={TagOutlined}
+                        text={item.tag.name}
+                        key={item.tag.id}
+                      />
+                    ))
+                    .concat([
+                      <IconText
+                        icon={FileImageOutlined}
+                        text={item.url}
+                        key="list-vertical-like-o"
+                      />,
+                    ])}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar src={item.icon} />}
+                    title={item.name}
+                    description={item.description}
+                  />
+                  {/* {item.content} */}
+                </List.Item>
+              )}
+            />
+          )}
         </div>
       </Content>
     </Layout>
