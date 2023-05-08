@@ -8,7 +8,7 @@ export function RootError(): JSX.Element {
 
   return (
     <Result
-      status={err.status || "error"}
+      status={"error"}
       title={t("error.title")}
       subTitle={err.statusText ?? err.message}
     ></Result>
