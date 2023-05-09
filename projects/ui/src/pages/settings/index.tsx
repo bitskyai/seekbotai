@@ -1,6 +1,6 @@
 import { usePageEffect } from "../../core/page.js";
 import { GetTagsDocument } from "../../graphql/generated.js";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 export default function AccountDetails(): JSX.Element {
   usePageEffect({ title: "Settings" });

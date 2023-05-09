@@ -74,7 +74,8 @@ export default function Home(): JSX.Element {
               <Search
                 placeholder={t("search.placeholder")}
                 allowClear
-                enterButton="Search"
+                enterButton
+                loading={loading}
                 size="large"
                 onSearch={onSearch}
               />
