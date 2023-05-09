@@ -1,6 +1,8 @@
 import { usePageEffect } from "../../core/page.js";
 import { GetBookmarksDocument } from "../../graphql/generated.js";
+import { updateURLQuery } from "../../helpers/utils.js";
 import { FileImageOutlined, TagOutlined } from "@ant-design/icons";
+import { useQuery } from "@apollo/client";
 import {
   Layout,
   theme,
@@ -12,9 +14,8 @@ import {
   List,
   Space,
 } from "antd";
-import { useState, useEffect, createElement } from "react";
+import { createElement } from "react";
 import { useTranslation } from "react-i18next";
-import { useLazyQuery } from "@apollo/client";
 import "./style.css";
 
 const { Header, Content } = Layout;
@@ -22,34 +23,30 @@ const { Title } = Typography;
 const { Search } = Input;
 
 export default function Home(): JSX.Element {
-  usePageEffect({ title: "Search" });
+  const { t } = useTranslation();
+
+  usePageEffect({ title: t("search.title") });
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const { t } = useTranslation();
   const padding = 20;
   const params = new URLSearchParams(window.location.search);
   const tagsStr = params.get("tags");
   const tagsParams = tagsStr?.split(",").map((tag) => parseInt(tag));
-  const [tags] = useState<number[]>(tagsParams ?? []);
-  const [searchString, setSearchString] = useState(params.get("text") ?? "");
-  const [fetchBookmarks, { loading, error, data }] =
-    useLazyQuery(GetBookmarksDocument);
+  const {
+    loading,
+    error,
+    data,
+    refetch: fetchBookmarks,
+  } = useQuery(GetBookmarksDocument, {
+    variables: { tags: tagsParams, searchString: params.get("text") ?? "" },
+  });
 
-  console.log(`searchString: `, searchString);
-  console.log(`tags: `, tags);
-  console.log("data: ", data);
-  console.log("fetching: ", loading);
-  console.log("error: ", error);
   const onSearch = (value: string) => {
-    setSearchString(value ?? "");
-    fetchBookmarks({ variables: { searchString: value } });
+    updateURLQuery([{ paramName: "searchString", paramValue: value }]);
+    fetchBookmarks({ searchString: value });
   };
-
-  useEffect(() => {
-    fetchBookmarks({ variables: { tags: tags, searchString: searchString } });
-  }, []);
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
     <Space>
@@ -75,7 +72,7 @@ export default function Home(): JSX.Element {
           <div className="search-container">
             <div className="search-remaining">
               <Search
-                placeholder="input search text"
+                placeholder={t("search.placeholder")}
                 allowClear
                 enterButton="Search"
                 size="large"
@@ -115,11 +112,13 @@ export default function Home(): JSX.Element {
                       />
                     ))
                     .concat([
-                      <IconText
-                        icon={FileImageOutlined}
-                        text={item.url}
-                        key="list-vertical-like-o"
-                      />,
+                      <a href={item.url} key="url-link" target="blank">
+                        <IconText
+                          icon={FileImageOutlined}
+                          text={item.url}
+                          key="list-vertical-like-o"
+                        />
+                      </a>,
                     ])}
                 >
                   <List.Item.Meta

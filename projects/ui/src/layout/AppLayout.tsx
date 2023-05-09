@@ -1,11 +1,16 @@
 import { GetTagsDocument, Tag } from "../graphql/generated";
-import { BookOutlined, SettingOutlined, TagOutlined } from "@ant-design/icons";
+import {
+  BookOutlined,
+  SettingOutlined,
+  TagOutlined,
+  FilterOutlined,
+} from "@ant-design/icons";
+import { useQuery } from "@apollo/client";
 import type { MenuProps } from "antd";
 import { Layout, Menu, Skeleton } from "antd";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
-import { useQuery } from "@apollo/client";
 
 const { Content, Sider } = Layout;
 
@@ -50,6 +55,7 @@ export function AppLayout(): JSX.Element {
   const { loading: fetchTags, data: tagsData } = useQuery(GetTagsDocument);
 
   const SIDE_NAV_WIDTH = 300;
+  const SIDE_COLLAPSED_NAV_WIDTH = 80;
 
   const items: MenuItem[] = [
     getItem(
@@ -64,25 +70,28 @@ export function AppLayout(): JSX.Element {
       "settings",
       <SettingOutlined />,
     ),
-    getItem(
-      <NavLink
-        to="/search"
-        // className={({ isActive, isPending }) =>
-        //   isPending ? "pending" : isActive ? "active" : ""
-        // }
-      >
-        {t("sideNav.allBookmarks")}
-      </NavLink>,
-      "allBookmarks",
-      <BookOutlined />,
-    ),
     // getItem(t("sideNav.folders"), "folders", <FolderOutlined />, [
     //   getItem("Bookmark Bar", "3"),
     // ]),
-    // getItem(t("sideNav.filters.sectionTitle"), "filters", <FilterOutlined />, [
-    //   getItem("Team 1", "6"),
-    //   getItem("Team 2", "8"),
-    // ]),
+    getItem(
+      t("sideNav.filters.sectionTitle"),
+      "filters",
+      <FilterOutlined />,
+      [
+        getItem(
+          <NavLink
+            to="/search"
+            // className={({ isActive, isPending }) =>
+            //   isPending ? "pending" : isActive ? "active" : ""
+            // }
+          >
+            {t("sideNav.allBookmarks")}
+          </NavLink>,
+          "allBookmarks",
+          <BookOutlined />,
+        ),
+      ].concat([]),
+    ),
     getItem(
       t("sideNav.tags.sectionTitle"),
       "tags",
@@ -117,7 +126,12 @@ export function AppLayout(): JSX.Element {
             defaultSelectedKeys={selectedKeys}
           />
         </Sider>
-        <Layout className="site-layout" style={{ marginLeft: SIDE_NAV_WIDTH }}>
+        <Layout
+          className="site-layout"
+          style={{
+            marginLeft: collapsed ? SIDE_COLLAPSED_NAV_WIDTH : SIDE_NAV_WIDTH,
+          }}
+        >
           <Content>
             <React.Suspense>
               <Outlet />

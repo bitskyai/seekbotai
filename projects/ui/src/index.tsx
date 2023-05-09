@@ -1,9 +1,9 @@
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { SnackbarProvider } from "notistack";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import "./i18n/config";
 import "./index.css";
 import { router } from "./routes.js";
