@@ -19,6 +19,7 @@
   "search": {
     "title": "Search",
     "searchBtn": "Search",
+    "placeholder": "Type search text. E.g: bitsky",
     "advancedSearch": "Switch to advanced",
     "basicSearch": "Switch to basic"
   }
