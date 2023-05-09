@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { useState, useEffect, createElement } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "urql";
+import { useLazyQuery } from "@apollo/client";
 import "./style.css";
 
 const { Header, Content } = Layout;
@@ -34,26 +34,21 @@ export default function Home(): JSX.Element {
   const tagsParams = tagsStr?.split(",").map((tag) => parseInt(tag));
   const [tags] = useState<number[]>(tagsParams ?? []);
   const [searchString, setSearchString] = useState(params.get("text") ?? "");
-  const [{ data, fetching }, fetchBookmarks] = useQuery({
-    query: GetBookmarksDocument,
-    variables: {
-      tags: tags,
-      searchString: searchString,
-    },
-    pause: true,
-    requestPolicy: "network-only",
-  });
+  const [fetchBookmarks, { loading, error, data }] =
+    useLazyQuery(GetBookmarksDocument);
+
   console.log(`searchString: `, searchString);
   console.log(`tags: `, tags);
   console.log("data: ", data);
-  console.log("fetching: ", fetching);
+  console.log("fetching: ", loading);
+  console.log("error: ", error);
   const onSearch = (value: string) => {
     setSearchString(value ?? "");
-    fetchBookmarks({ requestPolicy: "network-only" });
+    fetchBookmarks({ variables: { searchString: value } });
   };
 
   useEffect(() => {
-    fetchBookmarks();
+    fetchBookmarks({ variables: { tags: tags, searchString: searchString } });
   }, []);
 
   const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -95,7 +90,7 @@ export default function Home(): JSX.Element {
           </div>
         </div>
         <div>
-          {fetching ? (
+          {loading ? (
             <Skeleton active />
           ) : (
             <List

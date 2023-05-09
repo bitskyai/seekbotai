@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { createClient, Provider } from "urql";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import "./i18n/config";
 import "./index.css";
 import { router } from "./routes.js";
@@ -13,21 +13,22 @@ let url = import.meta.env.VITE_API_URL;
 if (!url) {
   url = `${window.location.href}graphql`;
 }
-const client = createClient({
-  // url: import.meta.env.VITE_API_URL || "http://localhost:4000/graphql",
-  url,
+
+const apolloClient = new ApolloClient({
+  uri: url,
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RecoilRoot>
-      <ThemeProvider>
-        <SnackbarProvider>
-          <Provider value={client}>
+    <ApolloProvider client={apolloClient}>
+      <RecoilRoot>
+        <ThemeProvider>
+          <SnackbarProvider>
             <RouterProvider router={router} />
-          </Provider>
-        </SnackbarProvider>
-      </ThemeProvider>
-    </RecoilRoot>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </RecoilRoot>
+    </ApolloProvider>
   </React.StrictMode>,
 );

@@ -5,7 +5,7 @@ import { Layout, Menu, Skeleton } from "antd";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
-import { useQuery } from "urql";
+import { useQuery } from "@apollo/client";
 
 const { Content, Sider } = Layout;
 
@@ -47,9 +47,7 @@ export function AppLayout(): JSX.Element {
   const [collapsed, setCollapsed] = React.useState(false);
   const [selectedKeys] = React.useState([]);
 
-  const [{ fetching: fetchTags, data: tagsData }] = useQuery({
-    query: GetTagsDocument,
-  });
+  const { loading: fetchTags, data: tagsData } = useQuery(GetTagsDocument);
 
   const SIDE_NAV_WIDTH = 300;
 
