@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+}
+
+.bitsky-popup-list {
+  border-radius: 0;
+}
+
+.bitsky-popup-list .bitsky-popup-list-item:hover {
+  cursor: pointer;
+}
+
+.actionable:hover .ant-list-item-meta-content {
+  color: #1677ff !important;
+}
+.actionable:hover .ant-list-item-meta-title {
+  color: #1677ff !important;
+}
+.actionable:hover .ant-list-item-meta-description {
+  color: #1677ff !important;
+}
+.actionable:hover .ant-list-item-meta-avatar {
+  color: #1677ff;
+}
