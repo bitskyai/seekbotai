@@ -16,13 +16,3 @@ export function updateURLQuery(
   // update the browser's URL bar with the new URL
   window.history.pushState(null, "", url.toString());
 }
-
-export function extensionOptionPage() {
-  console.log(`window.frameElement: `, window.frameElement);
-  console.log(`document.referrer: `, document.referrer);
-  // console.log(`window parent:`, window?.parent?.location.href);
-  console.log(
-    `display settings:`,
-    window.frameElement?.getAttribute("data-displayextensionsettings"),
-  );
-}

@@ -1,12 +1,10 @@
 import { lazy } from "react"
 import { Navigate, createHashRouter } from "react-router-dom"
 
-import { AppLayout } from "./pages/settings/layout/AppLayout"
-import { RootError } from "./pages/settings/layout/RootError"
+import { AppLayout } from "./layout/AppLayout"
+import { RootError } from "./layout/RootError"
 
-const SettingsLayout = lazy(
-  () => import("./pages/settings/layout/SettingsLayout")
-)
+const SettingsLayout = lazy(() => import("./layout/SettingsLayout"))
 
 const Dashboard = lazy(() => import("./pages/search/index"))
 const Settings = lazy(() => import("./pages/settings/index"))

@@ -60,5 +60,8 @@
   },
   "search": {
     "message": "Search with Bookmark Intelligence"
+  },
+  "errorPageTitle": {
+    "message": "Error"
   }
 }

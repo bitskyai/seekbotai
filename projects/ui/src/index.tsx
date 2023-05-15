@@ -19,12 +19,6 @@ const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-window.addEventListener("message", function (event) {
-  if (event.data === "displaySettingsOptions") {
-    console.log("displaySettingsOptions");
-  }
-});
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>

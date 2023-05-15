@@ -1,20 +1,31 @@
 // import { useQuery } from "@apollo/client";
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function Search(): JSX.Element {
+import {
+  APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
+  APP_NAVIGATE_TO_EXTENSION_SETTINGS,
+  APP_READY_MESSAGE
+} from "../../../../../shared/constants"
+
+export default function Search() {
   const navigate = useNavigate()
   const iframeElem = useRef(null)
 
-  window.removeEventListener("message", () => console.log("remove message"))
-  window.addEventListener("message", function (event) {
-    // if (event.origin != 'http://javascript.info') {
-    //   // something from an unknown domain, let's ignore it
-    //   return;
-    // }
-    navigate("/settings")
-    // can message back using event.source.postMessage(...)
-  })
+  useEffect(() => {
+    console.log("search init message listener")
+    window.removeEventListener("message", () => console.log("remove message"))
+    window.addEventListener("message", function (event) {
+      if (event.data === APP_READY_MESSAGE) {
+        iframeElem?.current?.contentWindow.postMessage(
+          APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
+          "*"
+        )
+      } else if (event.data === APP_NAVIGATE_TO_EXTENSION_SETTINGS) {
+        navigate("/settings")
+      }
+    })
+  }, [])
 
   return (
     <div style={{}}>
@@ -24,14 +35,6 @@ export default function Search(): JSX.Element {
         src="http://localhost:5173"
         className="full-screen"
         style={{ height: window.screen.height }}
-        onLoad={() => {
-          console.log("loaded")
-          console.log(iframeElem)
-          iframeElem.current.contentWindow.postMessage(
-            "displaySettingsOptions",
-            "*"
-          )
-        }}
       />
     </div>
   )
