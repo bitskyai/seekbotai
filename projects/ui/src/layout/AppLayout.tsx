@@ -7,10 +7,11 @@ import {
 } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import type { MenuProps } from "antd";
-import { Layout, Menu, Skeleton } from "antd";
+import { Layout, Menu, Skeleton, Button } from "antd";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
+import { extensionOptionPage } from "../helpers/utils";
 
 const { Content, Sider } = Layout;
 
@@ -32,14 +33,7 @@ function getItem(
 
 function getTagItem(tag: Tag): MenuItem {
   return getItem(
-    <NavLink
-      to={`/search?tags=${tag.id}`}
-      // className={({ isActive, isPending }) =>
-      //   isPending ? "pending" : isActive ? "active" : ""
-      // }
-    >
-      {tag.name}
-    </NavLink>,
+    <NavLink to={`/search?tags=${tag.id}`}>{tag.name}</NavLink>,
     `tag:${tag.id}`,
   );
 }
@@ -57,6 +51,8 @@ export function AppLayout(): JSX.Element {
   const SIDE_NAV_WIDTH = 300;
   const SIDE_COLLAPSED_NAV_WIDTH = 80;
 
+  console.log(`extensionOptionPage: ${extensionOptionPage()}`);
+
   const items: MenuItem[] = [
     getItem(
       <NavLink
@@ -68,6 +64,18 @@ export function AppLayout(): JSX.Element {
         {t("settings")}
       </NavLink>,
       "settings",
+      <SettingOutlined />,
+    ),
+    getItem(
+      <a
+        onClick={() => {
+          console.log("click extension settings");
+          window.parent.postMessage("/extensionSettings", "*");
+        }}
+      >
+        Extension Settings
+      </a>,
+      "extensionSettings",
       <SettingOutlined />,
     ),
     // getItem(t("sideNav.folders"), "folders", <FolderOutlined />, [

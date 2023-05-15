@@ -5,7 +5,7 @@ import {
   SearchOutlined,
   SettingOutlined
 } from "@ant-design/icons"
-import { Button, Divider, List, Tooltip, Typography } from "antd"
+import { Button, List, Tooltip, Typography } from "antd"
 import { useState } from "react"
 
 import Logo from "~/components/logo"
@@ -29,6 +29,7 @@ function IndexPopup() {
         </div>
       ),
       description: chrome.i18n.getMessage("searchDescription"),
+      key: "search",
       icon: <SearchOutlined style={{ fontSize: "18px" }} />
     },
     {
@@ -42,6 +43,7 @@ function IndexPopup() {
         </div>
       ),
       description: chrome.i18n.getMessage("savePageDescription"),
+      key: "savePage",
       icon: <SaveOutlined style={{ fontSize: "18px" }} />
     },
     {
@@ -55,9 +57,16 @@ function IndexPopup() {
         </div>
       ),
       description: chrome.i18n.getMessage("bookmarkPageDescription"),
+      key: "bookmarkPage",
       icon: <BookOutlined style={{ fontSize: "18px" }} />
     }
   ]
+
+  const onClickAction = (key: string) => {
+    if (key === "search") {
+      window.open("/options.html#/search", "_blank")
+    }
+  }
 
   return (
     <div style={{ minWidth: 450 }}>
@@ -76,7 +85,11 @@ function IndexPopup() {
                   icon={<QuestionCircleOutlined />}></Button>
               </Tooltip>
               <Tooltip title={chrome.i18n.getMessage("settingsTooltip")}>
-                <Button type="link" icon={<SettingOutlined />}></Button>
+                <Button
+                  type="link"
+                  href="options.html#/settings"
+                  target="_blank"
+                  icon={<SettingOutlined />}></Button>
               </Tooltip>
             </div>
           </div>
@@ -91,7 +104,10 @@ function IndexPopup() {
         bordered
         dataSource={menuData}
         renderItem={(item) => (
-          <List.Item className="bitsky-popup-list-item actionable">
+          <List.Item
+            key={item.key}
+            onClick={() => onClickAction(item.key)}
+            className="bitsky-popup-list-item actionable">
             <List.Item.Meta
               className="actionable"
               avatar={item.icon}

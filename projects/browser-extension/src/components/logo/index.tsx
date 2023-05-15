@@ -6,16 +6,16 @@ import "./index.css"
 function Logo() {
   return (
     <div className="bitsky-logo">
-      <Space align="center">
-        <Avatar src={<img src={logo} />}></Avatar>
-        <a
-          className="bitsky-logo-text"
-          href="https://www.bitsky.ai"
-          target="_blank"
-          rel="noreferrer">
+      <a
+        className="bitsky-logo-text"
+        href="https://www.bitsky.ai"
+        target="_blank"
+        rel="noreferrer">
+        <Space align="center">
+          <Avatar src={<img src={logo} />}></Avatar>
           {chrome.i18n.getMessage("extensionName")}
-        </a>
-      </Space>
+        </Space>
+      </a>
     </div>
   )
 }
