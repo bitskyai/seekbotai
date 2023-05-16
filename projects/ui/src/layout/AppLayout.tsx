@@ -91,7 +91,7 @@ export function AppLayout(): JSX.Element {
             window.parent.postMessage(APP_NAVIGATE_TO_EXTENSION_SETTINGS, "*");
           }}
         >
-          Extension Settings
+          {t("extensionSettings")}
         </a>,
         "extensionSettings",
         <SettingOutlined />,

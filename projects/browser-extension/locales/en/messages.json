@@ -13,6 +13,12 @@
   "settingsTitle": {
     "message": "Settings"
   },
+  "importTitle": {
+    "message": "Import"
+  },
+  "extensionSettingsTitle": {
+    "message": "Extension Settings"
+  },
   "settingsTooltip": {
     "message": "Click to open settings page"
   },
