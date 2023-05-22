@@ -3,6 +3,8 @@ import { ArrowLeftOutlined } from "@ant-design/icons"
 import { Button, Layout, Space, Tabs, theme } from "antd"
 import { NavLink } from "react-router-dom"
 
+import ExtensionSettingsGeneral from "./general"
+import ExtensionSettingsIgnorePatterns from "./ignorePatterns"
 import ExtensionSettingsImport from "./importBookmarks"
 
 const { Header, Content } = Layout
@@ -36,6 +38,16 @@ export default function ExtensionSettings(): JSX.Element {
         <Tabs
           tabPosition={"left"}
           items={[
+            {
+              label: <div>{chrome.i18n.getMessage("generalTitle")}</div>,
+              key: "general",
+              children: <ExtensionSettingsGeneral />
+            },
+            {
+              label: <div>{chrome.i18n.getMessage("ignorePatternsTitle")}</div>,
+              key: "ignorePatterns",
+              children: <ExtensionSettingsIgnorePatterns />
+            },
             {
               label: <div>{chrome.i18n.getMessage("importTitle")}</div>,
               key: "import",

@@ -121,6 +121,9 @@ model Folder {
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int      @map("bk_user_id")
+  parent    Folder?  @relation("ParentChildren", fields: [parentId], references: [id])
+  parentId  Int?     @map("bk_parent_id")
+  children  Folder[] @relation("ParentChildren")
 
   name      String
   icon      String?

@@ -1,3 +1,8 @@
+import {
+  APP_READY_MESSAGE,
+  APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
+  APP_NAVIGATE_TO_EXTENSION_SETTINGS,
+} from "../../../shared/constants";
 import { GetTagsDocument, Tag } from "../graphql/generated";
 import {
   BookOutlined,
@@ -11,11 +16,6 @@ import { Layout, Menu, Skeleton } from "antd";
 import { ReactNode, Key, Fragment, Suspense, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
-import {
-  APP_READY_MESSAGE,
-  APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
-  APP_NAVIGATE_TO_EXTENSION_SETTINGS,
-} from "../../../shared/constants";
 
 const { Content, Sider } = Layout;
 

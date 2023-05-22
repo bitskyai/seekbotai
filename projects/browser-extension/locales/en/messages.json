@@ -14,7 +14,19 @@
     "message": "Settings"
   },
   "importTitle": {
-    "message": "Import"
+    "message": "Import Bookmarks"
+  },
+  "importDescription": {
+    "message": "Import Bookmarks from current browser to BitSky. Import will not delete your browser bookmarks, if a bookmark need to login, it maybe failed to import."
+  },
+  "importButton": {
+    "message": "Start Import"
+  },
+  "generalTitle": {
+    "message": "General"
+  },
+  "ignorePatternsTitle": {
+    "message": "Ignore Patterns"
   },
   "extensionSettingsTitle": {
     "message": "Extension Settings"
