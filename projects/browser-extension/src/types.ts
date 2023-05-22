@@ -13,6 +13,17 @@ export interface ImportBookmarkRecord extends Bookmarks.BookmarkTreeNode {
 }
 
 export type ImportBookmarks = {
-  lastImportedAt: number
+  lastImportedAt?: number
+  status?: ImportStatus
   bookmarks: ImportBookmarkRecord[]
+}
+
+export type ImportBookmarksStatus = {
+  lastImportedAt?: number
+  status?: ImportStatus
+  total: number
+  inProgress: ImportBookmarkRecord[]
+  success: ImportBookmarkRecord[]
+  failed: ImportBookmarkRecord[]
+  remaining: ImportBookmarkRecord[]
 }

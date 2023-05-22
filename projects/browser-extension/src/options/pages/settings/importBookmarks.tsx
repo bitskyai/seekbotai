@@ -8,11 +8,15 @@ import { MessageSubject } from "~background/messages"
 const { Title, Text } = Typography
 
 async function getBookmarks() {
-  const bookmarks = await sendToBackground({
+  console.log(
+    `MessageSubject.getBookmarksImportStatus: `,
+    MessageSubject.getBookmarksImportStatus
+  )
+  const importBookmarksStatus = await sendToBackground({
     name: MessageSubject.getBookmarksImportStatus
   })
 
-  console.log(`bookmarks: `, bookmarks)
+  console.log(`importBookmarksStatus: `, importBookmarksStatus)
 }
 
 export default function ExtensionSettingsImport() {
