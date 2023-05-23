@@ -27,3 +27,9 @@ export type ImportBookmarksStatus = {
   failed: ImportBookmarkRecord[]
   remaining: ImportBookmarkRecord[]
 }
+
+export type MessageResponse<T> = {
+  data: T
+  status?: number
+  statusText?: string
+}

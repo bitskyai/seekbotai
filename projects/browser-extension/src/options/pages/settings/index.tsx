@@ -7,6 +7,8 @@ import ExtensionSettingsGeneral from "./general"
 import ExtensionSettingsIgnorePatterns from "./ignorePatterns"
 import ExtensionSettingsImport from "./importBookmarks"
 
+import "./index.css"
+
 const { Header, Content } = Layout
 
 export default function ExtensionSettings(): JSX.Element {

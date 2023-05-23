@@ -81,5 +81,17 @@
   },
   "errorPageTitle": {
     "message": "Error"
+  },
+  "totalTitle": {
+    "message": "Total"
+  },
+  "successTitle": {
+    "message": "Success"
+  },
+  "failedTitle": {
+    "message": "Fail"
+  },
+  "pendingTitle": {
+    "message": "In Progress"
   }
 }
