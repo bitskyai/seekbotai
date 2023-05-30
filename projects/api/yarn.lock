@@ -170,6 +170,11 @@
   dependencies:
     "@prisma/generator-helper" "^4.9.0"
 
+"@pothos/plugin-simple-objects@^3.6.8":
+  version "3.6.8"
+  resolved "https://registry.yarnpkg.com/@pothos/plugin-simple-objects/-/plugin-simple-objects-3.6.8.tgz#fe33d741a2955f7242347534a495e745385ad0d7"
+  integrity sha512-qsoBZHfwLAdozJEdT7r7jfineL9vDfdWf7HZkw5zkiUtY6KrZJPNuq0MMCPZGuGxHFBm60jC73nk/ENZrVKpsg==
+
 "@prisma/client@^4.9.0":
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-4.10.1.tgz#c47fd54661ee74b174cee63e9dc418ecf57a6ccd"
