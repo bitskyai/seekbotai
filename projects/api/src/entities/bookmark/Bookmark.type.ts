@@ -43,7 +43,11 @@ export const CreateBookmarksRes = schemaBuilder.simpleObject(
   "CreateBookmarksRes",
   {
     fields: (t) => ({
-      success: t.field({ type: BookmarkResult }),
+      url: t.string({ nullable: false }),
+      id: t.int({ nullable: true }),
+      status: t.string({ nullable: true }),
+      code: t.string({ nullable: true }),
+      message: t.string({ nullable: true }),
     }),
   },
 );

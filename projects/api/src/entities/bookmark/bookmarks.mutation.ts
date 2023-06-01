@@ -3,22 +3,23 @@ import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
   BookmarkCreateInputType,
-  Bookmark,
-  BookmarkResult,
+  CreateBookmarksRes,
   type BookmarkCreate,
 } from "./Bookmark.type";
 
 schemaBuilder.mutationField("createBookmarks", (t) =>
   t.field({
-    type: [Bookmark],
+    type: [CreateBookmarksRes],
     args: {
       bookmarks: t.arg({ type: [BookmarkCreateInputType], required: true }),
     },
     resolve: async (root, args, ctx) => {
-      return createOrUpdateBookmarks({
+      const res = await createOrUpdateBookmarks({
         ctx,
         bookmarks: args.bookmarks,
       });
+
+      return res;
     },
   }),
 );
@@ -31,13 +32,12 @@ export async function createOrUpdateBookmarks({
   bookmarks: BookmarkCreate[];
 }) {
   const prismaClient = getPrismaClient();
+  const bookmarksResult = [];
   //TODO: need to change to parrallel
-  const successBookmarks = [];
-  const failedBookmarks = [];
   for (const bookmark of bookmarks) {
     try {
-      successBookmarks.push(
-        await prismaClient.$transaction(async (prisma) => {
+      const createdBookmark = await prismaClient.$transaction(
+        async (prisma) => {
           const result = await prisma.bookmark.upsert({
             where: {
               userId_url: { url: bookmark.url, userId: ctx.user.id },
@@ -96,16 +96,27 @@ export async function createOrUpdateBookmarks({
             });
           }
           return result;
-        }),
+        },
       );
-    } catch (error) {
-      failedBookmarks.push(bookmark);
-      console.log("error", error);
+      bookmarksResult.push({
+        status: "success",
+        url: createdBookmark.url,
+        id: createdBookmark.id,
+      });
+    } catch (error: unknown) {
+      const errorRes = {
+        url: bookmark.url,
+        status: "error",
+        message: "",
+      };
+      if (error instanceof Error) {
+        errorRes.message = error.message;
+      } else {
+        errorRes.message = error?.toString() ?? "Unknown error";
+      }
+      bookmarksResult.push(errorRes);
     }
   }
-  // return {
-  //   success: successBookmarks,
-  //   fail: failedBookmarks,
-  // };
-  return successBookmarks;
+
+  return bookmarksResult;
 }

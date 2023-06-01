@@ -2,8 +2,8 @@ import { getPrismaClient } from "../db";
 import { GQLContext } from "../types";
 import SchemaBuilder from "@pothos/core";
 import PrismaPlugin from "@pothos/plugin-prisma";
-import SimpleObjectsPlugin from "@pothos/plugin-simple-objects";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
+import SimpleObjectsPlugin from "@pothos/plugin-simple-objects";
 import { DateResolver, DateTimeResolver } from "graphql-scalars";
 
 export const schemaBuilder = new SchemaBuilder<{
