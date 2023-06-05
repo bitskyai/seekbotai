@@ -2,7 +2,7 @@ import { type Bookmarks } from "webextension-polyfill"
 
 import { Storage } from "@plasmohq/storage"
 
-import { getFlatBookmarks } from "~bookmarks/background"
+import { getFlatBookmarks } from "~background/modules/bookmarks"
 import {
   type ImportBookmarks,
   type ImportBookmarksStatus,

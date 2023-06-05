@@ -1,0 +1,9 @@
+mutation createBookmarks($bookmarks: [BookmarkCreateInputType!]!) {
+  createBookmarks(bookmarks: $bookmarks) {
+    url
+    status
+    id
+    code
+    message
+  }
+}

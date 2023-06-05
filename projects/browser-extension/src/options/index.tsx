@@ -6,7 +6,8 @@ import "./index.css"
 
 import { router } from "./routes"
 
-const url = `http://localhost:5173/graphql`
+// TODO: need to get from preferences
+const url = `http://localhost:4000/graphql`
 
 const apolloClient = new ApolloClient({
   uri: url,

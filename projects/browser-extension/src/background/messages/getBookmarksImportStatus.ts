@@ -1,6 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
-import { getBookmarksImportStatus } from "~imports/background"
+import { getBookmarksImportStatus } from "~background/modules/imports"
 import { type ImportBookmarksStatus, type MessageResponse } from "~types"
 
 export type BookmarksImportStatusMsgRes = MessageResponse<ImportBookmarksStatus>
