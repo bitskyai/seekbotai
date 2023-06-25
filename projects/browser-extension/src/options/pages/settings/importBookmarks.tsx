@@ -25,16 +25,22 @@ export default function ExtensionSettingsImport() {
     const ImportBookmarksDetail = (await sendToBackground({
       name: MessageSubject.getBookmarksImportStatus
     })) as BookmarksImportStatusMsgRes
-    setTotal(ImportBookmarksDetail.data.total || 0)
-    setSuccess(ImportBookmarksDetail.data.success.length || 0)
-    setFailed(ImportBookmarksDetail.data.failed.length || 0)
-    setPending(ImportBookmarksDetail.data.inProgress.length || 0)
+    setTotal(ImportBookmarksDetail.data.totalBookmarkCount || 0)
+    setSuccess(ImportBookmarksDetail.data.successBookmarkCount || 0)
+    setFailed(ImportBookmarksDetail.data.failedBookmarkCount || 0)
+    setPending(ImportBookmarksDetail.data.inProgressBookmarkCount || 0)
     setPercentage(total > 0 ? Math.round((success / total) * 100) : 0)
     setTotalBookmarks(
       ImportBookmarksDetail.data.success
         .concat(ImportBookmarksDetail.data.failed)
         .concat(ImportBookmarksDetail.data.remaining)
     )
+  }
+
+  async function startImportBookmarks() {
+    await sendToBackground({
+      name: MessageSubject.startImportBookmarks
+    })
   }
 
   useEffect(() => {
@@ -77,7 +83,7 @@ export default function ExtensionSettingsImport() {
         </Row>
       </div>
       <div>
-        <Button type="primary" style={{ marginTop: 16 }}>
+        <Button type="primary" style={{ marginTop: 16 }} onClick={startImportBookmarks}>
           {chrome.i18n.getMessage("importButton")}
         </Button>
       </div>

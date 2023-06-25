@@ -25,7 +25,7 @@ export class ImportProcess {
   }
 
   async init() {
-    this.inited = false;
+    this.inited = false
     await prepareStartImportBookmarks({ syncUpBookmarks: true })
     this.inited = true
   }
@@ -34,7 +34,7 @@ export class ImportProcess {
     if (!this.inited) {
       await this.init()
     }
-    this.stopped = false;
+    this.stopped = false
     let inProgressBookmarks = await startImportBookmarks({concurrentBookmarks:this.concurrent})
     while(!this.stopped&&inProgressBookmarks.length>0) {
       // reset 
@@ -43,21 +43,21 @@ export class ImportProcess {
         let bookmark = inProgressBookmarks[i]
         let importThread = new ImportThread({url:bookmark.url, timeout:this.timeout})
         this.importThreads.push(importThread)
-
-        const pagesData = await  Promise.all(this.importThreads.map((thread)=>thread.start()))
-        await updateImportBookmarks(pagesData)
-
-        // fetch next
-        inProgressBookmarks = await startImportBookmarks({concurrentBookmarks:this.concurrent})
       }
+
+      const pagesData = await  Promise.all(this.importThreads.map((thread)=>thread.start()))
+      await updateImportBookmarks(pagesData)
+
+      // fetch next
+      inProgressBookmarks = await startImportBookmarks({concurrentBookmarks:this.concurrent})
     }
 
-    this.stopped = true;
+    this.stopped = true
   }
 
   async stop() {
-    this.stopped = true;
+    this.stopped = true
     await Promise.all(this.importThreads.map((thread)=>thread.stop()))
-    return true;
+    return true
   }
 }

@@ -35,7 +35,8 @@
     "fs-extra": "11.1.0",
     "lodash": "4.17.21",
     "server-destroy": "1.0.1",
-    "prisma": "^4.9.0"
+    "prisma": "^4.9.0",
+    "cheerio": "^1.0.0-rc.12"
   },
   "devDependencies": {
     "@types/node": "^18.11.19",

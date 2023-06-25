@@ -60,7 +60,8 @@
       "unlimitedStorage",
       "webNavigation",
       "notifications",
-      "storage"
+      "storage",
+      "unlimitedStorage"
     ]
   }
 }
