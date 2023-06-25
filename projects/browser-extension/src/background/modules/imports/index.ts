@@ -2,58 +2,34 @@ import { type Bookmarks } from "webextension-polyfill"
 
 import { Storage } from "@plasmohq/storage"
 
-import { getFlatBookmarks } from "~background/modules/bookmarks"
+import fetchPage from "~background/modules/fetchPage"
 import {
-  type ImportBookmarks,
-  type ImportBookmarksStatus,
-  ImportStatus
-} from "~types"
+  getImportBookmarksSummary,
+  prepareStartImportBookmarks
+} from "~storage"
+import { type ImportBookmarksSummary, ImportStatus } from "~types"
 
-function getBookmarkHash(bookmark: Bookmarks.BookmarkTreeNode) {
-  return `${bookmark.id}:${bookmark.url}`
-}
+export const IMPORT_BOOKMARKS_JOB_TIMEOUT = 1000 * 60 * 60 * 2 // 2 hours
+export const PARALLEL_IMPORT_BOOKMARKS_COUNT = 5
 
-export const getBookmarksImportStatus =
-  async (): Promise<ImportBookmarksStatus> => {
-    const bookmarks = await getFlatBookmarks()
-    const storage = new Storage()
-    const importBookmarks = ((await storage.get(
-      "importBookmarks"
-    )) as ImportBookmarks) ?? { bookmarks: [] }
+const importingBookmarks = false
 
-    const inProgress = []
-    const success = []
-    const failed = []
-    const remaining = []
+export const startImportBookmarks = async ({
+  forceStart
+}: {
+  forceStart?: Boolean
+}): Promise<Partial<ImportBookmarksSummary>> => {
+  const importBookmarksSummary = await getImportBookmarksSummary()
 
-    const importBookmarksHash = {}
-    for (let i = 0; i < importBookmarks.bookmarks.length; i++) {
-      const importBookmark = importBookmarks.bookmarks[i]
-      importBookmarksHash[getBookmarkHash(importBookmark)] = importBookmark
-    }
+  const importJobRunningTime =
+    new Date().getTime() - importBookmarksSummary.lastImportedAt ?? 0
 
-    for (let i = 0; i < bookmarks.length; i++) {
-      const bookmark = bookmarks[i]
-      const importBookmark = importBookmarksHash[getBookmarkHash(bookmark)]
-
-      if (!importBookmark) {
-        remaining.push(bookmark)
-      } else if (importBookmark.status === ImportStatus.Pending) {
-        inProgress.push(bookmark)
-      } else if (importBookmark.status === ImportStatus.Success) {
-        success.push(bookmark)
-      } else if (importBookmark.status === ImportStatus.Failed) {
-        failed.push(bookmark)
-      }
-    }
-
-    return {
-      lastImportedAt: importBookmarks.lastImportedAt,
-      status: importBookmarks.status,
-      total: bookmarks.length,
-      inProgress: inProgress,
-      success: success,
-      failed: failed,
-      remaining: remaining
-    }
+  if (
+    forceStart ||
+    (importingBookmarks && importJobRunningTime > IMPORT_BOOKMARKS_JOB_TIMEOUT)
+  ) {
+    await prepareStartImportBookmarks({ syncUpBookmarks: true })
   }
+
+  return importBookmarksSummary
+}

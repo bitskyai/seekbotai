@@ -1,9 +1,9 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import { getBookmarksImportStatus } from "~background/modules/imports"
-import { type ImportBookmarksStatus, type MessageResponse } from "~types"
+import { type ImportBookmarksDetail, type MessageResponse } from "~types"
 
-export type BookmarksImportStatusMsgRes = MessageResponse<ImportBookmarksStatus>
+export type BookmarksImportStatusMsgRes = MessageResponse<ImportBookmarksDetail>
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   console.log(`getBookmarksImportStatus MessageHandler: `, req)

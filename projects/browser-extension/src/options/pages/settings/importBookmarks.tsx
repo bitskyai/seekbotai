@@ -22,18 +22,18 @@ export default function ExtensionSettingsImport() {
   )
 
   async function getBookmarksImportStatus() {
-    const importBookmarksStatus = (await sendToBackground({
+    const ImportBookmarksDetail = (await sendToBackground({
       name: MessageSubject.getBookmarksImportStatus
     })) as BookmarksImportStatusMsgRes
-    setTotal(importBookmarksStatus.data.total || 0)
-    setSuccess(importBookmarksStatus.data.success.length || 0)
-    setFailed(importBookmarksStatus.data.failed.length || 0)
-    setPending(importBookmarksStatus.data.inProgress.length || 0)
+    setTotal(ImportBookmarksDetail.data.total || 0)
+    setSuccess(ImportBookmarksDetail.data.success.length || 0)
+    setFailed(ImportBookmarksDetail.data.failed.length || 0)
+    setPending(ImportBookmarksDetail.data.inProgress.length || 0)
     setPercentage(total > 0 ? Math.round((success / total) * 100) : 0)
     setTotalBookmarks(
-      importBookmarksStatus.data.success
-        .concat(importBookmarksStatus.data.failed)
-        .concat(importBookmarksStatus.data.remaining)
+      ImportBookmarksDetail.data.success
+        .concat(ImportBookmarksDetail.data.failed)
+        .concat(ImportBookmarksDetail.data.remaining)
     )
   }
 
