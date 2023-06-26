@@ -1,6 +1,7 @@
 import { type Bookmarks } from "webextension-polyfill"
 
 export enum ImportStatus {
+  Ready = "ready",
   Success = "success",
   Pending = "pending",
   Failed = "failed"

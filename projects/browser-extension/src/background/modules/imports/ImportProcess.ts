@@ -1,4 +1,9 @@
-import { updateImportBookmarks, prepareStartImportBookmarks, startImportBookmarks } from "~storage"
+import {
+  prepareStartImportBookmarks,
+  startImportBookmarks,
+  stopImportBookmarks,
+  updateImportBookmarks
+} from "~storage"
 
 import ImportThread from "./ImportThread"
 
@@ -10,8 +15,15 @@ export class ImportProcess {
   private stopped: boolean = true
   private inited = false
   private importThreads: ImportThread[] = []
+  private jobIndex: number = 0
 
-  constructor({ concurrent, timeout }: { concurrent?: number, timeout?: number }) {
+  constructor({
+    concurrent,
+    timeout
+  }: {
+    concurrent?: number
+    timeout?: number
+  }) {
     if (concurrent) {
       this.concurrent =
         concurrent <= ImportProcess.MAX_CONCURRENT
@@ -35,21 +47,39 @@ export class ImportProcess {
       await this.init()
     }
     this.stopped = false
-    let inProgressBookmarks = await startImportBookmarks({concurrentBookmarks:this.concurrent})
-    while(!this.stopped&&inProgressBookmarks.length>0) {
-      // reset 
+    let inProgressBookmarks = await startImportBookmarks({
+      concurrentBookmarks: this.concurrent
+    })
+    while (!this.stopped && inProgressBookmarks.length > 0) {
+      this.jobIndex++
+      console.log(
+        `[${Date.now()}][Start]Job Index: ${this.jobIndex}, Bookmarks:`,
+        inProgressBookmarks
+      )
+      // reset
       this.importThreads = []
-      for(let i=0;i<inProgressBookmarks.length;i++) {
+      for (let i = 0; i < inProgressBookmarks.length; i++) {
         let bookmark = inProgressBookmarks[i]
-        let importThread = new ImportThread({url:bookmark.url, timeout:this.timeout})
+        let importThread = new ImportThread({
+          url: bookmark.url,
+          timeout: this.timeout
+        })
         this.importThreads.push(importThread)
       }
 
-      const pagesData = await  Promise.all(this.importThreads.map((thread)=>thread.start()))
+      const pagesData = await Promise.all(
+        this.importThreads.map((thread) => thread.start())
+      )
       await updateImportBookmarks(pagesData)
 
+      console.log(
+        `[${Date.now()}][End]Job Index: ${this.jobIndex}, Pages Data:`,
+        pagesData
+      )
       // fetch next
-      inProgressBookmarks = await startImportBookmarks({concurrentBookmarks:this.concurrent})
+      inProgressBookmarks = await startImportBookmarks({
+        concurrentBookmarks: this.concurrent
+      })
     }
 
     this.stopped = true
@@ -57,7 +87,8 @@ export class ImportProcess {
 
   async stop() {
     this.stopped = true
-    await Promise.all(this.importThreads.map((thread)=>thread.stop()))
+    await Promise.all(this.importThreads.map((thread) => thread.stop()))
+    await stopImportBookmarks()
     return true
   }
 }

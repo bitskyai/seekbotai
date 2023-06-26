@@ -44,6 +44,6 @@ export default class ImportThread {
   async stop() {
     this.cancelled = true
     await this.fetchPageInstance.cancel()
-    return true;
+    return true
   }
 }

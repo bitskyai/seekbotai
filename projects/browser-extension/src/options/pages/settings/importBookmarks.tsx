@@ -2,40 +2,22 @@ import { Button, Col, List, Progress, Row, Statistic, Typography } from "antd"
 import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
+import { useStorage } from "@plasmohq/storage/hook"
 
 import {
   type BookmarksImportStatusMsgRes,
   MessageSubject
 } from "~background/messages"
+import { StorageKeys, getImportBookmarksDetail } from "~storage"
+import { type ImportBookmarksSummary, ImportStatus } from "~types"
 import { type ImportBookmarkRecord } from "~types"
 
 const { Title, Text } = Typography
 
 export default function ExtensionSettingsImport() {
-  const [percentage, setPercentage] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [success, setSuccess] = useState(0)
-  const [pending, setPending] = useState(0)
-  const [failed, setFailed] = useState(0)
   const [totalBookmarks, setTotalBookmarks] = useState<ImportBookmarkRecord[]>(
     []
   )
-
-  async function getBookmarksImportStatus() {
-    const ImportBookmarksDetail = (await sendToBackground({
-      name: MessageSubject.getBookmarksImportStatus
-    })) as BookmarksImportStatusMsgRes
-    setTotal(ImportBookmarksDetail.data.totalBookmarkCount || 0)
-    setSuccess(ImportBookmarksDetail.data.successBookmarkCount || 0)
-    setFailed(ImportBookmarksDetail.data.failedBookmarkCount || 0)
-    setPending(ImportBookmarksDetail.data.inProgressBookmarkCount || 0)
-    setPercentage(total > 0 ? Math.round((success / total) * 100) : 0)
-    setTotalBookmarks(
-      ImportBookmarksDetail.data.success
-        .concat(ImportBookmarksDetail.data.failed)
-        .concat(ImportBookmarksDetail.data.remaining)
-    )
-  }
 
   async function startImportBookmarks() {
     await sendToBackground({
@@ -43,9 +25,27 @@ export default function ExtensionSettingsImport() {
     })
   }
 
+  async function stopImportBookmarks() {
+    await sendToBackground({
+      name: MessageSubject.stopImportBookmarks
+    })
+  }
+
+  const [importBookmarksSummary] = useStorage<ImportBookmarksSummary>(
+    StorageKeys.ImportBookmarksSummary
+  )
+
   useEffect(() => {
-    getBookmarksImportStatus()
-  }, [])
+    getImportBookmarksDetail().then((importBookmarksDetail) => {
+      setTotalBookmarks(
+        importBookmarksDetail.failed
+          .concat(importBookmarksDetail.success)
+          .concat(importBookmarksDetail.remaining)
+      )
+    })
+  }, [importBookmarksSummary])
+
+  console.log(`ImportBookmarksSummary: `, importBookmarksSummary)
 
   return (
     <div>
@@ -54,42 +54,67 @@ export default function ExtensionSettingsImport() {
         {chrome.i18n.getMessage("importDescription")}
       </Text>
       <div className="settings-status-section">
-        <Progress percent={percentage} />
+        <Progress
+          percent={
+            importBookmarksSummary?.totalBookmarkCount
+              ? parseFloat(
+                  (
+                    importBookmarksSummary.totalBookmarkCount -
+                    importBookmarksSummary.remainingBookmarkCount /
+                      importBookmarksSummary.totalBookmarkCount
+                  ).toFixed(1)
+                )
+              : 0
+          }
+        />
         <Row gutter={16}>
           <Col span={12}>
             <Statistic
               title={chrome.i18n.getMessage("totalTitle")}
-              value={total}
+              value={importBookmarksSummary?.totalBookmarkCount || 0}
             />
           </Col>
           <Col span={12}>
             <Statistic
               title={chrome.i18n.getMessage("pendingTitle")}
-              value={pending}
+              value={importBookmarksSummary?.inProgressBookmarkCount || 0}
             />
           </Col>
           <Col span={12}>
             <Statistic
               title={chrome.i18n.getMessage("successTitle")}
-              value={success}
+              value={importBookmarksSummary?.successBookmarkCount || 0}
             />
           </Col>
           <Col span={12}>
             <Statistic
               title={chrome.i18n.getMessage("failedTitle")}
-              value={failed}
+              value={importBookmarksSummary?.failedBookmarkCount || 0}
             />
           </Col>
         </Row>
       </div>
       <div>
-        <Button type="primary" style={{ marginTop: 16 }} onClick={startImportBookmarks}>
+        <Button
+          type="primary"
+          style={{ marginTop: 16 }}
+          onClick={startImportBookmarks}
+          loading={
+            importBookmarksSummary?.status === ImportStatus.Pending
+              ? true
+              : false
+          }>
           {chrome.i18n.getMessage("importButton")}
+        </Button>
+        <Button
+          style={{ marginTop: 16, marginLeft: 5 }}
+          onClick={stopImportBookmarks}>
+          {chrome.i18n.getMessage("stopImportButton")}
         </Button>
       </div>
       <List
         itemLayout="horizontal"
-        dataSource={totalBookmarks}
+        dataSource={totalBookmarks || []}
         renderItem={(item, index) => (
           <List.Item>
             <List.Item.Meta

@@ -2,7 +2,7 @@ export enum MessageSubject {
   getBookmarks = "getBookmarks",
   getBookmarksImportStatus = "getBookmarksImportStatus",
   startImportBookmarks = "startImportBookmarks",
-  stopImportBookmarks = "stopImportBookmarks",
+  stopImportBookmarks = "stopImportBookmarks"
 }
 
 export { default as getBookmarksMessageHandler } from "./getBookmarks"

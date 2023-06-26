@@ -3,13 +3,10 @@ import { type Bookmarks } from "webextension-polyfill"
 
 import { Storage } from "@plasmohq/storage"
 
-import {
-  type BookmarkCreateInputType,
-} from "~/graphql/generated"
-
+import { type BookmarkCreateInputType } from "~/graphql/generated"
+import createBookmarks from "~background/apis/createBookmarks"
 import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
-import createBookmarks from "~background/apis/createBookmarks"
 import {
   type ImportBookmarkRecord,
   type ImportBookmarks,
@@ -54,18 +51,20 @@ export const getImportBookmarksSummary =
     return importBookmarksSummary
   }
 
-export const updateImportBookmarksSummary = async (summary:Partial<ImportBookmarksSummary>):Promise<Boolean> => {
+export const updateImportBookmarksSummary = async (
+  summary: Partial<ImportBookmarksSummary>
+): Promise<Boolean> => {
   const storage = new Storage()
   const importBookmarksSummary = await getImportBookmarksSummary()
   _.merge(importBookmarksSummary, summary)
   await storage.set(StorageKeys.ImportBookmarksSummary, importBookmarksSummary)
-  return true;
+  return true
 }
 
 export const getImportBookmarksInProgress = async (): Promise<
   ImportBookmarkRecord[]
 > => {
-  const storage = new Storage({area: "local"})
+  const storage = new Storage({ area: "local" })
   const importBookmarksInProgress =
     ((await storage.get(
       StorageKeys.ImportBookmarksInProgress
@@ -73,16 +72,18 @@ export const getImportBookmarksInProgress = async (): Promise<
   return importBookmarksInProgress
 }
 
-export const updateImportBookmarksInProgress = async (inProgress: ImportBookmarkRecord[]): Promise<Boolean> => {
-  const storage = new Storage({area: "local"})
-  await storage.set(StorageKeys.ImportBookmarksInProgress, inProgress??[])
-  return true;
+export const updateImportBookmarksInProgress = async (
+  inProgress: ImportBookmarkRecord[]
+): Promise<Boolean> => {
+  const storage = new Storage({ area: "local" })
+  await storage.set(StorageKeys.ImportBookmarksInProgress, inProgress ?? [])
+  return true
 }
 
 export const getImportBookmarksSuccess = async (): Promise<
   ImportBookmarkRecord[]
 > => {
-  const storage = new Storage({area: "local"})
+  const storage = new Storage({ area: "local" })
   const ImportBookmarksSuccess =
     ((await storage.get(
       StorageKeys.ImportBookmarksSuccess
@@ -90,16 +91,18 @@ export const getImportBookmarksSuccess = async (): Promise<
   return ImportBookmarksSuccess
 }
 
-export const updateImportBookmarksSuccess = async (success: ImportBookmarkRecord[]): Promise<Boolean> => {
-  const storage = new Storage({area: "local"})
-  await storage.set(StorageKeys.ImportBookmarksSuccess, success??[])
-  return true;
+export const updateImportBookmarksSuccess = async (
+  success: ImportBookmarkRecord[]
+): Promise<Boolean> => {
+  const storage = new Storage({ area: "local" })
+  await storage.set(StorageKeys.ImportBookmarksSuccess, success ?? [])
+  return true
 }
 
 export const getImportBookmarksFailed = async (): Promise<
   ImportBookmarkRecord[]
 > => {
-  const storage = new Storage({area: "local"})
+  const storage = new Storage({ area: "local" })
   const importBookmarksFailed =
     ((await storage.get(
       StorageKeys.ImportBookmarksFailed
@@ -107,16 +110,18 @@ export const getImportBookmarksFailed = async (): Promise<
   return importBookmarksFailed
 }
 
-export const updateImportBookmarksFailed = async (failed: ImportBookmarkRecord[]): Promise<Boolean> => {
-  const storage = new Storage({area: "local"})
-  await storage.set(StorageKeys.ImportBookmarksFailed, failed??[])
-  return true;
+export const updateImportBookmarksFailed = async (
+  failed: ImportBookmarkRecord[]
+): Promise<Boolean> => {
+  const storage = new Storage({ area: "local" })
+  await storage.set(StorageKeys.ImportBookmarksFailed, failed ?? [])
+  return true
 }
 
 export const getImportBookmarksRemaining = async (): Promise<
   ImportBookmarkRecord[]
 > => {
-  const storage = new Storage({area: "local"})
+  const storage = new Storage({ area: "local" })
   const importBookmarksRemaining =
     ((await storage.get(
       StorageKeys.ImportBookmarksRemaining
@@ -124,10 +129,12 @@ export const getImportBookmarksRemaining = async (): Promise<
   return importBookmarksRemaining
 }
 
-export const updateImportBookmarksRemaining = async (remaining: ImportBookmarkRecord[]) => {
-  const storage = new Storage({area: "local"})
-  await storage.set(StorageKeys.ImportBookmarksRemaining, remaining??[])
-  return true;
+export const updateImportBookmarksRemaining = async (
+  remaining: ImportBookmarkRecord[]
+) => {
+  const storage = new Storage({ area: "local" })
+  await storage.set(StorageKeys.ImportBookmarksRemaining, remaining ?? [])
+  return true
 }
 
 export const getImportBookmarksDetail =
@@ -144,21 +151,23 @@ export const getImportBookmarksDetail =
     }
   }
 
-export const updateImportBookmarksDetail = async (detail: Partial<ImportBookmarksDetail>):Promise<Boolean> => {
-  if(detail.inProgress) {
+export const updateImportBookmarksDetail = async (
+  detail: Partial<ImportBookmarksDetail>
+): Promise<Boolean> => {
+  if (detail.inProgress) {
     await updateImportBookmarksInProgress(detail.inProgress)
   }
-  if(detail.success) {
+  if (detail.success) {
     await updateImportBookmarksSuccess(detail.success)
   }
-  if(detail.failed) {
+  if (detail.failed) {
     await updateImportBookmarksFailed(detail.failed)
   }
-  if(detail.remaining) {
+  if (detail.remaining) {
     await updateImportBookmarksRemaining(detail.remaining)
   }
 
-  return true;
+  return true
 }
 
 export const getImportBookmarks = async (): Promise<ImportBookmarks> => {
@@ -171,24 +180,25 @@ export const getImportBookmarks = async (): Promise<ImportBookmarks> => {
   } as ImportBookmarks
 }
 
-export const updateImportBookmarks = async (
-  pagesData: PageData[]
-) => {
+export const updateImportBookmarks = async (pagesData: PageData[]) => {
   const inProgressBookmarks = await getImportBookmarksInProgress()
   const successBookmarks = await getImportBookmarksSuccess()
   const failedBookmarks = await getImportBookmarksFailed()
+  const remainingBookmarks = await getImportBookmarksRemaining()
 
-  const bookmarks:BookmarkCreateInputType[] = []
+  const bookmarks: BookmarkCreateInputType[] = []
 
-  for(let i=0;i<pagesData.length;i++) {
-    const pageData = pagesData[i]
-    const bookmark = inProgressBookmarks.find((bookmark)=>bookmark.url === pageData.url)
-    if(bookmark) {
-      if(pageData.error) {
+  for (let i = 0; i < inProgressBookmarks.length; i++) {
+    const bookmark = inProgressBookmarks[i]
+    const pageData = pagesData.find((pageData) => bookmark.url === pageData.url)
+    if (pageData) {
+      if (pageData.error) {
         bookmark.status = ImportStatus.Failed
+        bookmark.lastImportedAt = new Date().getTime()
         failedBookmarks.push(bookmark)
       } else {
         bookmark.status = ImportStatus.Success
+        bookmark.lastImportedAt = new Date().getTime()
         successBookmarks.push(bookmark)
         bookmarks.push({
           name: bookmark.title,
@@ -198,15 +208,21 @@ export const updateImportBookmarks = async (
           raw: pageData.html
         })
       }
+    } else {
+      bookmark.status = ImportStatus.Ready
+      bookmark.lastImportedAt = new Date().getTime()
+      remainingBookmarks.push(bookmark)
     }
   }
 
+  // send request to backend
   await createBookmarks(bookmarks)
 
   await updateImportBookmarksDetail({
     inProgress: [],
     success: successBookmarks,
-    failed: failedBookmarks
+    failed: failedBookmarks,
+    remaining: remainingBookmarks
   })
 }
 
@@ -305,44 +321,73 @@ export const prepareStartImportBookmarks = async ({
 
   // update importBookmarksSummary
   await updateImportBookmarksSummary({
-    lastImportedAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
     inProgressBookmarkCount: 0,
     remainingBookmarkCount: newRemainingBookmarks.length,
-    status: ImportStatus.Pending
+    status: ImportStatus.Ready
   })
-  
+
   return await getImportBookmarksSummary()
 }
 
-export const startImportBookmarks = async ({concurrentBookmarks}: {concurrentBookmarks?: number}):Promise<ImportBookmarkRecord[]> => {
-  if(!concurrentBookmarks) {
+export const startImportBookmarks = async ({
+  concurrentBookmarks
+}: {
+  concurrentBookmarks?: number
+}): Promise<ImportBookmarkRecord[]> => {
+  if (!concurrentBookmarks) {
     concurrentBookmarks = 1
   }
 
   const inProgressBookmarks = await getImportBookmarksInProgress()
   const remainingBookmarks = await getImportBookmarksRemaining()
-  const bookmarks: ImportBookmarkRecord[] = [];
-  for(let i = 0; i < concurrentBookmarks && remainingBookmarks.length; i++) {
+  const bookmarks: ImportBookmarkRecord[] = []
+  for (let i = 0; i < concurrentBookmarks && remainingBookmarks.length; i++) {
     const bookmark = remainingBookmarks.shift()
     bookmark.status = ImportStatus.Pending
     bookmark.lastImportedAt = new Date().getTime()
     bookmarks.push(bookmark)
   }
 
-  remainingBookmarks.concat(inProgressBookmarks);
+  remainingBookmarks.concat(inProgressBookmarks)
 
   await updateImportBookmarksSummary({
     status: ImportStatus.Pending,
     inProgressBookmarkCount: bookmarks.length,
     remainingBookmarkCount: remainingBookmarks.length,
     updatedAt: new Date().getTime()
-  });
+  })
 
   await updateImportBookmarksDetail({
     inProgress: bookmarks,
     remaining: remainingBookmarks
-  });
+  })
 
-  return bookmarks;
+  return bookmarks
+}
+
+export const stopImportBookmarks = async (): Promise<Boolean> => {
+  const inProgressBookmarks = await getImportBookmarksInProgress()
+  const remainingBookmarks = await getImportBookmarksRemaining()
+
+  remainingBookmarks.concat(
+    inProgressBookmarks.map((bookmark) => {
+      bookmark.status = undefined
+      return bookmark
+    })
+  )
+
+  await updateImportBookmarksSummary({
+    status: ImportStatus.Ready,
+    inProgressBookmarkCount: 0,
+    remainingBookmarkCount: remainingBookmarks.length,
+    updatedAt: new Date().getTime()
+  })
+
+  await updateImportBookmarksDetail({
+    inProgress: [],
+    remaining: remainingBookmarks
+  })
+
+  return true
 }
