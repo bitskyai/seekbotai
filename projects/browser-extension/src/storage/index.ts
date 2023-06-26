@@ -76,6 +76,10 @@ export const updateImportBookmarksInProgress = async (
   inProgress: ImportBookmarkRecord[]
 ): Promise<Boolean> => {
   const storage = new Storage({ area: "local" })
+  inProgress = inProgress.map((bookmark) => {
+    bookmark.status = ImportStatus.Pending
+    return bookmark
+  })
   await storage.set(StorageKeys.ImportBookmarksInProgress, inProgress ?? [])
   return true
 }
@@ -95,6 +99,10 @@ export const updateImportBookmarksSuccess = async (
   success: ImportBookmarkRecord[]
 ): Promise<Boolean> => {
   const storage = new Storage({ area: "local" })
+  success = success.map((bookmark) => {
+    bookmark.status = ImportStatus.Success
+    return bookmark
+  })
   await storage.set(StorageKeys.ImportBookmarksSuccess, success ?? [])
   return true
 }
@@ -114,6 +122,10 @@ export const updateImportBookmarksFailed = async (
   failed: ImportBookmarkRecord[]
 ): Promise<Boolean> => {
   const storage = new Storage({ area: "local" })
+  failed = failed.map((bookmark) => {
+    bookmark.status = ImportStatus.Failed
+    return bookmark
+  })
   await storage.set(StorageKeys.ImportBookmarksFailed, failed ?? [])
   return true
 }
@@ -133,6 +145,10 @@ export const updateImportBookmarksRemaining = async (
   remaining: ImportBookmarkRecord[]
 ) => {
   const storage = new Storage({ area: "local" })
+  remaining = remaining.map((bookmark) => {
+    bookmark.status = ImportStatus.Ready
+    return bookmark
+  })
   await storage.set(StorageKeys.ImportBookmarksRemaining, remaining ?? [])
   return true
 }
@@ -154,18 +170,25 @@ export const getImportBookmarksDetail =
 export const updateImportBookmarksDetail = async (
   detail: Partial<ImportBookmarksDetail>
 ): Promise<Boolean> => {
+  const summary: ImportBookmarksSummary = {}
   if (detail.inProgress) {
     await updateImportBookmarksInProgress(detail.inProgress)
+    summary.inProgressBookmarkCount = detail.inProgress.length
   }
   if (detail.success) {
     await updateImportBookmarksSuccess(detail.success)
+    summary.successBookmarkCount = detail.success.length
   }
   if (detail.failed) {
     await updateImportBookmarksFailed(detail.failed)
+    summary.failedBookmarkCount = detail.failed.length
   }
   if (detail.remaining) {
     await updateImportBookmarksRemaining(detail.remaining)
+    summary.remainingBookmarkCount = detail.remaining.length
   }
+
+  await updateImportBookmarksSummary(summary)
 
   return true
 }

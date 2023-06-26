@@ -1,16 +1,27 @@
-import { Button, Col, List, Progress, Row, Statistic, Typography } from "antd"
+import {
+  Badge,
+  Breadcrumb,
+  Button,
+  Col,
+  Progress,
+  Row,
+  Statistic,
+  Table,
+  Typography
+} from "antd"
+import type { ColumnsType } from "antd/es/table"
 import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
-import {
-  type BookmarksImportStatusMsgRes,
-  MessageSubject
-} from "~background/messages"
+import { MessageSubject } from "~background/messages"
 import { StorageKeys, getImportBookmarksDetail } from "~storage"
-import { type ImportBookmarksSummary, ImportStatus } from "~types"
-import { type ImportBookmarkRecord } from "~types"
+import {
+  type ImportBookmarkRecord,
+  type ImportBookmarksSummary,
+  ImportStatus
+} from "~types"
 
 const { Title, Text } = Typography
 
@@ -38,7 +49,8 @@ export default function ExtensionSettingsImport() {
   useEffect(() => {
     getImportBookmarksDetail().then((importBookmarksDetail) => {
       setTotalBookmarks(
-        importBookmarksDetail.failed
+        importBookmarksDetail.inProgress
+          .concat(importBookmarksDetail.failed)
           .concat(importBookmarksDetail.success)
           .concat(importBookmarksDetail.remaining)
       )
@@ -46,6 +58,98 @@ export default function ExtensionSettingsImport() {
   }, [importBookmarksSummary])
 
   console.log(`ImportBookmarksSummary: `, importBookmarksSummary)
+  const statusFilterOptions = []
+  for (const status of Object.values(ImportStatus)) {
+    statusFilterOptions.push({
+      text: <>{status}</>,
+      value: `${status}`
+    })
+  }
+
+  const columns: ColumnsType<ImportBookmarkRecord> = [
+    {
+      title: "Name",
+      dataIndex: "title",
+      key: "name",
+      render: (title, record) => (
+        <a href={record?.url} target="_blank">
+          {title}
+        </a>
+      )
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      filters: statusFilterOptions,
+      filterSearch: true,
+      onFilter: (value, record) => {
+        return record.status.indexOf(value as string) === 0
+      },
+      render: (status) => {
+        if (status === ImportStatus.Failed) {
+          return <Badge status="error" text={status} />
+        } else if (status === ImportStatus.Success) {
+          return <Badge status="success" text={status} />
+        } else if (status === ImportStatus.Pending) {
+          return <Badge status="processing" text={status} />
+        } else {
+          return <Badge status="default" text={status} />
+        }
+      }
+    },
+    {
+      title: "Folder",
+      dataIndex: "tags",
+      key: "tags",
+      render: (tags) => (
+        <Breadcrumb
+          items={tags.map((tag) => {
+            return { title: tag }
+          })}></Breadcrumb>
+      )
+    },
+    {
+      title: "Last Imported At",
+      dataIndex: "lastImportedAt",
+      key: "lastImportedAt",
+      sorter: (a, b) => a.lastImportedAt - b.lastImportedAt,
+      render: (lastImportedAt) => (
+        <>
+          {lastImportedAt
+            ? new Date(lastImportedAt).toLocaleString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+              })
+            : ""}
+        </>
+      )
+    },
+    {
+      title: "Created At",
+      dataIndex: "dateAdded",
+      key: "dateAdded",
+      sorter: (a, b) => a.dateAdded - b.dateAdded,
+      render: (dateAdded) => (
+        <Text>
+          {dateAdded
+            ? new Date(dateAdded).toLocaleString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+              })
+            : ""}
+        </Text>
+      )
+    }
+  ]
 
   return (
     <div>
@@ -59,34 +163,34 @@ export default function ExtensionSettingsImport() {
             importBookmarksSummary?.totalBookmarkCount
               ? parseFloat(
                   (
-                    importBookmarksSummary.totalBookmarkCount -
-                    importBookmarksSummary.remainingBookmarkCount /
-                      importBookmarksSummary.totalBookmarkCount
-                  ).toFixed(1)
-                )
+                    (importBookmarksSummary.totalBookmarkCount -
+                      importBookmarksSummary.remainingBookmarkCount) /
+                    importBookmarksSummary.totalBookmarkCount
+                  ).toFixed(3)
+                ) * 100
               : 0
           }
         />
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("totalTitle")}
               value={importBookmarksSummary?.totalBookmarkCount || 0}
             />
           </Col>
-          <Col span={12}>
+          <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("pendingTitle")}
               value={importBookmarksSummary?.inProgressBookmarkCount || 0}
             />
           </Col>
-          <Col span={12}>
+          <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("successTitle")}
               value={importBookmarksSummary?.successBookmarkCount || 0}
             />
           </Col>
-          <Col span={12}>
+          <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("failedTitle")}
               value={importBookmarksSummary?.failedBookmarkCount || 0}
@@ -112,21 +216,15 @@ export default function ExtensionSettingsImport() {
           {chrome.i18n.getMessage("stopImportButton")}
         </Button>
       </div>
-      <List
-        itemLayout="horizontal"
-        dataSource={totalBookmarks || []}
-        renderItem={(item, index) => (
-          <List.Item>
-            <List.Item.Meta
-              title={item.title}
-              description={
-                <a href={item.url} target="_blank" rel="noreferrer">
-                  {item.url}
-                </a>
-              }
-            />
-          </List.Item>
-        )}
+      <Table
+        rowKey={(record) => record.id}
+        columns={columns}
+        dataSource={totalBookmarks}
+        pagination={{
+          defaultPageSize: 50,
+          showTotal: (total, range) =>
+            `Showing ${range[0]}-${range[1]} of ${total} items` // Custom total display
+        }}
       />
     </div>
   )

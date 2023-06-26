@@ -40,16 +40,16 @@ export default function ExtensionSettings(): JSX.Element {
         <Tabs
           tabPosition={"left"}
           items={[
-            {
-              label: <div>{chrome.i18n.getMessage("generalTitle")}</div>,
-              key: "general",
-              children: <ExtensionSettingsGeneral />
-            },
-            {
-              label: <div>{chrome.i18n.getMessage("ignorePatternsTitle")}</div>,
-              key: "ignorePatterns",
-              children: <ExtensionSettingsIgnorePatterns />
-            },
+            // {
+            //   label: <div>{chrome.i18n.getMessage("generalTitle")}</div>,
+            //   key: "general",
+            //   children: <ExtensionSettingsGeneral />
+            // },
+            // {
+            //   label: <div>{chrome.i18n.getMessage("ignorePatternsTitle")}</div>,
+            //   key: "ignorePatterns",
+            //   children: <ExtensionSettingsIgnorePatterns />
+            // },
             {
               label: <div>{chrome.i18n.getMessage("importTitle")}</div>,
               key: "import",
