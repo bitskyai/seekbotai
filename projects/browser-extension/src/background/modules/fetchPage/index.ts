@@ -1,5 +1,4 @@
 import normalizeUrl from "normalize-url"
-import { type } from "os"
 
 import { isHTML } from "./utils"
 
@@ -206,6 +205,7 @@ export const fetchPageHTML = ({
             error: error.toJSON() as FetchPageErrorData
           }
         }
+
         return {
           url,
           error: new FetchPageError({

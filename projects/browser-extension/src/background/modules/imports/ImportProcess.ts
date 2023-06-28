@@ -1,3 +1,4 @@
+import { LogFormat } from "~helpers/LogFormat"
 import {
   prepareStartImportBookmarks,
   startImportBookmarks,
@@ -10,12 +11,13 @@ import ImportThread from "./ImportThread"
 export class ImportProcess {
   static MAX_CONCURRENT = 20
   static DEFAULT_TIMEOUT = 1000 * 60 * 60 * 2
-  private concurrent: number = 10
+  private concurrent = 10
   private timeout: number = ImportProcess.DEFAULT_TIMEOUT
-  private stopped: boolean = true
+  private stopped = true
   private inited = false
   private importThreads: ImportThread[] = []
-  private jobIndex: number = 0
+  private jobIndex = 0
+  private logFormat = new LogFormat("ImportProcess")
 
   constructor({
     concurrent,
@@ -24,6 +26,10 @@ export class ImportProcess {
     concurrent?: number
     timeout?: number
   }) {
+    console.debug(
+      ...this.logFormat.formatArgs("constructor", { concurrent, timeout })
+    )
+
     if (concurrent) {
       this.concurrent =
         concurrent <= ImportProcess.MAX_CONCURRENT
@@ -34,12 +40,20 @@ export class ImportProcess {
       this.timeout = timeout
     }
     this.init()
+    console.info(
+      ...this.logFormat.formatArgs("constructor finished", {
+        concurrent,
+        timeout
+      })
+    )
   }
 
   async init() {
+    console.debug(...this.logFormat.formatArgs("init"))
     this.inited = false
     await prepareStartImportBookmarks({ syncUpBookmarks: true })
     this.inited = true
+    console.info(...this.logFormat.formatArgs("init finished"))
   }
 
   async start() {
@@ -59,8 +73,8 @@ export class ImportProcess {
       // reset
       this.importThreads = []
       for (let i = 0; i < inProgressBookmarks.length; i++) {
-        let bookmark = inProgressBookmarks[i]
-        let importThread = new ImportThread({
+        const bookmark = inProgressBookmarks[i]
+        const importThread = new ImportThread({
           url: bookmark.url,
           timeout: this.timeout
         })

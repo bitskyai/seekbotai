@@ -5,7 +5,7 @@ import fetchPage, {
   type PageData
 } from "../fetchPage"
 
-export interface ImportThreadOptions extends FetchPageOptions {}
+export type ImportThreadOptions = FetchPageOptions
 
 export default class ImportThread {
   cancelled = false

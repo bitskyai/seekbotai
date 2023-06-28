@@ -25,10 +25,10 @@ export interface ImportBookmarksSummary {
 }
 
 export interface ImportBookmarksDetail {
-  inProgress: ImportBookmarkRecord[]
-  success: ImportBookmarkRecord[]
-  failed: ImportBookmarkRecord[]
-  remaining: ImportBookmarkRecord[]
+  inProgress?: ImportBookmarkRecord[]
+  success?: ImportBookmarkRecord[]
+  failed?: ImportBookmarkRecord[]
+  remaining?: ImportBookmarkRecord[]
 }
 
 export interface ImportBookmarks

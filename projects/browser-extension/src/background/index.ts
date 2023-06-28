@@ -1,2 +1,3 @@
-export {}
-console.log("HELLO WORLD FROM BGSCRIPTS")
+import "./apis"
+import "./messages"
+import "./modules"

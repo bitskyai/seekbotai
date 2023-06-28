@@ -16,6 +16,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { MessageSubject } from "~background/messages"
+import { LogFormat } from "~helpers/LogFormat"
 import { StorageKeys, getImportBookmarksDetail } from "~storage"
 import {
   type ImportBookmarkRecord,
@@ -24,6 +25,7 @@ import {
 } from "~types"
 
 const { Title, Text } = Typography
+const logFormat = new LogFormat("ExtensionSettingsImport")
 
 export default function ExtensionSettingsImport() {
   const [totalBookmarks, setTotalBookmarks] = useState<ImportBookmarkRecord[]>(
@@ -46,18 +48,32 @@ export default function ExtensionSettingsImport() {
     StorageKeys.ImportBookmarksSummary
   )
 
+  console.debug(
+    ...logFormat.formatArgs("importBookmarksSummary", importBookmarksSummary)
+  )
+
   useEffect(() => {
-    getImportBookmarksDetail().then((importBookmarksDetail) => {
-      setTotalBookmarks(
-        importBookmarksDetail.inProgress
-          .concat(importBookmarksDetail.failed)
-          .concat(importBookmarksDetail.success)
-          .concat(importBookmarksDetail.remaining)
-      )
-    })
+    getImportBookmarksDetail().then(
+      (importBookmarksDetail) => {
+        console.debug(
+          ...logFormat.formatArgs(
+            "importBookmarksDetail",
+            importBookmarksDetail
+          )
+        )
+        setTotalBookmarks(
+          importBookmarksDetail.inProgress
+            .concat(importBookmarksDetail.failed)
+            .concat(importBookmarksDetail.success)
+            .concat(importBookmarksDetail.remaining)
+        )
+      },
+      (error) => {
+        console.error(error)
+      }
+    )
   }, [importBookmarksSummary])
 
-  console.log(`ImportBookmarksSummary: `, importBookmarksSummary)
   const statusFilterOptions = []
   for (const status of Object.values(ImportStatus)) {
     statusFilterOptions.push({
@@ -72,7 +88,7 @@ export default function ExtensionSettingsImport() {
       dataIndex: "title",
       key: "name",
       render: (title, record) => (
-        <a href={record?.url} target="_blank">
+        <a href={record?.url} target="_blank" rel="noreferrer">
           {title}
         </a>
       )

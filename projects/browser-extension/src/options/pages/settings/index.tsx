@@ -1,4 +1,5 @@
 // import { useQuery } from "@apollo/client";
+
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { Button, Layout, Space, Tabs, theme } from "antd"
 import { NavLink } from "react-router-dom"
@@ -40,6 +41,7 @@ export default function ExtensionSettings(): JSX.Element {
         <Tabs
           tabPosition={"left"}
           items={[
+            // TODO: Add back in when start working on these features
             // {
             //   label: <div>{chrome.i18n.getMessage("generalTitle")}</div>,
             //   key: "general",
