@@ -40,9 +40,7 @@ export class ImportProcess {
       this.timeout = timeout
     }
     this.init()
-    console.info(
-      ...this.logFormat.formatArgs("constructor finished")
-    )
+    console.info(...this.logFormat.formatArgs("constructor finished"))
   }
 
   async init() {
@@ -67,7 +65,12 @@ export class ImportProcess {
       this.importThreads = []
 
       this.jobIndex++
-      console.debug(...this.logFormat.formatArgs(`jobIndex: ${this.jobIndex}, inProgressBookmarks:`, inProgressBookmarks))
+      console.debug(
+        ...this.logFormat.formatArgs(
+          `jobIndex: ${this.jobIndex}, inProgressBookmarks:`,
+          inProgressBookmarks
+        )
+      )
       for (let i = 0; i < inProgressBookmarks.length; i++) {
         const bookmark = inProgressBookmarks[i]
         const importThread = new ImportThread({
@@ -80,10 +83,15 @@ export class ImportProcess {
       const pagesData = await Promise.all(
         this.importThreads.map((thread) => thread.start())
       )
-      console.debug(...this.logFormat.formatArgs(`jobIndex: ${this.jobIndex}, pagesData:`, pagesData))
-      
+      console.debug(
+        ...this.logFormat.formatArgs(
+          `jobIndex: ${this.jobIndex}, pagesData:`,
+          pagesData
+        )
+      )
+
       await updateImportBookmarks(pagesData)
-      
+
       // fetch next
       inProgressBookmarks = await startImportBookmarks({
         concurrentBookmarks: this.concurrent

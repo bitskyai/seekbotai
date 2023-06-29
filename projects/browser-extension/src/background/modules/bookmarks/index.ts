@@ -1,8 +1,8 @@
 import browser from "webextension-polyfill"
 import { type Bookmarks } from "webextension-polyfill"
 
-import { type ImportBookmarkRecord } from "~types"
 import { LogFormat } from "~helpers/LogFormat"
+import { type ImportBookmarkRecord } from "~types"
 
 const logFormat = new LogFormat("bookmarks")
 
