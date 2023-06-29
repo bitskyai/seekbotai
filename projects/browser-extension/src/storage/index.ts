@@ -1,5 +1,6 @@
 import _ from "lodash"
 import { type Bookmarks } from "webextension-polyfill"
+import normalizeUrl from "normalize-url"
 
 import { Storage } from "@plasmohq/storage"
 
@@ -278,12 +279,18 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
   console.debug(
     ...logFormat.formatArgs("updateImportBookmarks -> pagesData:", pagesData)
   )
+  console.debug(...logFormat.formatArgs("updateImportBookmarks before -> inProgressBookmarks:", inProgressBookmarks))
+  console.debug(...logFormat.formatArgs("updateImportBookmarks before -> successBookmarks:", successBookmarks))
+  console.debug(...logFormat.formatArgs("updateImportBookmarks before -> failedBookmarks:", failedBookmarks))
+  console.debug(...logFormat.formatArgs("updateImportBookmarks before -> remainingBookmarks:", remainingBookmarks))
 
   const bookmarks: BookmarkCreateInputType[] = []
 
   for (let i = 0; i < inProgressBookmarks.length; i++) {
     const bookmark = inProgressBookmarks[i]
-    const pageData = pagesData.find((pageData) => bookmark.url === pageData.url)
+    const pageData = pagesData.find((pageData) => normalizeUrl(pageData.url) === normalizeUrl(bookmark.url))
+    // console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmark.url", bookmark.url, "pageData.url:", pageData.url))
+    console.debug(...logFormat.formatArgs("updateImportBookmarks -> pageData:", pageData, "index:", i))
     if (pageData) {
       if (pageData.error) {
         bookmark.status = ImportStatus.Failed
@@ -293,14 +300,15 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
         bookmark.status = ImportStatus.Success
         bookmark.lastImportedAt = new Date().getTime()
         successBookmarks.push(bookmark)
-        bookmarks.push({
-          name: bookmark.title,
-          bookmarkTags: bookmark.tags,
-          url: pageData.url,
-          content: pageData.html,
-          raw: pageData.html
-        })
       }
+
+      bookmarks.push({
+        name: bookmark.title,
+        bookmarkTags: bookmark.tags,
+        url: pageData.url,
+        content: pageData.html??'',
+        raw: pageData.html??''
+      })
     } else {
       bookmark.status = ImportStatus.Ready
       bookmark.lastImportedAt = new Date().getTime()
@@ -308,8 +316,10 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
     }
   }
 
-  // send request to backend
-  await createBookmarks(bookmarks)
+  console.debug(...logFormat.formatArgs("updateImportBookmarks after -> inProgressBookmarks:", inProgressBookmarks))
+  console.debug(...logFormat.formatArgs("updateImportBookmarks after -> successBookmarks:", successBookmarks))
+  console.debug(...logFormat.formatArgs("updateImportBookmarks after -> failedBookmarks:", failedBookmarks))
+  console.debug(...logFormat.formatArgs("updateImportBookmarks after -> remainingBookmarks:", remainingBookmarks))
 
   await updateImportBookmarksDetail({
     inProgress: [],
@@ -317,6 +327,9 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
     failed: failedBookmarks,
     remaining: remainingBookmarks
   })
+
+  // send request to backend
+  await createBookmarks(bookmarks)
 }
 
 function getBookmarkHash(bookmark: Bookmarks.BookmarkTreeNode) {
@@ -336,9 +349,11 @@ function updateImportBookmarkHash(
 
 // check if there are any new bookmarks and update the import status
 export const syncUpWithLatestBookmarks = async () => {
+  console.info(...logFormat.formatArgs("syncUpWithLatestBookmarks"))
   const bookmarks = await getFlatBookmarks()
   const importBookmarks = await getImportBookmarks()
-
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> bookmarks:", bookmarks))
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> importBookmarks:", importBookmarks))
   const importBookmarksHash: { [key: string]: ImportBookmarkRecord } = {}
   updateImportBookmarkHash(importBookmarksHash, importBookmarks?.inProgress)
   updateImportBookmarkHash(importBookmarksHash, importBookmarks?.success)
@@ -349,6 +364,8 @@ export const syncUpWithLatestBookmarks = async () => {
   const success = []
   const failed = []
   const remaining = []
+
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> importBookmarksHash:", importBookmarksHash))
 
   for (let i = 0; i < bookmarks.length; i++) {
     const bookmark = bookmarks[i]
@@ -363,9 +380,15 @@ export const syncUpWithLatestBookmarks = async () => {
       success.push(importBookmark)
     } else if (importBookmark.status === ImportStatus.Failed) {
       failed.push(importBookmark)
+    }else{
+      remaining.push(importBookmark)
     }
   }
 
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> remaining:", remaining))
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> inProgress:", inProgress))
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> success:", success))
+  console.debug(...logFormat.formatArgs("syncUpWithLatestBookmarks -> failed:", failed))
   // update total
   const importBookmarksSummary = {
     lastImportedAt: importBookmarks.lastImportedAt,
@@ -398,6 +421,7 @@ export const prepareStartImportBookmarks = async ({
 }: {
   syncUpBookmarks?: boolean
 }): Promise<ImportBookmarksSummary> => {
+  console.info(...logFormat.formatArgs("prepareStartImportBookmarks", {syncUpBookmarks}))
   if (syncUpBookmarks) {
     await syncUpWithLatestBookmarks()
   }

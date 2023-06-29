@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 const colors = [
   "#9933CC",
   "#33CC99",
@@ -83,10 +84,19 @@ export class LogFormat {
   private namespace: string
   private color: string
   private dateTimeColor = "#ababab"
+  private appName = "BI"
 
   constructor(namespace: string) {
     this.namespace = namespace
     this.color = colors[colorIndex++ % colors.length]
+  }
+
+  formatDate(date: Date) {
+    const hour = date.getHours()<10?'0'+date.getHours():date.getHours()
+    const minute = date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes()
+    const second = date.getSeconds()<10?'0'+date.getSeconds():date.getSeconds()
+    const millisecond = date.getMilliseconds()
+    return `${hour}:${minute}:${second}.${millisecond}`
   }
 
   formatArgs(...args) {
@@ -94,9 +104,30 @@ export class LogFormat {
     const dateTimeStyles = [`color: ${this.dateTimeColor}`]
     const namespaceStyles = [`color: ${this.color}`, `font-weight: bold`]
     return [
-      `%c[${Date.now()}] %c${this.namespace}`,
+      `%c[${this.formatDate(new Date())}] %c${this.appName +'/'+this.namespace}`,
       `${dateTimeStyles.join(";")}`,
       `${namespaceStyles.join(";")}`
     ].concat(argsArray)
   }
+}
+
+export enum LogLevel {
+  DEBUG = 1,
+  INFO = 2,
+  WARN = 3,
+  ERROR = 4
+}
+
+// TODO: make logLevel configurable
+const logLevel = LogLevel.INFO
+
+if(logLevel > LogLevel.DEBUG) {
+  console.debug = () => {}
+  console.log = () => {}
+}else if(logLevel > LogLevel.INFO) {
+  console.info = () => {}
+}else if(logLevel > LogLevel.WARN) {
+  console.warn = () => {}
+}else if(logLevel > LogLevel.ERROR) {
+  console.error = () => {}
 }

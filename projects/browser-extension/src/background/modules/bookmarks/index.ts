@@ -2,9 +2,13 @@ import browser from "webextension-polyfill"
 import { type Bookmarks } from "webextension-polyfill"
 
 import { type ImportBookmarkRecord } from "~types"
+import { LogFormat } from "~helpers/LogFormat"
+
+const logFormat = new LogFormat("bookmarks")
 
 export async function getBookmarks(): Promise<Bookmarks.BookmarkTreeNode[]> {
   const bookmarks = await browser.bookmarks.getTree()
+  console.info(...logFormat.formatArgs("getBookmarks", bookmarks))
   return bookmarks
 }
 
@@ -37,10 +41,12 @@ function traverseBookmarks(
 }
 
 export async function getFlatBookmarks(): Promise<ImportBookmarkRecord[]> {
+  console.info(...logFormat.formatArgs("getFlatBookmarks"))
   const bookmarks = await getBookmarks()
   const flatBookmarks: ImportBookmarkRecord[] = []
   for (let i = 0; i < bookmarks.length; i++) {
     traverseBookmarks(flatBookmarks, bookmarks[i])
   }
+  console.debug(...logFormat.formatArgs("getFlatBookmarks", flatBookmarks))
   return flatBookmarks
 }

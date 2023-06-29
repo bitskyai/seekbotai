@@ -88,6 +88,9 @@
   "totalTitle": {
     "message": "Total"
   },
+  "remainingTitle": {
+    "message": "Remaining"
+  },
   "successTitle": {
     "message": "Success"
   },

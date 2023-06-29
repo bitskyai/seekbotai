@@ -190,8 +190,8 @@ export default function ExtensionSettingsImport() {
         <Row gutter={16}>
           <Col span={4}>
             <Statistic
-              title={chrome.i18n.getMessage("totalTitle")}
-              value={importBookmarksSummary?.totalBookmarkCount || 0}
+              title={chrome.i18n.getMessage("remainingTitle")}
+              value={importBookmarksSummary?.remainingBookmarkCount || 0}
             />
           </Col>
           <Col span={4}>
