@@ -44,6 +44,16 @@ export const DEFAULT_IMPORT_BOOKMARKS_SUMMARY: ImportBookmarksSummary = {
   failedBookmarkCount: undefined
 }
 
+export const cleanAll = async () => {
+  const storageSummary = new Storage()
+  await storageSummary.remove(StorageKeys.ImportBookmarksSummary)
+  const storage = new Storage({ area: "local" })
+  await storage.remove(StorageKeys.ImportBookmarksInProgress)
+  await storage.remove(StorageKeys.ImportBookmarksSuccess)
+  await storage.remove(StorageKeys.ImportBookmarksFailed)
+  await storage.remove(StorageKeys.ImportBookmarksRemaining)
+}
+
 export const getImportBookmarksSummary =
   async (): Promise<ImportBookmarksSummary> => {
     const storage = new Storage()
@@ -335,7 +345,7 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
         name: bookmark.title,
         bookmarkTags: bookmark.tags,
         url: pageData.url,
-        content: pageData.html ?? "",
+        content: "",
         raw: pageData.html ?? ""
       })
     } else {

@@ -1,4 +1,5 @@
 import { getPrismaClient } from "../../db";
+import { extractPageContent } from "../../helpers/pageExtraction/index";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
@@ -6,6 +7,7 @@ import {
   CreateBookmarksRes,
   type BookmarkCreate,
 } from "./Bookmark.type";
+import _ from "lodash";
 
 schemaBuilder.mutationField("createBookmarks", (t) =>
   t.field({
@@ -33,11 +35,18 @@ export async function createOrUpdateBookmarks({
 }) {
   const prismaClient = getPrismaClient();
   const bookmarksResult = [];
-  //TODO: need to change to parrallel
-  for (const bookmark of bookmarks) {
+  //TODO: need to change to parallel
+  for (let bookmark of bookmarks) {
     try {
       const createdBookmark = await prismaClient.$transaction(
         async (prisma) => {
+          if (!bookmark.content && bookmark.raw) {
+            const extractedPage = await extractPageContent(
+              bookmark.url,
+              bookmark.raw,
+            );
+            bookmark = _.merge(bookmark, extractedPage);
+          }
           const result = await prisma.bookmark.upsert({
             where: {
               userId_url: { url: bookmark.url, userId: ctx.user.id },

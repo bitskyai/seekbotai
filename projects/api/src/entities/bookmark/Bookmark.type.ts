@@ -59,6 +59,7 @@ export type BookmarkCreate = {
   icon?: string | null | undefined;
   bookmarkTags?: string[] | null | undefined;
   content?: string | null | undefined;
+  raw?: string | null | undefined;
 };
 
 export const BookmarkSortOrderInput = schemaBuilder.inputType(

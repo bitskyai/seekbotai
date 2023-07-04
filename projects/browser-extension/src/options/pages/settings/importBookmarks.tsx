@@ -44,6 +44,12 @@ export default function ExtensionSettingsImport() {
     })
   }
 
+  async function cleanAndImportButton() {
+    await sendToBackground({
+      name: MessageSubject.cleanAndImportBookmarks
+    })
+  }
+
   const [importBookmarksSummary] = useStorage<ImportBookmarksSummary>(
     StorageKeys.ImportBookmarksSummary
   )
@@ -230,6 +236,11 @@ export default function ExtensionSettingsImport() {
           style={{ marginTop: 16, marginLeft: 5 }}
           onClick={stopImportBookmarks}>
           {chrome.i18n.getMessage("stopImportButton")}
+        </Button>
+        <Button
+          style={{ marginTop: 16, marginLeft: 5 }}
+          onClick={cleanAndImportButton}>
+          {chrome.i18n.getMessage("cleanAndImportButton")}
         </Button>
       </div>
       <Table

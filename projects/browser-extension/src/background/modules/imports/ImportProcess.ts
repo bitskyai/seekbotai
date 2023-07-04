@@ -3,8 +3,10 @@ import {
   prepareStartImportBookmarks,
   startImportBookmarks,
   stopImportBookmarks,
-  updateImportBookmarks
+  updateImportBookmarks,
+  updateImportBookmarksSummary
 } from "~storage"
+import { ImportStatus } from "~types"
 
 import ImportThread from "./ImportThread"
 
@@ -98,6 +100,7 @@ export class ImportProcess {
       })
     }
 
+    await updateImportBookmarksSummary({ status: ImportStatus.Ready })
     this.stopped = true
   }
 

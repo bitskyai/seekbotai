@@ -123,7 +123,7 @@ export enum LogLevel {
 }
 
 // TODO: make logLevel configurable
-const logLevel = LogLevel.INFO
+const logLevel = LogLevel.DEBUG
 
 if (logLevel > LogLevel.DEBUG) {
   console.debug = () => {}

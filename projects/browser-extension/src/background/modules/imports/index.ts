@@ -1,4 +1,5 @@
 import { LogFormat } from "~helpers/LogFormat"
+import { cleanAll } from "~storage"
 
 import { ImportProcess } from "./ImportProcess"
 
@@ -16,4 +17,9 @@ export const startImportBookmarks = async () => {
 export const stopImportBookmarks = async () => {
   console.info(...logFormat.formatArgs("stopImportBookmarks"))
   _importProcess.stop()
+}
+
+export const cleanAndImportBookmarks = async () => {
+  await cleanAll()
+  await _importProcess.init()
 }
