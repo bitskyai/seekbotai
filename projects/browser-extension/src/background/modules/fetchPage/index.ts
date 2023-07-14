@@ -10,8 +10,8 @@ export interface FetchPageOptions {
 }
 
 export interface PageData {
-  url: string
-  html?: string
+  url?: string
+  content?: string
   icon?: string
   error?: FetchPageErrorData
   warning?: FetchPageWarningData
@@ -196,7 +196,7 @@ export const fetchPageHTML = ({
         }
         return {
           url,
-          html: text
+          content: text
         }
       } catch (error) {
         if (error.name === "FetchPageError") {

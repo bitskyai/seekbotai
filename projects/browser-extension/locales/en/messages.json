@@ -17,7 +17,13 @@
     "message": "Import Bookmarks"
   },
   "importDescription": {
-    "message": "Import Bookmarks from current browser to BitSky. Import will not delete your browser bookmarks, if a bookmark need to login, it maybe failed to import."
+    "message": "Import Bookmarks from current browser to BitSky. Import will not delete your browser bookmarks, if a bookmark need to login or connect VPN, it maybe failed to import."
+  },
+  "importHistoryTitle": {
+    "message": "Import Browser History"
+  },
+  "importHistoryDescription": {
+    "message": "Import browser history to BitSky. Import will not delete your browser history, if a history need to login  or connect VPN, it maybe failed to import."
   },
   "importButton": {
     "message": "Start Import"

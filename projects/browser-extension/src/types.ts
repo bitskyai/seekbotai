@@ -1,4 +1,4 @@
-import { type Bookmarks } from "webextension-polyfill"
+import { type Bookmarks, type History } from "webextension-polyfill"
 
 export enum ImportStatus {
   Ready = "ready",
@@ -7,33 +7,44 @@ export enum ImportStatus {
   Failed = "failed"
 }
 
+export interface ImportHistoryRecord extends History.HistoryItem {
+  lastImportedAt?: number
+  status?: ImportStatus
+  tags?: string[]
+  rank?: number
+}
+
 export interface ImportBookmarkRecord extends Bookmarks.BookmarkTreeNode {
   lastImportedAt?: number
   status?: ImportStatus
   tags?: string[]
 }
 
-export interface ImportBookmarksSummary {
+export interface ImportSummary {
   lastImportedAt?: number
   updatedAt?: number
   status?: ImportStatus
-  totalBookmarkCount?: number
-  inProgressBookmarkCount?: number
-  successBookmarkCount?: number
-  failedBookmarkCount?: number
-  remainingBookmarkCount?: number
+  totalCount?: number
+  inProgressCount?: number
+  successCount?: number
+  failedCount?: number
+  remainingCount?: number
 }
 
-export interface ImportBookmarksDetail {
-  inProgress?: ImportBookmarkRecord[]
-  success?: ImportBookmarkRecord[]
-  failed?: ImportBookmarkRecord[]
-  remaining?: ImportBookmarkRecord[]
+export interface ImportDetail<pageType> {
+  inProgress?: pageType[]
+  success?: pageType[]
+  failed?: pageType[]
+  remaining?: pageType[]
 }
 
-export interface ImportBookmarks
-  extends ImportBookmarksSummary,
-    ImportBookmarksDetail {}
+export type ImportHistoryDetail = ImportDetail<ImportHistoryRecord>
+
+export type ImportBookmarksDetail = ImportDetail<ImportBookmarkRecord>
+
+export interface ImportBookmarks extends ImportSummary, ImportBookmarksDetail {}
+
+export interface ImportHistory extends ImportSummary, ImportHistoryDetail {}
 
 export type MessageResponse<T> = {
   data: T

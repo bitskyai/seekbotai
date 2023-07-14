@@ -4,9 +4,10 @@ import { ArrowLeftOutlined } from "@ant-design/icons"
 import { Button, Layout, Space, Tabs, theme } from "antd"
 import { NavLink } from "react-router-dom"
 
-import ExtensionSettingsGeneral from "./general"
-import ExtensionSettingsIgnorePatterns from "./ignorePatterns"
 import ExtensionSettingsImport from "./importBookmarks"
+// import ExtensionSettingsGeneral from "./general"
+// import ExtensionSettingsIgnorePatterns from "./ignorePatterns"
+import ExtensionSettingImportHistory from "./importHistory"
 
 import "./index.css"
 
@@ -54,8 +55,13 @@ export default function ExtensionSettings(): JSX.Element {
             // },
             {
               label: <div>{chrome.i18n.getMessage("importTitle")}</div>,
-              key: "import",
+              key: "importBookmarks",
               children: <ExtensionSettingsImport />
+            },
+            {
+              label: <div>{chrome.i18n.getMessage("importHistoryTitle")}</div>,
+              key: "importHistory",
+              children: <ExtensionSettingImportHistory />
             }
           ]}
         />

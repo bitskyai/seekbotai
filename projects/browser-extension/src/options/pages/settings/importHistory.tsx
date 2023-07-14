@@ -25,9 +25,9 @@ import {
 } from "~types"
 
 const { Title, Text } = Typography
-const logFormat = new LogFormat("ExtensionSettingsImport")
+const logFormat = new LogFormat("ExtensionSettingImportHistory")
 
-export default function ExtensionSettingsImport() {
+export default function ExtensionSettingImportHistory() {
   const [totalBookmarks, setTotalBookmarks] = useState<ImportBookmarkRecord[]>(
     []
   )
@@ -51,7 +51,7 @@ export default function ExtensionSettingsImport() {
   }
 
   const [importBookmarksSummary] = useStorage<ImportSummary>(
-    StorageKeys.ImportBookmarksSummary
+    StorageKeys.ImportHistorySummary
   )
 
   console.debug(
@@ -175,9 +175,9 @@ export default function ExtensionSettingsImport() {
 
   return (
     <div>
-      <Title level={5}>{chrome.i18n.getMessage("importTitle")}</Title>
+      <Title level={5}>{chrome.i18n.getMessage("importHistoryTitle")}</Title>
       <Text type="secondary">
-        {chrome.i18n.getMessage("importDescription")}
+        {chrome.i18n.getMessage("importHistoryDescription")}
       </Text>
       <div className="settings-status-section">
         <Progress
