@@ -1,9 +1,8 @@
 export enum MessageSubject {
   getBookmarks = "getBookmarks",
-  getBookmarksImportStatus = "getBookmarksImportStatus",
   startImportBookmarks = "startImportBookmarks",
   stopImportBookmarks = "stopImportBookmarks",
-  cleanAndImportBookmarks = "cleanAndImportBookmarks",
+  cleanImportBookmarks = "cleanImportBookmarks",
   startImportHistory = "startImportHistory",
   stopImportHistory = "stopImportHistory",
   cleanImportHistory = "cleanImportHistory"

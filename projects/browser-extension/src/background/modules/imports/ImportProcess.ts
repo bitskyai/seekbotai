@@ -48,30 +48,32 @@ export class ImportProcess {
   // if you want to extend it to import other types of data, you need override this method
   // this method should prepare local storage to change importing pages status to ready, and put to in progress to remaining pages
   async prepare() {
-    await prepareStartImportBookmarks({ syncUpBookmarks: true })
+    console.error("prepare is not implemented")
+    throw new Error("prepare is not implemented")
   }
 
   // by default ImportProcess will import bookmarks
   // if you want to extend it to import other types of data, you need override this method
   // this method should return an array of PageData that need to fetch content, if url is empty then it will skip this page
   async getImportPages(): Promise<PageData[]> {
-    return await startImportBookmarks({
-      concurrentBookmarks: this.concurrent
-    })
+    console.error("getImportPages is not implemented")
+    throw new Error("getImportPages is not implemented")
   }
 
   // by default ImportProcess will import bookmarks
   // if you want to extend it to import other types of data, you need override this method
   // this method should update local storage with the pagesData(if it can get html based on url, then it will have html, otherwise it will have error or warning)
   async updateImportPages(pagesData: PageData[]) {
-    await updateImportBookmarks(pagesData)
+    console.error("updateImportPages is not implemented")
+    throw new Error("updateImportPages is not implemented")
   }
 
   // by default ImportProcess will import bookmarks
   // if you want to extend it to import other types of data, you need override this method
   // this method should update local storage to change importing pages status to ready, and put to remaining pages
   async stopImportPages() {
-    await stopImportBookmarks()
+    console.error("stopImportPages is not implemented")
+    throw new Error("stopImportPages is not implemented")
   }
 
   async init() {

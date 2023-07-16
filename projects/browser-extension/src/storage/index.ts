@@ -92,6 +92,9 @@ export const updateImportSummary = async ({
   const storage = new Storage()
   const importSummary = await getImportSummary({ key })
   const updateImportSummary = {...importSummary, ...summary}
+  if(updateImportSummary.inProgressCount === 0){
+    updateImportSummary.status = ImportStatus.Ready
+  }
   await storage.set(key, updateImportSummary)
   console.debug(
     ...logFormat.formatArgs("updateImportSummary", updateImportSummary)
@@ -212,7 +215,7 @@ export const updateImportBookmarksDetail = async (
   }
   if (detail.success) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportBookmarksSuccess,
       overwriteImport: detail?.success ?? [],
       status: ImportStatus.Success
     })
@@ -220,7 +223,7 @@ export const updateImportBookmarksDetail = async (
   }
   if (detail.failed) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportBookmarksFailed,
       overwriteImport: detail?.failed ?? [],
       status: ImportStatus.Failed
     })
@@ -228,7 +231,7 @@ export const updateImportBookmarksDetail = async (
   }
   if (detail.remaining) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportBookmarksRemaining,
       overwriteImport: detail?.remaining ?? [],
       status: ImportStatus.Ready
     })

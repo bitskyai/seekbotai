@@ -46,7 +46,7 @@ export default function ExtensionSettingsImport() {
 
   async function cleanButton() {
     await sendToBackground({
-      name: MessageSubject.cleanAndImportBookmarks
+      name: MessageSubject.cleanImportBookmarks
     })
   }
 

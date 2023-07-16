@@ -82,7 +82,7 @@ const fetchPage = ({
 
   let run: RunFetch
   let cancel: CancelFetch
-  if(!isSupportedProtocol(url)){
+  if(isSupportedProtocol(url)){
     if (isHTML(url)) {
       const { run: runFetchPage, cancel: cancelFetchPage } = fetchPageHTML({
         url,
@@ -91,6 +91,7 @@ const fetchPage = ({
       run = runFetchPage
       cancel = cancelFetchPage
     } else {
+      console.warn(`Not implemented yet: ${url}`)
       run = async () => {
         // TODO: implement other types
         return {
@@ -103,6 +104,7 @@ const fetchPage = ({
       cancel = () => undefined
     }
   }else{
+    console.warn(`Protocol not supported: ${url}`)
     run = async () => {
       return {
         url,
