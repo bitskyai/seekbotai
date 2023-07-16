@@ -23,7 +23,7 @@ export class ImportBookmarks extends ImportProcess {
     console.debug(
       ...this.logFormat.formatArgs("constructor", { concurrent, timeout })
     )
-    
+
     console.info(...this.logFormat.formatArgs("constructor finished"))
   }
 

@@ -72,17 +72,17 @@ export type FetchPageInstance = {
   cancel: CancelFetch
 }
 
-export const DEFAULT_TIMEOUT = 1000 * 60 * 2
+export const DEFAULT_TIMEOUT = 1 * 60 * 1000 // 1 minute
 
 const fetchPage = ({
   url,
   timeout = DEFAULT_TIMEOUT
 }: FetchPageOptions): FetchPageInstance => {
-  url = normalizeUrl(url)
-
   let run: RunFetch
   let cancel: CancelFetch
-  if(isSupportedProtocol(url)){
+
+  if (isSupportedProtocol(url)) {
+    url = normalizeUrl(url)
     if (isHTML(url)) {
       const { run: runFetchPage, cancel: cancelFetchPage } = fetchPageHTML({
         url,
@@ -103,7 +103,7 @@ const fetchPage = ({
       }
       cancel = () => undefined
     }
-  }else{
+  } else {
     console.warn(`Protocol not supported: ${url}`)
     run = async () => {
       return {

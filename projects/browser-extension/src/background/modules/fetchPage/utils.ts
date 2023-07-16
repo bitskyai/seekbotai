@@ -1,6 +1,5 @@
-
 export const isSupportedProtocol = (url: string): boolean => {
-  return !!url?.match(/^(https?|http?):\/\//)
+  return !!url?.match(/^\s*(https?|http?):\/\//)
 }
 
 export const isPDF = (url: string): boolean => {

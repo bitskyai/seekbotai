@@ -28,9 +28,7 @@ const { Title, Text } = Typography
 const logFormat = new LogFormat("ExtensionSettingImportHistory")
 
 export default function ExtensionSettingImportHistory() {
-  const [totalHistory, setTotalHistory] = useState<ImportHistoryRecord[]>(
-    []
-  )
+  const [totalHistory, setTotalHistory] = useState<ImportHistoryRecord[]>([])
 
   async function startImportHistory() {
     await sendToBackground({
@@ -62,10 +60,7 @@ export default function ExtensionSettingImportHistory() {
     getImportHistoryDetail().then(
       (importHistoryDetail) => {
         console.debug(
-          ...logFormat.formatArgs(
-            "importHistoryDetail",
-            importHistoryDetail
-          )
+          ...logFormat.formatArgs("importHistoryDetail", importHistoryDetail)
         )
         setTotalHistory(
           importHistoryDetail.inProgress
@@ -226,9 +221,7 @@ export default function ExtensionSettingImportHistory() {
           style={{ marginTop: 16 }}
           onClick={startImportHistory}
           loading={
-            importHistorySummary?.status === ImportStatus.Pending
-              ? true
-              : false
+            importHistorySummary?.status === ImportStatus.Pending ? true : false
           }>
           {chrome.i18n.getMessage("importButton")}
         </Button>
@@ -237,9 +230,7 @@ export default function ExtensionSettingImportHistory() {
           onClick={stopImportHistory}>
           {chrome.i18n.getMessage("stopImportButton")}
         </Button>
-        <Button
-          style={{ marginTop: 16, marginLeft: 5 }}
-          onClick={cleanButton}>
+        <Button style={{ marginTop: 16, marginLeft: 5 }} onClick={cleanButton}>
           {chrome.i18n.getMessage("cleanButton")}
         </Button>
       </div>

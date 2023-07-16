@@ -91,8 +91,8 @@ export const updateImportSummary = async ({
 }): Promise<boolean> => {
   const storage = new Storage()
   const importSummary = await getImportSummary({ key })
-  const updateImportSummary = {...importSummary, ...summary}
-  if(updateImportSummary.inProgressCount === 0){
+  const updateImportSummary = { ...importSummary, ...summary }
+  if (updateImportSummary.inProgressCount === 0) {
     updateImportSummary.status = ImportStatus.Ready
   }
   await storage.set(key, updateImportSummary)
@@ -133,7 +133,7 @@ const overwriteImportByStorageKey = async ({
   const storage = new Storage({ area: "local" })
   if (status) {
     overwriteImport = overwriteImport.map((page) => {
-      if(page){
+      if (page) {
         page.status = status
       }
       return page
@@ -142,7 +142,10 @@ const overwriteImportByStorageKey = async ({
 
   await storage.set(key, overwriteImport ?? [])
   console.debug(
-    ...logFormat.formatArgs(`overwriteImportByStorageKey -> key: ${key}, overwriteImport: `, overwriteImport)
+    ...logFormat.formatArgs(
+      `overwriteImportByStorageKey -> key: ${key}, overwriteImport: `,
+      overwriteImport
+    )
   )
   return true
 }
@@ -378,7 +381,7 @@ function getPageHash(page: Bookmarks.BookmarkTreeNode | History.HistoryItem) {
 
 function updateImportPageHash(
   pagesHash: object,
-  pages: ImportBookmarkRecord[]|ImportHistoryRecord[]
+  pages: ImportBookmarkRecord[] | ImportHistoryRecord[]
 ) {
   for (let i = 0; i < pages.length; i++) {
     const page = pages[i]
@@ -716,13 +719,11 @@ export const getImportHistory = async (): Promise<ImportHistory> => {
 }
 
 export const updateImportHistory = async (pagesData: PageData[]) => {
-  const funName = `updateImportHistory`;
+  const funName = `updateImportHistory`
   const { inProgress, success, failed, remaining } =
     await getImportHistoryDetail()
 
-  console.debug(
-    ...logFormat.formatArgs(`${funName} -> pagesData:`, pagesData)
-  )
+  console.debug(...logFormat.formatArgs(`${funName} -> pagesData:`, pagesData))
   console.debug(
     ...logFormat.formatArgs(
       `${funName} before -> inProgressBookmarks:`,
@@ -730,16 +731,10 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
     )
   )
   console.debug(
-    ...logFormat.formatArgs(
-      `${funName} before -> successBookmarks:`,
-      success
-    )
+    ...logFormat.formatArgs(`${funName} before -> successBookmarks:`, success)
   )
   console.debug(
-    ...logFormat.formatArgs(
-      `${funName} before -> failedBookmarks:`,
-      failed
-    )
+    ...logFormat.formatArgs(`${funName} before -> failedBookmarks:`, failed)
   )
   console.debug(
     ...logFormat.formatArgs(
@@ -757,12 +752,7 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
     )
     // console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmark.url", bookmark.url, "pageData.url:", pageData.url))
     console.debug(
-      ...logFormat.formatArgs(
-        `${funName} -> pageData:`,
-        pageData,
-        "index:",
-        i
-      )
+      ...logFormat.formatArgs(`${funName} -> pageData:`, pageData, "index:", i)
     )
     if (pageData) {
       if (pageData.error) {
@@ -790,22 +780,14 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
   }
 
   console.debug(
-    ...logFormat.formatArgs(
-      `${funName} after -> inProgress:`,
-      inProgress
-    )
+    ...logFormat.formatArgs(`${funName} after -> inProgress:`, inProgress)
   )
   console.debug(
     ...logFormat.formatArgs(`${funName} after -> success:`, success)
   )
+  console.debug(...logFormat.formatArgs(`${funName} after -> failed:`, failed))
   console.debug(
-    ...logFormat.formatArgs(`${funName} after -> failed:`, failed)
-  )
-  console.debug(
-    ...logFormat.formatArgs(
-      `${funName} after -> remaining:`,
-      remaining
-    )
+    ...logFormat.formatArgs(`${funName} after -> remaining:`, remaining)
   )
 
   await updateImportHistoryDetail({
@@ -871,21 +853,18 @@ export const syncUpWithLatestHistory = async ({
       // new bookmark
       remaining.push(historyPage)
     } else if (importHistoryPage.status === ImportStatus.Pending) {
-      inProgress.push({...importHistoryPage, ...historyPage})
+      inProgress.push({ ...importHistoryPage, ...historyPage })
     } else if (importHistoryPage.status === ImportStatus.Success) {
-      success.push({...importHistoryPage, ...historyPage})
+      success.push({ ...importHistoryPage, ...historyPage })
     } else if (importHistoryPage.status === ImportStatus.Failed) {
-      failed.push({...importHistoryPage, ...historyPage})
+      failed.push({ ...importHistoryPage, ...historyPage })
     } else {
-      remaining.push({...importHistoryPage, ...historyPage})
+      remaining.push({ ...importHistoryPage, ...historyPage })
     }
   }
 
   console.debug(
-    ...logFormat.formatArgs(
-      "syncUpWithLatestHistory -> remaining:",
-      remaining
-    )
+    ...logFormat.formatArgs("syncUpWithLatestHistory -> remaining:", remaining)
   )
   console.debug(
     ...logFormat.formatArgs(

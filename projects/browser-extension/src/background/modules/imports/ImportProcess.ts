@@ -1,19 +1,13 @@
 import { LogFormat } from "~helpers/LogFormat"
-import {
-  prepareStartImportBookmarks,
-  startImportBookmarks,
-  stopImportBookmarks,
-  updateImportBookmarks
-} from "~storage"
 
 import { type PageData } from "../fetchPage"
 import ImportThread from "./ImportThread"
 
 export class ImportProcess {
   static MAX_CONCURRENT = 20
-  static DEFAULT_TIMEOUT = 1000 * 60 * 60 * 2
-  private initialized = false
+  static DEFAULT_TIMEOUT = 1 * 60 * 1000 // 1 minute
   private stopped = true
+  private initialized = false
   protected importThreads: ImportThread[] = []
   protected jobIndex = 0
   protected logFormat = new LogFormat("modules/imports/ImportProcess")

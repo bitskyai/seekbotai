@@ -237,9 +237,7 @@ export default function ExtensionSettingsImport() {
           onClick={stopImportBookmarks}>
           {chrome.i18n.getMessage("stopImportButton")}
         </Button>
-        <Button
-          style={{ marginTop: 16, marginLeft: 5 }}
-          onClick={cleanButton}>
+        <Button style={{ marginTop: 16, marginLeft: 5 }} onClick={cleanButton}>
           {chrome.i18n.getMessage("cleanButton")}
         </Button>
       </div>

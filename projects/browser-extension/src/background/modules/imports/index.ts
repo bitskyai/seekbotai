@@ -9,7 +9,7 @@ export const IMPORT_BOOKMARKS_JOB_TIMEOUT = 1000 * 60 * 60 * 2 // 2 hours
 export const PARALLEL_IMPORT_BOOKMARKS_COUNT = 5
 
 const _importBookmarks = new ImportBookmarks({})
-const _importHistory = new ImportHistory({syncUpWithHistory: true})
+const _importHistory = new ImportHistory({ syncUpWithHistory: true })
 
 export const startImportBookmarks = async () => {
   console.info(...logFormat.formatArgs("startImportBookmarks"))
