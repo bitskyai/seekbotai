@@ -1,4 +1,7 @@
-import exp from "constants"
+
+export const isSupportedProtocol = (url: string): boolean => {
+  return !!url?.match(/^(https?|http?):\/\//)
+}
 
 export const isPDF = (url: string): boolean => {
   return !!url?.endsWith(".pdf")

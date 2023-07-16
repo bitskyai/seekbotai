@@ -3,10 +3,8 @@ import {
   prepareStartImportBookmarks,
   startImportBookmarks,
   stopImportBookmarks,
-  updateImportBookmarks,
-  updateImportBookmarksSummary
+  updateImportBookmarks
 } from "~storage"
-import { ImportStatus } from "~types"
 
 import { type PageData } from "../fetchPage"
 import ImportThread from "./ImportThread"
@@ -16,13 +14,11 @@ export class ImportProcess {
   static DEFAULT_TIMEOUT = 1000 * 60 * 60 * 2
   private initialized = false
   private stopped = true
-
   protected importThreads: ImportThread[] = []
   protected jobIndex = 0
   protected logFormat = new LogFormat("modules/imports/ImportProcess")
-
-  concurrent = 10
-  timeout: number = ImportProcess.DEFAULT_TIMEOUT
+  protected concurrent = 10
+  protected timeout: number = ImportProcess.DEFAULT_TIMEOUT
 
   constructor({
     concurrent,
@@ -44,7 +40,7 @@ export class ImportProcess {
     if (timeout) {
       this.timeout = timeout
     }
-    this.init()
+    // this.init()
     console.info(...this.logFormat.formatArgs("constructor finished"))
   }
 
@@ -88,9 +84,7 @@ export class ImportProcess {
 
   async start() {
     console.info(...this.logFormat.formatArgs("start"))
-    if (!this.initialized) {
-      await this.init()
-    }
+    await this.init()
     this.stopped = false
     let inProgressPages = await this.getImportPages()
     while (!this.stopped && inProgressPages.length > 0) {

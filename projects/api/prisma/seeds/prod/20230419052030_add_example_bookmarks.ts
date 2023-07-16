@@ -20,14 +20,14 @@ async function seed(prismaClient?: PrismaClient) {
     });
   }
 
-  for (let i = 0; i < bookmarkRaws.length; i++) {
-    const bookmarkRaw = bookmarkRaws[i];
-    await prismaClient.bookmarkRaw.upsert({
-      where: { id: bookmarkRaw.id },
-      create: bookmarkRaw,
-      update: bookmarkRaw,
-    });
-  }
+  // for (let i = 0; i < bookmarkRaws.length; i++) {
+  //   const bookmarkRaw = bookmarkRaws[i];
+  //   await prismaClient.bookmarkRaw.upsert({
+  //     where: { id: bookmarkRaw.id },
+  //     create: bookmarkRaw,
+  //     update: bookmarkRaw,
+  //   });
+  // }
 
   for (let i = 0; i < bookmarkTags.length; i++) {
     const tags = bookmarkTags[i];

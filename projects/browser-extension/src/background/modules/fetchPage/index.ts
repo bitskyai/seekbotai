@@ -1,6 +1,6 @@
 import normalizeUrl from "normalize-url"
 
-import { isHTML } from "./utils"
+import { isHTML, isSupportedProtocol } from "./utils"
 
 export interface FetchPageOptions {
   url: string
@@ -82,20 +82,32 @@ const fetchPage = ({
 
   let run: RunFetch
   let cancel: CancelFetch
-  if (isHTML(url)) {
-    const { run: runFetchPage, cancel: cancelFetchPage } = fetchPageHTML({
-      url,
-      timeout
-    })
-    run = runFetchPage
-    cancel = cancelFetchPage
-  } else {
+  if(!isSupportedProtocol(url)){
+    if (isHTML(url)) {
+      const { run: runFetchPage, cancel: cancelFetchPage } = fetchPageHTML({
+        url,
+        timeout
+      })
+      run = runFetchPage
+      cancel = cancelFetchPage
+    } else {
+      run = async () => {
+        // TODO: implement other types
+        return {
+          url,
+          warning: {
+            message: "Not implemented yet"
+          }
+        }
+      }
+      cancel = () => undefined
+    }
+  }else{
     run = async () => {
-      // TODO: implement other types
       return {
         url,
         warning: {
-          message: "Not implemented yet"
+          message: "Protocol not supported"
         }
       }
     }

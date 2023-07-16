@@ -44,7 +44,7 @@ export default function ExtensionSettingsImport() {
     })
   }
 
-  async function cleanAndImportButton() {
+  async function cleanButton() {
     await sendToBackground({
       name: MessageSubject.cleanAndImportBookmarks
     })
@@ -126,7 +126,7 @@ export default function ExtensionSettingsImport() {
       key: "tags",
       render: (tags) => (
         <Breadcrumb
-          items={tags.map((tag) => {
+          items={tags?.map((tag) => {
             return { title: tag }
           })}></Breadcrumb>
       )
@@ -239,12 +239,12 @@ export default function ExtensionSettingsImport() {
         </Button>
         <Button
           style={{ marginTop: 16, marginLeft: 5 }}
-          onClick={cleanAndImportButton}>
-          {chrome.i18n.getMessage("cleanAndImportButton")}
+          onClick={cleanButton}>
+          {chrome.i18n.getMessage("cleanButton")}
         </Button>
       </div>
       <Table
-        rowKey={(record) => record.id}
+        rowKey={(record) => record?.id}
         columns={columns}
         dataSource={totalBookmarks}
         pagination={{

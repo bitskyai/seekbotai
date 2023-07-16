@@ -31,8 +31,8 @@
   "stopImportButton": {
     "message": "Stop Import"
   },
-  "cleanAndImportButton": {
-    "message": "Clean and Import"
+  "cleanButton": {
+    "message": "Clean"
   },
   "generalTitle": {
     "message": "General"

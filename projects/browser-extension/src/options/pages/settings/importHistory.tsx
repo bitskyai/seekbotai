@@ -17,9 +17,9 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import { MessageSubject } from "~background/messages"
 import { LogFormat } from "~helpers/LogFormat"
-import { StorageKeys, getImportBookmarksDetail } from "~storage"
+import { StorageKeys, getImportHistoryDetail } from "~storage"
 import {
-  type ImportBookmarkRecord,
+  type ImportHistoryRecord,
   ImportStatus,
   type ImportSummary
 } from "~types"
@@ -28,57 +28,57 @@ const { Title, Text } = Typography
 const logFormat = new LogFormat("ExtensionSettingImportHistory")
 
 export default function ExtensionSettingImportHistory() {
-  const [totalBookmarks, setTotalBookmarks] = useState<ImportBookmarkRecord[]>(
+  const [totalHistory, setTotalHistory] = useState<ImportHistoryRecord[]>(
     []
   )
 
-  async function startImportBookmarks() {
+  async function startImportHistory() {
     await sendToBackground({
-      name: MessageSubject.startImportBookmarks
+      name: MessageSubject.startImportHistory
     })
   }
 
-  async function stopImportBookmarks() {
+  async function stopImportHistory() {
     await sendToBackground({
-      name: MessageSubject.stopImportBookmarks
+      name: MessageSubject.stopImportHistory
     })
   }
 
-  async function cleanAndImportButton() {
+  async function cleanButton() {
     await sendToBackground({
-      name: MessageSubject.cleanAndImportBookmarks
+      name: MessageSubject.cleanImportHistory
     })
   }
 
-  const [importBookmarksSummary] = useStorage<ImportSummary>(
+  const [importHistorySummary] = useStorage<ImportSummary>(
     StorageKeys.ImportHistorySummary
   )
 
   console.debug(
-    ...logFormat.formatArgs("importBookmarksSummary", importBookmarksSummary)
+    ...logFormat.formatArgs("importHistorySummary", importHistorySummary)
   )
 
   useEffect(() => {
-    getImportBookmarksDetail().then(
-      (importBookmarksDetail) => {
+    getImportHistoryDetail().then(
+      (importHistoryDetail) => {
         console.debug(
           ...logFormat.formatArgs(
-            "importBookmarksDetail",
-            importBookmarksDetail
+            "importHistoryDetail",
+            importHistoryDetail
           )
         )
-        setTotalBookmarks(
-          importBookmarksDetail.inProgress
-            .concat(importBookmarksDetail.failed)
-            .concat(importBookmarksDetail.success)
-            .concat(importBookmarksDetail.remaining)
+        setTotalHistory(
+          importHistoryDetail.inProgress
+            .concat(importHistoryDetail.failed)
+            .concat(importHistoryDetail.success)
+            .concat(importHistoryDetail.remaining)
         )
       },
       (error) => {
         console.error(error)
       }
     )
-  }, [importBookmarksSummary])
+  }, [importHistorySummary])
 
   const statusFilterOptions = []
   for (const status of Object.values(ImportStatus)) {
@@ -88,7 +88,7 @@ export default function ExtensionSettingImportHistory() {
     })
   }
 
-  const columns: ColumnsType<ImportBookmarkRecord> = [
+  const columns: ColumnsType<ImportHistoryRecord> = [
     {
       title: "Name",
       dataIndex: "title",
@@ -126,7 +126,7 @@ export default function ExtensionSettingImportHistory() {
       key: "tags",
       render: (tags) => (
         <Breadcrumb
-          items={tags.map((tag) => {
+          items={tags?.map((tag) => {
             return { title: tag }
           })}></Breadcrumb>
       )
@@ -152,14 +152,14 @@ export default function ExtensionSettingImportHistory() {
       )
     },
     {
-      title: "Created At",
-      dataIndex: "dateAdded",
-      key: "dateAdded",
-      sorter: (a, b) => a.dateAdded - b.dateAdded,
-      render: (dateAdded) => (
+      title: "Last Visited At",
+      dataIndex: "lastVisitTime",
+      key: "lastVisitTime",
+      sorter: (a, b) => a.lastVisitTime - b.lastVisitTime,
+      render: (lastVisitTime) => (
         <Text>
-          {dateAdded
-            ? new Date(dateAdded).toLocaleString("en-US", {
+          {lastVisitTime
+            ? new Date(lastVisitTime).toLocaleString("en-US", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -182,12 +182,12 @@ export default function ExtensionSettingImportHistory() {
       <div className="settings-status-section">
         <Progress
           percent={
-            importBookmarksSummary?.totalCount
+            importHistorySummary?.totalCount
               ? parseFloat(
                   (
-                    (importBookmarksSummary.totalCount -
-                      importBookmarksSummary.remainingCount) /
-                    importBookmarksSummary.totalCount
+                    (importHistorySummary.totalCount -
+                      importHistorySummary.remainingCount) /
+                    importHistorySummary.totalCount
                   ).toFixed(3)
                 ) * 100
               : 0
@@ -197,25 +197,25 @@ export default function ExtensionSettingImportHistory() {
           <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("remainingTitle")}
-              value={importBookmarksSummary?.remainingCount || 0}
+              value={importHistorySummary?.remainingCount || 0}
             />
           </Col>
           <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("pendingTitle")}
-              value={importBookmarksSummary?.inProgressCount || 0}
+              value={importHistorySummary?.inProgressCount || 0}
             />
           </Col>
           <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("successTitle")}
-              value={importBookmarksSummary?.successCount || 0}
+              value={importHistorySummary?.successCount || 0}
             />
           </Col>
           <Col span={4}>
             <Statistic
               title={chrome.i18n.getMessage("failedTitle")}
-              value={importBookmarksSummary?.failedCount || 0}
+              value={importHistorySummary?.failedCount || 0}
             />
           </Col>
         </Row>
@@ -224,9 +224,9 @@ export default function ExtensionSettingImportHistory() {
         <Button
           type="primary"
           style={{ marginTop: 16 }}
-          onClick={startImportBookmarks}
+          onClick={startImportHistory}
           loading={
-            importBookmarksSummary?.status === ImportStatus.Pending
+            importHistorySummary?.status === ImportStatus.Pending
               ? true
               : false
           }>
@@ -234,19 +234,19 @@ export default function ExtensionSettingImportHistory() {
         </Button>
         <Button
           style={{ marginTop: 16, marginLeft: 5 }}
-          onClick={stopImportBookmarks}>
+          onClick={stopImportHistory}>
           {chrome.i18n.getMessage("stopImportButton")}
         </Button>
         <Button
           style={{ marginTop: 16, marginLeft: 5 }}
-          onClick={cleanAndImportButton}>
-          {chrome.i18n.getMessage("cleanAndImportButton")}
+          onClick={cleanButton}>
+          {chrome.i18n.getMessage("cleanButton")}
         </Button>
       </div>
       <Table
-        rowKey={(record) => record.id}
+        rowKey={(record) => record?.id}
         columns={columns}
-        dataSource={totalBookmarks}
+        dataSource={totalHistory}
         pagination={{
           defaultPageSize: 50,
           showTotal: (total, range) =>

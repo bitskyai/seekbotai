@@ -60,7 +60,7 @@ export const DEFAULT_IMPORT_SUMMARY: ImportSummary = {
   failedCount: undefined
 }
 
-export const cleanAll = async () => {
+export const cleanAllBookmarks = async () => {
   const storageSummary = new Storage()
   await storageSummary.remove(StorageKeys.ImportBookmarksSummary)
   const storage = new Storage({ area: "local" })
@@ -91,7 +91,7 @@ export const updateImportSummary = async ({
 }): Promise<boolean> => {
   const storage = new Storage()
   const importSummary = await getImportSummary({ key })
-  const updateImportSummary = _.merge(importSummary, summary)
+  const updateImportSummary = {...importSummary, ...summary}
   await storage.set(key, updateImportSummary)
   console.debug(
     ...logFormat.formatArgs("updateImportSummary", updateImportSummary)
@@ -130,14 +130,16 @@ const overwriteImportByStorageKey = async ({
   const storage = new Storage({ area: "local" })
   if (status) {
     overwriteImport = overwriteImport.map((page) => {
-      page.status = status
+      if(page){
+        page.status = status
+      }
       return page
     })
   }
 
   await storage.set(key, overwriteImport ?? [])
   console.debug(
-    ...logFormat.formatArgs("overwriteImportByStorageKey", overwriteImport)
+    ...logFormat.formatArgs(`overwriteImportByStorageKey -> key: ${key}, overwriteImport: `, overwriteImport)
   )
   return true
 }
@@ -607,10 +609,11 @@ export const getImportHistorySummary = async (): Promise<ImportSummary> => {
 export const updateImportHistorySummary = async (
   summary: Partial<ImportSummary>
 ): Promise<boolean> => {
-  return await updateImportSummary({
+  await updateImportSummary({
     key: StorageKeys.ImportHistorySummary,
     summary
   })
+  return true
 }
 
 export const getImportHistoryDetail = async (
@@ -657,7 +660,7 @@ export const updateImportHistoryDetail = async (
   const summary: ImportSummary = {}
   if (detail.inProgress) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportHistoryInProgress,
       overwriteImport: detail?.inProgress ?? [],
       status: ImportStatus.Pending
     })
@@ -665,7 +668,7 @@ export const updateImportHistoryDetail = async (
   }
   if (detail.success) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportHistorySuccess,
       overwriteImport: detail?.success ?? [],
       status: ImportStatus.Success
     })
@@ -673,7 +676,7 @@ export const updateImportHistoryDetail = async (
   }
   if (detail.failed) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportHistoryFailed,
       overwriteImport: detail?.failed ?? [],
       status: ImportStatus.Failed
     })
@@ -681,7 +684,7 @@ export const updateImportHistoryDetail = async (
   }
   if (detail.remaining) {
     await overwriteImportByStorageKey({
-      key: StorageKeys.ImportBookmarksInProgress,
+      key: StorageKeys.ImportHistoryRemaining,
       overwriteImport: detail?.remaining ?? [],
       status: ImportStatus.Ready
     })
@@ -710,33 +713,34 @@ export const getImportHistory = async (): Promise<ImportHistory> => {
 }
 
 export const updateImportHistory = async (pagesData: PageData[]) => {
+  const funName = `updateImportHistory`;
   const { inProgress, success, failed, remaining } =
     await getImportHistoryDetail()
 
   console.debug(
-    ...logFormat.formatArgs("updateImportBookmarks -> pagesData:", pagesData)
+    ...logFormat.formatArgs(`${funName} -> pagesData:`, pagesData)
   )
   console.debug(
     ...logFormat.formatArgs(
-      "updateImportBookmarks before -> inProgressBookmarks:",
+      `${funName} before -> inProgressBookmarks:`,
       inProgress
     )
   )
   console.debug(
     ...logFormat.formatArgs(
-      "updateImportBookmarks before -> successBookmarks:",
+      `${funName} before -> successBookmarks:`,
       success
     )
   )
   console.debug(
     ...logFormat.formatArgs(
-      "updateImportBookmarks before -> failedBookmarks:",
+      `${funName} before -> failedBookmarks:`,
       failed
     )
   )
   console.debug(
     ...logFormat.formatArgs(
-      "updateImportBookmarks before -> remainingBookmarks:",
+      `${funName} before -> remainingBookmarks:`,
       remaining
     )
   )
@@ -751,7 +755,7 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
     // console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmark.url", bookmark.url, "pageData.url:", pageData.url))
     console.debug(
       ...logFormat.formatArgs(
-        "updateImportBookmarks -> pageData:",
+        `${funName} -> pageData:`,
         pageData,
         "index:",
         i
@@ -784,19 +788,19 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
 
   console.debug(
     ...logFormat.formatArgs(
-      "updateImportBookmarks after -> inProgress:",
+      `${funName} after -> inProgress:`,
       inProgress
     )
   )
   console.debug(
-    ...logFormat.formatArgs("updateImportBookmarks after -> success:", success)
+    ...logFormat.formatArgs(`${funName} after -> success:`, success)
   )
   console.debug(
-    ...logFormat.formatArgs("updateImportBookmarks after -> failed:", failed)
+    ...logFormat.formatArgs(`${funName} after -> failed:`, failed)
   )
   console.debug(
     ...logFormat.formatArgs(
-      "updateImportBookmarks after -> remaining:",
+      `${funName} after -> remaining:`,
       remaining
     )
   )
@@ -849,21 +853,28 @@ export const syncUpWithLatestHistory = async ({
   const success = []
   const failed = []
   const remaining = []
+  console.debug(
+    ...logFormat.formatArgs(
+      "syncUpWithLatestHistory -> historyItems:",
+      historyItems
+    )
+  )
   for (let i = 0; i < historyItems.length; i++) {
     const historyPage = historyItems[i]
+    historyPage.tags = ["history"]
     const importHistoryPage = importHistoryHash[getPageHash(historyPage)]
 
     if (!importHistoryPage) {
       // new bookmark
-      remaining.push(importHistoryPage)
+      remaining.push(historyPage)
     } else if (importHistoryPage.status === ImportStatus.Pending) {
-      inProgress.push(importHistoryPage)
+      inProgress.push({...importHistoryPage, ...historyPage})
     } else if (importHistoryPage.status === ImportStatus.Success) {
-      success.push(importHistoryPage)
+      success.push({...importHistoryPage, ...historyPage})
     } else if (importHistoryPage.status === ImportStatus.Failed) {
-      failed.push(importHistoryPage)
+      failed.push({...importHistoryPage, ...historyPage})
     } else {
-      remaining.push(importHistoryPage)
+      remaining.push({...importHistoryPage, ...historyPage})
     }
   }
 
@@ -925,7 +936,8 @@ export const prepareStartImportHistory = async ({
       startTime,
       endTime,
       maxResults,
-      text
+      text,
+      syncUpWithHistory
     })
   )
 
