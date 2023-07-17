@@ -62,7 +62,8 @@
       "webNavigation",
       "notifications",
       "storage",
-      "unlimitedStorage"
+      "unlimitedStorage",
+      "scripting"
     ]
   }
 }

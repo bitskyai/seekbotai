@@ -1,4 +1,5 @@
 export enum MessageSubject {
+  createBookmarks = "createBookmarks",
   getBookmarks = "getBookmarks",
   startImportBookmarks = "startImportBookmarks",
   stopImportBookmarks = "stopImportBookmarks",
