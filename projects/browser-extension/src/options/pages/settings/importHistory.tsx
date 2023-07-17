@@ -172,12 +172,8 @@ export default function ExtensionSettingImportHistory() {
     <div>
       <Title level={5}>{chrome.i18n.getMessage("importHistoryTitle")}</Title>
       <Text type="secondary">
-        <p>
-        {chrome.i18n.getMessage("importHistoryDescription")}
-        </p>
-        <p>
-        {chrome.i18n.getMessage("importHistoryDetail")}
-        </p>
+        <p>{chrome.i18n.getMessage("importHistoryDescription")}</p>
+        <p>{chrome.i18n.getMessage("importHistoryDetail")}</p>
       </Text>
       <div className="settings-status-section">
         <Progress

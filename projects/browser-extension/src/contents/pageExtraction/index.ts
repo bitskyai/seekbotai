@@ -1,7 +1,9 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { LogFormat } from "~helpers/LogFormat"
+
 import { sendToBackground } from "@plasmohq/messaging"
+
 import { MessageSubject } from "~background/messages"
+import { LogFormat } from "~helpers/LogFormat"
 
 const logFormat = new LogFormat("contents/pageExtraction")
 export const config: PlasmoCSConfig = {
@@ -10,11 +12,17 @@ export const config: PlasmoCSConfig = {
 }
 
 function extractPageHTML() {
-  var currentPageHTML = document.documentElement.outerHTML;
+  var currentPageHTML = document.documentElement.outerHTML
   // remove script and style tags
-  currentPageHTML = currentPageHTML.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
-  currentPageHTML = currentPageHTML.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
-  return currentPageHTML;
+  currentPageHTML = currentPageHTML.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    ""
+  )
+  currentPageHTML = currentPageHTML.replace(
+    /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
+    ""
+  )
+  return currentPageHTML
 }
 
 window.addEventListener("load", async () => {
@@ -27,7 +35,7 @@ window.addEventListener("load", async () => {
     url: window.location.href,
     content: "",
     raw: extractPageHTML() ?? ""
-  };
+  }
 
   console.info(...logFormat.formatArgs("curentPageData", currentPageData))
   // save current page
