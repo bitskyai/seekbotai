@@ -18,7 +18,7 @@ function extractPageHTML() {
 }
 
 window.addEventListener("load", async () => {
-  document.body.style.background = "pink"
+  // document.body.style.background = "pink" // used for debugging
 
   console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
   const currentPageData = {
