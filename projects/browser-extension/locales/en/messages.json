@@ -25,6 +25,9 @@
   "importHistoryDescription": {
     "message": "Import browser history to BitSky. Import will not delete your browser history, if a history need to login  or connect VPN, it maybe failed to import."
   },
+  "importHistoryDetail": {
+    "message": "Import passed 300 days browser history, and max import 10000 records"
+  },
   "importButton": {
     "message": "Start Import"
   },
@@ -108,5 +111,23 @@
   },
   "pendingTitle": {
     "message": "In Progress"
+  },
+  "nameTitle": {
+    "message": "Name"
+  },
+  "statusTitle": {
+    "message": "Status"
+  },
+  "folderTitle": {
+    "message": "Folder"
+  },
+  "lastImportedAtTitle": {
+    "message": "Last Imported At"
+  },
+  "lastVisitedAtTitle": {
+    "message": "Last Visited At"
+  },
+  "createdAtTitle": {
+    "message": "Created At"
   }
 }

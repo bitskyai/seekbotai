@@ -90,7 +90,7 @@ export default function ExtensionSettingsImport() {
 
   const columns: ColumnsType<ImportBookmarkRecord> = [
     {
-      title: "Name",
+      title: chrome.i18n.getMessage("nameTitle"),
       dataIndex: "title",
       key: "name",
       render: (title, record) => (
@@ -100,7 +100,7 @@ export default function ExtensionSettingsImport() {
       )
     },
     {
-      title: "Status",
+      title: chrome.i18n.getMessage("statusTitle"),
       dataIndex: "status",
       key: "status",
       filters: statusFilterOptions,
@@ -121,7 +121,7 @@ export default function ExtensionSettingsImport() {
       }
     },
     {
-      title: "Folder",
+      title: chrome.i18n.getMessage("folderTitle"),
       dataIndex: "tags",
       key: "tags",
       render: (tags) => (
@@ -132,7 +132,7 @@ export default function ExtensionSettingsImport() {
       )
     },
     {
-      title: "Last Imported At",
+      title: chrome.i18n.getMessage("lastImportedAtTitle"),
       dataIndex: "lastImportedAt",
       key: "lastImportedAt",
       sorter: (a, b) => a.lastImportedAt - b.lastImportedAt,
@@ -152,7 +152,7 @@ export default function ExtensionSettingsImport() {
       )
     },
     {
-      title: "Created At",
+      title: chrome.i18n.getMessage("createdAtTitle"),
       dataIndex: "dateAdded",
       key: "dateAdded",
       sorter: (a, b) => a.dateAdded - b.dateAdded,

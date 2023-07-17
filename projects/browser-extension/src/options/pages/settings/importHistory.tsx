@@ -85,7 +85,7 @@ export default function ExtensionSettingImportHistory() {
 
   const columns: ColumnsType<ImportHistoryRecord> = [
     {
-      title: "Name",
+      title: chrome.i18n.getMessage("nameTitle"),
       dataIndex: "title",
       key: "name",
       render: (title, record) => (
@@ -95,7 +95,7 @@ export default function ExtensionSettingImportHistory() {
       )
     },
     {
-      title: "Status",
+      title: chrome.i18n.getMessage("statusTitle"),
       dataIndex: "status",
       key: "status",
       filters: statusFilterOptions,
@@ -116,7 +116,7 @@ export default function ExtensionSettingImportHistory() {
       }
     },
     {
-      title: "Folder",
+      title: chrome.i18n.getMessage("folderTitle"),
       dataIndex: "tags",
       key: "tags",
       render: (tags) => (
@@ -127,7 +127,7 @@ export default function ExtensionSettingImportHistory() {
       )
     },
     {
-      title: "Last Imported At",
+      title: chrome.i18n.getMessage("lastImportedAtTitle"),
       dataIndex: "lastImportedAt",
       key: "lastImportedAt",
       sorter: (a, b) => a.lastImportedAt - b.lastImportedAt,
@@ -147,7 +147,7 @@ export default function ExtensionSettingImportHistory() {
       )
     },
     {
-      title: "Last Visited At",
+      title: chrome.i18n.getMessage("lastVisitedAtTitle"),
       dataIndex: "lastVisitTime",
       key: "lastVisitTime",
       sorter: (a, b) => a.lastVisitTime - b.lastVisitTime,
@@ -172,7 +172,12 @@ export default function ExtensionSettingImportHistory() {
     <div>
       <Title level={5}>{chrome.i18n.getMessage("importHistoryTitle")}</Title>
       <Text type="secondary">
+        <p>
         {chrome.i18n.getMessage("importHistoryDescription")}
+        </p>
+        <p>
+        {chrome.i18n.getMessage("importHistoryDetail")}
+        </p>
       </Text>
       <div className="settings-status-section">
         <Progress
