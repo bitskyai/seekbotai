@@ -1,14 +1,83 @@
 {
   "extensionName": {
-    "message": "Bookmark Intelligence",
+    "message": "BitSky",
     "description": "name of the extension"
   },
   "extensionDescription": {
     "message": "test",
     "description": ""
   },
-  "tooltipBookmark": {
-    "message": "Click to bookmark current page"
+  "slogon": {
+    "message": "- Make Life Productive"
+  },
+  "settingsTitle": {
+    "message": "Settings"
+  },
+  "importTitle": {
+    "message": "Import Bookmarks"
+  },
+  "importDescription": {
+    "message": "Import Bookmarks from current browser to BitSky. Import will not delete your browser bookmarks, if a bookmark need to login or connect VPN, it maybe failed to import."
+  },
+  "importHistoryTitle": {
+    "message": "Import Browser History"
+  },
+  "importHistoryDescription": {
+    "message": "Import browser history to BitSky. Import will not delete your browser history, if a history need to login  or connect VPN, it maybe failed to import."
+  },
+  "importHistoryDetail": {
+    "message": "Import passed 300 days browser history, and max import 10000 records"
+  },
+  "importButton": {
+    "message": "Start Import"
+  },
+  "stopImportButton": {
+    "message": "Stop Import"
+  },
+  "cleanButton": {
+    "message": "Clean"
+  },
+  "generalTitle": {
+    "message": "General"
+  },
+  "ignorePatternsTitle": {
+    "message": "Ignore Patterns"
+  },
+  "extensionSettingsTitle": {
+    "message": "Extension Settings"
+  },
+  "settingsTooltip": {
+    "message": "Click to open settings page"
+  },
+  "questionTooltip": {
+    "message": "Click to open documents"
+  },
+  "searchTitle": {
+    "message": "Open Search Page"
+  },
+  "searchDescription": {
+    "message": "Search bookmarks or pages by title, url, tags, content"
+  },
+  "searchTooltip": {
+    "message": "Click to jump to search"
+  },
+  "savePageTitle": {
+    "message": "Save Page"
+  },
+  "savePageDescription": {
+    "message": "Save current page without add a browser bookmark"
+  },
+  "savePageTooltip": {
+    "message": "Click to save current page"
+  },
+  "bookmarkPageTitle": {
+    "message": "Bookmark Page"
+  },
+  "bookmarkPageDescription": {
+    "message": "Bookmark current page will save page also add a browser bookmark"
+  },
+  "bookmarkPageTooltip": {
+    "message": "Click to save current page"
   },
   "tooltipBookmarked": {
     "message": "Click to remove bookmark current page"
@@ -24,5 +93,41 @@
   },
   "search": {
     "message": "Search with Bookmark Intelligence"
+  },
+  "errorPageTitle": {
+    "message": "Error"
+  },
+  "totalTitle": {
+    "message": "Total"
+  },
+  "remainingTitle": {
+    "message": "Remaining"
+  },
+  "successTitle": {
+    "message": "Success"
+  },
+  "failedTitle": {
+    "message": "Fail"
+  },
+  "pendingTitle": {
+    "message": "In Progress"
+  },
+  "nameTitle": {
+    "message": "Name"
+  },
+  "statusTitle": {
+    "message": "Status"
+  },
+  "folderTitle": {
+    "message": "Folder"
+  },
+  "lastImportedAtTitle": {
+    "message": "Last Imported At"
+  },
+  "lastVisitedAtTitle": {
+    "message": "Last Visited At"
+  },
+  "createdAtTitle": {
+    "message": "Created At"
   }
 }

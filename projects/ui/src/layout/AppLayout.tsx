@@ -1,3 +1,8 @@
+import {
+  APP_READY_MESSAGE,
+  APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
+  APP_NAVIGATE_TO_EXTENSION_SETTINGS,
+} from "../../../shared/constants";
 import { GetTagsDocument, Tag } from "../graphql/generated";
 import {
   BookOutlined,
@@ -8,7 +13,7 @@ import {
 import { useQuery } from "@apollo/client";
 import type { MenuProps } from "antd";
 import { Layout, Menu, Skeleton } from "antd";
-import * as React from "react";
+import { ReactNode, Key, Fragment, Suspense, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
 
@@ -17,9 +22,9 @@ const { Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
+  label: ReactNode,
+  key: Key,
+  icon?: ReactNode,
   children?: MenuItem[],
 ): MenuItem {
   return {
@@ -32,14 +37,7 @@ function getItem(
 
 function getTagItem(tag: Tag): MenuItem {
   return getItem(
-    <NavLink
-      to={`/search?tags=${tag.id}`}
-      // className={({ isActive, isPending }) =>
-      //   isPending ? "pending" : isActive ? "active" : ""
-      // }
-    >
-      {tag.name}
-    </NavLink>,
+    <NavLink to={`/search?tags=${tag.id}`}>{tag.name}</NavLink>,
     `tag:${tag.id}`,
   );
 }
@@ -49,15 +47,29 @@ function getTagItem(tag: Tag): MenuItem {
  */
 export function AppLayout(): JSX.Element {
   const { t } = useTranslation();
-  const [collapsed, setCollapsed] = React.useState(false);
-  const [selectedKeys] = React.useState([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedKeys] = useState([]);
+  const [displayExtensionSettings, setDisplayExtensionSettings] =
+    useState(false);
 
   const { loading: fetchTags, data: tagsData } = useQuery(GetTagsDocument);
 
   const SIDE_NAV_WIDTH = 300;
   const SIDE_COLLAPSED_NAV_WIDTH = 80;
 
-  const items: MenuItem[] = [
+  // TODO: create a common iframe message handler
+  // notify iframe parent app is ready to receive messages
+  useEffect(() => {
+    console.log("app is ready");
+    window.parent.postMessage(APP_READY_MESSAGE, "*");
+    window.removeEventListener("message", () => console.log("remove message"));
+    window.addEventListener("message", function (event) {
+      if (event.data === APP_DISPLAY_EXTENSION_SETTINGS_OPTION) {
+        setDisplayExtensionSettings(true);
+      }
+    });
+  }, []);
+  const defaultMenuItem = [
     getItem(
       <NavLink
         to="/settings"
@@ -70,6 +82,24 @@ export function AppLayout(): JSX.Element {
       "settings",
       <SettingOutlined />,
     ),
+  ];
+  if (displayExtensionSettings) {
+    defaultMenuItem.push(
+      getItem(
+        <a
+          onClick={() => {
+            window.parent.postMessage(APP_NAVIGATE_TO_EXTENSION_SETTINGS, "*");
+          }}
+        >
+          {t("extensionSettings")}
+        </a>,
+        "extensionSettings",
+        <SettingOutlined />,
+      ),
+    );
+  }
+
+  const items: MenuItem[] = defaultMenuItem.concat([
     // getItem(t("sideNav.folders"), "folders", <FolderOutlined />, [
     //   getItem("Bookmark Bar", "3"),
     // ]),
@@ -100,10 +130,10 @@ export function AppLayout(): JSX.Element {
         ? [getItem(<Skeleton active />, "tagsSkeleton")]
         : tagsData?.tags?.map((tag) => getTagItem(tag)),
     ),
-  ];
+  ]);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Layout hasSider>
         <Sider
           width={SIDE_NAV_WIDTH}
@@ -133,12 +163,12 @@ export function AppLayout(): JSX.Element {
           }}
         >
           <Content>
-            <React.Suspense>
+            <Suspense>
               <Outlet />
-            </React.Suspense>
+            </Suspense>
           </Content>
         </Layout>
       </Layout>
-    </React.Fragment>
+    </Fragment>
   );
 }

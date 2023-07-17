@@ -1,6 +1,7 @@
 {
   "appName": "Bookmark Intelligence",
-  "settings": "Settings",
+  "settings": "Preferences",
+  "extensionSettings": "Extension Settings",
   "sideNav": {
     "allBookmarks": "All Bookmarks",
     "folders": "Folders",

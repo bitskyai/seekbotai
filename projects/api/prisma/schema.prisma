@@ -96,9 +96,10 @@ model Tag {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int      @map("bk_user_id")
 
-  name         String        @unique
+  name         String
   bookmarkTags BookmarkTag[]
 
+  @@unique([userId, name])
   @@map("bk_tag")
 }
 
@@ -121,6 +122,9 @@ model Folder {
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int      @map("bk_user_id")
+  parent    Folder?  @relation("ParentChildren", fields: [parentId], references: [id])
+  parentId  Int?     @map("bk_parent_id")
+  children  Folder[] @relation("ParentChildren")
 
   name      String
   icon      String?
@@ -149,6 +153,7 @@ model Bookmark {
   bookmarkScreenshots BookmarkScreenshot[]
   content             String?
 
+  @@unique([userId, url])
   @@map("bk_bookmark")
 }
 
@@ -164,6 +169,7 @@ model BookmarkRaw {
 
   raw String
 
+  @@unique([userId, bookmarkId])
   @@map("bk_bookmark_raw")
 }
 
@@ -194,6 +200,7 @@ model BookmarkTag {
   bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
   bookmarkId Int      @map("bk_bookmark_id")
 
+  @@unique([userId, tagId, bookmarkId])
   @@map("bk_bookmark_tag")
 }
 
@@ -211,5 +218,6 @@ model BrowserHistory {
   count       Int     @default(0)
   content     String
 
+  @@unique([userId, url])
   @@map("bk_browser_history")
 }

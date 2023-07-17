@@ -8,7 +8,7 @@ function IndexNewtab() {
   return (
     <div style={{}}>
       <iframe
-        src="http://localhost:56789"
+        src="http://localhost:5173"
         className="full-screen"
         style={{ height: window.screen.height }}
       />

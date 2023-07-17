@@ -7,33 +7,63 @@
   "author": "help.bitskyai@gmail.com",
   "license": "GPL-3.0",
   "scripts": {
-    "dev": "plasmo dev",
+    "dev": "plasmo dev --verbose",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
-    "plasmo": "0.64.5",
+    "plasmo": "0.70.1",
+    "@plasmohq/messaging": "0.3.0",
+    "@plasmohq/storage": "^1.6.0",
+    "webextension-polyfill": "^0.10.0",
+    "graphql": "^16.6.0",
+    "@apollo/client": "^3.7.14",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.0",
+    "antd": "^5.4.6",
+    "lodash": "^4.17.21",
+    "normalize-url": "^6.0.1"
   },
   "devDependencies": {
     "@types/chrome": "0.0.210",
     "@types/node": "^18.11.19",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/webextension-polyfill": "^0.10.0",
+    "@types/lodash": "^4.14.175",
+    "@types/debug": "^4.1.7",
     "prettier": "2.8.3",
     "typescript": "^4.9.5",
-    "@plasmohq/prettier-plugin-sort-imports": "3.6.1"
+    "@plasmohq/prettier-plugin-sort-imports": "3.6.1",
+    "@graphql-codegen/cli": "^3.0.0",
+    "@graphql-codegen/typed-document-node": "^3.0.0",
+    "@graphql-codegen/typescript": "^3.0.0",
+    "@graphql-codegen/typescript-operations": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "dotenv-cli": "^7.1.0"
   },
   "envars": {
     "cwd": "../../env"
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "<all_urls>"
     ],
     "permissions": [
-      "tabs"
+      "alarms",
+      "bookmarks",
+      "history",
+      "scripting",
+      "tabs",
+      "contextMenus",
+      "unlimitedStorage",
+      "webNavigation",
+      "notifications",
+      "storage",
+      "unlimitedStorage",
+      "scripting"
     ]
   }
 }

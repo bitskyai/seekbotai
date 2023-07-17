@@ -3,6 +3,7 @@ import { GQLContext } from "../types";
 import SchemaBuilder from "@pothos/core";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
+import SimpleObjectsPlugin from "@pothos/plugin-simple-objects";
 import { DateResolver, DateTimeResolver } from "graphql-scalars";
 
 export const schemaBuilder = new SchemaBuilder<{
@@ -13,7 +14,7 @@ export const schemaBuilder = new SchemaBuilder<{
   PrismaTypes: PrismaTypes;
   Context: GQLContext;
 }>({
-  plugins: [PrismaPlugin],
+  plugins: [PrismaPlugin, SimpleObjectsPlugin],
   prisma: {
     client: getPrismaClient(),
     filterConnectionTotalCount: true,
@@ -28,5 +29,5 @@ schemaBuilder.addScalarType("DateTime", DateTimeResolver, {});
 // since those nodes can have multiple resolvers and possibly
 // can lead to really large and hard to read/navigate files
 schemaBuilder.queryType({});
-// schemaBuilder.mutationType({});
+schemaBuilder.mutationType({});
 // schemaBuilder.subscriptionType({});
