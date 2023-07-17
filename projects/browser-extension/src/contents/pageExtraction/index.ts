@@ -12,7 +12,7 @@ export const config: PlasmoCSConfig = {
 }
 
 function extractPageHTML() {
-  var currentPageHTML = document.documentElement.outerHTML
+  let currentPageHTML = document.documentElement.outerHTML
   // remove script and style tags
   currentPageHTML = currentPageHTML.replace(
     /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,

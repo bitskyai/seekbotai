@@ -17,11 +17,11 @@ export class ImportHistory extends ImportProcess {
   static DEFAULT_HISTORY_DAYS_FROM_TODAY = DEFAULT_HISTORY_DAYS_FROM_TODAY
   static DEFAULT_MAX_RESULTS = DEFAULT_MAX_RESULTS
   protected logFormat = new LogFormat("modules/imports/ImportHistory")
-  protected startTime: number = 0
-  protected endTime: number = 0
-  protected maxResults: number = ImportHistory.DEFAULT_MAX_RESULTS
-  protected text: string = ""
-  protected syncUpWithHistory: boolean = true
+  protected startTime = 0
+  protected endTime = 0
+  protected maxResults = ImportHistory.DEFAULT_MAX_RESULTS
+  protected text = ""
+  protected syncUpWithHistory = true
 
   constructor({
     startTime,
@@ -41,8 +41,6 @@ export class ImportHistory extends ImportProcess {
     syncUpWithHistory?: boolean
   }) {
     super({ concurrent, timeout })
-
-    console.debug(...this.logFormat.formatArgs("constructor", arguments))
 
     if (!endTime) {
       this.endTime = new Date().getTime()
