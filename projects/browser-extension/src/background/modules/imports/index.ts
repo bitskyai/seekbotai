@@ -4,7 +4,7 @@ import { cleanAllBookmarks, cleanAllHistory } from "~storage"
 import { ImportBookmarks } from "./ImportBookmarks"
 import { ImportHistory } from "./ImportHistory"
 
-export {default as ImportThread} from "./ImportThread"
+export { default as ImportThread } from "./ImportThread"
 
 const logFormat = new LogFormat("modules/imports")
 export const IMPORT_BOOKMARKS_JOB_TIMEOUT = 1000 * 60 * 60 * 2 // 2 hours

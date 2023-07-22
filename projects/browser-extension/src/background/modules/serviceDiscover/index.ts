@@ -1,5 +1,6 @@
 import { DEFAULT_SELF_IDENTIFICATION, PORT_RANGE } from "@bitsky/shared"
 
+import { ImportThread } from "~background/modules/imports"
 import { LogFormat } from "~helpers/LogFormat"
 import {
   getServiceHostName,
@@ -10,8 +11,6 @@ import {
   setServicePort
 } from "~storage"
 import { ServiceStatus } from "~types"
-
-import {ImportThread} from "~background/modules/imports"
 
 const logFormat = new LogFormat("modules/serviceDiscover")
 const _interval_check_service_health = 1000 * 60 * 0.5 // half minutes
@@ -84,7 +83,9 @@ export const discoverService = async (
 
   console.info(
     ...logFormat.formatArgs(
-      `discoverService finished, time: ${Date.now() - startTime}ms, status: ${status}`
+      `discoverService finished, time: ${
+        Date.now() - startTime
+      }ms, status: ${status}`
     )
   )
 
@@ -105,7 +106,7 @@ export const checkServiceHealth = async (
     // let us discover service again
     status = await discoverService(timeout)
   } else {
-    const url = `${protocol}://${hostname}:${port}/heartbeat`;
+    const url = `${protocol}://${hostname}:${port}/heartbeat`
     console.info(...logFormat.formatArgs(`checkServiceHealth url: ${url}`))
     const importThread = new ImportThread({
       url,
@@ -143,6 +144,6 @@ export const stopServiceHealthCheck = async () => {
   console.info(...logFormat.formatArgs(`stopServiceHealthCheck`))
 }
 
-export const init = async ({timeout}:{timeout:number}) => {
+export const init = async ({ timeout }: { timeout: number }) => {
   startServiceHealthCheck(timeout)
 }

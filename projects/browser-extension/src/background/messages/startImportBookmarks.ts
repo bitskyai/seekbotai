@@ -1,8 +1,7 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
-import { LogFormat } from "~helpers/LogFormat"
-
 import { startImportBookmarks } from "~background/modules/imports"
+import { LogFormat } from "~helpers/LogFormat"
 
 const logFormat = new LogFormat("messages/startImportBookmarks")
 

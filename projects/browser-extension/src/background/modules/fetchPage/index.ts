@@ -1,9 +1,10 @@
+import { log } from "console"
 import normalizeUrl from "normalize-url"
+
+import { LogFormat } from "~helpers/LogFormat"
 
 import { isHTML, isSupportedProtocol } from "./utils"
 
-import { LogFormat } from "~helpers/LogFormat"
-import { log } from "console"
 const logFormat = new LogFormat("fetchPage")
 
 export interface FetchPageOptions {
@@ -208,7 +209,11 @@ export const fetchPageHTML = ({
         const response = await fetchWithTimeout(url, timeout, {
           signal: abortController.signal
         })
-        console.debug(...logFormat.formatArgs("fetchPageHTML -> run -> response", { response }))
+        console.debug(
+          ...logFormat.formatArgs("fetchPageHTML -> run -> response", {
+            response
+          })
+        )
         if (response.status !== 200) {
           throwErrorBasedOnResponseStatus({ status: response.status, url })
         }
@@ -221,7 +226,13 @@ export const fetchPageHTML = ({
           content: text
         }
       } catch (error) {
-        console.error(...logFormat.formatArgs("fetchPageHTML -> run -> error", { error }, {url, timeout}))
+        console.error(
+          ...logFormat.formatArgs(
+            "fetchPageHTML -> run -> error",
+            { error },
+            { url, timeout }
+          )
+        )
         if (error.name === "FetchPageError") {
           return {
             url,

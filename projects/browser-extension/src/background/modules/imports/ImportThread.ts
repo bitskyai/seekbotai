@@ -4,7 +4,6 @@ import fetchPage, {
   type FetchPageOptions,
   type PageData
 } from "~background/modules/fetchPage"
-
 import { LogFormat } from "~helpers/LogFormat"
 
 export type ImportThreadOptions = FetchPageOptions
@@ -28,7 +27,9 @@ export default class ImportThread {
     console.info(...this.logFormat.formatArgs("start"))
     try {
       pageData = await this.fetchPageInstance.run()
-      console.debug(...this.logFormat.formatArgs("start -> success", { pageData }))
+      console.debug(
+        ...this.logFormat.formatArgs("start -> success", { pageData })
+      )
     } catch (err) {
       console.error(...this.logFormat.formatArgs("start -> failed", { err }))
       if (err instanceof FetchPageError) {

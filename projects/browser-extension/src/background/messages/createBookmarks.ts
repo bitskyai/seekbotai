@@ -1,9 +1,8 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import { type CreateBookmarksRes } from "~/graphql/generated"
+import { createBookmarks } from "~background/modules/apis"
 import { type MessageResponse } from "~types"
-
-import {createBookmarks} from "~background/modules/apis"
 
 export type CreateBookmarksMsgRes = MessageResponse<CreateBookmarksRes[]>
 

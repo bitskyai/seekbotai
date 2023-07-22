@@ -1,3 +1,4 @@
+import { type PageData } from "~background/modules/fetchPage"
 import { LogFormat } from "~helpers/LogFormat"
 import {
   prepareStartImportBookmarks,
@@ -6,7 +7,6 @@ import {
   updateImportBookmarks
 } from "~storage"
 
-import { type PageData } from "~background/modules/fetchPage"
 import { ImportProcess } from "./ImportProcess"
 
 export class ImportBookmarks extends ImportProcess {

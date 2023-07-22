@@ -17,5 +17,7 @@ export type { BookmarksImportStatusMsgRes } from "./getBookmarksImportStatus"
 
 export const init = async () => {
   console.info(...logFormat.formatArgs("init"))
-  console.debug(...logFormat.formatArgs("init -> support messages: ", MessageSubject))
+  console.debug(
+    ...logFormat.formatArgs("init -> support messages: ", MessageSubject)
+  )
 }

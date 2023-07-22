@@ -10,7 +10,7 @@ import { type Bookmarks, type History } from "webextension-polyfill"
 import { Storage } from "@plasmohq/storage"
 
 import { type BookmarkCreateInputType } from "~/graphql/generated"
-import {createBookmarks} from "~background/modules/apis"
+import { createBookmarks } from "~background/modules/apis"
 import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
 import { getHistory } from "~background/modules/history"
@@ -465,7 +465,12 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
     )
   )
 
-  console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmarks send to server:", bookmarks))
+  console.debug(
+    ...logFormat.formatArgs(
+      "updateImportBookmarks -> bookmarks send to server:",
+      bookmarks
+    )
+  )
 
   await updateImportBookmarksDetail({
     inProgress: [],

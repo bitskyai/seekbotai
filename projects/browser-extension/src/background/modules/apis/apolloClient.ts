@@ -1,5 +1,6 @@
 import { Storage } from "@plasmohq/storage"
 
+import { LogFormat } from "~helpers/LogFormat"
 import { newApolloClient } from "~helpers/apolloClientFactory"
 import {
   StorageKeys,
@@ -8,7 +9,6 @@ import {
   getServicePort,
   getServiceProtocol
 } from "~storage"
-import { LogFormat } from "~helpers/LogFormat"
 
 const logFormat = new LogFormat("apis/apolloClient")
 
@@ -16,28 +16,28 @@ let _apolloClient = null
 
 const _initApolloClient = async () => {
   const protocol = await getServiceProtocol()
-      const hostName = await getServiceHostName()
-      const port = await getServicePort()
-      const apiKey = await getServiceAPIKey()
-      _apolloClient = await newApolloClient({
-        protocol,
-        hostName,
-        port,
-        apiKey
-      })
-    }
+  const hostName = await getServiceHostName()
+  const port = await getServicePort()
+  const apiKey = await getServiceAPIKey()
+  _apolloClient = await newApolloClient({
+    protocol,
+    hostName,
+    port,
+    apiKey
+  })
+}
 
 export const init = async () => {
   // try to init apollo client
   await _initApolloClient()
-  
+
   // watch service config change
   const storage = new Storage()
   let refreshApolloClientHandler = null
   // refresh apollo client when service config changed, add timeout to avoid refresh too frequently
   const refreshApolloClient = async () => {
     console.info(...logFormat.formatArgs("init -> refreshApolloClient"))
-    _apolloClient = null;
+    _apolloClient = null
     clearTimeout(refreshApolloClientHandler)
     refreshApolloClientHandler = setTimeout(async () => {
       await _initApolloClient()
@@ -58,7 +58,7 @@ const waitUtilApolloClientReady = async () => {
   if (_apolloClient) {
     return true
   }
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const interval = setInterval(() => {
       if (_apolloClient) {
         clearInterval(interval)
