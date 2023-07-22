@@ -60,7 +60,7 @@ const getAvailablePort = async (options, hosts) => {
 
   for (const host of hosts) {
     try {
-      await checkAvailablePort({ port: options.port, host }); // eslint-disable-line no-await-in-loop
+      await checkAvailablePort({ port: options.port, host });
     } catch (error) {
       if (!["EADDRNOTAVAIL", "EINVAL"].includes(error.code)) {
         throw error;
@@ -135,7 +135,7 @@ export default async function getPorts(options) {
         continue;
       }
 
-      let availablePort = await getAvailablePort({ ...options, port }, hosts); // eslint-disable-line no-await-in-loop
+      let availablePort = await getAvailablePort({ ...options, port }, hosts);
       while (
         lockedPorts.old.has(availablePort) ||
         lockedPorts.young.has(availablePort)
@@ -144,7 +144,7 @@ export default async function getPorts(options) {
           throw new Locked(port);
         }
 
-        availablePort = await getAvailablePort({ ...options, port }, hosts); // eslint-disable-line no-await-in-loop
+        availablePort = await getAvailablePort({ ...options, port }, hosts);
       }
 
       lockedPorts.young.add(availablePort);

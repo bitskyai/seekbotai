@@ -39,6 +39,7 @@ export const discoverService = async (
   const hostname = await getServiceHostName()
 
   while (!found && port <= PORT_RANGE[1]) {
+    jobIndex++
     const ports = getNextPorts()
     const importThreads = []
     for (let i = 0; i < ports.length; i++) {

@@ -18,7 +18,7 @@ export const newApolloClient = async ({
 }: {
   protocol: string
   hostName: string
-  port: Number
+  port: number
   apiKey: string
 }) => {
   if (!protocol || !hostName) {
