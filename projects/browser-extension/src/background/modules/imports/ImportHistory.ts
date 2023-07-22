@@ -6,7 +6,7 @@ import {
   updateImportHistory
 } from "~storage"
 
-import { type PageData } from "../fetchPage"
+import { type PageData } from "~background/modules/fetchPage"
 import {
   DEFAULT_HISTORY_DAYS_FROM_TODAY,
   DEFAULT_MAX_RESULTS

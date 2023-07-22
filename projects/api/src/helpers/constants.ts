@@ -18,6 +18,6 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   LOG_LEVEL: "info",
   LOG_MAX_SIZE: 50 * 1024 * 1024, // 50MB
   NODE_ENV: "development",
-  PORT: 4000,
+  PORT: 46997,
   SERVICE_NAME: packageJson.name,
 };

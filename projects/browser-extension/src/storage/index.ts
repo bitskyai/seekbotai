@@ -1,3 +1,8 @@
+import {
+  DEFAULT_API_KEY,
+  DEFAULT_HOST_NAME,
+  DEFAULT_PROTOCOL
+} from "@bitsky/shared"
 import _ from "lodash"
 import normalizeUrl from "normalize-url"
 import { type Bookmarks, type History } from "webextension-polyfill"
@@ -5,7 +10,7 @@ import { type Bookmarks, type History } from "webextension-polyfill"
 import { Storage } from "@plasmohq/storage"
 
 import { type BookmarkCreateInputType } from "~/graphql/generated"
-import createBookmarks from "~background/apis/createBookmarks"
+import {createBookmarks} from "~background/modules/apis"
 import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
 import { getHistory } from "~background/modules/history"
@@ -18,7 +23,8 @@ import {
   type ImportHistoryDetail,
   type ImportHistoryRecord,
   ImportStatus,
-  type ImportSummary
+  type ImportSummary,
+  ServiceStatus
 } from "~types"
 
 const logFormat = new LogFormat("storage")
@@ -33,7 +39,102 @@ export enum StorageKeys {
   ImportHistoryInProgress = "ImportHistoryInProgress",
   ImportHistorySuccess = "ImportHistorySuccess",
   ImportHistoryFailed = "ImportHistoryFailed",
-  ImportHistoryRemaining = "ImportHistoryRemaining"
+  ImportHistoryRemaining = "ImportHistoryRemaining",
+  ServiceHostName = "ServiceHostName",
+  ServicePort = "ServicePort",
+  ServiceProtocol = "ServiceProtocol",
+  ServiceAPIKey = "ServiceAPIKey",
+  ServiceDiscoverStatus = "ServiceDiscoverStatus",
+  ServiceHealthStatus = "ServiceHealthStatus"
+}
+
+// Service Relative Configuration
+export const getServiceHostName = async (): Promise<string> => {
+  const storage = new Storage()
+  const hostName = (await storage.get(StorageKeys.ServiceHostName)) as string
+  console.debug(...logFormat.formatArgs("getServiceHostName", hostName))
+  return hostName ?? DEFAULT_HOST_NAME
+}
+
+export const setServiceHostName = async (hostName: string) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ServiceHostName, hostName)
+  console.debug(...logFormat.formatArgs("setServiceHostName", hostName))
+  return true
+}
+
+export const getServiceProtocol = async (): Promise<string> => {
+  const storage = new Storage()
+  const protocol = (await storage.get(StorageKeys.ServiceProtocol)) as string
+  console.debug(...logFormat.formatArgs("getServiceProtocol", protocol))
+  return protocol ?? DEFAULT_PROTOCOL
+}
+
+export const setServiceProtocol = async (protocol: string) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ServiceProtocol, protocol)
+  console.debug(...logFormat.formatArgs("setServiceProtocol", protocol))
+  return true
+}
+
+export const getServiceAPIKey = async (): Promise<string> => {
+  const storage = new Storage()
+  const apiKey = (await storage.get(StorageKeys.ServiceAPIKey)) as string
+  console.debug(...logFormat.formatArgs("getServiceAPIKey", apiKey))
+  return apiKey ?? DEFAULT_API_KEY
+}
+
+export const setServiceAPIKey = async (apiKey: string) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ServiceAPIKey, apiKey)
+  console.debug(...logFormat.formatArgs("setServiceAPIKey", apiKey))
+  return true
+}
+
+export const getServicePort = async (): Promise<number> => {
+  const storage = new Storage()
+  const port = (await storage.get(StorageKeys.ServicePort)) as number
+  console.debug(...logFormat.formatArgs("getServicePort", port))
+  return port
+}
+
+export const setServicePort = async (port: number) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ServicePort, port)
+  console.debug(...logFormat.formatArgs("setServicePort", port))
+  return true
+}
+
+export const getServiceDiscoverStatus = async (): Promise<ServiceStatus> => {
+  const storage = new Storage()
+  const status = (await storage.get(
+    StorageKeys.ServiceDiscoverStatus
+  )) as ServiceStatus
+  console.debug(...logFormat.formatArgs("getServiceDiscoverStatus", status))
+  return status ?? ServiceStatus.Unknown
+}
+
+export const setServiceDiscoverStatus = async (status: ServiceStatus) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ServiceDiscoverStatus, status)
+  console.debug(...logFormat.formatArgs("setServiceDiscoverStatus", status))
+  return true
+}
+
+export const getServiceHealthStatus = async (): Promise<ServiceStatus> => {
+  const storage = new Storage()
+  const status = (await storage.get(
+    StorageKeys.ServiceHealthStatus
+  )) as ServiceStatus
+  console.debug(...logFormat.formatArgs("getServiceHealthStatus", status))
+  return status ?? ServiceStatus.Unknown
+}
+
+export const setServiceHealthStatus = async (status: ServiceStatus) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ServiceHealthStatus, status)
+  console.debug(...logFormat.formatArgs("setServiceHealthStatus", status))
+  return true
 }
 
 export const DEFAULT_IMPORT_BOOKMARKS_DETAIL: ImportBookmarksDetail = {
@@ -269,7 +370,7 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
     failed: failedBookmarks,
     remaining: remainingBookmarks
   } = await getImportBookmarksDetail()
-
+  console.info(...logFormat.formatArgs("updateImportBookmarks"))
   console.debug(
     ...logFormat.formatArgs("updateImportBookmarks -> pagesData:", pagesData)
   )
@@ -363,6 +464,8 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
       remainingBookmarks
     )
   )
+
+  console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmarks send to server:", bookmarks))
 
   await updateImportBookmarksDetail({
     inProgress: [],

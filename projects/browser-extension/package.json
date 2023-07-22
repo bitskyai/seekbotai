@@ -24,7 +24,8 @@
     "react-router-dom": "^6.11.0",
     "antd": "^5.4.6",
     "lodash": "^4.17.21",
-    "normalize-url": "^6.0.1"
+    "normalize-url": "^6.0.1",
+    "@bitsky/shared": "file:../shared"
   },
   "devDependencies": {
     "@types/chrome": "0.0.210",

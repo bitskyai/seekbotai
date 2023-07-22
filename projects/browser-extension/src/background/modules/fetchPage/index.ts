@@ -2,6 +2,10 @@ import normalizeUrl from "normalize-url"
 
 import { isHTML, isSupportedProtocol } from "./utils"
 
+import { LogFormat } from "~helpers/LogFormat"
+import { log } from "console"
+const logFormat = new LogFormat("fetchPage")
+
 export interface FetchPageOptions {
   url: string
   timeout?: number
@@ -78,6 +82,7 @@ const fetchPage = ({
   url,
   timeout = DEFAULT_TIMEOUT
 }: FetchPageOptions): FetchPageInstance => {
+  console.info(...logFormat.formatArgs("fetchPage", { url, timeout }))
   let run: RunFetch
   let cancel: CancelFetch
 
@@ -91,7 +96,7 @@ const fetchPage = ({
       run = runFetchPage
       cancel = cancelFetchPage
     } else {
-      console.warn(`Not implemented yet: ${url}`)
+      console.warn(...logFormat.formatArgs(`Not implemented yet: ${url}`))
       run = async () => {
         // TODO: implement other types
         return {
@@ -104,7 +109,7 @@ const fetchPage = ({
       cancel = () => undefined
     }
   } else {
-    console.warn(`Protocol not supported: ${url}`)
+    console.warn(...logFormat.formatArgs(`Protocol not supported: ${url}`))
     run = async () => {
       return {
         url,
@@ -124,6 +129,7 @@ const fetchWithTimeout = async (
   timeout = DEFAULT_TIMEOUT,
   { signal, ...options }: { signal?: AbortSignal } = {}
 ) => {
+  console.info(...logFormat.formatArgs("fetchWithTimeout", { url, timeout }))
   const abortController = new AbortController()
   const promise = fetch(url, { signal: abortController.signal, ...options })
   if (signal) {
@@ -192,15 +198,17 @@ export const fetchPageHTML = ({
   url,
   timeout
 }: FetchPageOptions): { run: RunFetch; cancel: CancelFetch } => {
+  console.info(...logFormat.formatArgs("fetchPageHTML", { url, timeout }))
   const abortController = new AbortController()
   return {
     cancel: () => abortController.abort(),
     run: async () => {
       try {
+        console.info(...logFormat.formatArgs("fetchPageHTML -> run", { url }))
         const response = await fetchWithTimeout(url, timeout, {
           signal: abortController.signal
         })
-
+        console.debug(...logFormat.formatArgs("fetchPageHTML -> run -> response", { response }))
         if (response.status !== 200) {
           throwErrorBasedOnResponseStatus({ status: response.status, url })
         }
@@ -213,6 +221,7 @@ export const fetchPageHTML = ({
           content: text
         }
       } catch (error) {
+        console.error(...logFormat.formatArgs("fetchPageHTML -> run -> error", { error }, {url, timeout}))
         if (error.name === "FetchPageError") {
           return {
             url,
@@ -231,6 +240,10 @@ export const fetchPageHTML = ({
       }
     }
   }
+}
+
+export const init = async () => {
+  console.info(...logFormat.formatArgs("init"))
 }
 
 export default fetchPage

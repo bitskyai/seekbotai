@@ -1,3 +1,7 @@
+import { LogFormat } from "~helpers/LogFormat"
+
+const logFormat = new LogFormat("messages")
+
 export enum MessageSubject {
   createBookmarks = "createBookmarks",
   getBookmarks = "getBookmarks",
@@ -8,8 +12,10 @@ export enum MessageSubject {
   stopImportHistory = "stopImportHistory",
   cleanImportHistory = "cleanImportHistory"
 }
-
-export { default as getBookmarksMessageHandler } from "./getBookmarks"
 export type { BookmarksMsgRes } from "./getBookmarks"
-export { default as getBookmarksImportStatusMessageHandler } from "./getBookmarksImportStatus"
 export type { BookmarksImportStatusMsgRes } from "./getBookmarksImportStatus"
+
+export const init = async () => {
+  console.info(...logFormat.formatArgs("init"))
+  console.debug(...logFormat.formatArgs("init -> support messages: ", MessageSubject))
+}

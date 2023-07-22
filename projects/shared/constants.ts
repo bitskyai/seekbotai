@@ -1,4 +1,0 @@
-// All messages that used for `browser extension` with `iframe`
-export const APP_READY_MESSAGE = `__BITSKY_APP_READY__`;
-export const APP_DISPLAY_EXTENSION_SETTINGS_OPTION = `__BITSKY_APP_DISPLAY_EXTENSION_SETTINGS_OPTION__`;
-export const APP_NAVIGATE_TO_EXTENSION_SETTINGS = `__BITSKY_APP_NAVIGATE_TO_EXTENSION_SETTINGS__`;

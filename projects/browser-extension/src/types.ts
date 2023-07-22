@@ -7,6 +7,13 @@ export enum ImportStatus {
   Failed = "failed"
 }
 
+export enum ServiceStatus {
+  Unknown = "unknown",
+  Checking = "checking",
+  Success = "success",
+  Failed = "failed"
+}
+
 export interface ImportHistoryRecord extends History.HistoryItem {
   lastImportedAt?: number
   status?: ImportStatus

@@ -35,3 +35,6 @@ export async function getHistory({
   console.info(...logFormat.formatArgs("getHistory", historyItems))
   return historyItems
 }
+export const init = async () => {
+  console.info(...logFormat.formatArgs("init"))
+}
