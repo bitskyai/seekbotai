@@ -1,14 +1,15 @@
+import { PORT_RANGE } from "@bitsky/shared";
 import { app } from "electron";
 import * as path from "path";
 
-const appFolder = ".bookmark_intelligence";
+const appFolder = ".bitsky_app_home";
 export const homePath = path.join(app.getPath("home"));
 
 export const APP_HOME_PATH = path.join(homePath, appFolder);
 
 export const LOG_FILES_FOLDER = "log";
 
-export const WEB_APP_PORT = 56789;
+export const WEB_APP_PORT = PORT_RANGE[0];
 
 export const WEB_APP_NAME = "web-app";
 

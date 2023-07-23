@@ -48,6 +48,7 @@ model Preference {
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int      @unique @map("bk_user_id")
+  apiKey    String   @unique @map("api_key")
 
   logLevel String @default("info") @map("log_level")
   logSize  Int    @default(52428800) @map("log_size") // 50MB

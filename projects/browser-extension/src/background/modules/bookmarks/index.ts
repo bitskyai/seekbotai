@@ -50,3 +50,7 @@ export async function getFlatBookmarks(): Promise<ImportBookmarkRecord[]> {
   console.debug(...logFormat.formatArgs("getFlatBookmarks", flatBookmarks))
   return flatBookmarks
 }
+
+export const init = async () => {
+  console.info(...logFormat.formatArgs("init"))
+}

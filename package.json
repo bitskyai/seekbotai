@@ -12,7 +12,8 @@
     "packages": [
       "scripts",
       "projects/browser-extension",
-      "projects/ui"
+      "projects/ui",
+      "projects/shared"
     ]
   },
   "engines": {

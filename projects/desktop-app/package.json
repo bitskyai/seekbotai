@@ -54,7 +54,6 @@
     "lodash": "4.17.21",
     "uuid": "9.0.0",
     "electron-log": "5.0.0-beta.16",
-    "detect-port": "1.5.1",
     "fs-extra": "11.1.0"
   },
   "envars": {

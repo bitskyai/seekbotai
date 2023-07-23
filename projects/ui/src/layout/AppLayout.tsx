@@ -1,8 +1,3 @@
-import {
-  APP_READY_MESSAGE,
-  APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
-  APP_NAVIGATE_TO_EXTENSION_SETTINGS,
-} from "../../../shared/constants";
 import { GetTagsDocument, Tag } from "../graphql/generated";
 import {
   BookOutlined,
@@ -11,6 +6,11 @@ import {
   FilterOutlined,
 } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
+import {
+  APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
+  APP_NAVIGATE_TO_EXTENSION_SETTINGS,
+  APP_READY_MESSAGE,
+} from "@bitsky/shared";
 import type { MenuProps } from "antd";
 import { Layout, Menu, Skeleton } from "antd";
 import { ReactNode, Key, Fragment, Suspense, useState, useEffect } from "react";

@@ -5,7 +5,7 @@ import { type ImportBookmarks, type MessageResponse } from "~types"
 
 export type BookmarksImportStatusMsgRes = MessageResponse<ImportBookmarks>
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+export const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   console.log(`getBookmarksImportStatus MessageHandler: `, req)
   const bookmarksImportStatus = await getImportBookmarks()
   res.send({

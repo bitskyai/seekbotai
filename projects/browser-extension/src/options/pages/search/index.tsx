@@ -1,13 +1,12 @@
 // import { useQuery } from "@apollo/client";
 
-import { useEffect, useRef } from "react"
-import { useNavigate } from "react-router-dom"
-
 import {
   APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
   APP_NAVIGATE_TO_EXTENSION_SETTINGS,
   APP_READY_MESSAGE
-} from "../../../../../shared/constants"
+} from "@bitsky/shared"
+import { useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function Search() {
   const navigate = useNavigate()

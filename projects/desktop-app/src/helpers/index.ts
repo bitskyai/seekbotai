@@ -1,6 +1,7 @@
 import { DirStructure, DirType } from "../interfaces";
+import getPort, { portNumbers } from "./get-port";
 import logger from "./logger";
-import detect from "detect-port";
+import { PORT_RANGE } from "@bitsky/shared";
 import { shell } from "electron";
 import * as fs from "fs-extra";
 import * as path from "path";
@@ -165,19 +166,25 @@ export function readFolderRecursiveSync(source: string, currentPath = ".") {
  * Get an available port
  * @param port - specific port want to check whether it is available
  */
-export async function getAvailablePort(port?: number): Promise<number> {
-  return new Promise((resolve) => {
-    if (!port) {
-      port = 9090;
-    }
-    detect(port, (err: Error, port: number) => {
-      if (err) {
-        logger.error("getAvailablePort, error: ", err);
-      }
+export async function getAvailablePort(preferPort?: number): Promise<number> {
+  // step 1: check whether preferPort is available
+  let port = preferPort;
+  // preferPort is must in PORT_RANGE, otherwise our discovery service will not work
+  if (
+    preferPort &&
+    preferPort >= PORT_RANGE[0] &&
+    preferPort <= PORT_RANGE[1]
+  ) {
+    port = await getPort({ port: preferPort });
+    if (port === preferPort) {
       logger.debug(`${port} is available`);
-      resolve(port);
-    });
-  });
+      return port;
+    }
+  }
+  // step 2: check whether port in PORT_RANGE is available
+  port = await getPort({ port: portNumbers(PORT_RANGE[0], PORT_RANGE[1]) });
+  logger.debug(`Random select port from port_range: ${port} is available`);
+  return port;
 }
 
 export function openLinkExternal() {

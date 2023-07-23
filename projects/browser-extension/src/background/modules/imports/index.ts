@@ -4,6 +4,8 @@ import { cleanAllBookmarks, cleanAllHistory } from "~storage"
 import { ImportBookmarks } from "./ImportBookmarks"
 import { ImportHistory } from "./ImportHistory"
 
+export { default as ImportThread } from "./ImportThread"
+
 const logFormat = new LogFormat("modules/imports")
 export const IMPORT_BOOKMARKS_JOB_TIMEOUT = 1000 * 60 * 60 * 2 // 2 hours
 export const PARALLEL_IMPORT_BOOKMARKS_COUNT = 5
@@ -37,4 +39,8 @@ export const stopImportHistory = async () => {
 
 export const cleanImportHistory = async () => {
   await cleanAllHistory()
+}
+
+export const init = async () => {
+  console.info(...logFormat.formatArgs("init"))
 }

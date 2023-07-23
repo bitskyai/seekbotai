@@ -1,6 +1,6 @@
+import { type PageData } from "~background/modules/fetchPage"
 import { LogFormat } from "~helpers/LogFormat"
 
-import { type PageData } from "../fetchPage"
 import ImportThread from "./ImportThread"
 
 export class ImportProcess {

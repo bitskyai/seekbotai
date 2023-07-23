@@ -1,2 +1,0 @@
-import "./apolloClient"
-import "./createBookmarks"
