@@ -38,8 +38,7 @@
     "prisma": "^4.9.0",
     "cheerio": "^1.0.0-rc.12",
     "helmet": "^4.6.0",
-    "crypto-js": "^4.1.1",
-    "@bitsky/shared": "file:../shared"
+    "crypto-js": "^4.1.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.19",

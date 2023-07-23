@@ -23,9 +23,6 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@bitsky/shared@file:../shared":
-  version "0.1.0"
-
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.npmjs.org/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz"

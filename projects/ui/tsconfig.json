@@ -14,12 +14,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@bitsky/shared": ["../shared"]
+    }
   },
   "include": ["src"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "references": [{
+    "path": "./tsconfig.node.json"
+  }]
 }
