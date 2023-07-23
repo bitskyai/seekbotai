@@ -9,7 +9,7 @@
     "outDir": "./dist/",
     "paths": {
       "*": ["node_modules/*"],
-      "@bitsky/shared": ["../shared"],
+      "@bitsky/shared": ["../shared"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
