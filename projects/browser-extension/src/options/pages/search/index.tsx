@@ -3,14 +3,28 @@
 import {
   APP_DISPLAY_EXTENSION_SETTINGS_OPTION,
   APP_NAVIGATE_TO_EXTENSION_SETTINGS,
-  APP_READY_MESSAGE
+  APP_READY_MESSAGE,
+  DEFAULT_HOST_NAME,
+  DEFAULT_PROTOCOL
 } from "@bitsky/shared"
 import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
+import { StorageKeys } from "~storage"
+
 export default function Search() {
   const navigate = useNavigate()
   const iframeElem = useRef(null)
+
+  const [protocol] = useStorage(StorageKeys.ServiceProtocol)
+  const [hostName] = useStorage(StorageKeys.ServiceHostName)
+
+  const [port] = useStorage(StorageKeys.ServicePort)
+  const url = `${protocol ?? DEFAULT_PROTOCOL}://${
+    hostName ?? DEFAULT_HOST_NAME
+  }:${port}`
 
   useEffect(() => {
     console.log("search init message listener")
@@ -32,7 +46,7 @@ export default function Search() {
       <iframe
         id="test"
         ref={iframeElem}
-        src="http://localhost:5173"
+        src={url}
         className="full-screen"
         style={{ height: window.screen.height }}
       />

@@ -12,7 +12,12 @@ export async function createApp() {
   const config = getAppConfig();
   const app = express();
   app.disable("x-powered-by");
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      frameguard: false,
+    }),
+  );
   app.use("/heartbeat", (req, res) => {
     res.send(DEFAULT_SELF_IDENTIFICATION);
   });
