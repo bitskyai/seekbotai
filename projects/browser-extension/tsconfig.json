@@ -5,7 +5,7 @@
   "compilerOptions": {
     "paths": {
       "~*": ["./src/*"],
-      "@bitsky/shared": ["../shared/*"]
+      "@bitsky/shared": ["../shared"]
     },
     "baseUrl": "."
   }

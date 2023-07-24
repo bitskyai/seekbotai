@@ -8,8 +8,7 @@
     "noImplicitAny": true,
     "outDir": "./dist/",
     "paths": {
-      "*": ["node_modules/*"],
-      "@bitsky/shared": ["../shared/*"]
+      "*": ["node_modules/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

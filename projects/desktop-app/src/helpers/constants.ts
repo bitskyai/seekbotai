@@ -1,4 +1,4 @@
-import { PORT_RANGE } from "@bitsky/shared";
+import { PORT_RANGE } from "../bitskyLibs/shared";
 import { app } from "electron";
 import * as path from "path";
 

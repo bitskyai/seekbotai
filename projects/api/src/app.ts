@@ -1,5 +1,5 @@
+import { DEFAULT_SELF_IDENTIFICATION } from "./bitskyLibs/shared";
 import { defaultUser } from "./db/seedData/defaultUsers";
-import { DEFAULT_SELF_IDENTIFICATION } from "@bitsky/shared";
 import express from "express";
 import { createYoga } from "graphql-yoga";
 import helmet from "helmet";
