@@ -22,6 +22,8 @@ cd $TARGET_PATH
 print "Remove previous build"
 rm -rf dist
 
+bash ${ROOT_DIR}/copy-libs.sh
+
 print "Compile Typescript"
 npm run prisma:generate
 npx tsc

@@ -10,7 +10,7 @@
     "webapp": "bash ../../scripts/build-web-app-to-desktop-app.sh",
     "electron:start": "electron-forge start",
     "dev:build": "npm run webapp && npm run dev",
-    "dev": "cross-env WATCH=true && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && npm run electron:start",
+    "dev": "cross-env WATCH=true && bash ../../scripts/copy-libs.sh && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && npm run electron:start",
     "build": "bash ../../scripts/build-desktop-app.sh",
     "app:package": "npm run build && electron-forge package",
     "app:make": "npm run build && electron-forge make",
