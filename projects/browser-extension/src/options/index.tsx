@@ -6,14 +6,6 @@ import "./index.css"
 
 import { router } from "./routes"
 
-// TODO: need to get from preferences
-// const url = `http://localhost:4000/graphql`
-
-// const apolloClient = new ApolloClient({
-//   uri: url,
-//   cache: new InMemoryCache()
-// })
-
 function Options() {
   return (
     <React.StrictMode>
