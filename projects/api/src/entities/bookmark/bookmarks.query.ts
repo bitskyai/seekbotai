@@ -86,20 +86,6 @@ export async function getBookmarks({
     }
   }
 
-  // await prismaClient.bookmark.findMany({
-  //   where: {
-  //     OR: [
-  //       {
-  //         OR: [
-  //           {
-  //             AND: [],
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  // });
-
   const orSearchByString = orConditions.length
     ? {
         OR: orConditions,
