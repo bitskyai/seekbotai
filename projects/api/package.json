@@ -41,8 +41,7 @@
     "cheerio": "^1.0.0-rc.12",
     "helmet": "^4.6.0",
     "crypto-js": "^4.1.1",
-    "uuid": "^9.0.0",
-    "normalize-url": "^8.0.0"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.19",

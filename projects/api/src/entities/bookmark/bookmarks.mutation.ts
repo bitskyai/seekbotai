@@ -1,5 +1,5 @@
 import { getPrismaClient } from "../../db";
-import normalizeUrl from "../../helpers/normalize-url";
+import normalizeUrl from "../../forkRepos/normalize-url";
 import { extractPageContent, saveRawPage } from "../../helpers/pageExtraction";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";

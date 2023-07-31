@@ -18,3 +18,4 @@ dist/
 **/desktop-app/out
 **/.bi-api
 **/*.html
+**/forkRepos

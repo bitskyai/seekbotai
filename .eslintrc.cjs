@@ -81,5 +81,6 @@ module.exports = {
     "/**/build",
     "/**/api/src/ui",
     "/**/.bi-api",
+    "/**/forkRepos",
   ],
 };
