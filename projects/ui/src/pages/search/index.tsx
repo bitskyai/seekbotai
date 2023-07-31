@@ -99,12 +99,14 @@ export default function Home(): JSX.Element {
             <List
               itemLayout="vertical"
               size="large"
-              // pagination={{
-              //   onChange: (page) => {
-              //     console.log(page);
-              //   },
-              //   pageSize: 3,
-              // }}
+              pagination={{
+                position: "bottom",
+                pageSizeOptions: ["50", "200", "500", "1000", "2000"],
+                align: "center",
+                defaultPageSize: 50,
+                showTotal: (total, range) =>
+                  `Showing ${range[0]}-${range[1]} of ${total} items`, // Custom total display
+              }}
               dataSource={data?.bookmarks ?? []}
               renderItem={(item) => (
                 <List.Item

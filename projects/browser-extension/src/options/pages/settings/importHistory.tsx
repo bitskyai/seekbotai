@@ -24,7 +24,7 @@ import {
   type ImportSummary
 } from "~types"
 
-const { Title, Text } = Typography
+const { Title, Text, Link } = Typography
 const logFormat = new LogFormat("ExtensionSettingImportHistory")
 
 export default function ExtensionSettingImportHistory() {
@@ -90,7 +90,11 @@ export default function ExtensionSettingImportHistory() {
       key: "name",
       render: (title, record) => (
         <a href={record?.url} target="_blank" rel="noreferrer">
-          {title}
+          <Link>
+            <Text style={{ width: 700 }} ellipsis={{ tooltip: title }}>
+              {title ?? record?.url}
+            </Text>
+          </Link>
         </a>
       )
     },

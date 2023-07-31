@@ -20,7 +20,7 @@
   "search": {
     "title": "Search",
     "searchBtn": "Search",
-    "placeholder": "Type search text. E.g: bitsky",
+    "placeholder": "E.g: 'Elon Mush, Twitter' means search Elon Mush or Twitter. 'Elon Mush + Twitter' means search Elon Mush and Twitter. '",
     "advancedSearch": "Switch to advanced",
     "basicSearch": "Switch to basic"
   }

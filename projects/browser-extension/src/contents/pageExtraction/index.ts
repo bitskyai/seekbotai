@@ -13,6 +13,7 @@ export const config: PlasmoCSConfig = {
 
 function extractPageHTML() {
   const currentPageHTML = document.documentElement.outerHTML
+  // comment to make sure backend get the raw html
   // remove script and style tags
   // currentPageHTML = currentPageHTML.replace(
   //   /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
@@ -26,8 +27,7 @@ function extractPageHTML() {
 }
 
 window.addEventListener("load", async () => {
-  document.body.style.background = "pink" // used for debugging
-
+  // document.body.style.background = "pink" // used for debugging
   console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
   const currentPageData = {
     name: document.title,

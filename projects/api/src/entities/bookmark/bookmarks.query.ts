@@ -35,17 +35,77 @@ export async function getBookmarks({
   searchString?: string;
   tags?: number[];
 }) {
+  const OR_CONDITION_SPLITER = ",";
+  const AND_CONDITION_SPLITER = "+";
+  const searchProperties: string[] = ["name", "description", "url", "content"];
+
   const prismaClient = getPrismaClient();
-  const orSearchByString = searchString
+  const orConditions: object[] = [];
+  searchString = searchString?.trim();
+  if (searchString) {
+    // get all OR conditions
+    const orConditionSearchStrings =
+      searchString?.split(OR_CONDITION_SPLITER) || [];
+
+    if (orConditionSearchStrings.length > 0) {
+      orConditionSearchStrings.map((orConditionSearchString) => {
+        orConditionSearchString = orConditionSearchString.trim();
+        if (orConditionSearchString) {
+          const subOrConditions: object[] = [];
+          searchProperties.map((property) => {
+            const andConditions: object[] = [];
+            const andConditionSearchStrings = orConditionSearchString.split(
+              AND_CONDITION_SPLITER,
+            );
+
+            andConditionSearchStrings.map((andConditionSearchString) => {
+              andConditionSearchString = andConditionSearchString.trim();
+              if (andConditionSearchString) {
+                const andCondition = {
+                  [property]: { contains: andConditionSearchString },
+                };
+
+                andConditions.push(andCondition);
+              }
+            });
+
+            if (andConditions.length > 0) {
+              subOrConditions.push({
+                AND: andConditions,
+              });
+            }
+          });
+
+          if (subOrConditions.length > 0) {
+            orConditions.push({
+              OR: subOrConditions,
+            });
+          }
+        }
+      });
+    }
+  }
+
+  // await prismaClient.bookmark.findMany({
+  //   where: {
+  //     OR: [
+  //       {
+  //         OR: [
+  //           {
+  //             AND: [],
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  // });
+
+  const orSearchByString = orConditions.length
     ? {
-        OR: [
-          { name: { contains: searchString } },
-          { description: { contains: searchString } },
-          { url: { contains: searchString } },
-          { content: { contains: searchString } },
-        ],
+        OR: orConditions,
       }
     : {};
+
   let bookmarkIds = {};
   if (tags?.length) {
     // TODO: Tags support and and also need to support pagination
@@ -68,7 +128,14 @@ export async function getBookmarks({
     };
   }
   const bookmarks = await prismaClient.bookmark.findMany({
-    where: { userId: ctx.user.id, ...orSearchByString, ...bookmarkIds },
+    where: {
+      userId: ctx.user.id,
+      ...orSearchByString,
+      ...bookmarkIds,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
     include: {
       bookmarkTags: {
         include: {
