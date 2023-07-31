@@ -80,5 +80,6 @@ module.exports = {
     "/**/web-app",
     "/**/build",
     "/**/api/src/ui",
+    "/**/.bi-api",
   ],
 };

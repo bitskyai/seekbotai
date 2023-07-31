@@ -16,3 +16,5 @@ dist/
 **/api/src/ui
 **/.plasmo
 **/desktop-app/out
+**/.bi-api
+**/*.html
