@@ -1,5 +1,6 @@
 import { getPrismaClient } from "../../db";
-import { extractPageContent } from "../../helpers/pageExtraction/index";
+import normalizeUrl from "../../helpers/normalize-url";
+import { extractPageContent, saveRawPage } from "../../helpers/pageExtraction";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
@@ -40,13 +41,18 @@ export async function createOrUpdateBookmarks({
     try {
       const createdBookmark = await prismaClient.$transaction(
         async (prisma) => {
+          let rawPageFileName = null;
+          bookmark.url = normalizeUrl(bookmark.url);
           if (!bookmark.content && bookmark.raw) {
+            rawPageFileName = await saveRawPage(bookmark.url, bookmark.raw);
+            console.log(`rawPageFileName: ${rawPageFileName}`);
             const extractedPage = await extractPageContent(
               bookmark.url,
               bookmark.raw,
             );
             bookmark = _.merge(bookmark, extractedPage);
           }
+
           const result = await prisma.bookmark.upsert({
             where: {
               userId_url: { url: bookmark.url, userId: ctx.user.id },
@@ -68,6 +74,28 @@ export async function createOrUpdateBookmarks({
               content: bookmark.content,
             },
           });
+          if (rawPageFileName) {
+            // For now we only support one version of raw page, but we can support multiple versions in the future
+            await prisma.bookmarkRaw.upsert({
+              where: {
+                userId_fileName_version: {
+                  version: 0,
+                  fileName: rawPageFileName,
+                  userId: ctx.user.id,
+                },
+              },
+              create: {
+                userId: ctx.user.id,
+                bookmarkId: result.id,
+                fileName: rawPageFileName,
+              },
+              update: {
+                userId: ctx.user.id,
+                bookmarkId: result.id,
+                fileName: rawPageFileName,
+              },
+            });
+          }
           const bookmarkTags = bookmark.bookmarkTags || [];
           for (let i = 0; i < bookmarkTags.length; i++) {
             const tagName = bookmarkTags[i];

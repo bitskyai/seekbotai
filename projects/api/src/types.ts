@@ -8,6 +8,7 @@ export interface ServerOptions {
   APP_SOURCE_PATH: string;
   SETUP_DB: boolean;
   SEED_DB: boolean;
+  SAVE_RAW_PAGE: boolean;
 }
 
 export interface AppConfig extends ServerOptions {

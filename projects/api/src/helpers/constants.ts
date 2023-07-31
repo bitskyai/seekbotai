@@ -8,6 +8,7 @@ const appHomePath = path.join(__dirname, "../../", `.${packageJson.name}`);
 export const DEFAULT_APP_CONFIG: AppConfig = {
   APP_HOME_PATH: appHomePath,
   APP_SOURCE_PATH: path.join(__dirname, "../../"),
+  SAVE_RAW_PAGE: false,
   COMBINED_LOG_FILE_NAME: "combined.log",
   SETUP_DB: true,
   SEED_DB: false,
