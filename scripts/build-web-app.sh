@@ -35,6 +35,7 @@ cp package.json ./dist/
 cp yarn.lock ./dist/
 cp -rf ./src/ui ./dist/src/
 cp -rf ./src/public ./dist/src/
+cp -rf ./src/forkRepos ./dist/src/
 cp -rf ./src/db/seedData/files ./dist/src/db/seedData/
 # remove typescript files
 find dist -type f -name "*.ts" -delete
