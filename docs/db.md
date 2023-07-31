@@ -60,7 +60,7 @@ Please read [Bookmark Intelligence ERD](https://lucid.app/lucidchart/2bac9da0-4e
 
 ## CRUD Schema
 
-### Step 1: CRUP a Schema
+### Step 1: CRUD a Schema
 
 1. Add new Schema to [Bookmark Intelligence ERD](https://lucid.app/lucidchart/2bac9da0-4e10-491c-a509-eb68ba695403/edit?beaconFlowId=0AB803401E4957D7&invitationId=inv_77370d48-ebf7-41ed-b3dd-ac1856bcb367&page=0_0#)
 2. Add Schema to `projects/api/prisma/schema.prisma`

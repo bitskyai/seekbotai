@@ -12,22 +12,22 @@ export const config: PlasmoCSConfig = {
 }
 
 function extractPageHTML() {
-  let currentPageHTML = document.documentElement.outerHTML
+  const currentPageHTML = document.documentElement.outerHTML
+  // comment to make sure backend get the raw html
   // remove script and style tags
-  currentPageHTML = currentPageHTML.replace(
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    ""
-  )
-  currentPageHTML = currentPageHTML.replace(
-    /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
-    ""
-  )
+  // currentPageHTML = currentPageHTML.replace(
+  //   /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+  //   ""
+  // )
+  // currentPageHTML = currentPageHTML.replace(
+  //   /<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,
+  //   ""
+  // )
   return currentPageHTML
 }
 
 window.addEventListener("load", async () => {
   // document.body.style.background = "pink" // used for debugging
-
   console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
   const currentPageData = {
     name: document.title,
@@ -37,7 +37,7 @@ window.addEventListener("load", async () => {
     raw: extractPageHTML() ?? ""
   }
 
-  console.info(...logFormat.formatArgs("curentPageData", currentPageData))
+  console.info(...logFormat.formatArgs("currentPageData", currentPageData))
   // save current page
   await sendToBackground({
     name: MessageSubject.createBookmarks,

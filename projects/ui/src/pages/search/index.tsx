@@ -55,6 +55,11 @@ export default function Home(): JSX.Element {
     </Space>
   );
 
+  function getOrigin(url: string) {
+    const urlObj = new URL(url);
+    return urlObj.origin;
+  }
+
   return (
     <Layout
       style={{ padding: `0 ${padding}px`, backgroundColor: colorBgContainer }}
@@ -94,12 +99,14 @@ export default function Home(): JSX.Element {
             <List
               itemLayout="vertical"
               size="large"
-              // pagination={{
-              //   onChange: (page) => {
-              //     console.log(page);
-              //   },
-              //   pageSize: 3,
-              // }}
+              pagination={{
+                position: "bottom",
+                pageSizeOptions: ["50", "200", "500", "1000", "2000"],
+                align: "center",
+                defaultPageSize: 50,
+                showTotal: (total, range) =>
+                  `Showing ${range[0]}-${range[1]} of ${total} items`, // Custom total display
+              }}
               dataSource={data?.bookmarks ?? []}
               renderItem={(item) => (
                 <List.Item
@@ -113,18 +120,20 @@ export default function Home(): JSX.Element {
                       />
                     ))
                     .concat([
-                      <a href={item.url} key="url-link" target="blank">
-                        <IconText
-                          icon={FileImageOutlined}
-                          text={item.url}
-                          key="list-vertical-like-o"
-                        />
-                      </a>,
+                      <IconText
+                        icon={FileImageOutlined}
+                        text={getOrigin(item.url)}
+                        key="list-vertical-like-o"
+                      />,
                     ])}
                 >
                   <List.Item.Meta
                     avatar={<Avatar src={item.icon} />}
-                    title={item.name}
+                    title={
+                      <a key="url-link" target="blank" href={item.url}>
+                        {item.name}
+                      </a>
+                    }
                     description={item.description}
                   />
                   {/* {item.content} */}
