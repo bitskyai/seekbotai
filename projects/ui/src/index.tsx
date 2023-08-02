@@ -11,7 +11,7 @@ import { ThemeProvider } from "./theme/index.js";
 
 let url = import.meta.env.VITE_API_URL;
 if (!url) {
-  url = `${window.location.href}graphql`;
+  url = `${window.location.origin}/graphql`;
 }
 
 const apolloClient = new ApolloClient({

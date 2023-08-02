@@ -129,5 +129,11 @@
   },
   "createdAtTitle": {
     "message": "Created At"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "failed": {
+    "message": "Failed, will auto retry in background"
   }
 }
