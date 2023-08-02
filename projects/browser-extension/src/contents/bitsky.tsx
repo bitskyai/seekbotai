@@ -26,53 +26,78 @@ function extractPageHTML() {
 }
 
 const BitskyHelper = () => {
+  const AUTO_CLOSE_NOTIFICATION = 5000
+  const FREQUENTLY_SAVE_INTERVAL = 15000
+
   const [saving, setSaving] = useState(null)
   const [success, setSuccess] = useState(null)
   const [displayNotification, setDisplayNotification] = useState(false)
+  let saveIntervalHandler = null
   let hideNotificationHandler = null
-  const AUTO_CLOSE_NOTIFICATION = 5000
+  let observer = null
+
+  const sendLatestPage = async () => {
+    try {
+      setDisplayNotification(true)
+      setSaving(true)
+      setSuccess(false)
+      // document.body.style.background = "pink" // used for debugging
+      console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
+      const currentPageData = {
+        name: document.title,
+        bookmarkTags: ["history"],
+        url: window.location.href,
+        content: "",
+        raw: extractPageHTML() ?? ""
+      }
+
+      console.info(...logFormat.formatArgs("currentPageData", currentPageData))
+      // save current page
+      await sendToBackground({
+        name: MessageSubject.createBookmarks,
+        body: [currentPageData]
+      })
+      setSaving(false)
+      setSuccess(true)
+      clearTimeout(hideNotificationHandler)
+      hideNotificationHandler = setTimeout(() => {
+        setDisplayNotification(false)
+      }, AUTO_CLOSE_NOTIFICATION)
+    } catch (err) {
+      setSaving(false)
+      setSuccess(false)
+      clearTimeout(hideNotificationHandler)
+      setTimeout(() => {
+        setDisplayNotification(false)
+        setSaving(null)
+        setSuccess(null)
+      }, AUTO_CLOSE_NOTIFICATION)
+      console.error(err)
+    }
+  }
 
   useEffect(() => {
     window.addEventListener("load", async () => {
-      try {
-        setDisplayNotification(true)
-        setSaving(true)
-        setSuccess(false)
-        // document.body.style.background = "pink" // used for debugging
-        console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
-        const currentPageData = {
-          name: document.title,
-          bookmarkTags: ["history"],
-          url: window.location.href,
-          content: "",
-          raw: extractPageHTML() ?? ""
-        }
+      await sendLatestPage()
 
-        console.info(
-          ...logFormat.formatArgs("currentPageData", currentPageData)
-        )
-        // save current page
-        await sendToBackground({
-          name: MessageSubject.createBookmarks,
-          body: [currentPageData]
-        })
-        setSaving(false)
-        setSuccess(true)
-        clearTimeout(hideNotificationHandler)
-        hideNotificationHandler = setTimeout(() => {
-          setDisplayNotification(false)
-        }, AUTO_CLOSE_NOTIFICATION)
-      } catch (err) {
-        setSaving(false)
-        setSuccess(false)
-        clearTimeout(hideNotificationHandler)
-        setTimeout(() => {
-          setDisplayNotification(false)
-          setSaving(null)
-          setSuccess(null)
-        }, AUTO_CLOSE_NOTIFICATION)
-        console.error(err)
+      const bodyNode = document.querySelector("body")
+      const config = { childList: true, subtree: true }
+      // Callback function to execute when mutations are observed
+      const callback = () => {
+        clearTimeout(saveIntervalHandler)
+        saveIntervalHandler = setTimeout(async () => {
+          await sendLatestPage()
+        }, FREQUENTLY_SAVE_INTERVAL)
       }
+      if (observer) {
+        observer?.disconnect()
+        observer = null
+      }
+      // Create an observer instance linked to the callback function
+      observer = new MutationObserver(callback)
+
+      // Start observing the target node for configured mutations
+      observer.observe(bodyNode, config)
     })
   }, [])
 
@@ -91,9 +116,7 @@ const BitskyHelper = () => {
               <div className="bitsky-notification-notice-description">
                 <div className="bitsky-title-container">
                   <span>
-                    <span
-                      className={logoClass}
-                      style={{ backgroundImage: `url(${logo})` }}></span>
+                    <span className={logoClass}></span>
                   </span>
                   {saving ? (
                     <></>
