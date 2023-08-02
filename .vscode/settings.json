@@ -82,7 +82,5 @@
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "cSpell.words": [
-    "bitsky"
-  ]
+  "cSpell.words": ["bitsky"]
 }
