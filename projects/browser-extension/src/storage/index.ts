@@ -45,7 +45,8 @@ export enum StorageKeys {
   ServiceProtocol = "ServiceProtocol",
   ServiceAPIKey = "ServiceAPIKey",
   ServiceDiscoverStatus = "ServiceDiscoverStatus",
-  ServiceHealthStatus = "ServiceHealthStatus"
+  ServiceHealthStatus = "ServiceHealthStatus",
+  BackgroundSyncUpPages = "BackgroundSyncUpPages"
 }
 
 // Service Relative Configuration

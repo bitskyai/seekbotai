@@ -1,17 +1,20 @@
 {
   "recommendations": [
-    "arcanis.vscode-zipfs",
     "dbaeumer.vscode-eslint",
-    "eamodio.gitlens",
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "firsttris.vscode-jest-runner",
     "graphql.vscode-graphql",
+    "graphQL.vscode-graphql-syntax",
     "mgmcdermott.vscode-language-babel",
     "mikestead.dotenv",
     "orta.vscode-jest",
     "streetsidesoftware.code-spell-checker",
     "vscode-icons-team.vscode-icons",
-    "Prisma.prisma"
+    "Prisma.prisma",
+    "EditorConfig.EditorConfig",
+    "mikestead.dotenv",
+    "gitHub.copilot",
+    "christian-kohler.path-intellisense"
   ]
 }

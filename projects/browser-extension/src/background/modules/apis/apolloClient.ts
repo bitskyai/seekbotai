@@ -27,6 +27,14 @@ const _initApolloClient = async () => {
   })
 }
 
+/**
+ * Init apollo client and watch following storage keys:
+ * 1. StorageKeys.ServiceAPIKey
+ * 2. StorageKeys.ServiceHostName
+ * 3. StorageKeys.ServicePort
+ * 4. StorageKeys.ServiceProtocol
+ * if any key changed, refresh apollo client
+ */
 export const init = async () => {
   // try to init apollo client
   await _initApolloClient()
@@ -54,7 +62,7 @@ export const init = async () => {
   console.info(...logFormat.formatArgs("init finished"))
 }
 
-const waitUtilApolloClientReady = async () => {
+export const waitUtilApolloClientReady = async () => {
   if (_apolloClient) {
     return true
   }
@@ -62,7 +70,7 @@ const waitUtilApolloClientReady = async () => {
     const interval = setInterval(() => {
       if (_apolloClient) {
         clearInterval(interval)
-        resolve(true)
+        resolve(_apolloClient)
       }
     }, 100)
   })
@@ -72,6 +80,12 @@ const waitUtilApolloClientReady = async () => {
 // since background cannot show UI, we can only log error
 // UI also need to listen to `storageWatchList` to give user feedback
 export const getApolloClient = async () => {
-  await waitUtilApolloClientReady()
+  // await waitUtilApolloClientReady()
   return _apolloClient
+}
+
+// Used when cannot connect to server, we need to set apollo client to null
+// like health check
+export const setApolloClientToNull = () => {
+  _apolloClient = null
 }
