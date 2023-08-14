@@ -135,5 +135,11 @@
   },
   "failed": {
     "message": "Failed, will auto retry in background"
+  },
+  "serviceNotHealthTitle": {
+    "message": "Attempting to connect to BitSky Desktop Application"
+  },
+  "serviceNotHealthDetail": {
+    "message": "Please ensure that the BitSky desktop application is currently running. If the application is running, please allow a few moments for the connection to establish. If you still encounter this message after a brief wait, kindly consider restarting the BitSky desktop application"
   }
 }

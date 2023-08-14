@@ -1,5 +1,8 @@
+import { Storage } from "@plasmohq/storage"
+
 import { LogFormat } from "~helpers/LogFormat"
-import { cleanAllBookmarks, cleanAllHistory } from "~storage"
+import { StorageKeys, cleanAllBookmarks, cleanAllHistory } from "~storage"
+import { ServiceStatus } from "~types"
 
 import { ImportBookmarks } from "./ImportBookmarks"
 import { ImportHistory } from "./ImportHistory"
@@ -43,4 +46,20 @@ export const cleanImportHistory = async () => {
 
 export const init = async () => {
   console.info(...logFormat.formatArgs("init"))
+  const storage = new Storage()
+  const storageWatchList = {
+    [StorageKeys.ServiceHealthStatus]: async () => {
+      const serviceHealthStatus = await storage.get(
+        StorageKeys.ServiceHealthStatus
+      )
+      if (serviceHealthStatus === ServiceStatus.Failed) {
+        console.warn(
+          ...logFormat.formatArgs("service is unhealthy, stop import")
+        )
+        await stopImportBookmarks()
+        await stopImportHistory()
+      }
+    }
+  }
+  storage.watch(storageWatchList)
 }

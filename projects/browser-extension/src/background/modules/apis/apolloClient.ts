@@ -5,26 +5,33 @@ import { newApolloClient } from "~helpers/apolloClientFactory"
 import {
   StorageKeys,
   getServiceAPIKey,
+  getServiceHealthStatus,
   getServiceHostName,
   getServicePort,
   getServiceProtocol
 } from "~storage"
+import { ServiceStatus } from "~types"
 
 const logFormat = new LogFormat("apis/apolloClient")
 
 let _apolloClient = null
 
 const _initApolloClient = async () => {
-  const protocol = await getServiceProtocol()
-  const hostName = await getServiceHostName()
-  const port = await getServicePort()
-  const apiKey = await getServiceAPIKey()
-  _apolloClient = await newApolloClient({
-    protocol,
-    hostName,
-    port,
-    apiKey
-  })
+  const serviceHealthStatus = await getServiceHealthStatus()
+  if (serviceHealthStatus == ServiceStatus.Success) {
+    const protocol = await getServiceProtocol()
+    const hostName = await getServiceHostName()
+    const port = await getServicePort()
+    const apiKey = await getServiceAPIKey()
+    _apolloClient = await newApolloClient({
+      protocol,
+      hostName,
+      port,
+      apiKey
+    })
+  } else {
+    _apolloClient = null
+  }
 }
 
 /**
@@ -53,6 +60,7 @@ export const init = async () => {
   }
 
   const storageWatchList = {
+    [StorageKeys.ServiceHealthStatus]: refreshApolloClient,
     [StorageKeys.ServiceAPIKey]: refreshApolloClient,
     [StorageKeys.ServiceHostName]: refreshApolloClient,
     [StorageKeys.ServicePort]: refreshApolloClient,
