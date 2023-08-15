@@ -27,26 +27,26 @@ import {
   ServiceStatus
 } from "~types"
 
-const logFormat = new LogFormat("storage")
+import {
+  BackgroundSyncUpStatus,
+  addToBackgroundSyncUpAPICreateOrUpdatePages,
+  getBackgroundSyncUpAPICreateOrUpdatePages,
+  initBackgroundSyncUp,
+  updateBackgroundSyncUpAPICreateOrUpdatePages
+} from "./backgroundSyncUp"
+import { StorageKeys } from "./storageKeys"
 
-export enum StorageKeys {
-  ImportBookmarksSummary = "ImportBookmarksSummary",
-  ImportBookmarksInProgress = "ImportBookmarksInProgress",
-  ImportBookmarksSuccess = "ImportBookmarksSuccess",
-  ImportBookmarksFailed = "ImportBookmarksFailed",
-  ImportBookmarksRemaining = "ImportBookmarksRemaining",
-  ImportHistorySummary = "ImportHistorySummary",
-  ImportHistoryInProgress = "ImportHistoryInProgress",
-  ImportHistorySuccess = "ImportHistorySuccess",
-  ImportHistoryFailed = "ImportHistoryFailed",
-  ImportHistoryRemaining = "ImportHistoryRemaining",
-  ServiceHostName = "ServiceHostName",
-  ServicePort = "ServicePort",
-  ServiceProtocol = "ServiceProtocol",
-  ServiceAPIKey = "ServiceAPIKey",
-  ServiceDiscoverStatus = "ServiceDiscoverStatus",
-  ServiceHealthStatus = "ServiceHealthStatus"
+//TODO: refactor index.ts, it should only focus on centralize exports
+export {
+  StorageKeys,
+  BackgroundSyncUpStatus,
+  initBackgroundSyncUp,
+  addToBackgroundSyncUpAPICreateOrUpdatePages,
+  getBackgroundSyncUpAPICreateOrUpdatePages,
+  updateBackgroundSyncUpAPICreateOrUpdatePages
 }
+
+const logFormat = new LogFormat("storage")
 
 // Service Relative Configuration
 export const getServiceHostName = async (): Promise<string> => {

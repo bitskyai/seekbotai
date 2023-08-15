@@ -1,6 +1,7 @@
 query GetBookmarks($tags: [Int!], $searchString: String = "") {
   bookmarks(searchString: $searchString, tags: $tags) {
     createdAt
+    updatedAt
     description
     favorite
     icon

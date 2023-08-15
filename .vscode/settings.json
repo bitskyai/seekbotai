@@ -26,7 +26,7 @@
     "**/.eslintcache": true,
     "**/.git": true,
     "**/.gitattributes": false,
-    "**/.husky": true,
+    "**/.husky": false,
     "**/.pnp.*": false,
     "**/.prettierignore": false,
     "**/node_modules": false,
@@ -81,5 +81,6 @@
   },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "cSpell.words": ["bitsky"]
 }

@@ -35,7 +35,8 @@
     "format:fix": "prettier --write .",
     "setup": "zx ./scripts/setup.js",
     "syncpack:fix": "syncpack fix-mismatches  -d -p -P",
-    "syncpack:list": "syncpack list-mismatches"
+    "syncpack:list": "syncpack list-mismatches",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@babel/cli": "^7.17.10",
@@ -82,6 +83,7 @@
     "@types/jest": "29.2.4",
     "@types/minimist": "^1.2.2",
     "@types/node": "^18.11.19",
-    "syncpack": "^8.4.11"
+    "syncpack": "^8.4.11",
+    "husky": "^8.0.0"
   }
 }

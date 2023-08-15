@@ -4,7 +4,6 @@ const logFormat = new LogFormat("messages")
 
 export enum MessageSubject {
   createBookmarks = "createBookmarks",
-  getBookmarks = "getBookmarks",
   startImportBookmarks = "startImportBookmarks",
   stopImportBookmarks = "stopImportBookmarks",
   cleanImportBookmarks = "cleanImportBookmarks",
@@ -12,8 +11,6 @@ export enum MessageSubject {
   stopImportHistory = "stopImportHistory",
   cleanImportHistory = "cleanImportHistory"
 }
-export type { BookmarksMsgRes } from "./getBookmarks"
-export type { BookmarksImportStatusMsgRes } from "./getBookmarksImportStatus"
 
 export const init = async () => {
   console.info(...logFormat.formatArgs("init"))

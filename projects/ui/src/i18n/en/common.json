@@ -23,5 +23,6 @@
     "placeholder": "E.g: 'Elon Mush, Twitter' means search Elon Mush or Twitter. 'Elon Mush + Twitter' means search Elon Mush and Twitter. '",
     "advancedSearch": "Switch to advanced",
     "basicSearch": "Switch to basic"
-  }
+  },
+  "viewedAt": "Viewed At"
 }
