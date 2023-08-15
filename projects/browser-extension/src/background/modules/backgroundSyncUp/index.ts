@@ -1,3 +1,4 @@
+import { log } from "console"
 import _ from "lodash"
 
 import { Storage } from "@plasmohq/storage"
@@ -18,7 +19,7 @@ const logFormat = new LogFormat("modules/backgroundSyncUp")
 let _intervalCheckBackgroundSyncUpList = null
 let _sending_request = false
 
-const BACKGROUND_SYNC_UP_INTERVAL_VALUE = 1000 * 5 // 10 S
+const BACKGROUND_SYNC_UP_INTERVAL_VALUE = 1000 * 1 // 10 S
 
 const sendCreateBookmarksRequest = async () => {
   const syncUpItem = await getBackgroundSyncUpAPICreateOrUpdatePages()
@@ -26,13 +27,16 @@ const sendCreateBookmarksRequest = async () => {
     ...logFormat.formatArgs("sendCreateBookmarksRequest", syncUpItem)
   )
   if (syncUpItem) {
-    const { data } = await createBookmarks(syncUpItem.data, true)
-    if (data) {
-      await updateBackgroundSyncUpAPICreateOrUpdatePages({
-        ...syncUpItem,
-        status: BackgroundSyncUpStatus.Success
-      })
-    } else {
+    try {
+      const result = await createBookmarks(syncUpItem.data, true)
+      if (!result) {
+        // when result is null, it means that the request is not sent to server
+        await updateBackgroundSyncUpAPICreateOrUpdatePages({
+          ...syncUpItem,
+          status: BackgroundSyncUpStatus.Success
+        })
+      }
+    } catch (err) {
       await updateBackgroundSyncUpAPICreateOrUpdatePages({
         ...syncUpItem,
         status: BackgroundSyncUpStatus.Failed
@@ -63,10 +67,17 @@ const _checkBackgroundSyncUpList = async () => {
       }
       _sending_request = false
     }, BACKGROUND_SYNC_UP_INTERVAL_VALUE)
-  } else {
+  } else if (serviceHealthStatus === ServiceStatus.Failed) {
     console.warn(...logFormat.formatArgs("service is not healthy"))
     // cancel interval check
     clearInterval(_intervalCheckBackgroundSyncUpList)
+  } else {
+    console.debug(
+      ...logFormat.formatArgs(
+        "_checkBackgroundSyncUpList -> serviceHealthStatus",
+        serviceHealthStatus
+      )
+    )
   }
 }
 
