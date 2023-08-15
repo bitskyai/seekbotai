@@ -21,7 +21,7 @@ function IndexNewtab() {
   }:${port}`
   return (
     <div style={{}}>
-      {serviceHealthStatus !== ServiceStatus.Success ? (
+      {serviceHealthStatus === ServiceStatus.Failed ? (
         <div style={{ maxWidth: 650, margin: "0 auto" }}>
           <Result
             status="404"
@@ -32,7 +32,7 @@ function IndexNewtab() {
       ) : (
         ""
       )}
-      {serviceHealthStatus === ServiceStatus.Success ? (
+      {serviceHealthStatus !== ServiceStatus.Failed ? (
         <iframe
           id="test"
           ref={iframeElem}

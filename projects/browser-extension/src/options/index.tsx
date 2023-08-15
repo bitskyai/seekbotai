@@ -18,7 +18,7 @@ function Options() {
 
   return (
     <React.StrictMode>
-      {serviceHealthStatus !== ServiceStatus.Success ? (
+      {serviceHealthStatus === ServiceStatus.Failed ? (
         <div style={{ maxWidth: 650, margin: "0 auto" }}>
           <Result
             status="404"
@@ -29,7 +29,7 @@ function Options() {
       ) : (
         ""
       )}
-      {serviceHealthStatus === ServiceStatus.Success ? (
+      {serviceHealthStatus !== ServiceStatus.Failed ? (
         <RouterProvider router={router} />
       ) : (
         ""

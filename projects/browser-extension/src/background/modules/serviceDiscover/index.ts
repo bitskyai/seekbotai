@@ -166,5 +166,6 @@ export const stopIntervalServiceHealthCheck = async () => {
 }
 
 export const init = async ({ timeout }: { timeout: number }) => {
+  console.info(...logFormat.formatArgs(`init`))
   startIntervalServiceHealthCheck(timeout)
 }

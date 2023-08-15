@@ -21,8 +21,10 @@ let _sending_request = false
 const BACKGROUND_SYNC_UP_INTERVAL_VALUE = 1000 * 5 // 10 S
 
 const sendCreateBookmarksRequest = async () => {
-  console.debug(...logFormat.formatArgs("sendCreateBookmarksRequest"))
   const syncUpItem = await getBackgroundSyncUpAPICreateOrUpdatePages()
+  console.debug(
+    ...logFormat.formatArgs("sendCreateBookmarksRequest", syncUpItem)
+  )
   if (syncUpItem) {
     const { data } = await createBookmarks(syncUpItem.data, true)
     if (data) {
@@ -69,6 +71,7 @@ const _checkBackgroundSyncUpList = async () => {
 }
 
 export const init = async () => {
+  console.info(...logFormat.formatArgs("init"))
   // init background sync up to move in progress items to remain list
   await initBackgroundSyncUp()
   // init interval check background sync up list

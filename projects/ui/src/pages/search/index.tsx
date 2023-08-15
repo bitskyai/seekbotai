@@ -1,7 +1,11 @@
 import { usePageEffect } from "../../core/page.js";
 import { GetBookmarksDocument } from "../../graphql/generated.js";
 import { updateURLQuery } from "../../helpers/utils.js";
-import { FileImageOutlined, TagOutlined } from "@ant-design/icons";
+import {
+  FileImageOutlined,
+  TagOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import {
   Layout,
@@ -111,21 +115,35 @@ export default function Home(): JSX.Element {
               renderItem={(item) => (
                 <List.Item
                   key={item.id}
-                  actions={item.bookmarkTags
-                    .map((item) => (
+                  actions={[
+                    <IconText
+                      icon={ClockCircleOutlined}
+                      text={`${t("viewedAt")}: ${new Date(
+                        item.updatedAt,
+                      ).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })}`}
+                      key="list-vertical-like-o"
+                    />,
+                    <IconText
+                      icon={FileImageOutlined}
+                      text={getOrigin(item.url)}
+                      key="list-vertical-like-o"
+                    />,
+                  ].concat(
+                    item.bookmarkTags.map((item) => (
                       <IconText
                         icon={TagOutlined}
                         text={item.tag.name}
                         key={item.tag.id}
                       />
-                    ))
-                    .concat([
-                      <IconText
-                        icon={FileImageOutlined}
-                        text={getOrigin(item.url)}
-                        key="list-vertical-like-o"
-                      />,
-                    ])}
+                    )),
+                  )}
                 >
                   <List.Item.Meta
                     avatar={<Avatar src={item.icon} />}

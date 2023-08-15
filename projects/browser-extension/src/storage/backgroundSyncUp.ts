@@ -40,6 +40,11 @@ async function addToBackgroundSyncUpInProgress(
   key: string,
   syncUpItemKey: string
 ) {
+  console.info(
+    ...logFormat.formatArgs(
+      `addToBackgroundSyncUpInProgress, key:${key}, syncUpItemKey:${syncUpItemKey}`
+    )
+  )
   const storage = new Storage({ area: "local" })
   const backgroundSyncUpInProgress =
     (await storage.get<BackgroundSyncUpInProgress>(key)) || {}
@@ -54,6 +59,11 @@ async function removeFromBackgroundSyncUpInProgress(
   key: string,
   syncUpItemKey: string
 ) {
+  console.info(
+    ...logFormat.formatArgs(
+      `removeFromBackgroundSyncUpInProgress, key:${key}, syncUpItemKey:${syncUpItemKey}`
+    )
+  )
   const storage = new Storage({ area: "local" })
   const backgroundSyncUpInProgress =
     (await storage.get<BackgroundSyncUpInProgress>(key)) || {}
@@ -68,6 +78,12 @@ async function addToBackgroundSyncUp<dataType>(
   key: StorageKeys,
   syncUpItem: BackgroundSyncUpBaseItem<dataType>
 ): Promise<string> {
+  console.info(
+    ...logFormat.formatArgs(
+      `addToBackgroundSyncUp, key: ${key}, syncUpItem: `,
+      syncUpItem
+    )
+  )
   const storage = new Storage({ area: "local" })
   const backgroundSyncUpList =
     (await storage.get<BackgroundSyncUpList>(key)) || []
@@ -94,7 +110,11 @@ async function getBackgroundSyncUpItem<dataType>(
   const storage = new Storage({ area: "local" })
   const backgroundSyncUpListRemain =
     (await storage.get<BackgroundSyncUpList>(key)) || []
-
+  console.info(
+    ...logFormat.formatArgs(
+      `getBackgroundSyncUpItem, key: ${key}, remain items: ${backgroundSyncUpListRemain.length} `
+    )
+  )
   if (!backgroundSyncUpListRemain?.length) {
     return null
   }
@@ -126,6 +146,13 @@ async function getBackgroundSyncUpItem<dataType>(
   // update backgroundSyncUpList in storage
   storage.set(key, backgroundSyncUpListRemain)
 
+  console.info(
+    ...logFormat.formatArgs(
+      `getBackgroundSyncUpItem, key: ${key}, syncUpItem: `,
+      syncUpItem
+    )
+  )
+
   return syncUpItem
 }
 
@@ -133,6 +160,12 @@ async function updateBackgroundSyncUpItem<dataType>(
   key: StorageKeys,
   syncUpItem: BackgroundSyncUpBaseItem<dataType>
 ) {
+  console.info(
+    ...logFormat.formatArgs(
+      `updateBackgroundSyncUpItem, key: ${key}, syncUpItem: `,
+      syncUpItem
+    )
+  )
   const storage = new Storage({ area: "local" })
   if (
     syncUpItem.status === BackgroundSyncUpStatus.Success ||
@@ -159,6 +192,11 @@ async function moveInProgressToRemainList(
   remainingKey: string,
   inProgressKey: string
 ) {
+  console.info(
+    ...logFormat.formatArgs(
+      `moveInProgressToRemainList, remainingKey: ${remainingKey}, inProgressKey: ${inProgressKey}`
+    )
+  )
   const storage = new Storage({ area: "local" })
   const inProgress =
     (await storage.get<BackgroundSyncUpInProgress>(inProgressKey)) || {}
@@ -190,6 +228,7 @@ async function moveInProgressToRemainList(
 }
 
 export async function initBackgroundSyncUp() {
+  console.info(...logFormat.formatArgs("initBackgroundSyncUp"))
   // check all the items in backgroundSyncUpInProgress and put to backgroundSyncUp list
   // BackgroundSyncUpKeyAPICreateOrUpdatePages
   await moveInProgressToRemainList(
@@ -201,6 +240,12 @@ export async function initBackgroundSyncUp() {
 export async function addToBackgroundSyncUpAPICreateOrUpdatePages(
   pages: BookmarkCreateInputType[]
 ) {
+  console.debug(
+    ...logFormat.formatArgs(
+      "addToBackgroundSyncUpAPICreateOrUpdatePages, pages: ",
+      pages
+    )
+  )
   const syncUpItem = {
     key: "", // will be updated when added to storage
     createdAt: Date.now(),
@@ -216,6 +261,9 @@ export async function addToBackgroundSyncUpAPICreateOrUpdatePages(
 }
 
 export async function getBackgroundSyncUpAPICreateOrUpdatePages() {
+  console.debug(
+    ...logFormat.formatArgs("getBackgroundSyncUpAPICreateOrUpdatePages")
+  )
   return getBackgroundSyncUpItem<BookmarkCreateInputType[]>(
     StorageKeys.BackgroundSyncUpKeyAPICreateOrUpdatePages
   )
@@ -224,6 +272,12 @@ export async function getBackgroundSyncUpAPICreateOrUpdatePages() {
 export async function updateBackgroundSyncUpAPICreateOrUpdatePages(
   syncUpItem: BackgroundSyncUpItemAPIPages
 ) {
+  console.debug(
+    ...logFormat.formatArgs(
+      "updateBackgroundSyncUpAPICreateOrUpdatePages, syncUpItem: ",
+      syncUpItem
+    )
+  )
   await updateBackgroundSyncUpItem<BookmarkCreateInputType[]>(
     StorageKeys.BackgroundSyncUpKeyAPICreateOrUpdatePages,
     syncUpItem
