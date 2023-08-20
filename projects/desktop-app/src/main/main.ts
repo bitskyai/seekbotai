@@ -8,9 +8,11 @@ import { onFirstRunMaybe } from "./first-run";
 import { setupMenu } from "./menu";
 import { listenForProtocolHandler, setupProtocolHandler } from "./protocol";
 import { shouldQuit } from "./squirrel";
+import { setupTray } from "./tray";
 import { getOrCreateMainWindow } from "./windows";
 import { app } from "electron";
 
+let tray = null;
 /**
  * Handle the app's "ready" event. This is essentially
  * the method that takes care of booting the application.
@@ -32,6 +34,7 @@ export async function onReady() {
     setupMenu();
     setupAboutPanel();
     setupProtocolHandler();
+    setupTray();
     // Auto update from github release
     // since currently don't have apple developer account, and auto update require developer account
     // so disable it for now
@@ -41,6 +44,12 @@ export async function onReady() {
   } catch (err) {
     logger.error("Error in onReady, error: ", err);
   }
+}
+
+export function onWindowsAllClosed(event: Electron.Event) {
+  app.dock.hide();
+  // Prevent the app from quitting when all windows are closed
+  event.preventDefault();
 }
 
 /**
@@ -73,7 +82,7 @@ export function main() {
   // Launch
   app.on("ready", onReady);
   app.on("before-quit", onBeforeQuit);
-  // app.on("window-all-closed", onWindowsAllClosed);
+  app.on("window-all-closed", onWindowsAllClosed);
   app.on("activate", getOrCreateMainWindow);
 }
 

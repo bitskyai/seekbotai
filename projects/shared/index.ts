@@ -19,3 +19,4 @@ export const DEFAULT_SELF_IDENTIFICATION =
 // this is a default master key for meilisearch. TODO: make it configurable
 export const DEFAULT_MEILISEARCH_MASTER_KEY =
   "8499a9f9-a7a5-4bb2-a445-bc82afe1366c";
+export const DEFAULT_MEILISEARCH_PORT = 57700;
