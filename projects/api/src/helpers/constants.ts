@@ -1,3 +1,7 @@
+import {
+  DEFAULT_MEILISEARCH_MASTER_KEY,
+  DEFAULT_HOST_NAME,
+} from "../bitskyLibs/shared";
 import { AppConfig } from "../types";
 import path from "path";
 
@@ -14,6 +18,7 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   SEED_DB: false,
   DATABASE_PROVIDER: "sqlite",
   DATABASE_URL: `file:${appHomePath}/${packageJson.name}.db`,
+  HOST_NAME: DEFAULT_HOST_NAME,
   ERROR_LOG_FILE_NAME: "error.log",
   LOG_FILES_FOLDER: "log", // relative to `APP_HOME_PATH`
   LOG_LEVEL: "info",
@@ -21,4 +26,8 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   NODE_ENV: "development",
   PORT: 46997,
   SERVICE_NAME: packageJson.name,
+  START_MEILISEARCH: true,
+  MEILISEARCH_PORT: 47700,
+  MEILISEARCH_MASTER_KEY: DEFAULT_MEILISEARCH_MASTER_KEY,
+  MEILISEARCH_DB_PATH: path.join(appHomePath, "meilisearch"),
 };

@@ -48,6 +48,21 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     VERSION: str({
       default: "1.0.0",
     }),
+    HOST_NAME: str({
+      default: DEFAULT_APP_CONFIG.HOST_NAME,
+    }),
+    START_MEILISEARCH: bool({
+      default: DEFAULT_APP_CONFIG.START_MEILISEARCH,
+    }),
+    MEILISEARCH_PORT: num({
+      default: DEFAULT_APP_CONFIG.MEILISEARCH_PORT,
+    }),
+    MEILISEARCH_MASTER_KEY: str({
+      default: DEFAULT_APP_CONFIG.MEILISEARCH_MASTER_KEY,
+    }),
+    MEILISEARCH_DB_PATH: str({
+      default: DEFAULT_APP_CONFIG.MEILISEARCH_DB_PATH,
+    }),
   });
 }
 

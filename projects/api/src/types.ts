@@ -1,4 +1,11 @@
-export interface ServerOptions {
+export interface MeiliSearchConfig {
+  HOST_NAME: string;
+  MEILISEARCH_PORT: number;
+  MEILISEARCH_MASTER_KEY: string;
+  MEILISEARCH_DB_PATH: string;
+}
+
+export interface ServerOptions extends MeiliSearchConfig {
   PORT: number;
   DATABASE_PROVIDER: string;
   DATABASE_URL: string;
@@ -9,6 +16,7 @@ export interface ServerOptions {
   SETUP_DB: boolean;
   SEED_DB: boolean;
   SAVE_RAW_PAGE: boolean;
+  START_MEILISEARCH: boolean;
 }
 
 export interface AppConfig extends ServerOptions {

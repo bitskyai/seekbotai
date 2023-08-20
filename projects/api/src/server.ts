@@ -3,6 +3,7 @@ import { setupDB } from "./db";
 import { overwriteAppConfig } from "./helpers/config";
 import { DEFAULT_APP_CONFIG } from "./helpers/constants";
 import getLogger from "./helpers/logger";
+import { startSearchEngine } from "./searchEngine";
 import { ServerOptions } from "./types";
 import * as http from "http";
 import enableDestroy from "server-destroy";
@@ -21,6 +22,10 @@ export async function startServer(serverOptions?: ServerOptions) {
     );
     const logger = getLogger();
     logger.info(`config: %s`, config);
+
+    // start search engine
+    await startSearchEngine(serverOptions);
+
     await setupDB();
     const app = await createApp();
     if (server) {
