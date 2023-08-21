@@ -12,7 +12,6 @@ import { setupTray } from "./tray";
 import { getOrCreateMainWindow } from "./windows";
 import { app } from "electron";
 
-const tray = null;
 /**
  * Handle the app's "ready" event. This is essentially
  * the method that takes care of booting the application.

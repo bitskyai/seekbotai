@@ -39,16 +39,15 @@ class WebApp {
         });
       }
       const webAppSourcePath = path.join(
-        app.getAppPath().replace("app.asar", "app.asar.unpacked"),
+        app.getAppPath(),
         "dist",
         WEB_APP_NAME,
       );
       // start
       updateProcessEnvs(preferences);
       logger.info("preferences", preferences);
-      logger.info("webAppSourcePath", webAppSourcePath);
       logger.info("starting bitsky...");
-      await startServer({
+      const webAppConfig = {
         DESKTOP_MODE: true,
         PORT: preferences.WEB_APP_PORT,
         DATABASE_URL: preferences.WEB_APP_DATABASE_URL,
@@ -59,7 +58,12 @@ class WebApp {
         LOG_LEVEL: preferences.WEB_APP_LOG_LEVEL,
         LOG_MAX_SIZE: preferences.WEB_APP_LOG_MAX_SIZE,
         START_MEILISEARCH: preferences.WEB_APP_START_MEILISEARCH,
-      });
+        HOST_NAME: preferences.WEB_APP_HOST_NAME,
+        MEILISEARCH_PORT: preferences.WEB_APP_MEILISEARCH_PORT,
+        MEILISEARCH_MASTER_KEY: preferences.WEB_APP_MEILISEARCH_MASTER_KEY,
+      };
+      logger.info("webAppConfig", webAppConfig);
+      await startServer(webAppConfig);
       logger.info("bitsky successfully started.");
       const mainWindow = getOrCreateMainWindow();
       mainWindow.loadURL(

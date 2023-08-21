@@ -40,5 +40,5 @@ yarn-error.log*
 **/node_modules
 **/bitskyLibs
 
-meilisearch
-meilisearch.exe
+meilisearch*
+meilisearch*.exe

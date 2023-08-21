@@ -60,8 +60,8 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     MEILISEARCH_MASTER_KEY: str({
       default: DEFAULT_APP_CONFIG.MEILISEARCH_MASTER_KEY,
     }),
-    MEILISEARCH_DB_PATH: str({
-      default: DEFAULT_APP_CONFIG.MEILISEARCH_DB_PATH,
+    MEILISEARCH_DB_FOLDER: str({
+      default: DEFAULT_APP_CONFIG.MEILISEARCH_DB_FOLDER,
     }),
   });
 }

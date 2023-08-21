@@ -38,7 +38,7 @@ cp -rf ./src/ui ./dist/src/
 cp -rf ./src/public ./dist/src/
 cp -rf ./src/forkRepos ./dist/src/
 cp -rf ./src/db/seedData/files ./dist/src/db/seedData/
-cp -rf ./src/searchEngine/meilisearch ./dist/src/searchEngine/
+cp -rf ./src/searchEngine/meilisearch_bin* ./dist/src/searchEngine/
 # remove typescript files
 find dist -type f -name "*.ts" -delete
 
