@@ -16,56 +16,20 @@ async function getMeiliSearchBinaryName(dirPath: string) {
   return meiliSearchBinaryName;
 }
 
-async function getMeiliSearchBinaryPath() {
-  // Why not `spawn` directly from ASAR Archives? - https://www.electronjs.org/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive
+async function getMeiliSearchBinaryPathInSource() {
   const logger = getLogger();
   const config = getAppConfig();
   const latestMeiliSearchBinaryName =
     (await getMeiliSearchBinaryName(
       join(config.APP_SOURCE_PATH, "./src/searchEngine"),
     )) ?? MEILI_SEARCH_BINARY_NAME_PREFIX;
-  logger.info(`latestMeiliSearchBinaryName: ${latestMeiliSearchBinaryName}`);
-  // this is meiliSearch Binary for executing later
-  const meiliSearchBinaryPathInHomePath = join(
-    config.APP_HOME_PATH,
+  const latestMeiliSearchBinaryPath = join(
+    config.APP_SOURCE_PATH,
+    "./src/searchEngine",
     latestMeiliSearchBinaryName,
   );
-  logger.info(
-    `meiliSearchBinaryPathInHomePath: ${meiliSearchBinaryPathInHomePath}`,
-  );
-  if (!fs.existsSync(meiliSearchBinaryPathInHomePath)) {
-    logger.info(
-      `${meiliSearchBinaryPathInHomePath} not exit. Copying to it...`,
-    );
-    const olderMeiliSearchBinaryName = await getMeiliSearchBinaryName(
-      config.APP_HOME_PATH,
-    );
-    if (olderMeiliSearchBinaryName) {
-      const olderMeiliSearchBinaryPath = join(
-        config.APP_HOME_PATH,
-        olderMeiliSearchBinaryName,
-      );
-      logger.info(`Removing ${olderMeiliSearchBinaryPath}`);
-      fs.rmSync(olderMeiliSearchBinaryPath, { force: true });
-      logger.info(`Removed ${olderMeiliSearchBinaryPath}`);
-    }
-
-    // copy from ASAR Archives to home path
-    const latestMeiliSearchBinaryPath = join(
-      config.APP_SOURCE_PATH,
-      "./src/searchEngine",
-      latestMeiliSearchBinaryName,
-    );
-    logger.info(
-      `Copying ${latestMeiliSearchBinaryPath} to ${config.APP_HOME_PATH}`,
-    );
-    fs.copySync(latestMeiliSearchBinaryPath, meiliSearchBinaryPathInHomePath);
-    logger.info(
-      `Copied ${latestMeiliSearchBinaryPath} to ${config.APP_HOME_PATH}`,
-    );
-  }
-
-  return meiliSearchBinaryPathInHomePath;
+  logger.info(`latestMeiliSearchBinaryPath: ${latestMeiliSearchBinaryPath}`);
+  return latestMeiliSearchBinaryPath;
 }
 
 export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
@@ -77,16 +41,23 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
       config.APP_HOME_PATH,
       config.MEILISEARCH_DB_FOLDER,
     );
-    const meiliSearchBinaryPath = await getMeiliSearchBinaryPath();
+
+    const meiliSearchBinaryPath = await getMeiliSearchBinaryPathInSource();
     logger.info(`meiliSearchBinaryPath: ${meiliSearchBinaryPath}`);
-    const meiliSearchProcess = spawn(meiliSearchBinaryPath, [
-      "--http-addr",
-      `${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
-      "--master-key",
-      config.MEILISEARCH_MASTER_KEY,
-      "--db-path",
-      meiliSearchDBPath,
-    ]);
+    logger.info(`meiliSearchDBPath: ${meiliSearchDBPath}`);
+    const meiliSearchProcess = spawn(
+      meiliSearchBinaryPath,
+      [
+        "--http-addr",
+        `${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
+        "--master-key",
+        config.MEILISEARCH_MASTER_KEY,
+        "--db-path",
+        meiliSearchDBPath,
+        "--no-analytics",
+      ],
+      { cwd: config.APP_HOME_PATH },
+    );
     meiliSearchProcess.stdout.on("data", (data) => {
       logger.info(`meilisearch stdout`, { data: data.toString() });
     });
@@ -97,6 +68,13 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
 
     meiliSearchProcess.on("close", (code) => {
       logger.info(`meilisearch process exited with code ${code}`);
+    });
+
+    meiliSearchProcess.on("exit", (code) => {
+      logger.info(`meilisearch process exited with code ${code}`);
+      if (code !== 0) {
+        meiliSearchProcess.kill();
+      }
     });
   } catch (err) {
     console.error(err);

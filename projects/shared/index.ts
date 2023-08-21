@@ -6,7 +6,7 @@ export const APP_READY_MESSAGE = `__BITSKY_APP_READY__`;
 export const APP_DISPLAY_EXTENSION_SETTINGS_OPTION = `__BITSKY_APP_DISPLAY_EXTENSION_SETTINGS_OPTION__`;
 export const APP_NAVIGATE_TO_EXTENSION_SETTINGS =
   "__BITSKY_APP_NAVIGATE_TO_EXTENSION_SETTINGS__";
-export const PORT_RANGE = [46897, 46997];
+export const PORT_RANGE = [46897, 48897];
 // this is a default host name, user able to change it in extension and desktop app settings page
 export const DEFAULT_HOST_NAME = "127.0.0.1";
 // this is a default API KEY, user able to change it in extension and desktop app settings page
