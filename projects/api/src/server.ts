@@ -3,7 +3,7 @@ import { setupDB } from "./db";
 import { overwriteAppConfig } from "./helpers/config";
 import { DEFAULT_APP_CONFIG } from "./helpers/constants";
 import getLogger from "./helpers/logger";
-import { startSearchEngine } from "./searchEngine";
+import { startSearchEngine, stopSearchEngine } from "./searchEngine";
 import { ServerOptions } from "./types";
 import * as http from "http";
 import enableDestroy from "server-destroy";
@@ -16,11 +16,11 @@ let processExit = false;
  * @param serverOptions : you should only use this when it isn't possible for you to set config in environment value
  */
 export async function startServer(serverOptions?: ServerOptions) {
+  const logger = getLogger();
   try {
     const config = overwriteAppConfig(
       serverOptions ?? { DATABASE_URL: DEFAULT_APP_CONFIG.DATABASE_URL },
     );
-    const logger = getLogger();
     logger.info(`application config`, { config: config });
 
     // start search engine
@@ -63,18 +63,19 @@ export async function startServer(serverOptions?: ServerOptions) {
       }
     });
   } catch (err) {
-    const logger = getLogger();
     logger.error("start server has error", { error: err });
     throw err;
   }
 }
 
 export async function stopServer() {
+  const logger = getLogger();
   try {
     // close server
     server.destroy();
+    await stopSearchEngine();
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     throw err;
   }
 }

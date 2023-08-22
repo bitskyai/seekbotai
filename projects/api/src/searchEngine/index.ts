@@ -1,11 +1,12 @@
 import { overwriteAppConfig, getAppConfig } from "../helpers/config";
 import getLogger from "../helpers/logger";
 import { type MeiliSearchConfig } from "../types";
-import { spawn } from "child_process";
+import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import fs from "fs-extra";
 import { join } from "path";
 
 const MEILI_SEARCH_BINARY_NAME_PREFIX = "meilisearch_bin";
+let meiliSearchProcess: ChildProcessWithoutNullStreams;
 
 async function getMeiliSearchBinaryName(dirPath: string) {
   const dirContents = await fs.readdirSync(dirPath);
@@ -45,7 +46,10 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
     const meiliSearchBinaryPath = await getMeiliSearchBinaryPathInSource();
     logger.info(`meiliSearchBinaryPath: ${meiliSearchBinaryPath}`);
     logger.info(`meiliSearchDBPath: ${meiliSearchDBPath}`);
-    const meiliSearchProcess = spawn(
+    if (meiliSearchProcess) {
+      meiliSearchProcess.kill();
+    }
+    meiliSearchProcess = spawn(
       meiliSearchBinaryPath,
       [
         "--http-addr",
@@ -82,4 +86,8 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
   }
 }
 
-// export async function stopSearchEngine() {}
+export async function stopSearchEngine() {
+  if (meiliSearchProcess) {
+    meiliSearchProcess.kill();
+  }
+}

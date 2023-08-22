@@ -58,6 +58,7 @@ export function onWindowsAllClosed(event: Electron.Event) {
  */
 export function onBeforeQuit() {
   (global as any).isQuitting = true;
+  webApp?.stop();
 }
 
 // In this file you can include the rest of your app"s specific main process
