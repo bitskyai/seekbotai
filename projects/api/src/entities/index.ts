@@ -1,4 +1,4 @@
-import "./bookmark";
+import "./page";
 import "./common.type";
 import "./gql-builder";
 import "./tag";

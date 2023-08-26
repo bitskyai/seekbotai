@@ -1,8 +1,8 @@
 import { getPrismaClient } from "../../../src/db";
 import {
-  bookmarkRaws,
-  bookmarkTags,
-  bookmarks,
+  pageMetadata,
+  pageTags,
+  pages,
 } from "../../../src/db/seedData/exampleBookmarks";
 import { PrismaClient } from "@prisma/client";
 
@@ -11,29 +11,29 @@ async function seed(prismaClient?: PrismaClient) {
     prismaClient = getPrismaClient();
   }
 
-  for (let i = 0; i < bookmarks.length; i++) {
-    const bookmark = bookmarks[i];
-    await prismaClient.bookmark.upsert({
-      where: { id: bookmark.id },
-      create: bookmark,
-      update: bookmark,
+  for (let i = 0; i < pages.length; i++) {
+    const page = pages[i];
+    await prismaClient.page.upsert({
+      where: { id: page.id },
+      create: page,
+      update: page,
     });
   }
 
-  // for (let i = 0; i < bookmarkRaws.length; i++) {
-  //   const bookmarkRaw = bookmarkRaws[i];
-  //   await prismaClient.bookmarkRaw.upsert({
-  //     where: { id: bookmarkRaw.id },
-  //     create: bookmarkRaw,
-  //     update: bookmarkRaw,
-  //   });
-  // }
+  for (let i = 0; i < pageMetadata.length; i++) {
+    const metadata = pageMetadata[i];
+    await prismaClient.pageMetadata.upsert({
+      where: { id: metadata.id },
+      create: metadata,
+      update: metadata,
+    });
+  }
 
-  for (let i = 0; i < bookmarkTags.length; i++) {
-    const tags = bookmarkTags[i];
+  for (let i = 0; i < pageTags.length; i++) {
+    const tags = pageTags[i];
     for (let j = 0; j < tags.length; j++) {
       const tag = tags[j];
-      await prismaClient.bookmarkTag.upsert({
+      await prismaClient.pageTag.upsert({
         where: { id: tag.id },
         create: tag,
         update: tag,

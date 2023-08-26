@@ -1,23 +1,23 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
-import { BookmarkSortOrderInput } from "./Bookmark.type";
+import { PageSortOrderInput } from "./Page.type";
 
-schemaBuilder.queryField("bookmarks", (t) =>
+schemaBuilder.queryField("pages", (t) =>
   t.prismaField({
-    type: ["Bookmark"],
+    type: ["Page"],
     args: {
       searchString: t.arg.string(),
-      tags: t.arg.intList(),
+      tags: t.arg.stringList(),
       skip: t.arg.int(),
       take: t.arg.int(),
       insensitive: t.arg.boolean(),
       orderBy: t.arg({
-        type: BookmarkSortOrderInput,
+        type: PageSortOrderInput,
       }),
     },
     resolve: async (query, parent, args, ctx, info) => {
-      return getBookmarks({
+      return getPages({
         ctx,
         searchString: args.searchString || undefined,
         tags: args.tags || undefined,
@@ -26,14 +26,14 @@ schemaBuilder.queryField("bookmarks", (t) =>
   }),
 );
 
-export async function getBookmarks({
+export async function getPages({
   ctx,
   searchString,
   tags,
 }: {
   ctx: GQLContext;
   searchString?: string;
-  tags?: number[];
+  tags?: string[];
 }) {
   const OR_CONDITION_SPLITER = ",";
   const AND_CONDITION_SPLITER = "+";
@@ -92,12 +92,12 @@ export async function getBookmarks({
       }
     : {};
 
-  let bookmarkIds = {};
+  let pageIds = {};
   if (tags?.length) {
     // TODO: Tags support and and also need to support pagination
-    const bookmarks = await prismaClient.bookmarkTag.findMany({
+    const pages = await prismaClient.pageTag.findMany({
       select: {
-        bookmarkId: true,
+        pageId: true,
       },
       where: {
         userId: ctx.user.id,
@@ -107,23 +107,23 @@ export async function getBookmarks({
       },
     });
 
-    bookmarkIds = {
+    pageIds = {
       AND: {
-        id: { in: bookmarks.map((bookmark) => bookmark.bookmarkId) },
+        id: { in: pages.map((page) => page.pageId) },
       },
     };
   }
-  const bookmarks = await prismaClient.bookmark.findMany({
+  const pages = await prismaClient.page.findMany({
     where: {
       userId: ctx.user.id,
       ...orSearchByString,
-      ...bookmarkIds,
+      ...pageIds,
     },
     orderBy: {
       updatedAt: "desc",
     },
     include: {
-      bookmarkTags: {
+      pageTags: {
         include: {
           tag: {
             select: {
@@ -138,5 +138,5 @@ export async function getBookmarks({
     },
   });
 
-  return bookmarks;
+  return pages;
 }

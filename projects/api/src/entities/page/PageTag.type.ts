@@ -1,6 +1,6 @@
 import { schemaBuilder } from "../gql-builder";
 
-schemaBuilder.prismaObject("BookmarkTag", {
+schemaBuilder.prismaObject("PageTag", {
   fields: (t) => ({
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "DateTime" }),

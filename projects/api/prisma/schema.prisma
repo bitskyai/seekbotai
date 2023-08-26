@@ -18,59 +18,78 @@ datasource db {
 
 // Following is Table Schemas
 model User {
-  id                  Int                  @id @default(autoincrement())
-  createdAt           DateTime             @default(now()) @map("created_at")
-  updatedAt           DateTime             @updatedAt @map("updated_at")
-  username            String
-  email               String?
-  password            String?
-  firstName           String?              @map("first_name")
-  lastName            String?              @map("last_name")
-  preference          Preference?
-  system              System?
-  seeds               Seed[]
-  backups             Backup[]
-  tags                Tag[]
-  filters             Filter[]
-  folders             Folder[]
-  bookmarks           Bookmark[]
-  bookmarkTags        BookmarkTag[]
-  browserHistories    BrowserHistory[]
-  bookmarkRaws        BookmarkRaw[]
-  bookmarkScreenshots BookmarkScreenshot[]
+  id                String              @id @default(uuid())
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+  username          String
+  email             String?
+  password          String?
+  firstName         String?             @map("first_name")
+  lastName          String?             @map("last_name")
+  preference        Preference?
+  system            System?
+  seeds             Seed[]
+  backups           Backup[]
+  tags              Tag[]
+  filters           Filter[]
+  folders           Folder[]
+  pages             Page[]
+  pageMetadatas     PageMetadata[]
+  pageTags          PageTag[]
+  pageRaws          PageRaw[]
+  pageScreenshots   PageScreenshot[]
+  IgnoreURL         IgnoreURL?
+  SearchEngineIndex SearchEngineIndex[]
+  Trash             Trash[]
 
   @@map("bk_user")
 }
 
 model Preference {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
-  apiKey    String   @unique @map("api_key")
-  logLevel  String   @default("info") @map("log_level")
-  logSize   Int      @default(52428800) @map("log_size") // 50MB
+  id             String      @id @default(uuid())
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String      @unique @map("bk_user_id")
+  apiKey         String      @unique @map("api_key")
+  logLevel       String      @default("info") @map("log_level")
+  logSize        Int         @default(52428800) @map("log_size") // 50MB
+  indexFrequency Int         @default(60) @map("index_frequency") // 1 min
+  ignoreURLs     IgnoreURL[]
 
   @@map("bk_preference")
 }
 
+model IgnoreURL {
+  id                String      @id @default(uuid())
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String      @unique @map("bk_user_id")
+  pattern           String      @unique @map("pattern")
+  regularExpression Boolean     @default(false) @map("regular_expression")
+  Preference        Preference? @relation(fields: [preferenceId], references: [id])
+  preferenceId      String?
+
+  @@map("bk_ignore_url")
+}
+
 model System {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique @map("bk_user_id")
+  userId    String   @unique @map("bk_user_id")
 
   @@map("bk_system")
 }
 
 model Seed {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @map("bk_user_id")
+  userId    String   @map("bk_user_id")
   seedName  String   @unique @map("seed_name")
   logs      String?
 
@@ -78,36 +97,36 @@ model Seed {
 }
 
 model Backup {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @map("bk_user_id")
+  userId    String   @map("bk_user_id")
 
   @@map("bk_backup")
 }
 
 // Tag: Store all the tag information
 model Tag {
-  id           Int           @id @default(autoincrement())
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       Int           @map("bk_user_id")
-  name         String
-  bookmarkTags BookmarkTag[]
-  version      Int           @default(0)
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String    @map("bk_user_id")
+  name      String
+  pageTags  PageTag[]
+  version   Int       @default(0)
 
   @@unique([userId, name])
   @@map("bk_tag")
 }
 
 model Filter {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @map("bk_user_id")
+  userId    String   @map("bk_user_id")
   name      String   @unique
   icon      String?
   version   Int      @default(0)
@@ -116,109 +135,142 @@ model Filter {
 }
 
 model Folder {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int        @map("bk_user_id")
-  parent    Folder?    @relation("ParentChildren", fields: [parentId], references: [id])
-  parentId  Int?       @map("bk_parent_id")
-  children  Folder[]   @relation("ParentChildren")
-  name      String
-  icon      String?
-  bookmarks Bookmark[]
-  version   Int        @default(0)
+  id            String         @id @default(uuid())
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String         @map("bk_user_id")
+  parent        Folder?        @relation("ParentChildren", fields: [parentId], references: [id])
+  parentId      String?        @map("bk_parent_id")
+  children      Folder[]       @relation("ParentChildren")
+  name          String
+  icon          String?
+  version       Int            @default(0)
+  PageMetadatas PageMetadata[]
 
   @@map("bk_folder")
 }
 
-model Bookmark {
-  id                  Int                  @id @default(autoincrement())
-  createdAt           DateTime             @default(now()) @map("created_at")
-  updatedAt           DateTime             @updatedAt @map("updated_at")
-  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId              Int                  @map("bk_user_id")
-  folder              Folder?              @relation(fields: [folderId], references: [id])
-  folderId            Int?                 @unique @map("bk_folder_id")
-  name                String
-  description         String?
-  icon                String?
-  favorite            Boolean              @default(false)
-  url                 String
-  count               Int                  @default(0)
-  bookmarkTags        BookmarkTag[]
-  bookmarkRaws        BookmarkRaw[]
-  bookmarkScreenshots BookmarkScreenshot[]
-  content             String?
-  version             Int                  @default(0)
+model Page {
+  id              String           @id @default(uuid())
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String           @map("bk_user_id")
+  title           String
+  description     String?
+  icon            String?
+  url             String
+  content         String?
+  version         Int              @default(0)
+  pageMetadata    PageMetadata?
+  pageTags        PageTag[]
+  pageRaws        PageRaw[]
+  pageScreenshots PageScreenshot[]
 
-  @@unique([userId, url])
-  @@map("bk_bookmark")
+  @@unique([userId, url, version])
+  @@map("bk_page")
 }
 
-model BookmarkRaw {
-  id                 Int                 @id @default(autoincrement())
-  createdAt          DateTime            @default(now()) @map("created_at")
-  updatedAt          DateTime            @updatedAt @map("updated_at")
-  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             Int                 @map("bk_user_id")
-  bookmark           Bookmark            @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
-  bookmarkId         Int                 @map("bk_bookmark_id")
-  bookmarkScreenshot BookmarkScreenshot?
-  fileName           String              @map("file_name")
-  version            Int                 @default(0)
-  raw                String?
+model PageMetadata {
+  id                 String   @id @default(uuid())
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  user               User     @relation(fields: [userId], references: [id])
+  userId             String   @map("bk_user_id")
+  folder             Folder?  @relation(fields: [folderId], references: [id])
+  folderId           String?  @unique @map("bk_folder_id")
+  page               Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId             String   @unique @map("bk_page_id")
+  displayTitle       String?  @map("display_title")
+  displayDescription String?  @map("display_description")
+  localMode          Boolean  @default(false) // if you don't want to sync up cross devices
+  favorite           Boolean  @default(false)
+  bookmarked         Boolean  @default(false)
+  incognito          Boolean  @default(false) // if you don't want to share the page in the default view
+  tabId              Int?     @map("tab_id") // The ID of the tab that this page is contained within. Set to -1 if this page is not contained within a tab.
+  visitCount         Int      @default(1) @map("visit_count") // The number of times the user has navigated to this page.
+  typedCount         Int      @default(1) @map("typed_count") // The number of times the user has navigated to this page by typing in the address.
+
+  version Int @default(0)
+
+  @@unique([userId, pageId, version])
+  @@map("bk_page_meta_data")
+}
+
+model PageRaw {
+  id             String          @id @default(uuid())
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String          @map("bk_user_id")
+  page           Page            @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId         String          @map("bk_page_id")
+  PageScreenshot PageScreenshot?
+  fileName       String          @map("file_name")
+  version        Int             @default(0)
+  raw            String?
 
   @@unique([userId, fileName, version])
-  @@map("bk_bookmark_raw")
+  @@map("bk_page_raw")
 }
 
-model BookmarkScreenshot {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        Int         @map("bk_user_id")
-  bookmark      Bookmark    @relation(fields: [bookmarkId], references: [id], onDelete: Cascade)
-  bookmarkId    Int         @map("bk_bookmark_id")
-  bookmarkRaw   BookmarkRaw @relation(fields: [bookmarkRawId], references: [id], onDelete: Cascade)
-  bookmarkRawId Int         @unique @map("bk_bookmark_raw_id")
-  screenshot    String
-  version       Int         @default(0)
-
-  @@map("bk_bookmark_screenshot")
-}
-
-model BookmarkTag {
-  id         Int      @id @default(autoincrement())
+model PageScreenshot {
+  id         String   @id @default(uuid())
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int      @map("bk_user_id")
-  tag        Tag      @relation(fields: [tagId], references: [id])
-  tagId      Int      @map("bk_tag_id")
-  bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
-  bookmarkId Int      @map("bk_bookmark_id")
+  userId     String   @map("bk_user_id")
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId     String   @map("bk_page_id")
+  pageRaw    PageRaw  @relation(fields: [pageRawId], references: [id], onDelete: Cascade)
+  pageRawId  String   @unique @map("bk_page_raw_id")
+  screenshot String
   version    Int      @default(0)
 
-  @@unique([userId, tagId, bookmarkId])
-  @@map("bk_bookmark_tag")
+  @@map("bk_page_screenshot")
 }
 
-model BrowserHistory {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int      @map("bk_user_id")
-  name        String
-  description String?
-  url         String
-  icon        String?
-  count       Int      @default(0)
-  content     String?
-  version     Int      @default(0)
+model PageTag {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("bk_user_id")
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  tagId     String   @map("bk_tag_id")
+  page      Page     @relation(fields: [pageId], references: [id])
+  pageId    String   @map("bk_page_id")
+  version   Int      @default(0)
 
-  @@unique([userId, url])
-  @@map("bk_browser_history")
+  @@unique([userId, tagId, pageId])
+  @@map("bk_page_tag")
+}
+
+model SearchEngineIndex {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String    @map("bk_user_id")
+  indexName   String    @map("index_name")
+  lastIndexAt DateTime? @map("last_index_time")
+  version     Int       @default(0)
+
+  @@unique([userId, indexName])
+  @@map("bk_search_engine_index")
+}
+
+// Trash: Store all the deleted information
+model Trash {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @map("bk_user_id")
+  version    Int      @default(0)
+  tableName  String   @map("table_name")
+  tableRowId String   @map("table_row_id")
+
+  @@map("bk_trash")
 }

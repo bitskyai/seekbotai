@@ -69,13 +69,10 @@ Please read [Bookmark Intelligence ERD](https://lucid.app/lucidchart/2bac9da0-4e
 3. Common fields for all tables
 
 ```
-id        Int      @id @default(autoincrement())
+id        Int      @id @default(uuid())
 createdAt DateTime @default(now()) @map("created_at")
 updatedAt DateTime @updatedAt @map("updated_at")
 ```
-
-> Why `id` is `autoincrement()`? How this work for large scale application?
-> The answer is no, this `id` doesn't work for large scale application. I follow `KISS`(Keep It Super Simple) principle. Move fast instead of design perfect.
 
 ### Step 2: Run `yarn migration:dev` in `projects/api`
 
@@ -107,3 +104,9 @@ Seed has two parts:
 
 1. Seed for dev env. You can run `yarn seed` in `projects/api`. It seeds mock data to database
 2. Seed for prod, it will be automatically checked and run during app start. Like: add a default user for desktop version, add default tags, add demo data... This kind of seed data should be maintained in `projects/api/prisma/seeds/prod`. General seed for prod only used for desktop app for now.
+
+## FAQs
+
+### Why id use `uuid`
+
+The reason is if need to store cross platform sync, `uuid` can avoid conflict. For example, if we use `autoincrement` for `id`, and we have two devices, one is device 1, one is device 2. If device 1 create a bookmark with `id` = 1, and device 2 create a bookmark with `id` = 1, then we have conflict. But if we use `uuid`, we don't have this problem.

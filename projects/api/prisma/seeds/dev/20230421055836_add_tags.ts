@@ -9,7 +9,7 @@ async function seed(prismaClient?: PrismaClient) {
 
   const tags = [
     {
-      id: 100,
+      id: "83062da9-7e23-4297-96b8-4a1b7115efc9",
       name: "Test",
     },
   ];
