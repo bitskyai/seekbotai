@@ -3,17 +3,15 @@ import normalizeUrl from "../../forkRepos/normalize-url";
 import getLogger from "../../helpers/logger";
 import { extractPageContent, saveRawPage } from "../../helpers/pageExtraction";
 import { GQLContext } from "../../types";
+import { type PageCreateOrUpdate } from "../../types";
 import { schemaBuilder } from "../gql-builder";
-import {
-  PageCreateInputType,
-  CreatePagesRes,
-  type PageCreate,
-} from "./Page.type";
+import { PageCreateInputType, CreateOrUpdatePageResObjT } from "./Page.type";
+import { type CreateOrUpdatePageRes } from "./types";
 import _ from "lodash";
 
 schemaBuilder.mutationField("createPages", (t) =>
   t.field({
-    type: [CreatePagesRes],
+    type: [CreateOrUpdatePageResObjT],
     args: {
       pages: t.arg({ type: [PageCreateInputType], required: true }),
     },
@@ -33,8 +31,8 @@ export async function createOrUpdatePages({
   pages,
 }: {
   ctx: GQLContext;
-  pages: PageCreate[];
-}) {
+  pages: PageCreateOrUpdate[];
+}): Promise<CreateOrUpdatePageRes[]> {
   const logger = getLogger();
   const prismaClient = getPrismaClient();
   const pagesResult = [];

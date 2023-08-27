@@ -1,17 +1,18 @@
 import { SortOrder } from "../common.type";
 import { schemaBuilder } from "../gql-builder";
+import { type CreateOrUpdatePageRes } from "./types";
 
 export const Page = schemaBuilder.prismaObject("Page", {
   fields: (t) => ({
-    id: t.exposeID("id"),
+    id: t.expose("id", { type: "UUID" }),
     createdAt: t.expose("createdAt", { type: "DateTime" }),
     updatedAt: t.expose("updatedAt", { type: "DateTime" }),
     title: t.exposeString("title"),
     description: t.exposeString("description", { nullable: true }),
     icon: t.exposeString("icon", { nullable: true }),
-    url: t.exposeString("url"),
+    url: t.expose("url", { type: "URL" }),
     pageTags: t.relation("pageTags"),
-    pageMetadata: t.relation("pageMetadata"),
+    // pageMetadata: t.relation("pageMetadata"),
     content: t.exposeString("content", { nullable: true }),
   }),
 });
@@ -58,38 +59,21 @@ export const PageResult = schemaBuilder.simpleObject("PageResult", {
   }),
 });
 
-export const CreatePagesRes = schemaBuilder.simpleObject("CreatePagesRes", {
-  fields: (t) => ({
-    url: t.string({ nullable: false }),
-    id: t.string({ nullable: true }),
-    status: t.string({ nullable: true }),
-    code: t.string({ nullable: true }),
-    message: t.string({ nullable: true }),
-  }),
-});
+const CreateOrUpdatePageResObjRef =
+  schemaBuilder.objectRef<CreateOrUpdatePageRes>("CreateOrUpdatePageRes");
 
-export type pageMetadata = {
-  displayTitle?: string;
-  displayDescription?: string;
-  localMode?: boolean;
-  favorite?: boolean;
-  bookmarked?: boolean;
-  incognito?: boolean;
-  tabId?: number;
-  visitCount?: number;
-  typedCount?: number;
-};
-
-export type PageCreate = {
-  title?: string;
-  description?: string | null | undefined;
-  url: string;
-  icon?: string | null | undefined;
-  content?: string | null | undefined;
-  raw?: string | null | undefined;
-  pageTags?: string[] | null | undefined;
-  pageMetadata?: pageMetadata | null | undefined;
-};
+export const CreateOrUpdatePageResObjT = schemaBuilder.objectType(
+  CreateOrUpdatePageResObjRef,
+  {
+    fields: (t) => ({
+      url: t.exposeString("url", { nullable: false }),
+      id: t.exposeString("id", { nullable: true }),
+      status: t.exposeString("status", { nullable: true }),
+      code: t.exposeString("code", { nullable: true }),
+      message: t.exposeString("message", { nullable: true }),
+    }),
+  },
+);
 
 export const PageSortOrderInput = schemaBuilder.inputType(
   "PageSortOrderInput",
