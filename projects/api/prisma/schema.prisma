@@ -190,8 +190,8 @@ model PageMetadata {
   bookmarked         Boolean   @default(false)
   incognito          Boolean   @default(false) // if you don't want to share the page in the default view
   tabId              Int?      @map("tab_id") // The ID of the tab that this page is contained within. Set to -1 if this page is not contained within a tab.
-  visitCount         Int       @default(1) @map("visit_count") // The number of times the user has navigated to this page.
-  typedCount         Int       @default(1) @map("typed_count") // The number of times the user has navigated to this page by typing in the address.
+  visitCount         Int       @default(0) @map("visit_count") // The number of times the user has navigated to this page.
+  typedCount         Int       @default(0) @map("typed_count") // The number of times the user has navigated to this page by typing in the address.
 
   version Int @default(0)
 

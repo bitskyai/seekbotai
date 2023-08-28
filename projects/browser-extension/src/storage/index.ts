@@ -883,7 +883,7 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
         content: "",
         raw: pageData.content ?? "",
         pageMetadata: {
-          lastVisitTime: page.lastVisitTime,
+          lastVisitTime: new Date(page.lastVisitTime).toISOString(),
           bookmarked: false,
           visitCount: page.visitCount,
           typedCount: page.typedCount

@@ -52,7 +52,7 @@ const BitskyHelper = () => {
         raw: extractPageHTML() ?? "",
         pageMetadata: {
           bookmarked: false,
-          lastVisitTime: Date.now()
+          lastVisitTime: new Date().toISOString()
         }
       }
 
