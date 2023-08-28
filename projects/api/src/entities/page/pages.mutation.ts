@@ -3,17 +3,19 @@ import normalizeUrl from "../../forkRepos/normalize-url";
 import getLogger from "../../helpers/logger";
 import { extractPageContent, saveRawPage } from "../../helpers/pageExtraction";
 import { GQLContext } from "../../types";
-import { type PageCreateOrUpdate } from "../../types";
 import { schemaBuilder } from "../gql-builder";
-import { PageCreateInputType, CreateOrUpdatePageResObjT } from "./Page.type";
-import { type CreateOrUpdatePageRes } from "./types";
+import {
+  PageCreateOrUpdatePayloadBM,
+  CreateOrUpdatePageResBM,
+} from "./schema.type";
+import type { CreateOrUpdatePageRes, PageCreateOrUpdateShape } from "./types";
 import _ from "lodash";
 
-schemaBuilder.mutationField("createPages", (t) =>
+schemaBuilder.mutationField("createOrUpdatePages", (t) =>
   t.field({
-    type: [CreateOrUpdatePageResObjT],
+    type: [CreateOrUpdatePageResBM],
     args: {
-      pages: t.arg({ type: [PageCreateInputType], required: true }),
+      pages: t.arg({ type: [PageCreateOrUpdatePayloadBM], required: true }),
     },
     resolve: async (root, args, ctx) => {
       const res = await createOrUpdatePages({
@@ -31,7 +33,7 @@ export async function createOrUpdatePages({
   pages,
 }: {
   ctx: GQLContext;
-  pages: PageCreateOrUpdate[];
+  pages: PageCreateOrUpdateShape[];
 }): Promise<CreateOrUpdatePageRes[]> {
   const logger = getLogger();
   const prismaClient = getPrismaClient();
@@ -133,17 +135,17 @@ export async function createOrUpdatePages({
 
         const pageTags = page.pageTags || [];
         for (let i = 0; i < pageTags.length; i++) {
-          const tagName = pageTags[i];
+          const pageTag = pageTags[i];
           const tag = await prisma.tag.upsert({
             where: {
-              userId_name: { name: tagName, userId: ctx.user.id },
+              userId_name: { name: pageTag.name, userId: ctx.user.id },
             },
             create: {
-              name: tagName,
+              name: pageTag.name,
               userId: ctx.user.id,
             },
             update: {
-              name: tagName,
+              name: pageTag.name,
               userId: ctx.user.id,
             },
           });

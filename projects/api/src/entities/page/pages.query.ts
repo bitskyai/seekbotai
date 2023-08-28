@@ -1,11 +1,11 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
-import { PageSortOrderInput } from "./Page.type";
+import { PageSortOrderInput, PageBM } from "./schema.type";
 
 schemaBuilder.queryField("pages", (t) =>
   t.prismaField({
-    type: ["Page"],
+    type: [PageBM],
     args: {
       searchString: t.arg.string(),
       tags: t.arg.stringList(),

@@ -48,27 +48,3 @@ export interface User {
 export interface GQLContext {
   user: User;
 }
-
-export type PageMetadata = {
-  displayTitle?: string;
-  displayDescription?: string;
-  localMode?: boolean;
-  favorite?: boolean;
-  bookmarked?: boolean;
-  incognito?: boolean;
-  tabId?: number;
-  visitCount?: number;
-  typedCount?: number;
-};
-
-export type PageCreateOrUpdate = {
-  id?: string | null | undefined;
-  title?: string;
-  description?: string | null | undefined;
-  url: string;
-  icon?: string | null | undefined;
-  content?: string | null | undefined;
-  raw?: string | null | undefined;
-  pageTags?: string[] | null | undefined;
-  pageMetadata?: PageMetadata | null | undefined;
-};

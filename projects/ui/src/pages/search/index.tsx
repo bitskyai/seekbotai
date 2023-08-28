@@ -1,5 +1,5 @@
 import { usePageEffect } from "../../core/page.js";
-import { GetBookmarksDocument } from "../../graphql/generated.js";
+import { GetPagesDocument } from "../../graphql/generated.js";
 import { updateURLQuery } from "../../helpers/utils.js";
 import {
   FileImageOutlined,
@@ -37,13 +37,13 @@ export default function Home(): JSX.Element {
   const padding = 20;
   const params = new URLSearchParams(window.location.search);
   const tagsStr = params.get("tags");
-  const tagsParams = tagsStr?.split(",").map((tag) => parseInt(tag));
+  const tagsParams = tagsStr?.split(",").map((tag) => tag);
   const {
     loading,
     error,
     data,
     refetch: fetchBookmarks,
-  } = useQuery(GetBookmarksDocument, {
+  } = useQuery(GetPagesDocument, {
     variables: { tags: tagsParams, searchString: params.get("text") ?? "" },
   });
 
@@ -111,7 +111,7 @@ export default function Home(): JSX.Element {
                 showTotal: (total, range) =>
                   `Showing ${range[0]}-${range[1]} of ${total} items`, // Custom total display
               }}
-              dataSource={data?.bookmarks ?? []}
+              dataSource={data?.pages ?? []}
               renderItem={(item) => (
                 <List.Item
                   key={item.id}
@@ -136,7 +136,7 @@ export default function Home(): JSX.Element {
                       key="list-vertical-like-o"
                     />,
                   ].concat(
-                    item.bookmarkTags.map((item) => (
+                    item.pageTags.map((item) => (
                       <IconText
                         icon={TagOutlined}
                         text={item.tag.name}
@@ -149,10 +149,14 @@ export default function Home(): JSX.Element {
                     avatar={<Avatar src={item.icon} />}
                     title={
                       <a key="url-link" target="blank" href={item.url}>
-                        {item.name}
+                        {item.pageMetadata.displayTitle ??
+                          item.title ??
+                          item.url}
                       </a>
                     }
-                    description={item.description}
+                    description={
+                      item.pageMetadata.displayDescription ?? item.description
+                    }
                   />
                   {/* {item.content} */}
                 </List.Item>
