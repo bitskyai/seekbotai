@@ -9,6 +9,7 @@ query GetPages($tags: [String!], $searchString: String = "") {
     url
     pageMetadata {
       id
+      lastVisitTime
       bookmarked
       displayTitle
       displayDescription
@@ -20,10 +21,8 @@ query GetPages($tags: [String!], $searchString: String = "") {
       visitCount
     }
     pageTags {
-      createdAt
       id
       tag {
-        createdAt
         id
         isSystem
         name

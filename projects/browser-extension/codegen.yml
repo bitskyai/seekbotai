@@ -1,5 +1,5 @@
 # codegen.yml
-schema: http://localhost:4000/graphql
+schema: http://localhost:46997/graphql
 documents: "./src/**/*.graphql"
 generates:
   ./src/graphql/generated.ts:

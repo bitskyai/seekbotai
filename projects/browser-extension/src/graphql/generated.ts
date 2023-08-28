@@ -13,54 +13,14 @@ export type Scalars = {
   Float: number;
   Date: any;
   DateTime: any;
+  URL: any;
+  UUID: any;
 };
 
-export type Bookmark = {
-  __typename?: 'Bookmark';
-  bookmarkTags: Array<BookmarkTag>;
-  content?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  favorite: Scalars['Boolean'];
-  icon?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type BookmarkCreateInputType = {
-  bookmarkTags?: InputMaybe<Array<Scalars['String']>>;
-  content?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  icon?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  raw?: InputMaybe<Scalars['String']>;
-  url: Scalars['String'];
-};
-
-export type BookmarkResult = {
-  __typename?: 'BookmarkResult';
-  id?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-};
-
-export type BookmarkSortOrderInput = {
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type BookmarkTag = {
-  __typename?: 'BookmarkTag';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  tag: Tag;
-};
-
-export type CreateBookmarksRes = {
-  __typename?: 'CreateBookmarksRes';
+export type CreateOrUpdatePageRes = {
+  __typename?: 'CreateOrUpdatePageRes';
   code?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   url: Scalars['String'];
@@ -68,27 +28,104 @@ export type CreateBookmarksRes = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createBookmarks: Array<CreateBookmarksRes>;
+  createOrUpdatePages: Array<CreateOrUpdatePageRes>;
 };
 
 
-export type MutationCreateBookmarksArgs = {
-  bookmarks: Array<BookmarkCreateInputType>;
+export type MutationCreateOrUpdatePagesArgs = {
+  pages: Array<PageCreateOrUpdatePayload>;
+};
+
+export type Page = {
+  __typename?: 'Page';
+  content?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  pageMetadata: PageMetadata;
+  pageTags: Array<PageTag>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  url: Scalars['URL'];
+};
+
+export type PageCreateOrUpdatePayload = {
+  content?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  pageMetadata?: InputMaybe<PageMetadataPayload>;
+  pageTags?: InputMaybe<Array<PageTagPayload>>;
+  raw?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type PageMetadata = {
+  __typename?: 'PageMetadata';
+  bookmarked?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime'];
+  displayDescription?: Maybe<Scalars['String']>;
+  displayTitle?: Maybe<Scalars['String']>;
+  favorite?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  incognito?: Maybe<Scalars['Boolean']>;
+  lastVisitTime?: Maybe<Scalars['DateTime']>;
+  localMode?: Maybe<Scalars['Boolean']>;
+  pageId: Scalars['UUID'];
+  tabId?: Maybe<Scalars['Int']>;
+  typedCount?: Maybe<Scalars['Int']>;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+  visitCount?: Maybe<Scalars['Int']>;
+};
+
+export type PageMetadataPayload = {
+  bookmarked?: InputMaybe<Scalars['Boolean']>;
+  displayDescription?: InputMaybe<Scalars['String']>;
+  displayTitle?: InputMaybe<Scalars['String']>;
+  favorite?: InputMaybe<Scalars['Boolean']>;
+  incognito?: InputMaybe<Scalars['Boolean']>;
+  lastVisitTime?: InputMaybe<Scalars['DateTime']>;
+  localMode?: InputMaybe<Scalars['Boolean']>;
+  tabId?: InputMaybe<Scalars['Int']>;
+  typedCount?: InputMaybe<Scalars['Int']>;
+  visitCount?: InputMaybe<Scalars['Int']>;
+};
+
+export type PageSortOrderInput = {
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type PageTag = {
+  __typename?: 'PageTag';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pageId: Scalars['UUID'];
+  tag: Tag;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+};
+
+export type PageTagPayload = {
+  name: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  bookmarks: Array<Bookmark>;
+  pageMetadata: Array<PageMetadata>;
+  pageTags: Array<PageTag>;
+  pages: Array<Page>;
   tags: Array<Tag>;
 };
 
 
-export type QueryBookmarksArgs = {
+export type QueryPagesArgs = {
   insensitive?: InputMaybe<Scalars['Boolean']>;
-  orderBy?: InputMaybe<BookmarkSortOrderInput>;
+  orderBy?: InputMaybe<PageSortOrderInput>;
   searchString?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
-  tags?: InputMaybe<Array<Scalars['Int']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
   take?: InputMaybe<Scalars['Int']>;
 };
 
@@ -103,14 +140,15 @@ export type Tag = {
   id: Scalars['ID'];
   isSystem: Scalars['Boolean'];
   name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
-export type CreateBookmarksMutationVariables = Exact<{
-  bookmarks: Array<BookmarkCreateInputType> | BookmarkCreateInputType;
+export type CreateOrUpdatePagesMutationVariables = Exact<{
+  pages: Array<PageCreateOrUpdatePayload> | PageCreateOrUpdatePayload;
 }>;
 
 
-export type CreateBookmarksMutation = { __typename?: 'Mutation', createBookmarks: Array<{ __typename?: 'CreateBookmarksRes', url: string, status?: string | null, id?: number | null, code?: string | null, message?: string | null }> };
+export type CreateOrUpdatePagesMutation = { __typename?: 'Mutation', createOrUpdatePages: Array<{ __typename?: 'CreateOrUpdatePageRes', url: string, status?: string | null, id?: string | null, code?: string | null, message?: string | null }> };
 
 
-export const CreateBookmarksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createBookmarks"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"bookmarks"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BookmarkCreateInputType"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBookmarks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"bookmarks"},"value":{"kind":"Variable","name":{"kind":"Name","value":"bookmarks"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateBookmarksMutation, CreateBookmarksMutationVariables>;
+export const CreateOrUpdatePagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createOrUpdatePages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pages"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PageCreateOrUpdatePayload"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOrUpdatePages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pages"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pages"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateOrUpdatePagesMutation, CreateOrUpdatePagesMutationVariables>;

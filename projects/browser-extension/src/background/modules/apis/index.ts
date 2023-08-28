@@ -2,7 +2,7 @@ import { LogFormat } from "~helpers/LogFormat"
 
 import { init as apolloClientInit } from "./apolloClient"
 
-export * from "./createBookmarks"
+export * from "./createOrUpdatePages"
 
 export { setApolloClientToNull } from "./apolloClient"
 

@@ -27,6 +27,10 @@ export const PageMetadataBM = schemaBuilder.prismaObject("PageMetadata", {
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "DateTime" }),
     updatedAt: t.expose("updatedAt", { type: "DateTime" }),
+    lastVisitTime: t.expose("lastVisitTime", {
+      type: "DateTime",
+      nullable: true,
+    }),
     pageId: t.expose("pageId", { type: "UUID" }),
     version: t.expose("version", { type: "Int" }),
     displayTitle: t.exposeString("displayTitle", { nullable: true }),
@@ -58,6 +62,7 @@ export const PageMetadataPayloadBM = schemaBuilder
   .inputRef<PageMetadataShape>("PageMetadataPayload")
   .implement({
     fields: (t) => ({
+      lastVisitTime: t.field({ type: "DateTime", required: false }),
       displayTitle: t.string({ required: false }),
       displayDescription: t.string({ required: false }),
       localMode: t.boolean({ required: false }),

@@ -9,8 +9,8 @@ import { type Bookmarks, type History } from "webextension-polyfill"
 
 import { Storage } from "@plasmohq/storage"
 
-import { type BookmarkCreateInputType } from "~/graphql/generated"
-import { createBookmarks } from "~background/modules/apis"
+import { type PageCreateOrUpdatePayload } from "~/graphql/generated"
+import { createOrUpdatePages } from "~background/modules/apis"
 import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
 import { getHistory } from "~background/modules/history"
@@ -399,7 +399,7 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
     )
   )
 
-  const bookmarks: BookmarkCreateInputType[] = []
+  const bookmarks: PageCreateOrUpdatePayload[] = []
 
   for (let i = 0; i < inProgressBookmarks.length; i++) {
     const bookmark = inProgressBookmarks[i]
@@ -427,11 +427,14 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
       }
 
       bookmarks.push({
-        name: bookmark.title,
-        bookmarkTags: bookmark.tags,
+        title: bookmark.title,
+        pageTags: bookmark.tags.map((tag) => ({ name: tag })),
         url: pageData.url,
         content: "",
-        raw: pageData.content ?? ""
+        raw: pageData.content ?? "",
+        pageMetadata: {
+          bookmarked: true
+        }
       })
     } else {
       bookmark.status = ImportStatus.Ready
@@ -480,7 +483,7 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
   })
 
   // send request to backend
-  await createBookmarks(bookmarks)
+  await createOrUpdatePages(bookmarks)
 }
 
 function getPageHash(page: Bookmarks.BookmarkTreeNode | History.HistoryItem) {
@@ -851,7 +854,7 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
     )
   )
 
-  const pages: BookmarkCreateInputType[] = []
+  const pages: PageCreateOrUpdatePayload[] = []
 
   for (let i = 0; i < inProgress.length; i++) {
     const page = inProgress[i]
@@ -874,11 +877,17 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
       }
 
       pages.push({
-        name: page.title,
-        bookmarkTags: page.tags,
+        title: page.title,
+        pageTags: page.tags.map((tag) => ({ name: tag })),
         url: pageData.url,
         content: "",
-        raw: pageData.content ?? ""
+        raw: pageData.content ?? "",
+        pageMetadata: {
+          lastVisitTime: page.lastVisitTime,
+          bookmarked: false,
+          visitCount: page.visitCount,
+          typedCount: page.typedCount
+        }
       })
     } else {
       page.status = ImportStatus.Ready
@@ -906,7 +915,7 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
   })
 
   // send request to backend
-  await createBookmarks(pages)
+  await createOrUpdatePages(pages)
 }
 
 export const syncUpWithLatestHistory = async ({

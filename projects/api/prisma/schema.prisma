@@ -173,24 +173,25 @@ model Page {
 }
 
 model PageMetadata {
-  id                 String   @id @default(uuid())
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String   @map("bk_user_id")
-  folder             Folder?  @relation(fields: [folderId], references: [id])
-  folderId           String?  @unique @map("bk_folder_id")
-  page               Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
-  pageId             String   @unique @map("bk_page_id")
-  displayTitle       String?  @map("display_title")
-  displayDescription String?  @map("display_description")
-  localMode          Boolean  @default(false) // if you don't want to sync up cross devices
-  favorite           Boolean  @default(false)
-  bookmarked         Boolean  @default(false)
-  incognito          Boolean  @default(false) // if you don't want to share the page in the default view
-  tabId              Int?     @map("tab_id") // The ID of the tab that this page is contained within. Set to -1 if this page is not contained within a tab.
-  visitCount         Int      @default(1) @map("visit_count") // The number of times the user has navigated to this page.
-  typedCount         Int      @default(1) @map("typed_count") // The number of times the user has navigated to this page by typing in the address.
+  id                 String    @id @default(uuid())
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  lastVisitTime      DateTime? @map("last_visit_time")
+  user               User      @relation(fields: [userId], references: [id])
+  userId             String    @map("bk_user_id")
+  folder             Folder?   @relation(fields: [folderId], references: [id])
+  folderId           String?   @unique @map("bk_folder_id")
+  page               Page      @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId             String    @unique @map("bk_page_id")
+  displayTitle       String?   @map("display_title")
+  displayDescription String?   @map("display_description")
+  localMode          Boolean   @default(false) // if you don't want to sync up cross devices
+  favorite           Boolean   @default(false)
+  bookmarked         Boolean   @default(false)
+  incognito          Boolean   @default(false) // if you don't want to share the page in the default view
+  tabId              Int?      @map("tab_id") // The ID of the tab that this page is contained within. Set to -1 if this page is not contained within a tab.
+  visitCount         Int       @default(1) @map("visit_count") // The number of times the user has navigated to this page.
+  typedCount         Int       @default(1) @map("typed_count") // The number of times the user has navigated to this page by typing in the address.
 
   version Int @default(0)
 

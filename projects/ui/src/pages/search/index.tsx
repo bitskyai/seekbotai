@@ -118,16 +118,20 @@ export default function Home(): JSX.Element {
                   actions={[
                     <IconText
                       icon={ClockCircleOutlined}
-                      text={`${t("viewedAt")}: ${new Date(
-                        item.updatedAt,
-                      ).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                      })}`}
+                      text={`${t("viewedAt")}: ${
+                        item.pageMetadata.lastVisitTime
+                          ? new Date(
+                              item.pageMetadata.lastVisitTime,
+                            ).toLocaleString("en-US", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            })
+                          : ""
+                      }`}
                       key="list-vertical-like-o"
                     />,
                     <IconText

@@ -1,6 +1,7 @@
 query GetTags {
   tags {
     createdAt
+    updatedAt
     id
     isSystem
     name
