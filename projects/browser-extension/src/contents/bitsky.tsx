@@ -1,3 +1,4 @@
+import { HISTORY_TAG } from "@bitsky/shared"
 import logo from "data-base64:~/assets/icon.svg"
 import cssText from "data-text:~/contents/bitsky.css"
 import type { PlasmoCSConfig } from "plasmo"
@@ -46,7 +47,7 @@ const BitskyHelper = () => {
       console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
       const currentPageData: PageCreateOrUpdatePayload = {
         title: document.title,
-        pageTags: [{ name: "History" }],
+        pageTags: [{ name: HISTORY_TAG }],
         url: window.location.href,
         content: "",
         raw: extractPageHTML() ?? "",

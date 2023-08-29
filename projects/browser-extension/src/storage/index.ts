@@ -1,7 +1,8 @@
 import {
   DEFAULT_API_KEY,
   DEFAULT_HOST_NAME,
-  DEFAULT_PROTOCOL
+  DEFAULT_PROTOCOL,
+  HISTORY_TAG
 } from "@bitsky/shared"
 import _ from "lodash"
 import normalizeUrl from "normalize-url"
@@ -963,7 +964,7 @@ export const syncUpWithLatestHistory = async ({
   )
   for (let i = 0; i < historyItems.length; i++) {
     const historyPage = historyItems[i]
-    historyPage.tags = ["history"]
+    historyPage.tags = [HISTORY_TAG]
     const importHistoryPage = importHistoryHash[getPageHash(historyPage)]
 
     if (!importHistoryPage) {

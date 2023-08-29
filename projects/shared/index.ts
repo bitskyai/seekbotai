@@ -20,3 +20,5 @@ export const DEFAULT_SELF_IDENTIFICATION =
 export const DEFAULT_MEILISEARCH_MASTER_KEY =
   "8499a9f9-a7a5-4bb2-a445-bc82afe1366c";
 export const DEFAULT_MEILISEARCH_PORT = 47700;
+
+export const HISTORY_TAG = "History";
