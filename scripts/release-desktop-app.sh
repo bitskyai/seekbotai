@@ -25,12 +25,12 @@ if [[ "$(uname)" == "Linux" ]]; then
   print "Operating system is Linux"
   copyAllFilesWithExtension ./out/make "*.deb" ./out/installer/
   copyAllFilesWithExtension ./out/make "*.rpm" ./out/installer/
-  zip -r ./out/bi.zip ./out/installer
+  zip -r ./out/bitsky.zip ./out/installer
 # Check if the operating system is macOS
 elif [[ "$(uname)" == "Darwin" ]]; then
   print "Operating system is macOS"
   copyAllFilesWithExtension ./out/make "*.zip" ./out/
-  mv -f ./out/bi-*.zip ./out/bi.zip
+  mv -f ./out/bitsky-*.zip ./out/bitsky.zip
 # Check if the operating system is Windows (using MSYS2)
 elif [[ "$(uname -o)" == "Msys" ]]; then
   print "Operating system is Windows"
@@ -45,8 +45,8 @@ elif [[ "$(uname -o)" == "Msys" ]]; then
 
   cd $ROOT_DIR
   cd $TARGET_PATH
-  mv -f .out/installer/*.zip ./bi.zip
-  # Compress-Archive -Path ./out/installer/* -DestinationPath "./out/bi.zip"
+  mv -f .out/installer/*.zip ./bitsky.zip
+  # Compress-Archive -Path ./out/installer/* -DestinationPath "./out/bitsky.zip"
 else
   print "Unknown operating system"
 fi

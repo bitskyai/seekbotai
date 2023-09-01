@@ -7,6 +7,7 @@ import path from "path";
 import "./entities";
 import { schemaBuilder } from "./entities";
 import { getAppConfig } from "./helpers/config";
+import printGraphqlSchema from "./helpers/printSchema";
 
 export async function createApp() {
   const config = getAppConfig();
@@ -33,6 +34,7 @@ export async function createApp() {
       // otherwise need to validate token add add user to `context`
     },
   });
+  printGraphqlSchema(schemaBuilder.toSchema({}));
   app.use(express.static(path.join(__dirname + "/public")));
   app.use(express.static(path.join(__dirname + "/ui")));
   app.use("/graphql", yoga);

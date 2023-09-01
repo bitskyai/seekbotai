@@ -8,6 +8,10 @@ import {
   WEB_APP_LOG_MAX_SIZE,
   WEB_APP_NAME,
   WEB_APP_PORT,
+  WEB_APP_HOST_NAME,
+  WEB_APP_MEILISEARCH_PORT,
+  WEB_APP_MEILISEARCH_MASTER_KEY,
+  WEB_APP_MEILISEARCH_NAME,
 } from "../helpers/constants";
 import logger from "../helpers/logger";
 import { LogLevel, Preferences } from "../interfaces";
@@ -126,6 +130,16 @@ export function getDefaultPreferences(): Preferences {
     WEB_APP_DATABASE_URL: WEB_APP_DATABASE_URL,
     WEB_APP_SETUP_DB: true,
     WEB_APP_SEED_DB: true,
+    WEB_APP_SAVE_RAW_PAGE: false,
+    WEB_APP_HOST_NAME,
+    WEB_APP_START_MEILISEARCH: true,
+    WEB_APP_MEILISEARCH_PORT,
+    WEB_APP_MEILISEARCH_MASTER_KEY,
+    WEB_APP_MEILISEARCH_DB_PATH: path.join(
+      APP_HOME_PATH,
+      WEB_APP_NAME,
+      WEB_APP_MEILISEARCH_NAME,
+    ),
     APP_HOME_PATH,
     LOG_FILES_PATH: path.join(APP_HOME_PATH, LOG_FILES_FOLDER),
     version: "1.0.0",

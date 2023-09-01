@@ -22,6 +22,7 @@
   },
   "scripts": {
     "dev": "",
+    "copy-meilisearch-to-api": "bash ./scripts/copy-meilisearch-to-api.sh",
     "build:ui-to-api": "bash ./scripts/build-ui-to-api.sh",
     "build:web-app-to-desktop-app": "bash ./scripts/build-web-app-to-desktop-app.sh",
     "build:web-app": "bash ./scripts/build-web-app.sh",

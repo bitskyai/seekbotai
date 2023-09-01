@@ -1,0 +1,9 @@
+mutation createOrUpdatePages($pages: [PageCreateOrUpdatePayload!]!) {
+  createOrUpdatePages(pages: $pages) {
+    url
+    status
+    id
+    code
+    message
+  }
+}

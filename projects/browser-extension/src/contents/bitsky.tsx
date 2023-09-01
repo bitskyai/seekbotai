@@ -1,3 +1,4 @@
+import { HISTORY_TAG } from "@bitsky/shared"
 import logo from "data-base64:~/assets/icon.svg"
 import cssText from "data-text:~/contents/bitsky.css"
 import type { PlasmoCSConfig } from "plasmo"
@@ -5,6 +6,7 @@ import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import { type PageCreateOrUpdatePayload } from "~/graphql/generated"
 import { MessageSubject } from "~background/messages"
 import { LogFormat } from "~helpers/LogFormat"
 
@@ -43,18 +45,22 @@ const BitskyHelper = () => {
       setSuccess(false)
       // document.body.style.background = "pink" // used for debugging
       console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
-      const currentPageData = {
-        name: document.title,
-        bookmarkTags: ["history"],
+      const currentPageData: PageCreateOrUpdatePayload = {
+        title: document.title,
+        pageTags: [{ name: HISTORY_TAG }],
         url: window.location.href,
         content: "",
-        raw: extractPageHTML() ?? ""
+        raw: extractPageHTML() ?? "",
+        pageMetadata: {
+          bookmarked: false,
+          lastVisitTime: new Date().toISOString()
+        }
       }
 
       console.info(...logFormat.formatArgs("currentPageData", currentPageData))
       // save current page
       await sendToBackground({
-        name: MessageSubject.createBookmarks,
+        name: MessageSubject.createOrUpdatePages,
         body: [currentPageData]
       })
       setSaving(false)

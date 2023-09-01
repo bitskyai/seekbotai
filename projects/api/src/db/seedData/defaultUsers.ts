@@ -5,7 +5,7 @@
 // `systemEnterprise`: Any resources that share with all enterprise users
 // other users are placeholders for the future purpose
 export const systemUser = {
-  id: 1,
+  id: "ea8471a7-1b47-431e-b845-67720d81ab1b",
   username: "system",
   firstName: "System",
   lastName: "x",
@@ -13,7 +13,7 @@ export const systemUser = {
 };
 
 export const systemShare = {
-  id: 2,
+  id: "52403322-0628-4a71-9358-dc36d4623fdf",
   username: "share",
   firstName: "Share",
   lastName: "x",
@@ -21,7 +21,7 @@ export const systemShare = {
 };
 
 export const systemPremium = {
-  id: 3,
+  id: "37f48233-e23d-4fc5-bd01-b1e20098392e",
   username: "premium",
   firstName: "Premium",
   lastName: "x",
@@ -29,7 +29,7 @@ export const systemPremium = {
 };
 
 export const systemEnterprise = {
-  id: 4,
+  id: "c401a817-0d4a-4c0b-ba13-cfb3f11bb28a",
   username: "enterprise",
   firstName: "Enterprise",
   lastName: "x",
@@ -37,7 +37,7 @@ export const systemEnterprise = {
 };
 
 export const systemPlaceHolder1 = {
-  id: 5,
+  id: "5dc6bea6-59be-42ab-8106-be54a1d8f6ef",
   username: "placeHolder1",
   firstName: "PlaceHolder1",
   lastName: "x",
@@ -45,7 +45,7 @@ export const systemPlaceHolder1 = {
 };
 
 export const systemPlaceHolder2 = {
-  id: 6,
+  id: "05f08f35-e63b-46c8-a620-cbb4b964532c",
   username: "placeHolder2",
   firstName: "PlaceHolder2",
   lastName: "x",
@@ -53,7 +53,7 @@ export const systemPlaceHolder2 = {
 };
 
 export const systemPlaceHolder3 = {
-  id: 7,
+  id: "3c2ec626-83e6-4154-87a3-fe50aa4c3310",
   username: "placeHolder3",
   firstName: "PlaceHolder3",
   lastName: "x",
@@ -61,7 +61,7 @@ export const systemPlaceHolder3 = {
 };
 
 export const systemPlaceHolder4 = {
-  id: 8,
+  id: "e171f7d0-4017-4c61-b6b2-a8e6ddfa366f",
   username: "placeHolder6",
   firstName: "PlaceHolder6",
   lastName: "x",
@@ -69,7 +69,7 @@ export const systemPlaceHolder4 = {
 };
 
 export const systemPlaceHolder5 = {
-  id: 9,
+  id: "b9cc8d39-68c9-418e-a861-17dcca8b4ce0",
   username: "placeHolder7",
   firstName: "PlaceHolder7",
   lastName: "x",
@@ -77,7 +77,7 @@ export const systemPlaceHolder5 = {
 };
 
 export const defaultUser = {
-  id: 10,
+  id: "b271b74d-d6fa-4bed-b11e-dfbbf95e03f3",
   username: "skywalker",
   firstName: "Skywalker",
   lastName: "x",

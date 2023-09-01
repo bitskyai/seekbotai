@@ -9,14 +9,14 @@ let logger: Logger;
 
 export default function getLogger() {
   try {
-    if (logger) {
-      // console.log('logger already created.');
-      return logger;
-    }
+    // if (logger) {
+    //   // console.log('logger already created.');
+    //   return logger;
+    // }
     const config = getAppConfig();
     const logFilesPath = path.join(
       config.APP_HOME_PATH,
-      DEFAULT_APP_CONFIG.LOG_FILES_FOLDER,
+      config.LOG_FILES_FOLDER,
     );
     fs.ensureDirSync(logFilesPath);
     // console.log('[createLogger] starting...');

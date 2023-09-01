@@ -13,55 +13,14 @@ export type Scalars = {
   Float: number;
   Date: any;
   DateTime: any;
+  URL: any;
+  UUID: any;
 };
 
-export type Bookmark = {
-  __typename?: 'Bookmark';
-  bookmarkTags: Array<BookmarkTag>;
-  content?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  description?: Maybe<Scalars['String']>;
-  favorite: Scalars['Boolean'];
-  icon?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
-  url: Scalars['String'];
-};
-
-export type BookmarkCreateInputType = {
-  bookmarkTags?: InputMaybe<Array<Scalars['String']>>;
-  content?: InputMaybe<Scalars['String']>;
-  description?: InputMaybe<Scalars['String']>;
-  icon?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  raw?: InputMaybe<Scalars['String']>;
-  url: Scalars['String'];
-};
-
-export type BookmarkResult = {
-  __typename?: 'BookmarkResult';
-  id?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-};
-
-export type BookmarkSortOrderInput = {
-  updatedAt?: InputMaybe<SortOrder>;
-};
-
-export type BookmarkTag = {
-  __typename?: 'BookmarkTag';
-  createdAt: Scalars['DateTime'];
-  id: Scalars['ID'];
-  tag: Tag;
-};
-
-export type CreateBookmarksRes = {
-  __typename?: 'CreateBookmarksRes';
+export type CreateOrUpdatePageRes = {
+  __typename?: 'CreateOrUpdatePageRes';
   code?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   url: Scalars['String'];
@@ -69,28 +28,148 @@ export type CreateBookmarksRes = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createBookmarks: Array<CreateBookmarksRes>;
+  createOrUpdatePages: Array<CreateOrUpdatePageRes>;
 };
 
 
-export type MutationCreateBookmarksArgs = {
-  bookmarks: Array<BookmarkCreateInputType>;
+export type MutationCreateOrUpdatePagesArgs = {
+  pages: Array<PageCreateOrUpdatePayload>;
+};
+
+export type Page = {
+  __typename?: 'Page';
+  content?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+  pageMetadata: PageMetadata;
+  pageTags: Array<PageTag>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  url: Scalars['URL'];
+};
+
+export type PageCreateOrUpdatePayload = {
+  content?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  pageMetadata?: InputMaybe<PageMetadataPayload>;
+  pageTags?: InputMaybe<Array<PageTagPayload>>;
+  raw?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type PageMetadata = {
+  __typename?: 'PageMetadata';
+  bookmarked?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime'];
+  displayDescription?: Maybe<Scalars['String']>;
+  displayTitle?: Maybe<Scalars['String']>;
+  favorite?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  incognito?: Maybe<Scalars['Boolean']>;
+  lastVisitTime?: Maybe<Scalars['DateTime']>;
+  localMode?: Maybe<Scalars['Boolean']>;
+  pageId: Scalars['UUID'];
+  tabId?: Maybe<Scalars['Int']>;
+  typedCount?: Maybe<Scalars['Int']>;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+  visitCount?: Maybe<Scalars['Int']>;
+};
+
+export type PageMetadataDetail = {
+  __typename?: 'PageMetadataDetail';
+  bookmarked?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime'];
+  displayDescription?: Maybe<Scalars['String']>;
+  displayTitle?: Maybe<Scalars['String']>;
+  favorite?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  incognito?: Maybe<Scalars['Boolean']>;
+  lastVisitTime?: Maybe<Scalars['DateTime']>;
+  localMode?: Maybe<Scalars['Boolean']>;
+  pageId: Scalars['UUID'];
+  tabId?: Maybe<Scalars['Int']>;
+  typedCount?: Maybe<Scalars['Int']>;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+  visitCount?: Maybe<Scalars['Int']>;
+};
+
+export type PageMetadataPayload = {
+  bookmarked?: InputMaybe<Scalars['Boolean']>;
+  displayDescription?: InputMaybe<Scalars['String']>;
+  displayTitle?: InputMaybe<Scalars['String']>;
+  favorite?: InputMaybe<Scalars['Boolean']>;
+  incognito?: InputMaybe<Scalars['Boolean']>;
+  lastVisitTime?: InputMaybe<Scalars['DateTime']>;
+  localMode?: InputMaybe<Scalars['Boolean']>;
+  tabId?: InputMaybe<Scalars['Int']>;
+  typedCount?: InputMaybe<Scalars['Int']>;
+  visitCount?: InputMaybe<Scalars['Int']>;
+};
+
+export type PageSortOrderInput = {
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export type PageTag = {
+  __typename?: 'PageTag';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pageId: Scalars['UUID'];
+  tag: Tag;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+};
+
+export type PageTagDetail = {
+  __typename?: 'PageTagDetail';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pageId: Scalars['UUID'];
+  tag: TagDetail;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+};
+
+export type PageTagPayload = {
+  name: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  bookmarks: Array<Bookmark>;
+  pageMetadata: Array<PageMetadata>;
+  pageTags: Array<PageTag>;
+  pages: Array<SearchResultPage>;
   tags: Array<Tag>;
 };
 
 
-export type QueryBookmarksArgs = {
+export type QueryPagesArgs = {
   insensitive?: InputMaybe<Scalars['Boolean']>;
-  orderBy?: InputMaybe<BookmarkSortOrderInput>;
+  orderBy?: InputMaybe<PageSortOrderInput>;
   searchString?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
-  tags?: InputMaybe<Array<Scalars['Int']>>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
   take?: InputMaybe<Scalars['Int']>;
+};
+
+export type SearchResultPage = {
+  __typename?: 'SearchResultPage';
+  content?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pageMetadata: PageMetadataDetail;
+  pageTags: Array<PageTagDetail>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  url: Scalars['URL'];
 };
 
 export enum SortOrder {
@@ -104,21 +183,30 @@ export type Tag = {
   id: Scalars['ID'];
   isSystem: Scalars['Boolean'];
   name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
-export type GetBookmarksQueryVariables = Exact<{
-  tags?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
+export type TagDetail = {
+  __typename?: 'TagDetail';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type GetPagesQueryVariables = Exact<{
+  tags?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
   searchString?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetBookmarksQuery = { __typename?: 'Query', bookmarks: Array<{ __typename?: 'Bookmark', createdAt: any, updatedAt: any, description?: string | null, favorite: boolean, icon?: string | null, id: string, name: string, url: string, bookmarkTags: Array<{ __typename?: 'BookmarkTag', createdAt: any, id: string, tag: { __typename?: 'Tag', createdAt: any, id: string, isSystem: boolean, name: string } }> }> };
+export type GetPagesQuery = { __typename?: 'Query', pages: Array<{ __typename?: 'SearchResultPage', createdAt: any, updatedAt: any, title: string, description?: string | null, icon?: string | null, id: string, url: any, pageMetadata: { __typename?: 'PageMetadataDetail', id: string, lastVisitTime?: any | null, bookmarked?: boolean | null, displayTitle?: string | null, displayDescription?: string | null, favorite?: boolean | null, incognito?: boolean | null, localMode?: boolean | null, tabId?: number | null, typedCount?: number | null, visitCount?: number | null }, pageTags: Array<{ __typename?: 'PageTagDetail', id: string, tag: { __typename?: 'TagDetail', id: string, name: string } }> }> };
 
 export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', createdAt: any, id: string, isSystem: boolean, name: string }> };
+export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', createdAt: any, updatedAt: any, id: string, isSystem: boolean, name: string }> };
 
 
-export const GetBookmarksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBookmarks"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tags"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchString"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"bookmarks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"searchString"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchString"}}},{"kind":"Argument","name":{"kind":"Name","value":"tags"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tags"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"favorite"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"bookmarkTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isSystem"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBookmarksQuery, GetBookmarksQueryVariables>;
-export const GetTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isSystem"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetTagsQuery, GetTagsQueryVariables>;
+export const GetPagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tags"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchString"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"searchString"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchString"}}},{"kind":"Argument","name":{"kind":"Name","value":"tags"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tags"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"pageMetadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"lastVisitTime"}},{"kind":"Field","name":{"kind":"Name","value":"bookmarked"}},{"kind":"Field","name":{"kind":"Name","value":"displayTitle"}},{"kind":"Field","name":{"kind":"Name","value":"displayDescription"}},{"kind":"Field","name":{"kind":"Name","value":"favorite"}},{"kind":"Field","name":{"kind":"Name","value":"incognito"}},{"kind":"Field","name":{"kind":"Name","value":"localMode"}},{"kind":"Field","name":{"kind":"Name","value":"tabId"}},{"kind":"Field","name":{"kind":"Name","value":"typedCount"}},{"kind":"Field","name":{"kind":"Name","value":"visitCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tag"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetPagesQuery, GetPagesQueryVariables>;
+export const GetTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isSystem"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetTagsQuery, GetTagsQueryVariables>;

@@ -3,7 +3,7 @@ import _ from "lodash"
 
 import { Storage } from "@plasmohq/storage"
 
-import { createBookmarks } from "~background/modules/apis/createBookmarks"
+import { createOrUpdatePages } from "~background/modules/apis/createOrUpdatePages"
 import { LogFormat } from "~helpers/LogFormat"
 import {
   BackgroundSyncUpStatus,
@@ -28,7 +28,7 @@ const sendCreateBookmarksRequest = async () => {
   )
   if (syncUpItem) {
     try {
-      const result = await createBookmarks(syncUpItem.data, true)
+      const result = await createOrUpdatePages(syncUpItem.data, true)
       if (!result) {
         // when result is null, it means that the request is not sent to server
         await updateBackgroundSyncUpAPICreateOrUpdatePages({

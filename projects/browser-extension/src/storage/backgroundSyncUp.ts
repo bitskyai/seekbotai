@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { Storage } from "@plasmohq/storage"
 
-import { type BookmarkCreateInputType } from "~/graphql/generated"
+import { type PageCreateOrUpdatePayload } from "~/graphql/generated"
 import { LogFormat } from "~helpers/LogFormat"
 
 import { StorageKeys } from "./storageKeys"
@@ -28,7 +28,7 @@ export interface BackgroundSyncUpBaseItem<dataType> {
 }
 
 export type BackgroundSyncUpItemAPIPages = BackgroundSyncUpBaseItem<
-  BookmarkCreateInputType[]
+  PageCreateOrUpdatePayload[]
 >
 
 type BackgroundSyncUpList = string[]
@@ -238,7 +238,7 @@ export async function initBackgroundSyncUp() {
 }
 
 export async function addToBackgroundSyncUpAPICreateOrUpdatePages(
-  pages: BookmarkCreateInputType[]
+  pages: PageCreateOrUpdatePayload[]
 ) {
   console.debug(
     ...logFormat.formatArgs(
@@ -254,7 +254,7 @@ export async function addToBackgroundSyncUpAPICreateOrUpdatePages(
     retryCount: 0,
     data: pages
   }
-  await addToBackgroundSyncUp<BookmarkCreateInputType[]>(
+  await addToBackgroundSyncUp<PageCreateOrUpdatePayload[]>(
     StorageKeys.BackgroundSyncUpKeyAPICreateOrUpdatePages,
     syncUpItem
   )
@@ -264,7 +264,7 @@ export async function getBackgroundSyncUpAPICreateOrUpdatePages() {
   console.debug(
     ...logFormat.formatArgs("getBackgroundSyncUpAPICreateOrUpdatePages")
   )
-  return getBackgroundSyncUpItem<BookmarkCreateInputType[]>(
+  return getBackgroundSyncUpItem<PageCreateOrUpdatePayload[]>(
     StorageKeys.BackgroundSyncUpKeyAPICreateOrUpdatePages
   )
 }
@@ -278,7 +278,7 @@ export async function updateBackgroundSyncUpAPICreateOrUpdatePages(
       syncUpItem
     )
   )
-  await updateBackgroundSyncUpItem<BookmarkCreateInputType[]>(
+  await updateBackgroundSyncUpItem<PageCreateOrUpdatePayload[]>(
     StorageKeys.BackgroundSyncUpKeyAPICreateOrUpdatePages,
     syncUpItem
   )

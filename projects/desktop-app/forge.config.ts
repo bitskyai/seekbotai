@@ -11,8 +11,8 @@ import path from "path";
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: "bi",
-    executableName: "bi",
+    name: "bitsky",
+    executableName: "bitsky",
     icon: path.resolve(__dirname, "assets", "icons", "bitsky"),
     ignore: [
       /^\/\.vscode/,
@@ -44,7 +44,7 @@ const config: ForgeConfig = {
       config: {
         repository: {
           owner: "bitskyai",
-          name: "bi",
+          name: "bitsky",
         },
         draft: true,
         prerelease: true,

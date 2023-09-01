@@ -40,7 +40,7 @@ export const enum LogLevel {
 }
 
 // Preferences are configurable
-export interface Preferences {
+export interface WebAppPreferences {
   WEB_APP_LOG_LEVEL: LogLevel;
   WEB_APP_LOG_MAX_SIZE: number;
   WEB_APP_PORT: number;
@@ -48,6 +48,15 @@ export interface Preferences {
   WEB_APP_DATABASE_URL: string;
   WEB_APP_SETUP_DB: boolean;
   WEB_APP_SEED_DB: boolean;
+  WEB_APP_SAVE_RAW_PAGE: boolean;
+  WEB_APP_HOST_NAME: string;
+  WEB_APP_START_MEILISEARCH: boolean;
+  WEB_APP_MEILISEARCH_PORT: number;
+  WEB_APP_MEILISEARCH_MASTER_KEY: string;
+  WEB_APP_MEILISEARCH_DB_PATH: string;
+}
+
+export interface Preferences extends WebAppPreferences {
   APP_HOME_PATH: string;
   LOG_FILES_PATH: string;
   version: string;

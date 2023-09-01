@@ -3,7 +3,7 @@ import { LogFormat } from "~helpers/LogFormat"
 const logFormat = new LogFormat("messages")
 
 export enum MessageSubject {
-  createBookmarks = "createBookmarks",
+  createOrUpdatePages = "createOrUpdatePages",
   startImportBookmarks = "startImportBookmarks",
   stopImportBookmarks = "stopImportBookmarks",
   cleanImportBookmarks = "cleanImportBookmarks",

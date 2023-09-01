@@ -1,0 +1,31 @@
+query GetPages($tags: [String!], $searchString: String = "") {
+  pages(searchString: $searchString, tags: $tags) {
+    createdAt
+    updatedAt
+    title
+    description
+    icon
+    id
+    url
+    pageMetadata {
+      id
+      lastVisitTime
+      bookmarked
+      displayTitle
+      displayDescription
+      favorite
+      incognito
+      localMode
+      tabId
+      typedCount
+      visitCount
+    }
+    pageTags {
+      id
+      tag {
+        id
+        name
+      }
+    }
+  }
+}

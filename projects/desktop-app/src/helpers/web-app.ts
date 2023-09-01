@@ -5,7 +5,12 @@ import {
 } from "../main/preferences";
 import { getOrCreateMainWindow } from "../main/windows";
 import { startServer, stopServer } from "../web-app/src/server";
-import { APP_HOME_PATH, WEB_APP_NAME, WEB_APP_PORT } from "./constants";
+import {
+  APP_HOME_PATH,
+  WEB_APP_NAME,
+  WEB_APP_PORT,
+  WEB_APP_MEILISEARCH_PORT,
+} from "./constants";
 import { getAvailablePort } from "./index";
 import logger from "./logger";
 import { app, dialog } from "electron";
@@ -13,6 +18,7 @@ import path from "path";
 
 class WebApp {
   public port = WEB_APP_PORT;
+  public searchEnginePort = WEB_APP_MEILISEARCH_PORT;
   constructor() {
     logger.log("WebApp constructor");
   }
@@ -20,42 +26,55 @@ class WebApp {
   public async start() {
     try {
       const preferences = getPreferencesJSON();
-      logger.info(
-        "main->main.js->onReady, LOG_FILES_PATH: ",
-        process.env.LOG_FILES_PATH,
-      );
       this.port = await getAvailablePort(preferences.WEB_APP_PORT);
+      this.searchEnginePort = await getAvailablePort(
+        preferences.WEB_APP_MEILISEARCH_PORT,
+      );
       if (this.port != preferences.WEB_APP_PORT) {
         updatePreferencesJSON({ WEB_APP_PORT: this.port });
       }
+      if (this.searchEnginePort != preferences.WEB_APP_MEILISEARCH_PORT) {
+        updatePreferencesJSON({
+          WEB_APP_MEILISEARCH_PORT: this.searchEnginePort,
+        });
+      }
+      const webAppSourcePath = path.join(
+        app.getAppPath(),
+        "dist",
+        WEB_APP_NAME,
+      );
       // start
       updateProcessEnvs(preferences);
-      await startServer({
+      logger.info("preferences", preferences);
+      logger.info("starting bitsky...");
+      const webAppConfig = {
         DESKTOP_MODE: true,
         PORT: preferences.WEB_APP_PORT,
         DATABASE_URL: preferences.WEB_APP_DATABASE_URL,
         APP_HOME_PATH: preferences.WEB_APP_HOME_PATH,
-        APP_SOURCE_PATH: path.join(
-          app.getAppPath().replace("app.asar", "app.asar.unpacked"),
-          "dist",
-          WEB_APP_NAME,
-        ),
+        APP_SOURCE_PATH: webAppSourcePath,
         SETUP_DB: preferences.WEB_APP_SETUP_DB,
         SEED_DB: preferences.WEB_APP_SEED_DB,
         LOG_LEVEL: preferences.WEB_APP_LOG_LEVEL,
         LOG_MAX_SIZE: preferences.WEB_APP_LOG_MAX_SIZE,
-      });
-      logger.info(
-        "main->main.js->onReady, bitsky-supplier successfully started.",
-      );
+        START_MEILISEARCH: preferences.WEB_APP_START_MEILISEARCH,
+        HOST_NAME: preferences.WEB_APP_HOST_NAME,
+        MEILISEARCH_PORT: preferences.WEB_APP_MEILISEARCH_PORT,
+        MEILISEARCH_MASTER_KEY: preferences.WEB_APP_MEILISEARCH_MASTER_KEY,
+      };
+      logger.info("webAppConfig", webAppConfig);
+      await startServer(webAppConfig);
+      logger.info("bitsky successfully started.");
       const mainWindow = getOrCreateMainWindow();
-      mainWindow.loadURL(`http://localhost:${this.port}`);
-      process.env.BITSKY_BASE_URL = `http://localhost:${this.port}`;
+      mainWindow.loadURL(
+        `http://${preferences.WEB_APP_HOST_NAME}:${this.port}`,
+      );
+      process.env.BITSKY_BASE_URL = `http://${preferences.WEB_APP_HOST_NAME}:${this.port}`;
       // Only used for UI Develop
       // mainWindow.loadURL(`http://localhost:8000`);
 
       logger.info(
-        `main->main.js->onReady, load http://localhost:${this.port} in main browser`,
+        `Load http://${preferences.WEB_APP_HOST_NAME}:${this.port} in main browser`,
       );
     } catch (err) {
       dialog.showErrorBox(
@@ -70,8 +89,10 @@ class WebApp {
 
   public async restart() {
     try {
+      logger.info("Restarting BitSky...");
       this.stop();
       this.start();
+      logger.info("Restarted BitSky");
     } catch (err) {
       dialog.showErrorBox(
         "Restart BitSky Failed",
@@ -85,7 +106,9 @@ class WebApp {
 
   public async stop() {
     try {
+      logger.info("Stop BitSky...");
       await stopServer();
+      logger.info("Stopped BitSky");
     } catch (err) {
       dialog.showErrorBox(
         "Stop BitSky Failed",

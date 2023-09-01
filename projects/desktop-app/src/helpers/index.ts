@@ -166,15 +166,14 @@ export function readFolderRecursiveSync(source: string, currentPath = ".") {
  * Get an available port
  * @param port - specific port want to check whether it is available
  */
-export async function getAvailablePort(preferPort?: number): Promise<number> {
+export async function getAvailablePort(
+  preferPort?: number,
+  portRange = PORT_RANGE,
+): Promise<number> {
   // step 1: check whether preferPort is available
   let port = preferPort;
   // preferPort is must in PORT_RANGE, otherwise our discovery service will not work
-  if (
-    preferPort &&
-    preferPort >= PORT_RANGE[0] &&
-    preferPort <= PORT_RANGE[1]
-  ) {
+  if (preferPort && preferPort >= portRange[0] && preferPort <= portRange[1]) {
     port = await getPort({ port: preferPort });
     if (port === preferPort) {
       logger.debug(`${port} is available`);
@@ -182,7 +181,7 @@ export async function getAvailablePort(preferPort?: number): Promise<number> {
     }
   }
   // step 2: check whether port in PORT_RANGE is available
-  port = await getPort({ port: portNumbers(PORT_RANGE[0], PORT_RANGE[1]) });
+  port = await getPort({ port: portNumbers(portRange[0], portRange[1]) });
   logger.debug(`Random select port from port_range: ${port} is available`);
   return port;
 }
