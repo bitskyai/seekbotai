@@ -1,5 +1,6 @@
 import { getPrismaClient } from "../db";
 import { GQLContext } from "../types";
+import { SearchResultPage } from "./page/types";
 import SchemaBuilder from "@pothos/core";
 import PrismaPlugin from "@pothos/plugin-prisma";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
@@ -12,6 +13,9 @@ import {
 } from "graphql-scalars";
 
 export const schemaBuilder = new SchemaBuilder<{
+  Objects: {
+    SearchResultPage: SearchResultPage;
+  };
   Scalars: {
     Date: { Input: Date; Output: Date };
     DateTime: { Input: Date; Output: Date };

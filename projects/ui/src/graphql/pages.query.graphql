@@ -24,7 +24,6 @@ query GetPages($tags: [String!], $searchString: String = "") {
       id
       tag {
         id
-        isSystem
         name
       }
     }

@@ -10,13 +10,26 @@ export type CreateOrUpdatePageRes = {
 
 export type PageMetadataShape = Partial<PageMetadata>;
 
-export type PageTagShape = Partial<PageTag> & Pick<Tag, "name">;
+export type PageTagWithNameShape = Partial<PageTag> & Pick<Tag, "name">;
 
 export type PageShape = Partial<Page>;
+
+export type TagShape = Partial<Tag>;
+
+export type PageTagShape = Partial<PageTag>;
 
 export type PageCreateOrUpdateShape = PageShape & {
   url: string;
   raw?: string;
-  pageTags?: PageTagShape[];
+  pageTags?: PageTagWithNameShape[];
   pageMetadata?: PageMetadataShape;
+};
+
+export type PageTagOutput = PageTag & {
+  tag: Tag;
+};
+
+export type SearchResultPage = Page & {
+  pageMetadata: PageMetadata;
+  pageTags: PageTagOutput[];
 };

@@ -3,9 +3,12 @@ import { schemaBuilder } from "../gql-builder";
 import type {
   PageMetadataShape,
   PageCreateOrUpdateShape,
-  PageTagShape,
+  PageTagWithNameShape,
+  PageTagOutput,
   CreateOrUpdatePageRes,
+  SearchResultPage,
 } from "./types";
+import type { PageMetadata, Page, Tag, PageTag } from "@prisma/client";
 
 export const PageBM = schemaBuilder.prismaObject("Page", {
   fields: (t) => ({
@@ -58,6 +61,78 @@ export const PageTagBM = schemaBuilder.prismaObject("PageTag", {
   }),
 });
 
+export const TagTypeBM = schemaBuilder.objectRef<Tag>("TagDetail").implement({
+  fields: (t) => ({
+    id: t.exposeID("id"),
+    createdAt: t.expose("createdAt", { type: "DateTime" }),
+    updatedAt: t.expose("updatedAt", { type: "DateTime" }),
+    name: t.exposeString("name"),
+  }),
+});
+
+export const PageTagTypeBM = schemaBuilder
+  .objectRef<PageTagOutput>("PageTagDetail")
+  .implement({
+    fields: (t) => ({
+      id: t.exposeID("id"),
+      createdAt: t.expose("createdAt", { type: "DateTime" }),
+      updatedAt: t.expose("updatedAt", { type: "DateTime" }),
+      pageId: t.expose("pageId", { type: "UUID" }),
+      version: t.expose("version", { type: "Int" }),
+      tag: t.expose("tag", {
+        type: TagTypeBM,
+      }),
+    }),
+  });
+
+export const PageMetadataShapeTypeBM = schemaBuilder
+  .objectRef<PageMetadata>("PageMetadataDetail")
+  .implement({
+    fields: (t) => ({
+      id: t.exposeID("id"),
+      createdAt: t.expose("createdAt", { type: "DateTime" }),
+      updatedAt: t.expose("updatedAt", { type: "DateTime" }),
+      lastVisitTime: t.expose("lastVisitTime", {
+        type: "DateTime",
+        nullable: true,
+      }),
+      pageId: t.expose("pageId", { type: "UUID" }),
+      version: t.expose("version", { type: "Int" }),
+      displayTitle: t.exposeString("displayTitle", { nullable: true }),
+      displayDescription: t.exposeString("displayDescription", {
+        nullable: true,
+      }),
+      localMode: t.exposeBoolean("localMode", { nullable: true }),
+      favorite: t.exposeBoolean("favorite", { nullable: true }),
+      bookmarked: t.exposeBoolean("bookmarked", { nullable: true }),
+      incognito: t.exposeBoolean("incognito", { nullable: true }),
+      tabId: t.expose("tabId", { type: "Int", nullable: true }),
+      visitCount: t.expose("visitCount", { type: "Int", nullable: true }),
+      typedCount: t.expose("typedCount", { type: "Int", nullable: true }),
+    }),
+  });
+
+export const SearchResultPageBM = schemaBuilder
+  .objectRef<SearchResultPage>("SearchResultPage")
+  .implement({
+    fields: (t) => ({
+      id: t.exposeID("id"),
+      createdAt: t.expose("createdAt", { type: "DateTime" }),
+      updatedAt: t.expose("updatedAt", { type: "DateTime" }),
+      title: t.exposeString("title"),
+      description: t.exposeString("description", { nullable: true }),
+      icon: t.exposeString("icon", { nullable: true }),
+      url: t.expose("url", { type: "URL" }),
+      pageTags: t.expose("pageTags", {
+        type: [PageTagTypeBM],
+      }),
+      pageMetadata: t.expose("pageMetadata", {
+        type: PageMetadataShapeTypeBM,
+      }),
+      content: t.exposeString("content", { nullable: true }),
+    }),
+  });
+
 export const PageMetadataPayloadBM = schemaBuilder
   .inputRef<PageMetadataShape>("PageMetadataPayload")
   .implement({
@@ -76,7 +151,7 @@ export const PageMetadataPayloadBM = schemaBuilder
   });
 
 export const PageTagPayloadBM = schemaBuilder
-  .inputRef<PageTagShape>("PageTagPayload")
+  .inputRef<PageTagWithNameShape>("PageTagPayload")
   .implement({
     fields: (t) => ({
       name: t.string({ required: true }),

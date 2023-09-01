@@ -18,29 +18,28 @@ datasource db {
 
 // Following is Table Schemas
 model User {
-  id                String              @id @default(uuid())
-  createdAt         DateTime            @default(now()) @map("created_at")
-  updatedAt         DateTime            @updatedAt @map("updated_at")
-  username          String
-  email             String?
-  password          String?
-  firstName         String?             @map("first_name")
-  lastName          String?             @map("last_name")
-  preference        Preference?
-  system            System?
-  seeds             Seed[]
-  backups           Backup[]
-  tags              Tag[]
-  filters           Filter[]
-  folders           Folder[]
-  pages             Page[]
-  pageMetadatas     PageMetadata[]
-  pageTags          PageTag[]
-  pageRaws          PageRaw[]
-  pageScreenshots   PageScreenshot[]
-  IgnoreURL         IgnoreURL?
-  SearchEngineIndex SearchEngineIndex[]
-  Trash             Trash[]
+  id              String           @id @default(uuid())
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  username        String
+  email           String?
+  password        String?
+  firstName       String?          @map("first_name")
+  lastName        String?          @map("last_name")
+  preference      Preference?
+  system          System?
+  seeds           Seed[]
+  backups         Backup[]
+  tags            Tag[]
+  filters         Filter[]
+  folders         Folder[]
+  pages           Page[]
+  pageMetadatas   PageMetadata[]
+  pageTags        PageTag[]
+  pageRaws        PageRaw[]
+  pageScreenshots PageScreenshot[]
+  IgnoreURL       IgnoreURL?
+  Trash           Trash[]
 
   @@map("bk_user")
 }
@@ -185,7 +184,7 @@ model PageMetadata {
   pageId             String    @unique @map("bk_page_id")
   displayTitle       String?   @map("display_title")
   displayDescription String?   @map("display_description")
-  localMode          Boolean   @default(false) // if you don't want to sync up cross devices
+  localMode          Boolean   @default(false) @map("local_mode") // if you don't want to sync up cross devices
   favorite           Boolean   @default(false)
   bookmarked         Boolean   @default(false)
   incognito          Boolean   @default(false) // if you don't want to share the page in the default view
@@ -249,16 +248,14 @@ model PageTag {
 }
 
 model SearchEngineIndex {
-  id          String    @id @default(uuid())
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String    @map("bk_user_id")
-  indexName   String    @map("index_name")
-  lastIndexAt DateTime? @map("last_index_time")
-  version     Int       @default(0)
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  indexName   String   @map("index_name")
+  lastIndexAt DateTime @map("last_index_at")
+  version     Int      @default(0)
 
-  @@unique([userId, indexName])
+  @@unique([indexName])
   @@map("bk_search_engine_index")
 }
 

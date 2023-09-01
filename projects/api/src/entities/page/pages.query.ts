@@ -1,11 +1,13 @@
 import { getPrismaClient } from "../../db";
+import { PAGES_INDEX_NAME, getMeiliSearchClient } from "../../searchEngine";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
-import { PageSortOrderInput, PageBM } from "./schema.type";
+import { PageSortOrderInput, SearchResultPageBM } from "./schema.type";
+import { SearchResultPage } from "./types";
 
 schemaBuilder.queryField("pages", (t) =>
-  t.prismaField({
-    type: [PageBM],
+  t.field({
+    type: [SearchResultPageBM],
     args: {
       searchString: t.arg.string(),
       tags: t.arg.stringList(),
@@ -16,8 +18,13 @@ schemaBuilder.queryField("pages", (t) =>
         type: PageSortOrderInput,
       }),
     },
-    resolve: async (query, parent, args, ctx, info) => {
-      return getPages({
+    resolve: async (parent, args, ctx) => {
+      // return getPages({
+      //   ctx,
+      //   searchString: args.searchString || undefined,
+      //   tags: args.tags || undefined,
+      // });
+      return meiliSearch({
         ctx,
         searchString: args.searchString || undefined,
         tags: args.tags || undefined,
@@ -25,6 +32,20 @@ schemaBuilder.queryField("pages", (t) =>
     },
   }),
 );
+
+export async function meiliSearch({
+  ctx,
+  searchString,
+  tags,
+}: {
+  ctx: GQLContext;
+  searchString?: string;
+  tags?: string[];
+}) {
+  const client = await getMeiliSearchClient();
+  const result = await client.index(PAGES_INDEX_NAME).search(searchString);
+  return result.hits as SearchResultPage[];
+}
 
 export async function getPages({
   ctx,
