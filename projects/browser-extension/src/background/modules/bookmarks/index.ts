@@ -2,6 +2,7 @@ import browser from "webextension-polyfill"
 import { type Bookmarks } from "webextension-polyfill"
 
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 import { type ImportBookmarkRecord } from "~types"
 
 const logFormat = new LogFormat("bookmarks")
@@ -48,6 +49,7 @@ export async function getFlatBookmarks(): Promise<ImportBookmarkRecord[]> {
     traverseBookmarks(flatBookmarks, bookmarks[i])
   }
   console.debug(...logFormat.formatArgs("getFlatBookmarks", flatBookmarks))
+  releaseMemory(bookmarks)
   return flatBookmarks
 }
 

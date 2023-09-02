@@ -13,35 +13,41 @@ const logFormat = new LogFormat("modules/imports")
 export const IMPORT_BOOKMARKS_JOB_TIMEOUT = 1000 * 60 * 60 * 2 // 2 hours
 export const PARALLEL_IMPORT_BOOKMARKS_COUNT = 5
 
-const _importBookmarks = new ImportBookmarks({})
-const _importHistory = new ImportHistory({ syncUpWithHistory: true })
+let _importBookmarks
+let _importHistory
 
 export const startImportBookmarks = async () => {
   console.info(...logFormat.formatArgs("startImportBookmarks"))
+  _importBookmarks = new ImportBookmarks({})
   _importBookmarks.start()
 }
 
 export const stopImportBookmarks = async () => {
   console.info(...logFormat.formatArgs("stopImportBookmarks"))
-  _importBookmarks.stop()
+  _importBookmarks?.stop()
+  _importBookmarks = undefined
 }
 
 export const cleanImportBookmarks = async () => {
   await cleanAllBookmarks()
+  _importBookmarks = undefined
 }
 
 export const startImportHistory = async () => {
   console.info(...logFormat.formatArgs("startImportHistory"))
+  _importHistory = new ImportHistory({ syncUpWithHistory: true })
   _importHistory.start()
 }
 
 export const stopImportHistory = async () => {
   console.info(...logFormat.formatArgs("stopImportHistory"))
-  _importHistory.stop()
+  _importHistory?.stop()
+  _importHistory = undefined
 }
 
 export const cleanImportHistory = async () => {
   await cleanAllHistory()
+  _importHistory = undefined
 }
 
 export const init = async () => {

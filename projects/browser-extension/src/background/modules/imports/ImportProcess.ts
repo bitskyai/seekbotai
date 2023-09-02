@@ -1,5 +1,6 @@
 import { type PageData } from "~background/modules/fetchPage"
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 
 import ImportThread from "./ImportThread"
 
@@ -84,6 +85,7 @@ export class ImportProcess {
     this.stopped = false
     let inProgressPages = await this.getImportPages()
     while (!this.stopped && inProgressPages.length > 0) {
+      releaseMemory(this.importThreads)
       // reset
       this.importThreads = []
 
@@ -126,8 +128,14 @@ export class ImportProcess {
 
   async stop() {
     this.stopped = true
-    await Promise.all(this.importThreads.map((thread) => thread.stop()))
+    await Promise.all(
+      this.importThreads.map((thread) => {
+        thread.stop()
+        thread = undefined // release memory
+      })
+    )
     await this.stopImportPages()
+    releaseMemory(this.importThreads)
     return true
   }
 }
