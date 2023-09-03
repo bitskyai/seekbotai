@@ -16,6 +16,7 @@ import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
 import { getHistory } from "~background/modules/history"
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 import {
   type ImportBookmarkRecord,
   type ImportBookmarks,
@@ -54,6 +55,7 @@ export const getServiceHostName = async (): Promise<string> => {
   const storage = new Storage()
   const hostName = (await storage.get(StorageKeys.ServiceHostName)) as string
   console.debug(...logFormat.formatArgs("getServiceHostName", hostName))
+  releaseMemory(storage)
   return hostName ?? DEFAULT_HOST_NAME
 }
 
@@ -61,6 +63,7 @@ export const setServiceHostName = async (hostName: string) => {
   const storage = new Storage()
   await storage.set(StorageKeys.ServiceHostName, hostName)
   console.debug(...logFormat.formatArgs("setServiceHostName", hostName))
+  releaseMemory(storage)
   return true
 }
 
@@ -68,6 +71,7 @@ export const getServiceProtocol = async (): Promise<string> => {
   const storage = new Storage()
   const protocol = (await storage.get(StorageKeys.ServiceProtocol)) as string
   console.debug(...logFormat.formatArgs("getServiceProtocol", protocol))
+  releaseMemory(storage)
   return protocol ?? DEFAULT_PROTOCOL
 }
 
@@ -75,6 +79,7 @@ export const setServiceProtocol = async (protocol: string) => {
   const storage = new Storage()
   await storage.set(StorageKeys.ServiceProtocol, protocol)
   console.debug(...logFormat.formatArgs("setServiceProtocol", protocol))
+  releaseMemory(storage)
   return true
 }
 
@@ -82,6 +87,7 @@ export const getServiceAPIKey = async (): Promise<string> => {
   const storage = new Storage()
   const apiKey = (await storage.get(StorageKeys.ServiceAPIKey)) as string
   console.debug(...logFormat.formatArgs("getServiceAPIKey", apiKey))
+  releaseMemory(storage)
   return apiKey ?? DEFAULT_API_KEY
 }
 
@@ -89,6 +95,7 @@ export const setServiceAPIKey = async (apiKey: string) => {
   const storage = new Storage()
   await storage.set(StorageKeys.ServiceAPIKey, apiKey)
   console.debug(...logFormat.formatArgs("setServiceAPIKey", apiKey))
+  releaseMemory(storage)
   return true
 }
 
@@ -96,6 +103,7 @@ export const getServicePort = async (): Promise<number> => {
   const storage = new Storage()
   const port = (await storage.get(StorageKeys.ServicePort)) as number
   console.debug(...logFormat.formatArgs("getServicePort", port))
+  releaseMemory(storage)
   return port
 }
 
@@ -103,6 +111,7 @@ export const setServicePort = async (port: number) => {
   const storage = new Storage()
   await storage.set(StorageKeys.ServicePort, port)
   console.debug(...logFormat.formatArgs("setServicePort", port))
+  releaseMemory(storage)
   return true
 }
 
@@ -112,6 +121,7 @@ export const getServiceDiscoverStatus = async (): Promise<ServiceStatus> => {
     StorageKeys.ServiceDiscoverStatus
   )) as ServiceStatus
   console.debug(...logFormat.formatArgs("getServiceDiscoverStatus", status))
+  releaseMemory(storage)
   return status ?? ServiceStatus.Unknown
 }
 
@@ -119,6 +129,7 @@ export const setServiceDiscoverStatus = async (status: ServiceStatus) => {
   const storage = new Storage()
   await storage.set(StorageKeys.ServiceDiscoverStatus, status)
   console.debug(...logFormat.formatArgs("setServiceDiscoverStatus", status))
+  releaseMemory(storage)
   return true
 }
 
@@ -128,6 +139,7 @@ export const getServiceHealthStatus = async (): Promise<ServiceStatus> => {
     StorageKeys.ServiceHealthStatus
   )) as ServiceStatus
   console.debug(...logFormat.formatArgs("getServiceHealthStatus", status))
+  releaseMemory(storage)
   return status ?? ServiceStatus.Unknown
 }
 
@@ -135,6 +147,7 @@ export const setServiceHealthStatus = async (status: ServiceStatus) => {
   const storage = new Storage()
   await storage.set(StorageKeys.ServiceHealthStatus, status)
   console.debug(...logFormat.formatArgs("setServiceHealthStatus", status))
+  releaseMemory(storage)
   return true
 }
 
@@ -485,6 +498,7 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
 
   // send request to backend
   await createOrUpdatePages(bookmarks)
+  releaseMemory(bookmarks) // release memory
 }
 
 function getPageHash(page: Bookmarks.BookmarkTreeNode | History.HistoryItem) {
@@ -592,6 +606,10 @@ export const syncUpWithLatestBookmarks = async () => {
     failed,
     remaining
   })
+  releaseMemory(inProgress)
+  releaseMemory(success)
+  releaseMemory(failed)
+  releaseMemory(failed)
   return importBookmarksSummary
 }
 
@@ -917,6 +935,7 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
 
   // send request to backend
   await createOrUpdatePages(pages)
+  releaseMemory(pages) // release memory
 }
 
 export const syncUpWithLatestHistory = async ({
@@ -937,14 +956,6 @@ export const syncUpWithLatestHistory = async ({
     text
   })
   const importHistory = await getImportHistory()
-  // _.sortBy(historyItems, [(historyItem)=>{
-  //   const visitTimeDistance = new Date().getTime() - new Date(historyItem.lastVisitTime??0).getTime()
-  //   const visitTimeDistanceByDay = Math.ceil(visitTimeDistance / (1000 * 3600 * 24)) ?? 1;
-  //   // need to improve the rank algorithm
-  //   const rank = (historyItem.visitCount + historyItem.typedCount)*(1+1/visitTimeDistanceByDay)
-  //   historyItem.rank = rank
-  //   return rank;
-  // }])
 
   const importHistoryHash: { [key: string]: ImportHistoryRecord } = {}
   updateImportPageHash(importHistoryHash, importHistory?.inProgress)
@@ -1015,6 +1026,10 @@ export const syncUpWithLatestHistory = async ({
     failed,
     remaining
   })
+  releaseMemory(inProgress)
+  releaseMemory(success)
+  releaseMemory(failed)
+  releaseMemory(failed) // release memory
   return importHistorySummary
 }
 
@@ -1112,7 +1127,7 @@ export const startImportHistory = async ({
     inProgress: history,
     remaining: remaining
   })
-
+  releaseMemory(history) // release memory
   return history
 }
 

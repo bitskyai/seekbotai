@@ -123,15 +123,22 @@ export enum LogLevel {
 }
 
 // TODO: make logLevel configurable
+// const logLevel = process?.env?.LOG_LEVEL
+//   ? parseInt(process.env.LOG_LEVEL)
+//   : LogLevel.ERROR + 1
 const logLevel = LogLevel.DEBUG
+if (logLevel > LogLevel.ERROR) {
+  console.error = () => {}
+}
+if (logLevel > LogLevel.WARN) {
+  console.warn = () => {}
+}
+
+if (logLevel > LogLevel.INFO) {
+  console.info = () => {}
+}
 
 if (logLevel > LogLevel.DEBUG) {
   console.debug = () => {}
   console.log = () => {}
-} else if (logLevel > LogLevel.INFO) {
-  console.info = () => {}
-} else if (logLevel > LogLevel.WARN) {
-  console.warn = () => {}
-} else if (logLevel > LogLevel.ERROR) {
-  console.error = () => {}
 }

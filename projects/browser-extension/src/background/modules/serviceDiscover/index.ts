@@ -3,6 +3,7 @@ import { DEFAULT_SELF_IDENTIFICATION, PORT_RANGE } from "@bitsky/shared"
 import { setApolloClientToNull } from "~background/modules/apis"
 import { ImportThread } from "~background/modules/imports"
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 import {
   getServiceHostName,
   getServicePort,
@@ -81,6 +82,8 @@ export const discoverService = async (
         break
       }
     }
+    releaseMemory(pagesData) // release memory
+    releaseMemory(importThreads) // release memory
   }
   let status = ServiceStatus.Failed
   if (found) {

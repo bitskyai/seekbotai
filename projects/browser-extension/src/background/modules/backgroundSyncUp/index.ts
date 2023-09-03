@@ -1,10 +1,10 @@
-import { log } from "console"
 import _ from "lodash"
 
 import { Storage } from "@plasmohq/storage"
 
 import { createOrUpdatePages } from "~background/modules/apis/createOrUpdatePages"
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 import {
   BackgroundSyncUpStatus,
   StorageKeys,
@@ -36,11 +36,13 @@ const sendCreateBookmarksRequest = async () => {
           status: BackgroundSyncUpStatus.Success
         })
       }
+      releaseMemory(syncUpItem)
     } catch (err) {
       await updateBackgroundSyncUpAPICreateOrUpdatePages({
         ...syncUpItem,
         status: BackgroundSyncUpStatus.Failed
       })
+      releaseMemory(syncUpItem)
     }
   }
 

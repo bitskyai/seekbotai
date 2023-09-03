@@ -14,7 +14,7 @@ import { ServiceStatus } from "~types"
 
 const logFormat = new LogFormat("apis/apolloClient")
 
-let _apolloClient = null
+let _apolloClient = undefined
 
 const _initApolloClient = async () => {
   const serviceHealthStatus = await getServiceHealthStatus()
@@ -30,7 +30,7 @@ const _initApolloClient = async () => {
       apiKey
     })
   } else {
-    _apolloClient = null
+    _apolloClient = undefined
   }
 }
 
@@ -95,5 +95,5 @@ export const getApolloClient = async () => {
 // Used when cannot connect to server, we need to set apollo client to null
 // like health check
 export const setApolloClientToNull = () => {
-  _apolloClient = null
+  _apolloClient = undefined
 }

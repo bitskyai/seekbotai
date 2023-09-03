@@ -7,7 +7,7 @@
   "author": "help.bitskyai@gmail.com",
   "license": "GPL-3.0",
   "scripts": {
-    "dev": "plasmo dev --verbose",
+    "dev": "plasmo dev --verbose --env=.env.development",
     "build": "plasmo build",
     "package": "plasmo package",
     "codegen": "graphql-codegen"

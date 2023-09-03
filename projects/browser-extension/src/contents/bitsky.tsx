@@ -9,6 +9,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { type PageCreateOrUpdatePayload } from "~/graphql/generated"
 import { MessageSubject } from "~background/messages"
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 
 const logFormat = new LogFormat("contents/bitsky")
 
@@ -58,11 +59,13 @@ const BitskyHelper = () => {
       }
 
       console.info(...logFormat.formatArgs("currentPageData", currentPageData))
+      const pages = [currentPageData]
       // save current page
       await sendToBackground({
         name: MessageSubject.createOrUpdatePages,
-        body: [currentPageData]
+        body: pages
       })
+      releaseMemory(pages) // release memory
       setSaving(false)
       setSuccess(true)
       clearTimeout(hideNotificationHandler)
