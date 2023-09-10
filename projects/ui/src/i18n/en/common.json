@@ -21,8 +21,10 @@
     "title": "Search",
     "searchBtn": "Search",
     "placeholder": "Search something...",
-    "advancedSearch": "Switch to advanced",
-    "basicSearch": "Switch to basic"
+    "moreOptions": "More options",
+    "lessOptions": "Less options",
+    "basicSearch": "Switch to basic",
+    "sortBy": "Sort by"
   },
   "viewedAt": "Viewed At"
 }

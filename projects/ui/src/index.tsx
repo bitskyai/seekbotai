@@ -9,8 +9,9 @@ import "./index.css";
 import { router } from "./routes.js";
 import { ThemeProvider } from "./theme/index.js";
 
-let url = import.meta.env.VITE_API_URL;
-if (!url) {
+const host = import.meta.env.VITE_API_URL;
+let url = `${host}/graphql`;
+if (!host) {
   url = `${window.location.origin}/graphql`;
 }
 

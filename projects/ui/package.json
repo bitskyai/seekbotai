@@ -21,7 +21,10 @@
     "i18next": "^22.4.15",
     "react-i18next": "^12.2.2",
     "vitest": "^0.31.0",
-    "antd": "^5.4.6"
+    "antd": "^5.8.6",
+    "instantsearch.css": "^8.0.0",
+    "react-instantsearch": "^7.0.2",
+    "@meilisearch/instant-meilisearch": "^0.13.5"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^3.0.0",
@@ -30,6 +33,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/react-instantsearch-dom": "^6.12.3",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",

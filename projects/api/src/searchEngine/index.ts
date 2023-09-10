@@ -10,12 +10,14 @@ import { join } from "path";
 
 const MEILI_SEARCH_BINARY_NAME_PREFIX = "meilisearch_bin";
 let meiliSearchProcess: ChildProcessWithoutNullStreams;
+let indexingIntervalHandler: NodeJS.Timer;
 
 export const PAGES_INDEX_NAME = "pages";
 export const TAGS_INDEX_NAME = "tags";
 export const MAX_TRIES_UNTIL_HEALTH = 60;
 export const HEALTH_CHECK_INTERVAL = 1000;
-export const CHECK_NEW_INDEXES_INTERVAL = 1000 * 60; // 1 min
+export const CHECK_NEW_INDEXES_INTERVAL = 1000 * 60 * 0.5; // 5 min
+export { setupProxy } from "./setupProxy";
 
 async function getMeiliSearchBinaryName(dirPath: string) {
   const dirContents = await fs.readdirSync(dirPath);
@@ -76,7 +78,7 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
     });
 
     meiliSearchProcess.stderr.on("data", (data) => {
-      logger.error(`meilisearch error`, { error: data.toString() });
+      logger.info(`meilisearch stderr`, { data: data.toString() });
     });
 
     meiliSearchProcess.on("close", (code) => {
@@ -103,10 +105,12 @@ export async function setupIndexes() {
   if (ready) {
     const meiliSearch = await getMeiliSearchClient();
     const indexes = await meiliSearch.getIndexes();
+    logger.debug(`existing indexes`, { indexes: indexes });
     const indexesHashMap: { [key: string]: Index } = {};
     indexes.results.map((index) => {
       indexesHashMap[index.uid] = index;
     });
+    logger.debug(`existing indexes hashmap`, { hashmap: indexesHashMap });
     if (!indexesHashMap[PAGES_INDEX_NAME]) {
       await initPagesIndex();
     }
@@ -118,12 +122,14 @@ export async function setupIndexes() {
 export async function startIndexing() {
   await setupIndexes();
   console.log("startIndexing");
-  setInterval(async () => {
+  clearInterval(indexingIntervalHandler);
+  indexingIntervalHandler = setInterval(async () => {
     await startPagesIndex();
-  }, 1000 * 30);
+  }, CHECK_NEW_INDEXES_INTERVAL);
 }
 
 export async function stopSearchEngine() {
+  clearInterval(indexingIntervalHandler);
   if (meiliSearchProcess) {
     meiliSearchProcess.kill();
   }
@@ -143,6 +149,7 @@ export async function waitMeiliSearchReady() {
   let healthCheck = false;
   let tried = 0;
   while (!healthCheck && tried++ < MAX_TRIES_UNTIL_HEALTH) {
+    logger.debug(`healthCheck number: ${tried}`);
     try {
       const meiliSearch = await getMeiliSearchClient();
       const health = await meiliSearch.health();
@@ -154,7 +161,6 @@ export async function waitMeiliSearchReady() {
         );
       }
     } catch (err) {
-      logger.warn(err);
       await new Promise((resolve) =>
         setTimeout(resolve, HEALTH_CHECK_INTERVAL),
       );
@@ -177,8 +183,24 @@ async function updatePagesIndexSetting() {
   const logger = getLogger();
   const meiliSearch = await getMeiliSearchClient();
   const settings: Settings = {
-    rankingRules: [],
     distinctAttribute: "url",
+    rankingRules: [
+      "words",
+      "sort",
+      "typo",
+      "proximity",
+      "attribute",
+      "exactness",
+    ],
+    filterableAttributes: [
+      "pageTags.tag.name",
+      "pageMetadata.bookmarked",
+      "pageMetadata.favorite",
+      "pageMetadata.incognito",
+      "pageMetadata.localMode",
+      "pageMetadata.lastVisitTime",
+      "url",
+    ],
     searchableAttributes: [
       "pageMetadata.displayTitle",
       "pageMetadata.displayDescription",
@@ -189,12 +211,12 @@ async function updatePagesIndexSetting() {
       "content",
     ],
     sortableAttributes: [
-      "pageMetadata.lastVisitTime:desc",
-      "pageMetadata.visitCount:desc",
-      "pageMetadata.favorite:desc",
-      "pageMetadata.bookmarked:desc",
-      "pageMetadata.typeCount:desc",
-      "pageMetadata.updatedAt:desc",
+      "pageMetadata.lastVisitTime",
+      "pageMetadata.visitCount",
+      "pageMetadata.favorite",
+      "pageMetadata.bookmarked",
+      "pageMetadata.typeCount",
+      "pageMetadata.updatedAt",
     ],
   };
   logger.info(`Updating index ${PAGES_INDEX_NAME} settings`);

@@ -8,6 +8,7 @@ import "./entities";
 import { schemaBuilder } from "./entities";
 import { getAppConfig } from "./helpers/config";
 import printGraphqlSchema from "./helpers/printSchema";
+import { setupProxy } from "./searchEngine";
 
 export async function createApp() {
   const config = getAppConfig();
@@ -38,6 +39,7 @@ export async function createApp() {
   app.use(express.static(path.join(__dirname + "/public")));
   app.use(express.static(path.join(__dirname + "/ui")));
   app.use("/graphql", yoga);
+  await setupProxy(app);
 
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname + "/ui/index.html"));

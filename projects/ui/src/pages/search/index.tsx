@@ -1,174 +1,125 @@
-import { usePageEffect } from "../../core/page.js";
-import { GetPagesDocument } from "../../graphql/generated.js";
-import { updateURLQuery } from "../../helpers/utils.js";
-import {
-  FileImageOutlined,
-  TagOutlined,
-  ClockCircleOutlined,
-} from "@ant-design/icons";
-import { useQuery } from "@apollo/client";
-import {
-  Layout,
-  theme,
-  Typography,
-  Input,
-  Button,
-  Skeleton,
-  Avatar,
-  List,
-  Space,
-} from "antd";
-import { createElement } from "react";
+import "instantsearch.css/themes/algolia-min.css";
+import { type SearchResultPage } from "../../graphql/generated";
+import { DownOutlined } from "@ant-design/icons";
+import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
+import { Button, Form } from "antd";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  InfiniteHits,
+  InstantSearch,
+  SortBy,
+  SearchBox,
+  Highlight,
+  ClearRefinements,
+  ToggleRefinement,
+  RefinementList,
+  Configure,
+  Snippet,
+} from "react-instantsearch";
 import "./style.css";
 
-const { Header, Content } = Layout;
-const { Title } = Typography;
-const { Search } = Input;
-
-export default function Home(): JSX.Element {
-  const { t } = useTranslation();
-
-  usePageEffect({ title: t("search.title") });
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
-  const padding = 20;
-  const params = new URLSearchParams(window.location.search);
-  const tagsStr = params.get("tags");
-  const tagsParams = tagsStr?.split(",").map((tag) => tag);
-  const {
-    loading,
-    error,
-    data,
-    refetch: fetchBookmarks,
-  } = useQuery(GetPagesDocument, {
-    variables: { tags: tagsParams, searchString: params.get("text") ?? "" },
-  });
-
-  const onSearch = (value: string) => {
-    updateURLQuery([{ paramName: "searchString", paramValue: value }]);
-    fetchBookmarks({ searchString: value });
-  };
-
-  const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-    <Space>
-      {createElement(icon)}
-      {text}
-    </Space>
-  );
-
-  function getOrigin(url: string) {
-    const urlObj = new URL(url);
-    return urlObj.origin;
-  }
-
-  return (
-    <Layout
-      style={{ padding: `0 ${padding}px`, backgroundColor: colorBgContainer }}
-    >
-      <Header
-        style={{
-          padding: 0,
-          backgroundColor: colorBgContainer,
-        }}
-      >
-        <Title level={3}>{t("search.title")}</Title>
-      </Header>
-      <Content>
-        <div>
-          <div className="search-container">
-            <div className="search-remaining">
-              <Search
-                placeholder={t("search.placeholder")}
-                allowClear
-                enterButton
-                loading={loading}
-                size="large"
-                onSearch={onSearch}
-              />
-            </div>
-            <div style={{ width: 160 }}>
-              <Button size="large" type="link">
-                {t("search.advancedSearch")}
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div>
-          {loading ? (
-            <Skeleton active />
-          ) : (
-            <List
-              itemLayout="vertical"
-              size="large"
-              pagination={{
-                position: "bottom",
-                pageSizeOptions: ["50", "200", "500", "1000", "2000"],
-                align: "center",
-                defaultPageSize: 50,
-                showTotal: (total, range) =>
-                  `Showing ${range[0]}-${range[1]} of ${total} items`, // Custom total display
-              }}
-              dataSource={data?.pages ?? []}
-              renderItem={(item) => (
-                <List.Item
-                  key={item.id}
-                  actions={[
-                    <IconText
-                      icon={ClockCircleOutlined}
-                      text={`${t("viewedAt")}: ${
-                        item.pageMetadata.lastVisitTime
-                          ? new Date(
-                              item.pageMetadata.lastVisitTime,
-                            ).toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                            })
-                          : ""
-                      }`}
-                      key="list-vertical-like-o"
-                    />,
-                    <IconText
-                      icon={FileImageOutlined}
-                      text={getOrigin(item.url)}
-                      key="list-vertical-like-o"
-                    />,
-                  ].concat(
-                    item.pageTags.map((item) => (
-                      <IconText
-                        icon={TagOutlined}
-                        text={item.tag.name}
-                        key={item.tag.id}
-                      />
-                    )),
-                  )}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar src={item.icon} />}
-                    title={
-                      <a key="url-link" target="blank" href={item.url}>
-                        {item.pageMetadata.displayTitle ??
-                          item.title ??
-                          item.url}
-                      </a>
-                    }
-                    description={
-                      item.pageMetadata.displayDescription ?? item.description
-                    }
-                  />
-                  {/* {item.content} */}
-                </List.Item>
-              )}
-            />
-          )}
-        </div>
-      </Content>
-    </Layout>
-  );
+let url = import.meta.env.VITE_API_URL;
+if (!url) {
+  url = `${window.location.origin}`;
 }
+console.log("url", url);
+const searchClient = instantMeiliSearch(
+  url,
+  "8499a9f9-a7a5-4bb2-a445-bc82afe1366c",
+  {
+    finitePagination: true,
+  },
+);
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const App = () => {
+  const { t } = useTranslation();
+  const [expand, setExpand] = useState(false);
+  return (
+    <div className="ais-InstantSearch">
+      <InstantSearch indexName="pages" searchClient={searchClient}>
+        <div>
+          <div>
+            <SearchBox autoFocus />
+            <Button
+              size="large"
+              type="link"
+              onClick={() => {
+                setExpand(!expand);
+              }}
+            >
+              <DownOutlined rotate={expand ? 180 : 0} rev={undefined} />{" "}
+              {expand ? t("search.lessOptions") : t("search.moreOptions")}
+            </Button>
+          </div>
+          <div className="search-options" hidden={expand ? false : true}>
+            <Form {...layout}>
+              <Form.Item label={t("search.sortBy")}>
+                <SortBy
+                  items={[
+                    {
+                      value: "pages:pageMetadata.lastVisitTime:desc",
+                      label: "Last Visit Time",
+                    },
+                    {
+                      value: "pages:pageMetadata.visitCount:desc",
+                      label: "Most Visited",
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </Form>
+          </div>
+
+          <Configure
+            hitsPerPage={10}
+            attributesToSnippet={["content:50"]}
+            snippetEllipsisText={"..."}
+          />
+        </div>
+        <div className="search-results">
+          {/* <Hits hitComponent={Hit} />
+          <Pagination showLast={true} /> */}
+          <ClearRefinements />
+          <RefinementList
+            attribute="pageTags.tag.name"
+            searchable={true}
+            searchablePlaceholder="Search tag"
+            showMore={true}
+          />
+          <ToggleRefinement
+            attribute="pageMetadata.bookmarked"
+            label="Bookmarked"
+          />
+          <ToggleRefinement
+            attribute="pageMetadata.favorite"
+            label="Favorite"
+          />
+          <InfiniteHits showPrevious hitComponent={Hit} />
+        </div>
+      </InstantSearch>
+    </div>
+  );
+};
+
+const Hit = ({ hit }: { hit: SearchResultPage }) => (
+  <div key={hit.id}>
+    <div className="hit-name">
+      <Highlight attribute="title" hit={hit} />
+    </div>
+    <img
+      src={hit.icon ?? ""}
+      alt={hit.pageMetadata.displayTitle ?? hit.title}
+    />
+    <div className="hit-content">
+      <Snippet attribute="content" hit={hit} />
+    </div>
+  </div>
+);
+
+export default App;
