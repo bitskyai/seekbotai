@@ -1,8 +1,8 @@
-import "instantsearch.css/themes/algolia-min.css";
 import { type SearchResultPage } from "../../graphql/generated";
 import { DownOutlined } from "@ant-design/icons";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import { Button, Form } from "antd";
+import algoliasearch from "algoliasearch/lite";
+import { Button, Form, Layout } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,6 +18,10 @@ import {
   Snippet,
 } from "react-instantsearch";
 import "./style.css";
+import Panel from "../../components/AisPanel";
+import "instantsearch.css/themes/satellite.css";
+
+const { Header, Content, Sider } = Layout;
 
 let url = import.meta.env.VITE_API_URL;
 if (!url) {
@@ -39,69 +43,70 @@ const layout = {
 
 const App = () => {
   const { t } = useTranslation();
-  const [expand, setExpand] = useState(false);
   return (
-    <div className="ais-InstantSearch">
-      <InstantSearch indexName="pages" searchClient={searchClient}>
-        <div>
-          <div>
-            <SearchBox autoFocus />
-            <Button
-              size="large"
-              type="link"
-              onClick={() => {
-                setExpand(!expand);
-              }}
-            >
-              <DownOutlined rotate={expand ? 180 : 0} rev={undefined} />{" "}
-              {expand ? t("search.lessOptions") : t("search.moreOptions")}
-            </Button>
-          </div>
-          <div className="search-options" hidden={expand ? false : true}>
-            <Form {...layout}>
-              <Form.Item label={t("search.sortBy")}>
-                <SortBy
-                  items={[
-                    {
-                      value: "pages:pageMetadata.lastVisitTime:desc",
-                      label: "Last Visit Time",
-                    },
-                    {
-                      value: "pages:pageMetadata.visitCount:desc",
-                      label: "Most Visited",
-                    },
-                  ]}
-                />
-              </Form.Item>
-            </Form>
-            <ClearRefinements />
+    <InstantSearch indexName="pages" searchClient={searchClient}>
+      <Layout>
+        <Sider width={300} style={{ padding: "0 10px" }} theme="light">
+          <Panel header="Bookmark">
+            <ToggleRefinement
+              attribute="pageMetadata.bookmarked"
+              label="Bookmarked"
+            />
+          </Panel>
+          <Panel header="Favorite">
+            <ToggleRefinement
+              attribute="pageMetadata.favorite"
+              label="Favorite"
+            />
+          </Panel>
+          <Panel header="Tag">
             <RefinementList
               attribute="pageTags.tag.name"
               searchable={true}
               searchablePlaceholder="Search tag"
               showMore={true}
             />
-            <ToggleRefinement
-              attribute="pageMetadata.bookmarked"
-              label="Bookmarked"
-            />
-            <ToggleRefinement
-              attribute="pageMetadata.favorite"
-              label="Favorite"
-            />
-          </div>
+          </Panel>
+        </Sider>
+        <Layout>
+          <Content>
+            <div>
+              <div>
+                <SearchBox autoFocus />
+              </div>
+              <div>
+                <ClearRefinements />
+                <Form {...layout}>
+                  <Form.Item label={t("search.sortBy")}>
+                    <SortBy
+                      items={[
+                        {
+                          value: "pages:pageMetadata.lastVisitTime:desc",
+                          label: "Last Visit Time",
+                        },
+                        {
+                          value: "pages:pageMetadata.visitCount:desc",
+                          label: "Most Visited",
+                        },
+                      ]}
+                    />
+                  </Form.Item>
+                </Form>
+              </div>
 
-          <Configure
-            hitsPerPage={10}
-            attributesToSnippet={["content:50"]}
-            snippetEllipsisText={"..."}
-          />
-        </div>
-        <div className="search-results">
-          <InfiniteHits showPrevious hitComponent={Hit} />
-        </div>
-      </InstantSearch>
-    </div>
+              <Configure
+                hitsPerPage={10}
+                attributesToSnippet={["content:50"]}
+                snippetEllipsisText={"..."}
+              />
+            </div>
+            <div className="search-results">
+              <InfiniteHits showPrevious hitComponent={Hit} />
+            </div>
+          </Content>
+        </Layout>
+      </Layout>
+    </InstantSearch>
   );
 };
 

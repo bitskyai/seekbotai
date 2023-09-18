@@ -52,14 +52,7 @@ export function AppLayout(): JSX.Element {
   }, []);
   const items: MenuItem[] = [
     getItem(
-      <NavLink
-        to="/settings"
-        // className={({ isActive, isPending }) =>
-        //   isPending ? "pending" : isActive ? "active" : ""
-        // }
-      >
-        {t("settings")}
-      </NavLink>,
+      <NavLink to="/settings">{t("settings")}</NavLink>,
       "settings",
       <SettingOutlined rev={undefined} />,
     ),
@@ -92,7 +85,7 @@ export function AppLayout(): JSX.Element {
             lineHeight: `48px`,
             backgroundColor: "transparent",
             borderBlockEnd: "1px solid rgba(5, 5, 5, 0.06)",
-            padding: 0,
+            padding: "0 16px",
           }}
         >
           <div
@@ -101,7 +94,6 @@ export function AppLayout(): JSX.Element {
               display: "flex",
               alignItems: "center",
               marginBlock: 0,
-              marginInline: "16px",
               boxSizing: "border-box",
             }}
           >
@@ -112,10 +104,10 @@ export function AppLayout(): JSX.Element {
                 position: "relative",
               }}
             >
-              <Logo />
+              <Logo url="/search" />
             </div>
             <div style={{ flex: "1 1 0%;" }}></div>
-            <div style={{ boxSizing: "border-box" }}>
+            <div style={{ boxSizing: "border-box", marginLeft: "16px" }}>
               <Menu
                 theme="light"
                 mode="horizontal"
