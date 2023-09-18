@@ -74,6 +74,21 @@ const App = () => {
                 />
               </Form.Item>
             </Form>
+            <ClearRefinements />
+            <RefinementList
+              attribute="pageTags.tag.name"
+              searchable={true}
+              searchablePlaceholder="Search tag"
+              showMore={true}
+            />
+            <ToggleRefinement
+              attribute="pageMetadata.bookmarked"
+              label="Bookmarked"
+            />
+            <ToggleRefinement
+              attribute="pageMetadata.favorite"
+              label="Favorite"
+            />
           </div>
 
           <Configure
@@ -83,23 +98,6 @@ const App = () => {
           />
         </div>
         <div className="search-results">
-          {/* <Hits hitComponent={Hit} />
-          <Pagination showLast={true} /> */}
-          <ClearRefinements />
-          <RefinementList
-            attribute="pageTags.tag.name"
-            searchable={true}
-            searchablePlaceholder="Search tag"
-            showMore={true}
-          />
-          <ToggleRefinement
-            attribute="pageMetadata.bookmarked"
-            label="Bookmarked"
-          />
-          <ToggleRefinement
-            attribute="pageMetadata.favorite"
-            label="Favorite"
-          />
           <InfiniteHits showPrevious hitComponent={Hit} />
         </div>
       </InstantSearch>

@@ -3,21 +3,15 @@ import {
   APP_NAVIGATE_TO_EXTENSION_SETTINGS,
   APP_READY_MESSAGE,
 } from "../../../shared";
-import { GetTagsDocument, Tag } from "../graphql/generated";
-import {
-  BookOutlined,
-  SettingOutlined,
-  TagOutlined,
-  FilterOutlined,
-} from "@ant-design/icons";
-import { useQuery } from "@apollo/client";
+import Logo from "../components/logo";
+import { SettingOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Menu, Skeleton } from "antd";
+import { Layout, Skeleton, Menu } from "antd";
 import { ReactNode, Key, Fragment, Suspense, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
 
-const { Content, Sider } = Layout;
+const { Content, Header } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -35,27 +29,14 @@ function getItem(
   } as MenuItem;
 }
 
-function getTagItem(tag: Tag): MenuItem {
-  return getItem(
-    <NavLink to={`/search?tags=${tag.id}`}>{tag.name}</NavLink>,
-    `tag:${tag.id}`,
-  );
-}
-
 /**
  * The primary application layout.
  */
 export function AppLayout(): JSX.Element {
   const { t } = useTranslation();
-  const [collapsed, setCollapsed] = useState(false);
   const [selectedKeys] = useState([]);
   const [displayExtensionSettings, setDisplayExtensionSettings] =
     useState(false);
-
-  const { loading: fetchTags, data: tagsData } = useQuery(GetTagsDocument);
-
-  const SIDE_NAV_WIDTH = 300;
-  const SIDE_COLLAPSED_NAV_WIDTH = 80;
 
   // TODO: create a common iframe message handler
   // notify iframe parent app is ready to receive messages
@@ -69,7 +50,7 @@ export function AppLayout(): JSX.Element {
       }
     });
   }, []);
-  const defaultMenuItem = [
+  const items: MenuItem[] = [
     getItem(
       <NavLink
         to="/settings"
@@ -80,11 +61,11 @@ export function AppLayout(): JSX.Element {
         {t("settings")}
       </NavLink>,
       "settings",
-      <SettingOutlined />,
+      <SettingOutlined rev={undefined} />,
     ),
   ];
   if (displayExtensionSettings) {
-    defaultMenuItem.push(
+    items.push(
       getItem(
         <a
           onClick={() => {
@@ -94,74 +75,57 @@ export function AppLayout(): JSX.Element {
           {t("extensionSettings")}
         </a>,
         "extensionSettings",
-        <SettingOutlined />,
+        <SettingOutlined rev={undefined} />,
       ),
     );
   }
 
-  const items: MenuItem[] = defaultMenuItem.concat([
-    // getItem(t("sideNav.folders"), "folders", <FolderOutlined />, [
-    //   getItem("Bookmark Bar", "3"),
-    // ]),
-    getItem(
-      t("sideNav.filters.sectionTitle"),
-      "filters",
-      <FilterOutlined />,
-      [
-        getItem(
-          <NavLink
-            to="/search"
-            // className={({ isActive, isPending }) =>
-            //   isPending ? "pending" : isActive ? "active" : ""
-            // }
-          >
-            {t("sideNav.allBookmarks")}
-          </NavLink>,
-          "allBookmarks",
-          <BookOutlined />,
-        ),
-      ].concat([]),
-    ),
-    getItem(
-      t("sideNav.tags.sectionTitle"),
-      "tags",
-      <TagOutlined />,
-      fetchTags
-        ? [getItem(<Skeleton active />, "tagsSkeleton")]
-        : tagsData?.tags?.map((tag) => getTagItem(tag)),
-    ),
-  ]);
-
   return (
     <Fragment>
-      <Layout hasSider>
-        <Sider
-          width={SIDE_NAV_WIDTH}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+      <Layout>
+        <Header
+          className="bitsky-header"
           style={{
-            overflow: "auto",
-            height: "100vh",
-            position: "fixed",
-            left: 0,
-            top: 0,
-            bottom: 0,
+            display: "flex",
+            alignItems: "center",
+            height: 48,
+            lineHeight: `48px`,
+            backgroundColor: "transparent",
+            borderBlockEnd: "1px solid rgba(5, 5, 5, 0.06)",
+            padding: 0,
           }}
         >
-          <Menu
-            theme="dark"
-            mode="inline"
-            items={items}
-            defaultSelectedKeys={selectedKeys}
-          />
-        </Sider>
-        <Layout
-          className="site-layout"
-          style={{
-            marginLeft: collapsed ? SIDE_COLLAPSED_NAV_WIDTH : SIDE_NAV_WIDTH,
-          }}
-        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              marginBlock: 0,
+              marginInline: "16px",
+              boxSizing: "border-box",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <Logo />
+            </div>
+            <div style={{ flex: "1 1 0%;" }}></div>
+            <div style={{ boxSizing: "border-box" }}>
+              <Menu
+                theme="light"
+                mode="horizontal"
+                items={items}
+                defaultSelectedKeys={selectedKeys}
+              />
+            </div>
+          </div>
+        </Header>
+        <Layout>
           <Content>
             <Suspense>
               <Outlet />
