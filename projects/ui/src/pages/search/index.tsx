@@ -1,11 +1,11 @@
 import { type SearchResultPage } from "../../graphql/generated";
 import { DownOutlined } from "@ant-design/icons";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import algoliasearch from "algoliasearch/lite";
 import { Button, Form, Layout } from "antd";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  CurrentRefinements,
+  HitsPerPage,
   InfiniteHits,
   InstantSearch,
   SortBy,
@@ -19,6 +19,7 @@ import {
 } from "react-instantsearch";
 import "./style.css";
 import Panel from "../../components/AisPanel";
+import Refresh from "../../components/Refresh";
 import "instantsearch.css/themes/satellite.css";
 
 const { Header, Content, Sider } = Layout;
@@ -36,17 +37,25 @@ const searchClient = instantMeiliSearch(
   },
 );
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
 const App = () => {
   const { t } = useTranslation();
   return (
     <InstantSearch indexName="pages" searchClient={searchClient}>
+      <Configure
+        hitsPerPage={20}
+        attributesToSnippet={["content:200"]}
+        snippetEllipsisText={"..."}
+      />
       <Layout>
         <Sider width={300} style={{ padding: "0 10px" }} theme="light">
+          <Panel header="Tag">
+            <RefinementList
+              attribute="pageTags.tag.name"
+              searchable={true}
+              searchablePlaceholder="Search tag"
+              showMore={true}
+            />
+          </Panel>
           <Panel header="Bookmark">
             <ToggleRefinement
               attribute="pageMetadata.bookmarked"
@@ -59,14 +68,6 @@ const App = () => {
               label="Favorite"
             />
           </Panel>
-          <Panel header="Tag">
-            <RefinementList
-              attribute="pageTags.tag.name"
-              searchable={true}
-              searchablePlaceholder="Search tag"
-              showMore={true}
-            />
-          </Panel>
         </Sider>
         <Layout>
           <Content>
@@ -75,33 +76,48 @@ const App = () => {
                 <SearchBox autoFocus />
               </div>
               <div>
-                <ClearRefinements />
-                <Form {...layout}>
-                  <Form.Item label={t("search.sortBy")}>
-                    <SortBy
-                      items={[
-                        {
-                          value: "pages:pageMetadata.lastVisitTime:desc",
-                          label: "Last Visit Time",
-                        },
-                        {
-                          value: "pages:pageMetadata.visitCount:desc",
-                          label: "Most Visited",
-                        },
-                      ]}
-                    />
-                  </Form.Item>
-                </Form>
+                <HitsPerPage
+                  items={[
+                    { label: "20 hits per page", value: 20, default: true },
+                    { label: "40 hits per page", value: 40 },
+                  ]}
+                />
+                <SortBy
+                  items={[
+                    {
+                      value: "pages:pageMetadata.lastVisitTime:desc",
+                      label: "Last Visit Time",
+                    },
+                    {
+                      value: "pages:pageMetadata.visitCount:desc",
+                      label: "Most Visited",
+                    },
+                  ]}
+                />
+                <Refresh />
               </div>
+              <div>
+                <ClearRefinements />
+                <CurrentRefinements
+                  transformItems={(items) =>
+                    items.map((item) => {
+                      const label = item.label.startsWith(
+                        "hierarchicalCategories",
+                      )
+                        ? "Hierarchy"
+                        : item.label;
 
-              <Configure
-                hitsPerPage={10}
-                attributesToSnippet={["content:50"]}
-                snippetEllipsisText={"..."}
-              />
+                      return {
+                        ...item,
+                        attribute: label,
+                      };
+                    })
+                  }
+                />
+              </div>
             </div>
             <div className="search-results">
-              <InfiniteHits showPrevious hitComponent={Hit} />
+              <InfiniteHits hitComponent={Hit} />
             </div>
           </Content>
         </Layout>
