@@ -1,7 +1,6 @@
 import { type SearchResultPage } from "../../graphql/generated";
-import { DownOutlined } from "@ant-design/icons";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import { Button, Form, Layout } from "antd";
+import { Layout } from "antd";
 import { useTranslation } from "react-i18next";
 import {
   CurrentRefinements,
@@ -21,8 +20,9 @@ import "./style.css";
 import Panel from "../../components/AisPanel";
 import Refresh from "../../components/Refresh";
 import "instantsearch.css/themes/satellite.css";
+import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 let url = import.meta.env.VITE_API_URL;
 if (!url) {
@@ -39,6 +39,20 @@ const searchClient = instantMeiliSearch(
 
 const App = () => {
   const { t } = useTranslation();
+  const transformBooleanToReadableValue = (
+    refinements: CurrentRefinementsConnectorParamsRefinement[],
+  ) => {
+    for (let j = 0; j < refinements.length; j++) {
+      if (refinements[j].value === "true") {
+        refinements[j].label = t("yes");
+      }
+      if (refinements[j].value === "false") {
+        refinements[j].label = t("no");
+      }
+    }
+    return refinements;
+  };
+
   return (
     <InstantSearch indexName="pages" searchClient={searchClient}>
       <Configure
@@ -48,24 +62,24 @@ const App = () => {
       />
       <Layout>
         <Sider width={300} style={{ padding: "0 10px" }} theme="light">
-          <Panel header="Tag">
+          <Panel header={t("search.tag")}>
             <RefinementList
               attribute="pageTags.tag.name"
               searchable={true}
-              searchablePlaceholder="Search tag"
+              searchablePlaceholder={t("search.searchTag")}
               showMore={true}
             />
           </Panel>
-          <Panel header="Bookmark">
+          <Panel header={t("search.bookmark")}>
             <ToggleRefinement
               attribute="pageMetadata.bookmarked"
-              label="Bookmarked"
+              label={t("search.bookmarked")}
             />
           </Panel>
-          <Panel header="Favorite">
+          <Panel header={t("search.favorite")}>
             <ToggleRefinement
               attribute="pageMetadata.favorite"
-              label="Favorite"
+              label={t("search.favorited")}
             />
           </Panel>
         </Sider>
@@ -78,41 +92,61 @@ const App = () => {
               <div>
                 <HitsPerPage
                   items={[
-                    { label: "20 hits per page", value: 20, default: true },
-                    { label: "40 hits per page", value: 40 },
+                    {
+                      label: t("search.resultsPerPage", {
+                        resultsNumber: "20",
+                      }),
+                      value: 20,
+                      default: true,
+                    },
+                    {
+                      label: t("search.resultsPerPage", {
+                        resultsNumber: "40",
+                      }),
+                      value: 40,
+                    },
                   ]}
                 />
                 <SortBy
                   items={[
                     {
                       value: "pages:pageMetadata.lastVisitTime:desc",
-                      label: "Last Visit Time",
+                      label: t("search.lastVisited"),
                     },
                     {
                       value: "pages:pageMetadata.visitCount:desc",
-                      label: "Most Visited",
+                      label: t("search.mostVisited"),
                     },
                   ]}
                 />
-                <Refresh />
               </div>
               <div>
-                <ClearRefinements />
                 <CurrentRefinements
-                  transformItems={(items) =>
-                    items.map((item) => {
-                      const label = item.label.startsWith(
-                        "hierarchicalCategories",
-                      )
-                        ? "Hierarchy"
-                        : item.label;
-
-                      return {
-                        ...item,
-                        attribute: label,
-                      };
-                    })
-                  }
+                  transformItems={(items) => {
+                    for (let i = 0; i < items.length; i++) {
+                      if (items[i].attribute === "pageTags.tag.name") {
+                        items[i].label = t("search.tag");
+                      }
+                      if (items[i].attribute === "pageMetadata.favorite") {
+                        items[i].label = t("search.favorited");
+                        items[i].refinements = transformBooleanToReadableValue(
+                          items[i].refinements,
+                        );
+                      }
+                      if (items[i].attribute === "pageMetadata.bookmarked") {
+                        items[i].label = t("search.bookmarked");
+                        items[i].refinements = transformBooleanToReadableValue(
+                          items[i].refinements,
+                        );
+                      }
+                    }
+                    return items;
+                  }}
+                />
+                <ClearRefinements
+                  translations={{
+                    resetButtonText: t("search.resetButtonText"),
+                  }}
                 />
               </div>
             </div>

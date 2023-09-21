@@ -24,7 +24,19 @@
     "moreOptions": "More options",
     "lessOptions": "Less options",
     "basicSearch": "Switch to basic",
-    "sortBy": "Sort by"
+    "sortBy": "Sort by",
+    "tag": "Tag",
+    "searchTag": "Search tag",
+    "bookmark": "Bookmark",
+    "bookmarked": "Bookmarked",
+    "favorite": "Favorite",
+    "favorited": "Favorited",
+    "resultsPerPage": "{{resultsNumber}} results per page",
+    "lastVisited": "Last visited",
+    "mostVisited": "Most visited",
+    "resetButtonText": "Reset"
   },
-  "viewedAt": "Viewed At"
+  "viewedAt": "Viewed At",
+  "yes": "Yes",
+  "no": "No"
 }

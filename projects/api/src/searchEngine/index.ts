@@ -16,7 +16,7 @@ export const PAGES_INDEX_NAME = "pages";
 export const TAGS_INDEX_NAME = "tags";
 export const MAX_TRIES_UNTIL_HEALTH = 60;
 export const HEALTH_CHECK_INTERVAL = 1000;
-export const CHECK_NEW_INDEXES_INTERVAL = 1000 * 60 * 5; // 5 min
+export const CHECK_NEW_INDEXES_INTERVAL = 1000 * 60 * 10; // 5 min
 export { setupProxy } from "./setupProxy";
 
 async function getMeiliSearchBinaryName(dirPath: string) {
@@ -67,6 +67,10 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
         `${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
         "--master-key",
         config.MEILISEARCH_MASTER_KEY,
+        "--max-indexing-memory",
+        config.MEILI_MAX_INDEXING_MEMORY.toString(),
+        "--max-indexing-threads",
+        config.MEILI_MAX_INDEXING_THREADS.toString(),
         "--db-path",
         meiliSearchDBPath,
         "--no-analytics",
