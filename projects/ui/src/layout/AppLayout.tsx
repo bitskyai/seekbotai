@@ -84,7 +84,7 @@ export function AppLayout(): JSX.Element {
             height: 48,
             lineHeight: `48px`,
             backgroundColor: "transparent",
-            borderBlockEnd: "1px solid rgba(5, 5, 5, 0.06)",
+            borderBlockEnd: "1px solid rgb(208, 215, 222)",
             padding: "0 16px",
           }}
         >
