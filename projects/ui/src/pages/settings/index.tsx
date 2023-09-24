@@ -1,4 +1,4 @@
-import { usePageEffect } from "../../core/page.js";
+import { usePageEffect } from "../../core/search.js";
 import { GetTagsDocument } from "../../graphql/generated.js";
 import { useQuery } from "@apollo/client";
 

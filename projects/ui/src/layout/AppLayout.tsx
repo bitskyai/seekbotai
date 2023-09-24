@@ -4,9 +4,9 @@ import {
   APP_READY_MESSAGE,
 } from "../../../shared";
 import Logo from "../components/logo";
-import { SettingOutlined } from "@ant-design/icons";
+import { SettingOutlined, FileTextOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Skeleton, Menu } from "antd";
+import { Layout, Space, Menu } from "antd";
 import { ReactNode, Key, Fragment, Suspense, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
@@ -34,7 +34,7 @@ function getItem(
  */
 export function AppLayout(): JSX.Element {
   const { t } = useTranslation();
-  const [selectedKeys] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState(["pages"]);
   const [displayExtensionSettings, setDisplayExtensionSettings] =
     useState(false);
 
@@ -51,6 +51,11 @@ export function AppLayout(): JSX.Element {
     });
   }, []);
   const items: MenuItem[] = [
+    getItem(
+      <NavLink to="/search">{t("search.title")}</NavLink>,
+      "pages",
+      <FileTextOutlined rev={undefined} />,
+    ),
     getItem(
       <NavLink to="/settings">{t("settings")}</NavLink>,
       "settings",
@@ -88,34 +93,16 @@ export function AppLayout(): JSX.Element {
             padding: "0 16px",
           }}
         >
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              marginBlock: 0,
-              boxSizing: "border-box",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                position: "relative",
-              }}
-            >
-              <Logo url="/search" />
-            </div>
-            <div style={{ flex: "1 1 0%;" }}></div>
-            <div style={{ boxSizing: "border-box", marginLeft: "16px" }}>
-              <Menu
-                theme="light"
-                mode="horizontal"
-                items={items}
-                defaultSelectedKeys={selectedKeys}
-              />
-            </div>
-          </div>
+          <Space>
+            <Logo url="/search" />
+            <Menu
+              theme="light"
+              items={items}
+              mode="horizontal"
+              style={{ width: 230 }}
+              defaultSelectedKeys={selectedKeys}
+            />
+          </Space>
         </Header>
         <Layout>
           <Content>

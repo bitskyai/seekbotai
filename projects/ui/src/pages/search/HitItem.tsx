@@ -60,11 +60,11 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
   };
 
   const showInput = () => {
-    setInputVisible(true);
+    // setInputVisible(true);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    // setInputValue(e.target.value);
   };
 
   const handleInputConfirm = () => {
@@ -76,7 +76,7 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
   };
 
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditInputValue(e.target.value);
+    // setEditInputValue(e.target.value);
   };
 
   const handleEditInputConfirm = () => {
@@ -103,11 +103,7 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
         <Space>
           <Avatar src={hit.icon} />
           <Tooltip title={hit.url}>
-            <Link
-              target="blank"
-              href={hit.url}
-              editable={{ tooltip: false, onChange: updateDisplayTitle }}
-            >
+            <Link target="blank" href={hit.url}>
               <Highlight attribute={titleHighlightAttribute} hit={hit} />
             </Link>
           </Tooltip>

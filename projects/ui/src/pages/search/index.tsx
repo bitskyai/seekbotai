@@ -52,7 +52,15 @@ const App = () => {
 
   return (
     <div className="search-container">
-      <InstantSearch indexName="pages" searchClient={searchClient}>
+      <InstantSearch
+        indexName="pages"
+        stalledSearchDelay={1000}
+        routing={true}
+        initialUiState={{
+          pages: { sortBy: "pages:pageMetadata.lastVisitTime:desc" },
+        }}
+        searchClient={searchClient}
+      >
         <Configure
           hitsPerPage={20}
           attributesToSnippet={["content:200"]}
