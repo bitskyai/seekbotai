@@ -1,6 +1,5 @@
-import { type SearchResultPage } from "../../graphql/generated";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import { Layout, Space, List, Avatar } from "antd";
+import { Layout, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import {
   CurrentRefinements,
@@ -9,28 +8,17 @@ import {
   InstantSearch,
   SortBy,
   SearchBox,
-  Highlight,
   ClearRefinements,
   ToggleRefinement,
   RefinementList,
   Configure,
-  Snippet,
 } from "react-instantsearch";
 import "./style.css";
 import Panel from "../../components/AisPanel";
 import "instantsearch.css/themes/satellite.css";
-import {
-  FileImageOutlined,
-  TagOutlined,
-  ClockCircleOutlined,
-} from "@ant-design/icons";
+import HitItem from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
 import { createElement } from "react";
-
-function getOrigin(url: string) {
-  const urlObj = new URL(url);
-  return urlObj.origin;
-}
 
 const { Content, Sider } = Layout;
 
@@ -85,6 +73,14 @@ const App = () => {
                 attribute="pageTags.tag.name"
                 searchable={true}
                 searchablePlaceholder={t("search.searchTag")}
+                showMore={true}
+              />
+            </Panel>
+            <Panel header={t("search.url")}>
+              <RefinementList
+                attribute="url"
+                searchable={true}
+                searchablePlaceholder={t("search.searchUrl")}
                 showMore={true}
               />
             </Panel>
@@ -172,82 +168,13 @@ const App = () => {
                 </div>
               </div>
               <div className="search-results">
-                <InfiniteHits hitComponent={Hit} />
+                <InfiniteHits hitComponent={HitItem} />
               </div>
             </Content>
           </Layout>
         </Layout>
       </InstantSearch>
     </div>
-  );
-};
-
-const Hit = ({ hit }: { hit: SearchResultPage }) => {
-  const { t } = useTranslation();
-  return (
-    <List.Item
-      key={hit.id}
-      actions={[
-        <IconText
-          icon={ClockCircleOutlined}
-          text={`${t("viewedAt")}: ${
-            hit.pageMetadata.lastVisitTime
-              ? new Date(hit.pageMetadata.lastVisitTime).toLocaleString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  },
-                )
-              : ""
-          }`}
-          key="list-vertical-like-o"
-        />,
-        <IconText
-          icon={FileImageOutlined}
-          text={getOrigin(hit.url)}
-          key="list-vertical-like-o"
-        />,
-      ].concat(
-        hit.pageTags.map((item) => (
-          <IconText icon={TagOutlined} text={item.tag.name} key={item.tag.id} />
-        )),
-      )}
-    >
-      <List.Item.Meta
-        avatar={<Avatar src={hit.icon} />}
-        title={
-          <a key="url-link" target="blank" href={hit.url}>
-            <Highlight
-              attribute={
-                hit.pageMetadata.displayTitle
-                  ? "pageMetadata.displayTitle"
-                  : hit.title
-                  ? "title"
-                  : "url"
-              }
-              hit={hit}
-            />
-          </a>
-        }
-        description={hit.pageMetadata.displayDescription ?? hit.description}
-      />
-
-      {/* <div className="hit-name">
-        <Highlight attribute="title" hit={hit} />
-      </div> */}
-      {/* <img
-        src={hit.icon ?? ""}
-        alt={hit.pageMetadata.displayTitle ?? hit.title}
-      /> */}
-      <div className="hit-content">
-        <Snippet attribute="content" hit={hit} />
-      </div>
-    </List.Item>
   );
 };
 

@@ -25,6 +25,8 @@
     "lessOptions": "Less options",
     "basicSearch": "Switch to basic",
     "sortBy": "Sort by",
+    "url": "URL",
+    "searchUrl": "Search URL",
     "tag": "Tag",
     "searchTag": "Search tag",
     "bookmark": "Bookmark",

@@ -35,3 +35,13 @@
 .search-container .search-results .ais-InfiniteHits-loadPrevious {
   display: none;
 }
+
+.search-container .search-results .ais-Hits-item,
+.ais-InfiniteHits-item {
+  box-shadow: none !important;
+  padding: 0 0 1.5rem 0 !important;
+}
+
+.search-container .search-results .ant-card {
+  width: 100%;
+}
