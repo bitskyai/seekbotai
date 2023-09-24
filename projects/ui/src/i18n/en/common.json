@@ -37,9 +37,11 @@
     "resultsPerPage": "{{resultsNumber}} results per page",
     "lastVisited": "Last visited",
     "mostVisited": "Most visited",
-    "resetButtonText": "Reset"
+    "resetButtonText": "Reset",
+    "newTag": "New Tag"
   },
   "viewedAt": "Viewed At",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "delete": "Delete"
 }

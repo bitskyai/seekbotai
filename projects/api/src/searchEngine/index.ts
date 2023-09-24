@@ -126,6 +126,7 @@ export async function setupIndexes() {
 export async function startIndexing() {
   await setupIndexes();
   console.log("startIndexing");
+  await startPagesIndex();
   clearInterval(indexingIntervalHandler);
   indexingIntervalHandler = setInterval(async () => {
     await startPagesIndex();
@@ -208,10 +209,9 @@ async function updatePagesIndexSetting() {
     searchableAttributes: [
       "pageMetadata.displayTitle",
       "pageMetadata.displayDescription",
-      "pageTags.tag.name",
-      "url",
       "title",
       "description",
+      "url",
       "content",
     ],
     sortableAttributes: [

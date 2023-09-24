@@ -1,6 +1,5 @@
 import { PageTagDetail, type SearchResultPage } from "../../graphql/generated";
 import {
-  FileImageOutlined,
   ClockCircleOutlined,
   PlusOutlined,
   BookOutlined,
@@ -8,6 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Space, Avatar, Card, Tag, Tooltip, Input, Typography } from "antd";
 import type { InputRef } from "antd";
+import type { Hit } from "instantsearch.js";
 import { createElement, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Highlight, Snippet } from "react-instantsearch";
@@ -21,12 +21,7 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   </Space>
 );
 
-function getOrigin(url: string) {
-  const urlObj = new URL(url);
-  return urlObj.origin;
-}
-
-const HitItem = ({ hit }: { hit: SearchResultPage }) => {
+const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
   const { t } = useTranslation();
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -95,7 +90,11 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
   const updateDisplayTitle = () => {
     console.log("updateDisplayTitle");
   };
-
+  const titleHighlightAttribute = hit.pageMetadata.displayTitle
+    ? "pageMetadata.displayTitle"
+    : hit.title
+    ? "title"
+    : "url";
   return (
     <Card
       hoverable
@@ -109,16 +108,7 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
               href={hit.url}
               editable={{ tooltip: false, onChange: updateDisplayTitle }}
             >
-              <Highlight
-                attribute={
-                  hit.pageMetadata.displayTitle
-                    ? "pageMetadata.displayTitle"
-                    : hit.title
-                    ? "title"
-                    : "url"
-                }
-                hit={hit}
-              />
+              <Highlight attribute={titleHighlightAttribute} hit={hit} />
             </Link>
           </Tooltip>
         </Space>
@@ -141,7 +131,7 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
                 )
               : ""
           }`}
-          key="list-vertical-like-o"
+          key="card-viewedAt"
         />
       }
       actions={[
@@ -152,12 +142,12 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
               ? t("search.unbookmark")
               : t("search.bookmark")
           }
-          key="list-vertical-like-o"
+          key="card-action-bookmark"
         />,
         <IconText
           icon={DeleteOutlined}
-          text={"Delete"}
-          key="list-vertical-like-o"
+          text={t("delete")}
+          key="card-action-delete"
         />,
       ]}
     >
@@ -225,7 +215,7 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
             icon={<PlusOutlined rev={undefined} />}
             onClick={showInput}
           >
-            New Tag
+            {t("search.newTag")}
           </Tag>
         )}
       </Space>
