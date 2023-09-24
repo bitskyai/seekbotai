@@ -3,6 +3,8 @@ import {
   FileImageOutlined,
   ClockCircleOutlined,
   PlusOutlined,
+  BookOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { Space, Avatar, Card, Tag, Tooltip, Input, Typography } from "antd";
 import type { InputRef } from "antd";
@@ -10,8 +12,7 @@ import { createElement, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Highlight, Snippet } from "react-instantsearch";
 
-const { Meta } = Card;
-const { Paragraph } = Typography;
+const { Link, Paragraph, Text } = Typography;
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   <Space>
@@ -102,11 +103,12 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
       title={
         <Space>
           <Avatar src={hit.icon} />
-          <Paragraph
-            style={{ marginBottom: "0" }}
-            editable={{ onChange: updateDisplayTitle }}
-          >
-            <a key="url-link" target="blank" href={hit.url}>
+          <Tooltip title={hit.url}>
+            <Link
+              target="blank"
+              href={hit.url}
+              editable={{ tooltip: false, onChange: updateDisplayTitle }}
+            >
               <Highlight
                 attribute={
                   hit.pageMetadata.displayTitle
@@ -117,8 +119,8 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
                 }
                 hit={hit}
               />
-            </a>
-          </Paragraph>
+            </Link>
+          </Tooltip>
         </Space>
       }
       extra={
@@ -144,8 +146,17 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
       }
       actions={[
         <IconText
-          icon={FileImageOutlined}
-          text={getOrigin(hit.url)}
+          icon={BookOutlined}
+          text={
+            hit.pageMetadata.bookmarked
+              ? t("search.unbookmark")
+              : t("search.bookmark")
+          }
+          key="list-vertical-like-o"
+        />,
+        <IconText
+          icon={DeleteOutlined}
+          text={"Delete"}
           key="list-vertical-like-o"
         />,
       ]}
@@ -170,7 +181,7 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
           const tagElem = (
             <Tag
               key={pageTag.tag.id}
-              closable={index !== 0}
+              closable
               style={{ userSelect: "none" }}
               onClose={() => handleClose(pageTag)}
             >
@@ -209,25 +220,33 @@ const HitItem = ({ hit }: { hit: SearchResultPage }) => {
             onPressEnter={handleInputConfirm}
           />
         ) : (
-          <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
+          <Tag
+            style={tagPlusStyle}
+            icon={<PlusOutlined rev={undefined} />}
+            onClick={showInput}
+          >
             New Tag
           </Tag>
         )}
       </Space>
-      <Space>
-        <Meta
-          description={hit.pageMetadata.displayDescription ?? hit.description}
-        />
-      </Space>
-      {/* <div className="hit-name">
-        <Highlight attribute="title" hit={hit} />
-      </div> */}
-      {/* <img
-        src={hit.icon ?? ""}
-        alt={hit.pageMetadata.displayTitle ?? hit.title}
-      /> */}
       <div className="hit-content">
-        <Snippet attribute="content" hit={hit} />
+        <Space.Compact block>
+          {hit.pageMetadata.displayTitle && (
+            <Text strong>
+              <Highlight attribute="title" hit={hit} />
+            </Text>
+          )}
+          {hit.pageMetadata.displayDescription && (
+            <Text type="secondary">
+              <Highlight attribute="description" hit={hit} />
+            </Text>
+          )}
+        </Space.Compact>
+        <Space.Compact block>
+          <Paragraph>
+            <Snippet attribute="content" hit={hit} />
+          </Paragraph>
+        </Space.Compact>
       </div>
     </Card>
   );

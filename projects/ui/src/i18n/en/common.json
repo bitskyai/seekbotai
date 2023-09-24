@@ -31,6 +31,7 @@
     "searchTag": "Search tag",
     "bookmark": "Bookmark",
     "bookmarked": "Bookmarked",
+    "unbookmark": "Unbookmark",
     "favorite": "Favorite",
     "favorited": "Favorited",
     "resultsPerPage": "{{resultsNumber}} results per page",

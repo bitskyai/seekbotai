@@ -45,3 +45,10 @@
 .search-container .search-results .ant-card {
   width: 100%;
 }
+.search-container .search-results .ant-card .ant-card-actions li {
+  max-width: 150px;
+}
+
+.search-container .search-results .hit-content {
+  margin: 1rem 0 0 0;
+}

@@ -18,7 +18,6 @@ import Panel from "../../components/AisPanel";
 import "instantsearch.css/themes/satellite.css";
 import HitItem from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
-import { createElement } from "react";
 
 const { Content, Sider } = Layout;
 
@@ -33,13 +32,6 @@ const searchClient = instantMeiliSearch(
   {
     finitePagination: true,
   },
-);
-
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-  <Space>
-    {createElement(icon)}
-    {text}
-  </Space>
 );
 
 const App = () => {
@@ -90,12 +82,12 @@ const App = () => {
                 label={t("search.bookmarked")}
               />
             </Panel>
-            <Panel header={t("search.favorite")}>
+            {/* <Panel header={t("search.favorite")}>
               <ToggleRefinement
                 attribute="pageMetadata.favorite"
                 label={t("search.favorited")}
               />
-            </Panel>
+            </Panel> */}
           </Sider>
           <Layout>
             <Content className="search-content">
