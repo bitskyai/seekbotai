@@ -14,7 +14,7 @@ import { Highlight, Snippet } from "react-instantsearch";
 
 const { Link, Paragraph, Text } = Typography;
 
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+const IconText = ({ icon, text }: { icon: any; text: string }) => (
   <Space>
     {createElement(icon)}
     {text}
@@ -90,11 +90,9 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
   const updateDisplayTitle = () => {
     console.log("updateDisplayTitle");
   };
-  const titleHighlightAttribute = hit.pageMetadata.displayTitle
-    ? "pageMetadata.displayTitle"
-    : hit.title
-    ? "title"
-    : "url";
+
+  const titleHighlightAttribute = hit.title ? "title" : "url";
+
   return (
     <Card
       hoverable
