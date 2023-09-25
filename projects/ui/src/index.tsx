@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { SnackbarProvider } from "notistack";
+import { ConfigProvider } from "antd";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
@@ -7,10 +7,10 @@ import { RecoilRoot } from "recoil";
 import "./i18n/config";
 import "./index.css";
 import { router } from "./routes.js";
-import { ThemeProvider } from "./theme/index.js";
 
-let url = import.meta.env.VITE_API_URL;
-if (!url) {
+const host = import.meta.env.VITE_API_URL;
+let url = `${host}/graphql`;
+if (!host) {
   url = `${window.location.origin}/graphql`;
 }
 
@@ -23,11 +23,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
       <RecoilRoot>
-        <ThemeProvider>
-          <SnackbarProvider>
-            <RouterProvider router={router} />
-          </SnackbarProvider>
-        </ThemeProvider>
+        <ConfigProvider>
+          <RouterProvider router={router} />
+        </ConfigProvider>
       </RecoilRoot>
     </ApolloProvider>
   </React.StrictMode>,

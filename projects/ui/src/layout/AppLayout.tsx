@@ -3,21 +3,15 @@ import {
   APP_NAVIGATE_TO_EXTENSION_SETTINGS,
   APP_READY_MESSAGE,
 } from "../../../shared";
-import { GetTagsDocument, Tag } from "../graphql/generated";
-import {
-  BookOutlined,
-  SettingOutlined,
-  TagOutlined,
-  FilterOutlined,
-} from "@ant-design/icons";
-import { useQuery } from "@apollo/client";
+import Logo from "../components/logo";
+import { SettingOutlined, FileTextOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Menu, Skeleton } from "antd";
+import { Layout, Space, Menu } from "antd";
 import { ReactNode, Key, Fragment, Suspense, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, Outlet } from "react-router-dom";
 
-const { Content, Sider } = Layout;
+const { Content, Header } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -35,32 +29,19 @@ function getItem(
   } as MenuItem;
 }
 
-function getTagItem(tag: Tag): MenuItem {
-  return getItem(
-    <NavLink to={`/search?tags=${tag.id}`}>{tag.name}</NavLink>,
-    `tag:${tag.id}`,
-  );
-}
-
 /**
  * The primary application layout.
  */
 export function AppLayout(): JSX.Element {
   const { t } = useTranslation();
-  const [collapsed, setCollapsed] = useState(false);
-  const [selectedKeys] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState(["pages"]);
+  const [menuWidth, setMenuWidth] = useState(250);
   const [displayExtensionSettings, setDisplayExtensionSettings] =
     useState(false);
-
-  const { loading: fetchTags, data: tagsData } = useQuery(GetTagsDocument);
-
-  const SIDE_NAV_WIDTH = 300;
-  const SIDE_COLLAPSED_NAV_WIDTH = 80;
 
   // TODO: create a common iframe message handler
   // notify iframe parent app is ready to receive messages
   useEffect(() => {
-    console.log("app is ready");
     window.parent.postMessage(APP_READY_MESSAGE, "*");
     window.removeEventListener("message", () => console.log("remove message"));
     window.addEventListener("message", function (event) {
@@ -68,23 +49,26 @@ export function AppLayout(): JSX.Element {
         setDisplayExtensionSettings(true);
       }
     });
+    const pathName = window.location.pathname;
+    setSelectedKeys(["pages"]);
+    if (pathName.search("/settings") >= 0) {
+      setSelectedKeys(["settings"]);
+    }
   }, []);
-  const defaultMenuItem = [
+  const items: MenuItem[] = [
     getItem(
-      <NavLink
-        to="/settings"
-        // className={({ isActive, isPending }) =>
-        //   isPending ? "pending" : isActive ? "active" : ""
-        // }
-      >
-        {t("settings")}
-      </NavLink>,
+      <NavLink to="/search">{t("search.title")}</NavLink>,
+      "pages",
+      <FileTextOutlined rev={undefined} />,
+    ),
+    getItem(
+      <NavLink to="/settings">{t("settings")}</NavLink>,
       "settings",
-      <SettingOutlined />,
+      <SettingOutlined rev={undefined} />,
     ),
   ];
   if (displayExtensionSettings) {
-    defaultMenuItem.push(
+    items.push(
       getItem(
         <a
           onClick={() => {
@@ -94,74 +78,42 @@ export function AppLayout(): JSX.Element {
           {t("extensionSettings")}
         </a>,
         "extensionSettings",
-        <SettingOutlined />,
+        <SettingOutlined rev={undefined} />,
       ),
     );
+    setMenuWidth(450);
   }
-
-  const items: MenuItem[] = defaultMenuItem.concat([
-    // getItem(t("sideNav.folders"), "folders", <FolderOutlined />, [
-    //   getItem("Bookmark Bar", "3"),
-    // ]),
-    getItem(
-      t("sideNav.filters.sectionTitle"),
-      "filters",
-      <FilterOutlined />,
-      [
-        getItem(
-          <NavLink
-            to="/search"
-            // className={({ isActive, isPending }) =>
-            //   isPending ? "pending" : isActive ? "active" : ""
-            // }
-          >
-            {t("sideNav.allBookmarks")}
-          </NavLink>,
-          "allBookmarks",
-          <BookOutlined />,
-        ),
-      ].concat([]),
-    ),
-    getItem(
-      t("sideNav.tags.sectionTitle"),
-      "tags",
-      <TagOutlined />,
-      fetchTags
-        ? [getItem(<Skeleton active />, "tagsSkeleton")]
-        : tagsData?.tags?.map((tag) => getTagItem(tag)),
-    ),
-  ]);
 
   return (
     <Fragment>
-      <Layout hasSider>
-        <Sider
-          width={SIDE_NAV_WIDTH}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+      <Layout>
+        <Header
+          className="bitsky-header"
           style={{
-            overflow: "auto",
-            height: "100vh",
-            position: "fixed",
-            left: 0,
-            top: 0,
-            bottom: 0,
+            display: "flex",
+            alignItems: "center",
+            height: 48,
+            lineHeight: `48px`,
+            backgroundColor: "transparent",
+            borderBlockEnd: "1px solid rgb(208, 215, 222)",
+            padding: "0 16px",
           }}
         >
-          <Menu
-            theme="dark"
-            mode="inline"
-            items={items}
-            defaultSelectedKeys={selectedKeys}
-          />
-        </Sider>
-        <Layout
-          className="site-layout"
-          style={{
-            marginLeft: collapsed ? SIDE_COLLAPSED_NAV_WIDTH : SIDE_NAV_WIDTH,
-          }}
-        >
+          <Space>
+            <Logo url="/search" />
+            <Menu
+              theme="light"
+              items={items}
+              mode="horizontal"
+              style={{ width: menuWidth }}
+              onSelect={({ key }) => {
+                setSelectedKeys([key]);
+              }}
+              selectedKeys={selectedKeys}
+            />
+          </Space>
+        </Header>
+        <Layout>
           <Content>
             <Suspense>
               <Outlet />

@@ -1,174 +1,184 @@
-import { usePageEffect } from "../../core/page.js";
-import { GetPagesDocument } from "../../graphql/generated.js";
-import { updateURLQuery } from "../../helpers/utils.js";
-import {
-  FileImageOutlined,
-  TagOutlined,
-  ClockCircleOutlined,
-} from "@ant-design/icons";
-import { useQuery } from "@apollo/client";
-import {
-  Layout,
-  theme,
-  Typography,
-  Input,
-  Button,
-  Skeleton,
-  Avatar,
-  List,
-  Space,
-} from "antd";
-import { createElement } from "react";
+import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
+import { Layout, Space } from "antd";
 import { useTranslation } from "react-i18next";
+import {
+  CurrentRefinements,
+  HitsPerPage,
+  InfiniteHits,
+  InstantSearch,
+  SortBy,
+  SearchBox,
+  ClearRefinements,
+  ToggleRefinement,
+  RefinementList,
+  Configure,
+} from "react-instantsearch";
 import "./style.css";
+import Panel from "../../components/AisPanel";
+import "instantsearch.css/themes/satellite.css";
+import HitItem from "./HitItem";
+import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
 
-const { Header, Content } = Layout;
-const { Title } = Typography;
-const { Search } = Input;
+const { Content, Sider } = Layout;
 
-export default function Home(): JSX.Element {
+let url = import.meta.env.VITE_API_URL;
+if (!url) {
+  url = `${window.location.origin}`;
+}
+console.log("url", url);
+const searchClient = instantMeiliSearch(
+  url,
+  "8499a9f9-a7a5-4bb2-a445-bc82afe1366c",
+  {
+    finitePagination: true,
+  },
+);
+
+const App = () => {
   const { t } = useTranslation();
-
-  usePageEffect({ title: t("search.title") });
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
-  const padding = 20;
-  const params = new URLSearchParams(window.location.search);
-  const tagsStr = params.get("tags");
-  const tagsParams = tagsStr?.split(",").map((tag) => tag);
-  const {
-    loading,
-    error,
-    data,
-    refetch: fetchBookmarks,
-  } = useQuery(GetPagesDocument, {
-    variables: { tags: tagsParams, searchString: params.get("text") ?? "" },
-  });
-
-  const onSearch = (value: string) => {
-    updateURLQuery([{ paramName: "searchString", paramValue: value }]);
-    fetchBookmarks({ searchString: value });
+  const transformBooleanToReadableValue = (
+    refinements: CurrentRefinementsConnectorParamsRefinement[],
+  ) => {
+    for (let j = 0; j < refinements.length; j++) {
+      if (refinements[j].value === "true") {
+        refinements[j].label = t("yes");
+      }
+      if (refinements[j].value === "false") {
+        refinements[j].label = t("no");
+      }
+    }
+    return refinements;
   };
 
-  const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-    <Space>
-      {createElement(icon)}
-      {text}
-    </Space>
-  );
-
-  function getOrigin(url: string) {
-    const urlObj = new URL(url);
-    return urlObj.origin;
-  }
-
   return (
-    <Layout
-      style={{ padding: `0 ${padding}px`, backgroundColor: colorBgContainer }}
-    >
-      <Header
-        style={{
-          padding: 0,
-          backgroundColor: colorBgContainer,
+    <div className="search-container">
+      <InstantSearch
+        indexName="pages"
+        stalledSearchDelay={1000}
+        routing={true}
+        initialUiState={{
+          pages: { sortBy: "pages:pageMetadata.lastVisitTime:desc" },
         }}
+        searchClient={searchClient}
       >
-        <Title level={3}>{t("search.title")}</Title>
-      </Header>
-      <Content>
-        <div>
-          <div className="search-container">
-            <div className="search-remaining">
-              <Search
-                placeholder={t("search.placeholder")}
-                allowClear
-                enterButton
-                loading={loading}
-                size="large"
-                onSearch={onSearch}
+        <Configure
+          hitsPerPage={20}
+          attributesToSnippet={["content:100"]}
+          snippetEllipsisText={"..."}
+        />
+        <Layout>
+          <Sider className="search-side-bar" width={300} theme="light">
+            <Panel header={t("search.tag")}>
+              <RefinementList
+                attribute="pageTags.tag.name"
+                searchable={true}
+                searchablePlaceholder={t("search.searchTag")}
+                showMore={true}
               />
-            </div>
-            <div style={{ width: 160 }}>
-              <Button size="large" type="link">
-                {t("search.advancedSearch")}
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div>
-          {loading ? (
-            <Skeleton active />
-          ) : (
-            <List
-              itemLayout="vertical"
-              size="large"
-              pagination={{
-                position: "bottom",
-                pageSizeOptions: ["50", "200", "500", "1000", "2000"],
-                align: "center",
-                defaultPageSize: 50,
-                showTotal: (total, range) =>
-                  `Showing ${range[0]}-${range[1]} of ${total} items`, // Custom total display
-              }}
-              dataSource={data?.pages ?? []}
-              renderItem={(item) => (
-                <List.Item
-                  key={item.id}
-                  actions={[
-                    <IconText
-                      icon={ClockCircleOutlined}
-                      text={`${t("viewedAt")}: ${
-                        item.pageMetadata.lastVisitTime
-                          ? new Date(
-                              item.pageMetadata.lastVisitTime,
-                            ).toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                            })
-                          : ""
-                      }`}
-                      key="list-vertical-like-o"
-                    />,
-                    <IconText
-                      icon={FileImageOutlined}
-                      text={getOrigin(item.url)}
-                      key="list-vertical-like-o"
-                    />,
-                  ].concat(
-                    item.pageTags.map((item) => (
-                      <IconText
-                        icon={TagOutlined}
-                        text={item.tag.name}
-                        key={item.tag.id}
-                      />
-                    )),
-                  )}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar src={item.icon} />}
-                    title={
-                      <a key="url-link" target="blank" href={item.url}>
-                        {item.pageMetadata.displayTitle ??
-                          item.title ??
-                          item.url}
-                      </a>
-                    }
-                    description={
-                      item.pageMetadata.displayDescription ?? item.description
-                    }
+            </Panel>
+            <Panel header={t("search.hostName")}>
+              <RefinementList
+                attribute="pageMetadata.hostName"
+                searchable={true}
+                searchablePlaceholder={t("search.searchHostName")}
+                showMore={true}
+              />
+            </Panel>
+            <Panel header={t("search.bookmark")}>
+              <ToggleRefinement
+                attribute="pageMetadata.bookmarked"
+                label={t("search.bookmarked")}
+              />
+            </Panel>
+            {/* <Panel header={t("search.favorite")}>
+              <ToggleRefinement
+                attribute="pageMetadata.favorite"
+                label={t("search.favorited")}
+              />
+            </Panel> */}
+          </Sider>
+          <Layout>
+            <Content className="search-content">
+              <div className="search-bar">
+                <SearchBox autoFocus />
+                <div className="search-items">
+                  <Space size="small">
+                    <HitsPerPage
+                      items={[
+                        {
+                          label: t("search.resultsPerPage", {
+                            resultsNumber: "20",
+                          }),
+                          value: 20,
+                          default: true,
+                        },
+                        {
+                          label: t("search.resultsPerPage", {
+                            resultsNumber: "40",
+                          }),
+                          value: 40,
+                        },
+                      ]}
+                    />
+                    <SortBy
+                      items={[
+                        {
+                          value: "pages:pageMetadata.lastVisitTime:desc",
+                          label: t("search.lastVisited"),
+                        },
+                        {
+                          value: "pages:pageMetadata.visitCount:desc",
+                          label: t("search.mostVisited"),
+                        },
+                      ]}
+                    />
+                    <ClearRefinements
+                      className="clear-refinements-button"
+                      translations={{
+                        resetButtonText: t("search.resetButtonText"),
+                      }}
+                    />
+                  </Space>
+                </div>
+                <div>
+                  <CurrentRefinements
+                    transformItems={(items) => {
+                      for (let i = 0; i < items.length; i++) {
+                        if (items[i].attribute === "pageTags.tag.name") {
+                          items[i].label = t("search.tag");
+                        }
+                        if (items[i].attribute === "pageMetadata.hostName") {
+                          items[i].label = t("search.hostName");
+                        }
+                        if (items[i].attribute === "pageMetadata.favorite") {
+                          items[i].label = t("search.favorited");
+                          items[i].refinements =
+                            transformBooleanToReadableValue(
+                              items[i].refinements,
+                            );
+                        }
+                        if (items[i].attribute === "pageMetadata.bookmarked") {
+                          items[i].label = t("search.bookmarked");
+                          items[i].refinements =
+                            transformBooleanToReadableValue(
+                              items[i].refinements,
+                            );
+                        }
+                      }
+                      return items;
+                    }}
                   />
-                  {/* {item.content} */}
-                </List.Item>
-              )}
-            />
-          )}
-        </div>
-      </Content>
-    </Layout>
+                </div>
+              </div>
+              <div className="search-results">
+                <InfiniteHits hitComponent={HitItem} />
+              </div>
+            </Content>
+          </Layout>
+        </Layout>
+      </InstantSearch>
+    </div>
   );
-}
+};
+
+export default App;

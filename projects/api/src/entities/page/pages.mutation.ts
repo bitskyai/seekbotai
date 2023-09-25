@@ -100,6 +100,7 @@ export async function createOrUpdatePages({
           });
         }
         const metadata = page.pageMetadata ?? {};
+        metadata.hostName = new URL(page.url).hostname;
         const currentMetadata = await prisma.pageMetadata.findFirst({
           where: {
             version: 0,

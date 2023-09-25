@@ -2,6 +2,8 @@ export interface MeiliSearchConfig {
   HOST_NAME: string;
   MEILISEARCH_PORT: number;
   MEILISEARCH_MASTER_KEY: string;
+  MEILI_MAX_INDEXING_MEMORY: number;
+  MEILI_MAX_INDEXING_THREADS: number;
 }
 
 export interface ServerOptions extends MeiliSearchConfig {

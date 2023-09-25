@@ -34,6 +34,7 @@ export const getChangedPages = async (since: Date) => {
           visitCount: true,
           typedCount: true,
           version: true,
+          hostName: true,
         },
       },
     },

@@ -63,6 +63,12 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     MEILISEARCH_DB_FOLDER: str({
       default: DEFAULT_APP_CONFIG.MEILISEARCH_DB_FOLDER,
     }),
+    MEILI_MAX_INDEXING_MEMORY: num({
+      default: DEFAULT_APP_CONFIG.MEILI_MAX_INDEXING_MEMORY,
+    }),
+    MEILI_MAX_INDEXING_THREADS: num({
+      default: DEFAULT_APP_CONFIG.MEILI_MAX_INDEXING_THREADS,
+    }),
   });
 }
 

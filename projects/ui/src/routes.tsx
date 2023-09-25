@@ -5,7 +5,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 const SettingsLayout = lazy(() => import("./layout/SettingsLayout.js"));
 
-const Dashboard = lazy(() => import("./pages/search/index.js"));
+const Search = lazy(() => import("./pages/search/index.js"));
 const Settings = lazy(() => import("./pages/settings/index.js"));
 
 /**
@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
     errorElement: <RootError />,
     children: [
       { index: true, element: <Navigate to="/search" replace /> },
-      { path: "search", element: <Dashboard /> },
+      { path: "search", element: <Search /> },
       {
         path: "",
         element: <SettingsLayout />,

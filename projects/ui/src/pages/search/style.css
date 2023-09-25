@@ -1,9 +1,54 @@
 .search-container {
-  display: flex;
   width: 100%;
-  margin: 12px 0;
 }
 
-.search-remaining {
-  flex: 1;
+.search-container .search-content {
+  background-color: white;
+  padding: 16px;
+}
+
+.search-container .search-content .search-bar {
+  padding-bottom: 16px;
+}
+
+.search-container .search-content .search-bar .search-items {
+  margin: 10px 0;
+}
+.search-container .search-content .search-bar .search-items button,
+.search-container .search-content .search-bar .search-items select {
+  height: 2rem;
+}
+
+.search-container .search-side-bar {
+  padding: 16px;
+  border-right: 1px solid rgb(208, 215, 222);
+}
+
+.search-container .search-side-bar .ais-Panel {
+  margin-bottom: 1rem;
+}
+
+.search-container .search-side-bar .ais-Panel-header {
+  margin-bottom: 0.5rem;
+}
+
+.search-container .search-results .ais-InfiniteHits-loadPrevious {
+  display: none;
+}
+
+.search-container .search-results .ais-Hits-item,
+.ais-InfiniteHits-item {
+  box-shadow: none !important;
+  padding: 0 0 1.5rem 0 !important;
+}
+
+.search-container .search-results .ant-card {
+  width: 100%;
+}
+.search-container .search-results .ant-card .ant-card-actions li {
+  max-width: 150px;
+}
+
+.search-container .search-results .hit-content {
+  margin: 1rem 0 0 0;
 }
