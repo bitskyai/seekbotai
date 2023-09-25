@@ -76,11 +76,11 @@ const App = () => {
                 showMore={true}
               />
             </Panel>
-            <Panel header={t("search.url")}>
+            <Panel header={t("search.hostName")}>
               <RefinementList
-                attribute="url"
+                attribute="pageMetadata.hostName"
                 searchable={true}
-                searchablePlaceholder={t("search.searchUrl")}
+                searchablePlaceholder={t("search.searchHostName")}
                 showMore={true}
               />
             </Panel>
@@ -146,6 +146,9 @@ const App = () => {
                       for (let i = 0; i < items.length; i++) {
                         if (items[i].attribute === "pageTags.tag.name") {
                           items[i].label = t("search.tag");
+                        }
+                        if (items[i].attribute === "pageMetadata.hostName") {
+                          items[i].label = t("search.hostName");
                         }
                         if (items[i].attribute === "pageMetadata.favorite") {
                           items[i].label = t("search.favorited");

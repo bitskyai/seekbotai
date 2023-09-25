@@ -30,8 +30,8 @@ function getContent($: cheerio.Root) {
   addSpacesBetweenTextNodes($("body"), $);
 
   let content = $("body").prop("innerText");
-  // remove multiple new lines to only keep one
-  content = content.replace(/\n{2,}/g, "\n");
+  // replace multiple new lines to space
+  content = content.replace(/\n+/g, " ");
   // remove multiple spaces to only keep one
   content = content.replace(/\s+/g, " ");
   return content;

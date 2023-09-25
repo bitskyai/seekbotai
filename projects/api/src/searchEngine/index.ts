@@ -204,7 +204,7 @@ async function updatePagesIndexSetting() {
       "pageMetadata.incognito",
       "pageMetadata.localMode",
       "pageMetadata.lastVisitTime",
-      "url",
+      "pageMetadata.hostName",
     ],
     searchableAttributes: [
       "pageMetadata.displayTitle",

@@ -27,6 +27,8 @@
     "sortBy": "Sort by",
     "url": "URL",
     "searchUrl": "Search URL",
+    "hostName": "Host Name",
+    "searchHostName": "Search host name",
     "tag": "Tag",
     "searchTag": "Search tag",
     "bookmark": "Bookmark",
