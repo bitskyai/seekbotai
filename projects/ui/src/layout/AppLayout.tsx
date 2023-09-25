@@ -35,13 +35,13 @@ function getItem(
 export function AppLayout(): JSX.Element {
   const { t } = useTranslation();
   const [selectedKeys, setSelectedKeys] = useState(["pages"]);
+  const [menuWidth, setMenuWidth] = useState(250);
   const [displayExtensionSettings, setDisplayExtensionSettings] =
     useState(false);
 
   // TODO: create a common iframe message handler
   // notify iframe parent app is ready to receive messages
   useEffect(() => {
-    console.log("app is ready");
     window.parent.postMessage(APP_READY_MESSAGE, "*");
     window.removeEventListener("message", () => console.log("remove message"));
     window.addEventListener("message", function (event) {
@@ -49,6 +49,11 @@ export function AppLayout(): JSX.Element {
         setDisplayExtensionSettings(true);
       }
     });
+    const pathName = window.location.pathname;
+    setSelectedKeys(["pages"]);
+    if (pathName.search("/settings") >= 0) {
+      setSelectedKeys(["settings"]);
+    }
   }, []);
   const items: MenuItem[] = [
     getItem(
@@ -76,6 +81,7 @@ export function AppLayout(): JSX.Element {
         <SettingOutlined rev={undefined} />,
       ),
     );
+    setMenuWidth(450);
   }
 
   return (
@@ -99,8 +105,11 @@ export function AppLayout(): JSX.Element {
               theme="light"
               items={items}
               mode="horizontal"
-              style={{ width: 230 }}
-              defaultSelectedKeys={selectedKeys}
+              style={{ width: menuWidth }}
+              onSelect={({ key }) => {
+                setSelectedKeys([key]);
+              }}
+              selectedKeys={selectedKeys}
             />
           </Space>
         </Header>
