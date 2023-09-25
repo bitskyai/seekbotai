@@ -1,5 +1,4 @@
 import { HISTORY_TAG } from "@bitsky/shared"
-import logo from "data-base64:~/assets/icon.svg"
 import cssText from "data-text:~/contents/bitsky.css"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
@@ -14,7 +13,8 @@ import { releaseMemory } from "~helpers/util"
 const logFormat = new LogFormat("contents/bitsky")
 
 export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"]
+  matches: ["<all_urls>"],
+  run_at: "document_start"
 }
 
 export const getStyle = () => {
@@ -85,28 +85,51 @@ const BitskyHelper = () => {
     }
   }
 
+  const setupPageCollect = async () => {
+    await sendLatestPage()
+
+    const bodyNode = document.querySelector("body")
+    const config = { childList: true, subtree: true }
+    // Callback function to execute when mutations are observed
+    const callback = () => {
+      clearTimeout(saveIntervalHandler)
+      saveIntervalHandler = setTimeout(async () => {
+        await sendLatestPage()
+      }, FREQUENTLY_SAVE_INTERVAL)
+    }
+    if (observer) {
+      observer?.disconnect()
+      observer = null
+    }
+    // Create an observer instance linked to the callback function
+    observer = new MutationObserver(callback)
+
+    // Start observing the target node for configured mutations
+    observer.observe(bodyNode, config)
+  }
+
   useEffect(() => {
-    window.addEventListener("load", async () => {
-      await sendLatestPage()
-
-      const bodyNode = document.querySelector("body")
-      const config = { childList: true, subtree: true }
-      // Callback function to execute when mutations are observed
-      const callback = () => {
-        clearTimeout(saveIntervalHandler)
-        saveIntervalHandler = setTimeout(async () => {
-          await sendLatestPage()
-        }, FREQUENTLY_SAVE_INTERVAL)
-      }
-      if (observer) {
-        observer?.disconnect()
-        observer = null
-      }
-      // Create an observer instance linked to the callback function
-      observer = new MutationObserver(callback)
-
-      // Start observing the target node for configured mutations
-      observer.observe(bodyNode, config)
+    console.log(...logFormat.formatArgs("bitsky contents script"))
+    let setupedPageCollect = false
+    const setupPageCollectHandler = setTimeout(() => {
+      console.info(
+        ...logFormat.formatArgs(
+          "bitsky content script: setupPageCollect through setTimeout"
+        )
+      )
+      setupedPageCollect = true
+      setupPageCollect()
+    }, FREQUENTLY_SAVE_INTERVAL)
+    document.removeEventListener("DOMContentLoaded", setupPageCollect)
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.info(
+        ...logFormat.formatArgs(
+          "bitsky content script: DOMContentLoaded event fired"
+        )
+      )
+      clearTimeout(setupPageCollectHandler)
+      if (setupedPageCollect) return
+      setupPageCollect()
     })
   }, [])
 
