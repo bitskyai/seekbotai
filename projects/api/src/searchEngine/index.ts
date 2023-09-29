@@ -1,22 +1,31 @@
-import { getPrismaClient } from "../db";
 import { overwriteAppConfig, getAppConfig } from "../helpers/config";
 import getLogger from "../helpers/logger";
 import { type MeiliSearchConfig } from "../types";
+import {
+  PAGES_INDEX_NAME,
+  MAX_TRIES_UNTIL_HEALTH,
+  HEALTH_CHECK_INTERVAL,
+  CHECK_NEW_INDEXES_INTERVAL,
+  MEILI_SEARCH_BINARY_NAME_PREFIX,
+} from "./constants";
 import { getChangedPages } from "./pages";
+import { getPageIndex, updatePageIndex, pageIndexSettings } from "./pagesIndex";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import fs from "fs-extra";
-import { MeiliSearch, type Settings, type Index } from "meilisearch";
+import { MeiliSearch, type Index } from "meilisearch";
 import { join } from "path";
 
-const MEILI_SEARCH_BINARY_NAME_PREFIX = "meilisearch_bin";
+export {
+  PAGES_INDEX_NAME,
+  MAX_TRIES_UNTIL_HEALTH,
+  HEALTH_CHECK_INTERVAL,
+  CHECK_NEW_INDEXES_INTERVAL,
+  MEILI_SEARCH_BINARY_NAME_PREFIX,
+} from "./constants";
+
 let meiliSearchProcess: ChildProcessWithoutNullStreams;
 let indexingIntervalHandler: NodeJS.Timer;
 
-export const PAGES_INDEX_NAME = "pages";
-export const TAGS_INDEX_NAME = "tags";
-export const MAX_TRIES_UNTIL_HEALTH = 60;
-export const HEALTH_CHECK_INTERVAL = 1000;
-export const CHECK_NEW_INDEXES_INTERVAL = 1000 * 60 * 10; // 5 min
 export { setupProxy } from "./setupProxy";
 
 async function getMeiliSearchBinaryName(dirPath: string) {
@@ -118,6 +127,7 @@ export async function setupIndexes() {
     if (!indexesHashMap[PAGES_INDEX_NAME]) {
       await initPagesIndex();
     }
+    await updatePagesIndexSetting();
   } else {
     logger.error(`MeiliSearch is not ready`);
   }
@@ -179,52 +189,22 @@ async function initPagesIndex() {
   const meiliSearch = await getMeiliSearchClient();
   logger.info(`Creating index ${PAGES_INDEX_NAME}`);
   await meiliSearch.createIndex(PAGES_INDEX_NAME, { primaryKey: "id" });
-  // TODO: need to redesign a way how to update settings
-  // Currently, settings are updated only when index is created, it should be more dynamic
-  await updatePagesIndexSetting();
 }
 
 async function updatePagesIndexSetting() {
   const logger = getLogger();
-  const meiliSearch = await getMeiliSearchClient();
-  const settings: Settings = {
-    distinctAttribute: "url",
-    rankingRules: [
-      "words",
-      "sort",
-      "typo",
-      "proximity",
-      "attribute",
-      "exactness",
-    ],
-    filterableAttributes: [
-      "pageTags.tag.name",
-      "pageMetadata.bookmarked",
-      "pageMetadata.favorite",
-      "pageMetadata.incognito",
-      "pageMetadata.localMode",
-      "pageMetadata.lastVisitTime",
-      "pageMetadata.hostName",
-    ],
-    searchableAttributes: [
-      "pageMetadata.displayTitle",
-      "pageMetadata.displayDescription",
-      "title",
-      "description",
-      "url",
-      "content",
-    ],
-    sortableAttributes: [
-      "pageMetadata.lastVisitTime",
-      "pageMetadata.visitCount",
-      "pageMetadata.favorite",
-      "pageMetadata.bookmarked",
-      "pageMetadata.typeCount",
-      "pageMetadata.updatedAt",
-    ],
-  };
-  logger.info(`Updating index ${PAGES_INDEX_NAME} settings`);
-  await meiliSearch.index(PAGES_INDEX_NAME).updateSettings(settings);
+  const pageIndexingRecord = await getPageIndex();
+  const currentVersion = pageIndexingRecord?.version;
+  if (currentVersion !== pageIndexSettings.version) {
+    const meiliSearch = await getMeiliSearchClient();
+    logger.info(`Updating index ${PAGES_INDEX_NAME} settings`);
+    await meiliSearch
+      .index(PAGES_INDEX_NAME)
+      .updateSettings(pageIndexSettings.settings);
+    await updatePageIndex({ version: pageIndexSettings.version });
+  } else {
+    logger.info(`Index ${PAGES_INDEX_NAME} settings are up to date`);
+  }
 }
 
 /**
@@ -233,13 +213,8 @@ async function updatePagesIndexSetting() {
  */
 async function startPagesIndex(lastIndexAt?: Date) {
   const logger = getLogger();
-  const prismaClient = getPrismaClient();
   const config = getAppConfig();
-  const pageIndexingRecord = await prismaClient.searchEngineIndex.findFirst({
-    where: {
-      indexName: PAGES_INDEX_NAME,
-    },
-  });
+  const pageIndexingRecord = await getPageIndex();
   if (!lastIndexAt) {
     lastIndexAt = pageIndexingRecord?.lastIndexAt ?? new Date(0);
   }
@@ -260,18 +235,8 @@ async function startPagesIndex(lastIndexAt?: Date) {
       .addDocuments(pages, { primaryKey: "id" });
     logger.debug(`indexRes`, { indexRes });
   }
-  await prismaClient.searchEngineIndex.upsert({
-    where: {
-      indexName: PAGES_INDEX_NAME,
-    },
-    create: {
-      indexName: PAGES_INDEX_NAME,
-      lastIndexAt: new Date(),
-    },
-    update: {
-      lastIndexAt: new Date(),
-    },
-  });
+  await updatePageIndex({ lastIndexAt: new Date() });
+  logger.info(`startPagesIndex: done`);
 }
 
 // export async function stopIndexingPages() {}
