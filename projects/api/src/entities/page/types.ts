@@ -21,6 +21,7 @@ export type PageTagShape = Partial<PageTag>;
 export type PageCreateOrUpdateShape = PageShape & {
   url: string;
   raw?: string;
+  screenshot?: string;
   pageTags?: PageTagWithNameShape[];
   pageMetadata?: PageMetadataShape;
 };

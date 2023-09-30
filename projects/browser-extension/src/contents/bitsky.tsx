@@ -1,5 +1,6 @@
 import { HISTORY_TAG } from "@bitsky/shared"
 import cssText from "data-text:~/contents/bitsky.css"
+import html2canvas from "html2canvas"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 
@@ -28,6 +29,13 @@ function extractPageHTML() {
   return currentPageHTML
 }
 
+async function extractPageImage() {
+  const bodyElm = document.body
+  const canvas = await html2canvas(bodyElm)
+  const dataUrl = canvas.toDataURL()
+  return dataUrl
+}
+
 const BitskyHelper = () => {
   const AUTO_CLOSE_NOTIFICATION = 5000
   const FREQUENTLY_SAVE_INTERVAL = 15000
@@ -45,13 +53,22 @@ const BitskyHelper = () => {
       setSaving(true)
       setSuccess(false)
       // document.body.style.background = "pink" // used for debugging
-      console.info(...logFormat.formatArgs("DOMContentLoaded event fired"))
+      console.info(...logFormat.formatArgs("window.load event fired"))
+      let pageImage = ""
+      try {
+        pageImage = await extractPageImage()
+      } catch (err) {
+        console.error(
+          ...logFormat.formatArgs("screenshot fail solution 2: ", err)
+        )
+      }
       const currentPageData: PageCreateOrUpdatePayload = {
         title: document.title,
         pageTags: [{ name: HISTORY_TAG }],
         url: window.location.href,
         content: "",
         raw: extractPageHTML() ?? "",
+        screenshot: pageImage,
         pageMetadata: {
           bookmarked: false,
           lastVisitTime: new Date().toISOString()

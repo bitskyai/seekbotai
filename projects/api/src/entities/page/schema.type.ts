@@ -167,6 +167,7 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
       url: t.string({ required: true }),
       icon: t.string({ required: false }),
       content: t.string({ required: false }),
+      screenshot: t.string({ required: false }),
       raw: t.string({ required: false }),
       pageTags: t.field({
         type: [PageTagPayloadBM],

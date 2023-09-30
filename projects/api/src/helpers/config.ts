@@ -12,6 +12,21 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     APP_HOME_PATH: str({
       default: DEFAULT_APP_CONFIG.APP_HOME_PATH,
     }),
+    SCREENSHOT_PREVIEW_CROP_HEIGHT: num({
+      default: DEFAULT_APP_CONFIG.SCREENSHOT_PREVIEW_CROP_HEIGHT,
+    }),
+    SAVE_FULL_SIZE_SCREENSHOT: bool({
+      default: DEFAULT_APP_CONFIG.SAVE_FULL_SIZE_SCREENSHOT,
+    }),
+    SCREENSHOT_FOLDER: str({
+      default: DEFAULT_APP_CONFIG.SCREENSHOT_FOLDER,
+    }),
+    SCREENSHOT_FULL_SIZE_FOLDER: str({
+      default: DEFAULT_APP_CONFIG.SCREENSHOT_FULL_SIZE_FOLDER,
+    }),
+    SCREENSHOT_PREVIEW_FOLDER: str({
+      default: DEFAULT_APP_CONFIG.SCREENSHOT_PREVIEW_FOLDER,
+    }),
     APP_SOURCE_PATH: str({
       default: DEFAULT_APP_CONFIG.APP_SOURCE_PATH,
     }),
