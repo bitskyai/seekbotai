@@ -15,6 +15,9 @@ function getCleanEnv(overwriteProcessEnv?: object) {
     SCREENSHOT_PREVIEW_CROP_HEIGHT: num({
       default: DEFAULT_APP_CONFIG.SCREENSHOT_PREVIEW_CROP_HEIGHT,
     }),
+    SCREENSHOT_PREVIEW_CROP_WIDTH: num({
+      default: DEFAULT_APP_CONFIG.SCREENSHOT_PREVIEW_CROP_WIDTH,
+    }),
     SAVE_FULL_SIZE_SCREENSHOT: bool({
       default: DEFAULT_APP_CONFIG.SAVE_FULL_SIZE_SCREENSHOT,
     }),

@@ -1,6 +1,8 @@
 import {
   DEFAULT_MEILISEARCH_MASTER_KEY,
   DEFAULT_HOST_NAME,
+  SCREENSHOT_PREVIEW_CROP_HEIGHT,
+  SCREENSHOT_PREVIEW_CROP_WIDTH,
 } from "../bitskyLibs/shared";
 import { AppConfig } from "../types";
 import path from "path";
@@ -14,7 +16,8 @@ export const DEFAULT_APP_CONFIG: AppConfig = {
   SCREENSHOT_FOLDER: "screenshots", // relative to `APP_HOME_PATH`
   SCREENSHOT_PREVIEW_FOLDER: `preview`, // relative to `SCREENSHOT_FOLDER`
   SCREENSHOT_FULL_SIZE_FOLDER: `full`, // relative to `APP_HOME_PATH`
-  SCREENSHOT_PREVIEW_CROP_HEIGHT: 2048,
+  SCREENSHOT_PREVIEW_CROP_HEIGHT,
+  SCREENSHOT_PREVIEW_CROP_WIDTH,
   SAVE_FULL_SIZE_SCREENSHOT: true,
   APP_SOURCE_PATH: path.join(__dirname, "../../"),
   SAVE_RAW_PAGE: false,

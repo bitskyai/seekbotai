@@ -124,8 +124,11 @@ export async function createOrUpdatePages({
           // if currentMetadata and metadata doesn't have visitCount, then auto add 1
           metadata.visitCount = currentMetadata.visitCount + 1;
         }
-        metadata.screenshot = screenshot.fullSizeScreenshotPath;
-        metadata.screenshotPreview = screenshot.previewScreenshotPath;
+        metadata.screenshot =
+          screenshot.fullSizeScreenshotPath ?? currentMetadata?.screenshot;
+        metadata.screenshotPreview =
+          screenshot.previewScreenshotPath ??
+          currentMetadata?.screenshotPreview;
 
         await prisma.pageMetadata.upsert({
           where: {

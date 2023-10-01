@@ -117,6 +117,7 @@ export async function saveScreenshot(
       SCREENSHOT_FULL_SIZE_FOLDER,
       SCREENSHOT_PREVIEW_FOLDER,
       SCREENSHOT_PREVIEW_CROP_HEIGHT,
+      SCREENSHOT_PREVIEW_CROP_WIDTH,
     } = getAppConfig();
     const fileName = crypto.createHash("sha256").update(url).digest("hex");
     const screenshotsPath = path.join(`${APP_HOME_PATH}`, SCREENSHOT_FOLDER);
@@ -145,17 +146,24 @@ export async function saveScreenshot(
     const buffer = Buffer.from(screenshot, "base64");
     fs.writeFileSync(fullSizeScreenshotPath, buffer);
     const dimensions = sizeOf(buffer);
-    const previewWidth = Math.floor(
-      (500 / SCREENSHOT_PREVIEW_CROP_HEIGHT) * (dimensions.width ?? 1024),
+
+    const targetScreenHeight = Math.floor(
+      (dimensions.width ?? 1024) *
+        (SCREENSHOT_PREVIEW_CROP_HEIGHT / SCREENSHOT_PREVIEW_CROP_WIDTH),
     );
+    const dimensionsHeight =
+      dimensions.height ?? SCREENSHOT_PREVIEW_CROP_HEIGHT;
     await sharp(buffer)
       .extract({
         left: 0,
-        width: dimensions.width ?? 1024,
+        width: dimensions.width ?? SCREENSHOT_PREVIEW_CROP_WIDTH,
         top: 0,
-        height: SCREENSHOT_PREVIEW_CROP_HEIGHT,
+        height:
+          targetScreenHeight > dimensionsHeight
+            ? dimensionsHeight
+            : targetScreenHeight,
       })
-      .resize(previewWidth, 500)
+      .resize(SCREENSHOT_PREVIEW_CROP_WIDTH, SCREENSHOT_PREVIEW_CROP_HEIGHT)
       .toFile(previewScreenshotPath);
     return {
       fullSizeScreenshotPath: SAVE_FULL_SIZE_SCREENSHOT

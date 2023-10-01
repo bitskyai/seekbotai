@@ -25,6 +25,7 @@ export interface AppConfig extends ServerOptions {
   [key: string]: string | number | boolean | undefined;
   // following are not configurable
   SCREENSHOT_PREVIEW_CROP_HEIGHT: number;
+  SCREENSHOT_PREVIEW_CROP_WIDTH: number;
   MEILISEARCH_DB_FOLDER: string;
   SCREENSHOT_FOLDER: string;
   SCREENSHOT_PREVIEW_FOLDER: string;
