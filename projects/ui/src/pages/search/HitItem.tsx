@@ -1,11 +1,22 @@
+import { SCREENSHOT_PREVIEW_CROP_WIDTH } from "../../../../shared";
 import { PageTagDetail, type SearchResultPage } from "../../graphql/generated";
+import { getHost } from "../../helpers/utils";
 import {
   ClockCircleOutlined,
   PlusOutlined,
   BookOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import { Space, Avatar, Card, Tag, Tooltip, Input, Typography } from "antd";
+import {
+  Space,
+  Avatar,
+  Card,
+  Tag,
+  Tooltip,
+  Input,
+  Typography,
+  Image,
+} from "antd";
 import type { InputRef } from "antd";
 import type { Hit } from "instantsearch.js";
 import { createElement, useState, useRef, useEffect } from "react";
@@ -226,11 +237,24 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
             </Text>
           )}
         </Space.Compact>
-        <Space.Compact block>
+        <Space>
+          {hit.pageMetadata.screenshotPreview && (
+            <Image
+              src={`${getHost()}/${hit.pageMetadata.screenshotPreview}`}
+              width={SCREENSHOT_PREVIEW_CROP_WIDTH}
+              preview={
+                hit.pageMetadata.screenshot
+                  ? {
+                      src: `${getHost()}/${hit.pageMetadata.screenshot}`,
+                    }
+                  : false
+              }
+            />
+          )}
           <Paragraph>
             <Snippet attribute="content" hit={hit} />
           </Paragraph>
-        </Space.Compact>
+        </Space>
       </div>
     </Card>
   );

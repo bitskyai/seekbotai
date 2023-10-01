@@ -109,6 +109,10 @@ export const PageMetadataShapeTypeBM = schemaBuilder
       tabId: t.expose("tabId", { type: "Int", nullable: true }),
       visitCount: t.expose("visitCount", { type: "Int", nullable: true }),
       typedCount: t.expose("typedCount", { type: "Int", nullable: true }),
+      screenshotPreview: t.exposeString("screenshotPreview", {
+        nullable: true,
+      }),
+      screenshot: t.exposeString("screenshotPreview", { nullable: true }),
     }),
   });
 
@@ -167,6 +171,7 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
       url: t.string({ required: true }),
       icon: t.string({ required: false }),
       content: t.string({ required: false }),
+      screenshot: t.string({ required: false }),
       raw: t.string({ required: false }),
       pageTags: t.field({
         type: [PageTagPayloadBM],

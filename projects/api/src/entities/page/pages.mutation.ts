@@ -1,7 +1,11 @@
 import { getPrismaClient } from "../../db";
 import normalizeUrl from "../../forkRepos/normalize-url";
 import getLogger from "../../helpers/logger";
-import { extractPageContent, saveRawPage } from "../../helpers/pageExtraction";
+import {
+  extractPageContent,
+  saveRawPage,
+  saveScreenshot,
+} from "../../helpers/pageExtraction";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
@@ -44,6 +48,13 @@ export async function createOrUpdatePages({
       const createdPage = await prismaClient.$transaction(async (prisma) => {
         let rawPageFileName = null;
         page.url = normalizeUrl(page.url);
+        let screenshot: {
+          fullSizeScreenshotPath?: string;
+          previewScreenshotPath?: string;
+        } = {};
+        if (page.screenshot) {
+          screenshot = await saveScreenshot(page.url, page.screenshot);
+        }
         if (!page.content && page.raw) {
           rawPageFileName = await saveRawPage(page.url, page.raw);
           logger.debug(`rawPageFileName: ${rawPageFileName}`);
@@ -113,6 +124,11 @@ export async function createOrUpdatePages({
           // if currentMetadata and metadata doesn't have visitCount, then auto add 1
           metadata.visitCount = currentMetadata.visitCount + 1;
         }
+        metadata.screenshot =
+          screenshot.fullSizeScreenshotPath ?? currentMetadata?.screenshot;
+        metadata.screenshotPreview =
+          screenshot.previewScreenshotPath ??
+          currentMetadata?.screenshotPreview;
 
         await prisma.pageMetadata.upsert({
           where: {

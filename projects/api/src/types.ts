@@ -17,12 +17,19 @@ export interface ServerOptions extends MeiliSearchConfig {
   SETUP_DB: boolean;
   SEED_DB: boolean;
   SAVE_RAW_PAGE: boolean;
+  SAVE_FULL_SIZE_SCREENSHOT: boolean;
   START_MEILISEARCH: boolean;
 }
 
 export interface AppConfig extends ServerOptions {
   [key: string]: string | number | boolean | undefined;
+  // following are not configurable
+  SCREENSHOT_PREVIEW_CROP_HEIGHT: number;
+  SCREENSHOT_PREVIEW_CROP_WIDTH: number;
   MEILISEARCH_DB_FOLDER: string;
+  SCREENSHOT_FOLDER: string;
+  SCREENSHOT_PREVIEW_FOLDER: string;
+  SCREENSHOT_FULL_SIZE_FOLDER: string;
   LOG_FILES_FOLDER: string;
   SERVICE_NAME: string;
   NODE_ENV: string;

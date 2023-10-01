@@ -16,3 +16,12 @@ export function updateURLQuery(
   // update the browser's URL bar with the new URL
   window.history.pushState(null, "", url.toString());
 }
+
+export function getHost() {
+  const host = import.meta.env.VITE_API_URL;
+  let url = `${host}`;
+  if (!host) {
+    url = `${window.location.origin}`;
+  }
+  return url;
+}

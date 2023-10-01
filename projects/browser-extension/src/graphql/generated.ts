@@ -57,12 +57,32 @@ export type PageCreateOrUpdatePayload = {
   pageMetadata?: InputMaybe<PageMetadataPayload>;
   pageTags?: InputMaybe<Array<PageTagPayload>>;
   raw?: InputMaybe<Scalars['String']>;
+  screenshot?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   url: Scalars['String'];
 };
 
 export type PageMetadata = {
   __typename?: 'PageMetadata';
+  bookmarked?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['DateTime'];
+  displayDescription?: Maybe<Scalars['String']>;
+  displayTitle?: Maybe<Scalars['String']>;
+  favorite?: Maybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  incognito?: Maybe<Scalars['Boolean']>;
+  lastVisitTime?: Maybe<Scalars['DateTime']>;
+  localMode?: Maybe<Scalars['Boolean']>;
+  pageId: Scalars['UUID'];
+  tabId?: Maybe<Scalars['Int']>;
+  typedCount?: Maybe<Scalars['Int']>;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+  visitCount?: Maybe<Scalars['Int']>;
+};
+
+export type PageMetadataDetail = {
+  __typename?: 'PageMetadataDetail';
   bookmarked?: Maybe<Scalars['Boolean']>;
   createdAt: Scalars['DateTime'];
   displayDescription?: Maybe<Scalars['String']>;
@@ -107,6 +127,16 @@ export type PageTag = {
   version: Scalars['Int'];
 };
 
+export type PageTagDetail = {
+  __typename?: 'PageTagDetail';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pageId: Scalars['UUID'];
+  tag: TagDetail;
+  updatedAt: Scalars['DateTime'];
+  version: Scalars['Int'];
+};
+
 export type PageTagPayload = {
   name: Scalars['String'];
 };
@@ -115,7 +145,7 @@ export type Query = {
   __typename?: 'Query';
   pageMetadata: Array<PageMetadata>;
   pageTags: Array<PageTag>;
-  pages: Array<Page>;
+  pages: Array<SearchResultPage>;
   tags: Array<Tag>;
 };
 
@@ -129,6 +159,20 @@ export type QueryPagesArgs = {
   take?: InputMaybe<Scalars['Int']>;
 };
 
+export type SearchResultPage = {
+  __typename?: 'SearchResultPage';
+  content?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  pageMetadata: PageMetadataDetail;
+  pageTags: Array<PageTagDetail>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  url: Scalars['URL'];
+};
+
 export enum SortOrder {
   Asc = 'asc',
   Desc = 'desc'
@@ -139,6 +183,14 @@ export type Tag = {
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   isSystem: Scalars['Boolean'];
+  name: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type TagDetail = {
+  __typename?: 'TagDetail';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };

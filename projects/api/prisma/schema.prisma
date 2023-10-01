@@ -192,6 +192,8 @@ model PageMetadata {
   visitCount         Int       @default(0) @map("visit_count") // The number of times the user has navigated to this page.
   typedCount         Int       @default(0) @map("typed_count") // The number of times the user has navigated to this page by typing in the address.
   hostName           String?   @map("host_name") // The hostname of this page.
+  screenshotPreview  String?   @map("screenshot_preview") // A filename for the page thumbnail image.
+  screenshot         String?   @map("screenshot") // A filenmae for the page fullsize image.
 
   version Int @default(0)
 
