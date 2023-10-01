@@ -6,16 +6,11 @@ import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import "./i18n/config";
 import "./index.css";
+import { getHost } from "./helpers/utils";
 import { router } from "./routes.js";
 
-const host = import.meta.env.VITE_API_URL;
-let url = `${host}/graphql`;
-if (!host) {
-  url = `${window.location.origin}/graphql`;
-}
-
 const apolloClient = new ApolloClient({
-  uri: url,
+  uri: `${getHost()}/graphql`,
   cache: new InMemoryCache(),
 });
 

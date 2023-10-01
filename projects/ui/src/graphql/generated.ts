@@ -57,6 +57,7 @@ export type PageCreateOrUpdatePayload = {
   pageMetadata?: InputMaybe<PageMetadataPayload>;
   pageTags?: InputMaybe<Array<PageTagPayload>>;
   raw?: InputMaybe<Scalars['String']>;
+  screenshot?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
   url: Scalars['String'];
 };
@@ -92,6 +93,8 @@ export type PageMetadataDetail = {
   lastVisitTime?: Maybe<Scalars['DateTime']>;
   localMode?: Maybe<Scalars['Boolean']>;
   pageId: Scalars['UUID'];
+  screenshot?: Maybe<Scalars['String']>;
+  screenshotPreview?: Maybe<Scalars['String']>;
   tabId?: Maybe<Scalars['Int']>;
   typedCount?: Maybe<Scalars['Int']>;
   updatedAt: Scalars['DateTime'];

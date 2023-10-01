@@ -63,7 +63,7 @@ const App = () => {
       >
         <Configure
           hitsPerPage={20}
-          attributesToSnippet={["content:100"]}
+          attributesToSnippet={["content:300"]}
           snippetEllipsisText={"..."}
         />
         <Layout>

@@ -35,6 +35,8 @@ export const getChangedPages = async (since: Date) => {
           typedCount: true,
           version: true,
           hostName: true,
+          screenshot: true,
+          screenshotPreview: true,
         },
       },
     },
