@@ -1,5 +1,10 @@
 import { SCREENSHOT_PREVIEW_CROP_WIDTH } from "../../../../shared";
-import { PageTagDetail, type SearchResultPage } from "../../graphql/generated";
+import TagsSelector from "../../components/TagsSelector";
+import {
+  PageTagDetail,
+  type SearchResultPage,
+  GetTagsDocument,
+} from "../../graphql/generated";
 import { getHost } from "../../helpers/utils";
 import {
   ClockCircleOutlined,
@@ -35,71 +40,11 @@ const IconText = ({ icon, text }: { icon: any; text: string }) => (
 const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
   const { t } = useTranslation();
   const [inputVisible, setInputVisible] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [editInputIndex, setEditInputIndex] = useState(-1);
-  const [editInputValue, setEditInputValue] = useState("");
-  const inputRef = useRef<InputRef>(null);
-  const editInputRef = useRef<InputRef>(null);
-
-  const tagInputStyle: React.CSSProperties = {
-    width: 64,
-    height: 22,
-    marginInlineEnd: 8,
-    verticalAlign: "top",
-  };
 
   const tagPlusStyle: React.CSSProperties = {
     height: 22,
     // background: token.colorBgContainer,
     borderStyle: "dashed",
-  };
-
-  useEffect(() => {
-    if (inputVisible) {
-      inputRef.current?.focus();
-    }
-  }, [inputVisible]);
-
-  useEffect(() => {
-    editInputRef.current?.focus();
-  }, [editInputValue]);
-
-  const handleClose = (removedTag: PageTagDetail) => {
-    // const newTags = tags.filter((tag) => tag !== removedTag);
-    // console.log(newTags);
-    // setTags(newTags);
-  };
-
-  const showInput = () => {
-    // setInputVisible(true);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // setInputValue(e.target.value);
-  };
-
-  const handleInputConfirm = () => {
-    // if (inputValue && !tags.includes(inputValue)) {
-    //   setTags([...tags, inputValue]);
-    // }
-    // setInputVisible(false);
-    // setInputValue('');
-  };
-
-  const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // setEditInputValue(e.target.value);
-  };
-
-  const handleEditInputConfirm = () => {
-    // const newTags = [...tags];
-    // newTags[editInputIndex] = editInputValue;
-    // setTags(newTags);
-    // setEditInputIndex(-1);
-    // setEditInputValue('');
-  };
-
-  const updateDisplayTitle = () => {
-    console.log("updateDisplayTitle");
   };
 
   const titleHighlightAttribute = hit.title ? "title" : "url";
@@ -156,74 +101,55 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
         />,
       ]}
     >
-      <Space>
-        {hit.pageTags.map((pageTag, index) => {
-          if (editInputIndex === index) {
-            return (
-              <Input
-                ref={editInputRef}
-                key={pageTag.tag.id}
-                size="small"
-                style={tagInputStyle}
-                value={editInputValue}
-                onChange={handleEditInputChange}
-                onBlur={handleEditInputConfirm}
-                onPressEnter={handleEditInputConfirm}
-              />
-            );
-          }
-          const isLongTag = pageTag.tag.name.length > 20;
-          const tagElem = (
-            <Tag
-              key={pageTag.tag.id}
-              closable
-              style={{ userSelect: "none" }}
-              onClose={() => handleClose(pageTag)}
-            >
-              <span
-                onDoubleClick={(e) => {
-                  if (index !== 0) {
-                    setEditInputIndex(index);
-                    setEditInputValue(pageTag.tag.name);
-                    e.preventDefault();
-                  }
-                }}
-              >
-                {isLongTag
-                  ? `${pageTag.tag.name.slice(0, 20)}...`
-                  : pageTag.tag.name}
-              </span>
-            </Tag>
-          );
-          return isLongTag ? (
-            <Tooltip title={pageTag.tag.name} key={pageTag.tag.id}>
-              {tagElem}
-            </Tooltip>
-          ) : (
-            tagElem
-          );
-        })}
+      <div>
         {inputVisible ? (
-          <Input
-            ref={inputRef}
-            type="text"
-            size="small"
-            style={tagInputStyle}
-            value={inputValue}
-            onChange={handleInputChange}
-            onBlur={handleInputConfirm}
-            onPressEnter={handleInputConfirm}
-          />
+          <TagsSelector />
         ) : (
-          <Tag
-            style={tagPlusStyle}
-            icon={<PlusOutlined rev={undefined} />}
-            onClick={showInput}
-          >
-            {t("search.newTag")}
-          </Tag>
+          <>
+            {hit.pageTags.map((pageTag, index) => {
+              const isLongTag = pageTag.tag.name.length > 20;
+              const tagElem = (
+                <Tag
+                  key={pageTag.tag.id}
+                  closable
+                  style={{ userSelect: "none" }}
+                  // onClose={() => handleClose(pageTag)}
+                >
+                  <span
+                  // onDoubleClick={(e) => {
+                  //   if (index !== 0) {
+                  //     setEditInputIndex(index);
+                  //     setEditInputValue(pageTag.tag.name);
+                  //     e.preventDefault();
+                  //   }
+                  // }}
+                  >
+                    {isLongTag
+                      ? `${pageTag.tag.name.slice(0, 20)}...`
+                      : pageTag.tag.name}
+                  </span>
+                </Tag>
+              );
+              return isLongTag ? (
+                <Tooltip title={pageTag.tag.name} key={pageTag.tag.id}>
+                  {tagElem}
+                </Tooltip>
+              ) : (
+                tagElem
+              );
+            })}
+            <Tag
+              style={tagPlusStyle}
+              icon={<PlusOutlined rev={undefined} />}
+              onClick={() => {
+                setInputVisible(true);
+              }}
+            >
+              {t("search.newTag")}
+            </Tag>
+          </>
         )}
-      </Space>
+      </div>
       <div className="hit-content">
         <Space.Compact block>
           {hit.pageMetadata.displayTitle && (

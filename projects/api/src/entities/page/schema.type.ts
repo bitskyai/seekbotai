@@ -8,7 +8,7 @@ import type {
   CreateOrUpdatePageRes,
   SearchResultPage,
 } from "./types";
-import type { PageMetadata, Page, Tag, PageTag } from "@prisma/client";
+import type { PageMetadata, Tag } from "@prisma/client";
 
 export const PageBM = schemaBuilder.prismaObject("Page", {
   fields: (t) => ({

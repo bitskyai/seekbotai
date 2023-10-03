@@ -10,7 +10,7 @@ export type CreateOrUpdatePageRes = {
 
 export type PageMetadataShape = Partial<PageMetadata>;
 
-export type PageTagWithNameShape = Partial<PageTag> & Pick<Tag, "name">;
+export type PageTagWithNameShape = Pick<Tag, "name">;
 
 export type PageShape = Partial<Page>;
 
