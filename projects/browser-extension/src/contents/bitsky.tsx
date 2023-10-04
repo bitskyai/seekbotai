@@ -31,9 +31,38 @@ function extractPageHTML() {
 
 async function extractPageImage() {
   const bodyElm = document.body
-  const canvas = await html2canvas(bodyElm)
+  const canvas = await html2canvas(bodyElm, { logging: false })
   const dataUrl = canvas.toDataURL()
   return dataUrl
+}
+
+function whetherTriggeredByHTML2Canvas(mutationList: MutationRecord[]) {
+  for (const mutation of mutationList) {
+    for (const node of mutation.addedNodes) {
+      if (
+        node instanceof HTMLIFrameElement &&
+        node.className === "html2canvas-container"
+      ) {
+        return true
+      }
+    }
+    if (
+      mutation.previousSibling instanceof HTMLIFrameElement &&
+      mutation.previousSibling.className === "html2canvas-container"
+    ) {
+      return true
+    }
+
+    for (const node of mutation.removedNodes) {
+      if (
+        node instanceof HTMLIFrameElement &&
+        node.className === "html2canvas-container"
+      ) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 const BitskyHelper = () => {
@@ -62,6 +91,7 @@ const BitskyHelper = () => {
           ...logFormat.formatArgs("screenshot fail solution 2: ", err)
         )
       }
+
       const currentPageData: PageCreateOrUpdatePayload = {
         title: document.title,
         pageTags: [{ name: HISTORY_TAG }],
@@ -108,12 +138,18 @@ const BitskyHelper = () => {
     const bodyNode = document.querySelector("body")
     const config = { childList: true, subtree: true }
     // Callback function to execute when mutations are observed
-    const callback = () => {
-      clearTimeout(saveIntervalHandler)
-      saveIntervalHandler = setTimeout(async () => {
-        await sendLatestPage()
-      }, FREQUENTLY_SAVE_INTERVAL)
+    const callback = (mutationList) => {
+      if (whetherTriggeredByHTML2Canvas(mutationList)) {
+        console.info(`triggered by html2canvas, ignore`)
+        clearTimeout(saveIntervalHandler)
+      } else {
+        clearTimeout(saveIntervalHandler)
+        saveIntervalHandler = setTimeout(async () => {
+          await sendLatestPage()
+        }, FREQUENTLY_SAVE_INTERVAL)
+      }
     }
+
     if (observer) {
       observer?.disconnect()
       observer = null
