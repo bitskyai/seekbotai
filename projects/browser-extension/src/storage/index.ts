@@ -5,7 +5,6 @@ import {
   HISTORY_TAG
 } from "@bitsky/shared"
 import _ from "lodash"
-import normalizeUrl from "normalize-url"
 import { type Bookmarks, type History } from "webextension-polyfill"
 
 import { Storage } from "@plasmohq/storage"
@@ -16,6 +15,7 @@ import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
 import { getHistory } from "~background/modules/history"
 import { LogFormat } from "~helpers/LogFormat"
+import { normalizeUrlWithoutError } from "~helpers/util"
 import { releaseMemory } from "~helpers/util"
 import {
   type ImportBookmarkRecord,
@@ -418,7 +418,9 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
   for (let i = 0; i < inProgressBookmarks.length; i++) {
     const bookmark = inProgressBookmarks[i]
     const pageData = pagesData.find(
-      (pageData) => normalizeUrl(pageData.url) === normalizeUrl(bookmark.url)
+      (pageData) =>
+        normalizeUrlWithoutError(pageData.url) ===
+        normalizeUrlWithoutError(bookmark.url)
     )
     // console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmark.url", bookmark.url, "pageData.url:", pageData.url))
     console.debug(
@@ -878,7 +880,9 @@ export const updateImportHistory = async (pagesData: PageData[]) => {
   for (let i = 0; i < inProgress.length; i++) {
     const page = inProgress[i]
     const pageData = pagesData.find(
-      (pageData) => normalizeUrl(pageData.url) === normalizeUrl(page.url)
+      (pageData) =>
+        normalizeUrlWithoutError(pageData.url) ===
+        normalizeUrlWithoutError(page.url)
     )
     // console.debug(...logFormat.formatArgs("updateImportBookmarks -> bookmark.url", bookmark.url, "pageData.url:", pageData.url))
     console.debug(

@@ -7,6 +7,9 @@ import type {
   PageTagOutput,
   CreateOrUpdatePageRes,
   SearchResultPage,
+  UpdatablePageMetadataShape,
+  UpdatePageTagShape,
+  MutationResShape,
 } from "./types";
 import type { PageMetadata, Tag } from "@prisma/client";
 
@@ -184,6 +187,29 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
     }),
   });
 
+export const UpdatablePageMetadataShapeBM = schemaBuilder
+  .inputRef<UpdatablePageMetadataShape>("UpdatablePageMetadataPayload")
+  .implement({
+    fields: (t) => ({
+      pageId: t.string({ required: true }),
+      displayTitle: t.string({ required: false }),
+      displayDescription: t.string({ required: false }),
+      localMode: t.boolean({ required: true }),
+      favorite: t.boolean({ required: true }),
+      bookmarked: t.boolean({ required: true }),
+      incognito: t.boolean({ required: true }),
+      tabId: t.int({ required: false }),
+    }),
+  });
+
+export const UpdatePageTagShapeBM = schemaBuilder
+  .inputRef<UpdatePageTagShape>("UpdatePageTagPayload")
+  .implement({
+    fields: (t) => ({
+      name: t.string({ required: true }),
+    }),
+  });
+
 export const CreateOrUpdatePageResBM = schemaBuilder
   .objectRef<CreateOrUpdatePageRes>("CreateOrUpdatePageRes")
   .implement({
@@ -206,3 +232,12 @@ export const PageSortOrderInput = schemaBuilder.inputType(
     }),
   },
 );
+
+export const MutationResShapeBM = schemaBuilder
+  .objectRef<MutationResShape>("MutationRes")
+  .implement({
+    fields: (t) => ({
+      success: t.exposeBoolean("success", { nullable: false }),
+      message: t.exposeString("message", { nullable: true }),
+    }),
+  });

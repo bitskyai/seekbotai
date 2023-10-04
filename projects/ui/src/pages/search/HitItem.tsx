@@ -1,9 +1,8 @@
 import { SCREENSHOT_PREVIEW_CROP_WIDTH } from "../../../../shared";
-import TagsSelector from "../../components/TagsSelector";
+import Tags from "../../components/Tags";
 import {
-  PageTagDetail,
   type SearchResultPage,
-  GetTagsDocument,
+  UpdatePageTagsDocument,
 } from "../../graphql/generated";
 import { getHost } from "../../helpers/utils";
 import {
@@ -12,19 +11,20 @@ import {
   BookOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
+import { useMutation } from "@apollo/client";
 import {
   Space,
   Avatar,
   Card,
   Tag,
   Tooltip,
-  Input,
+  // Input,
   Typography,
   Image,
 } from "antd";
-import type { InputRef } from "antd";
+// import type { InputRef } from "antd";
 import type { Hit } from "instantsearch.js";
-import { createElement, useState, useRef, useEffect } from "react";
+import { createElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Highlight, Snippet } from "react-instantsearch";
 
@@ -37,14 +37,27 @@ const IconText = ({ icon, text }: { icon: any; text: string }) => (
   </Space>
 );
 
-const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
+function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const { t } = useTranslation();
   const [inputVisible, setInputVisible] = useState(false);
 
   const tagPlusStyle: React.CSSProperties = {
     height: 22,
-    // background: token.colorBgContainer,
     borderStyle: "dashed",
+  };
+
+  const [updatePageTagsMutation, { loading, error, data }] = useMutation(
+    UpdatePageTagsDocument,
+  );
+
+  const updatePageTags = (tags: string[]) => {
+    setInputVisible(false);
+    updatePageTagsMutation({
+      variables: {
+        pageId: hit.id,
+        pageTags: tags.map((tag) => ({ name: tag })),
+      },
+    });
   };
 
   const titleHighlightAttribute = hit.title ? "title" : "url";
@@ -103,7 +116,10 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
     >
       <div>
         {inputVisible ? (
-          <TagsSelector />
+          <Tags
+            value={hit.pageTags.map((pageTag) => pageTag.tag.name)}
+            onBlur={updatePageTags}
+          />
         ) : (
           <>
             {hit.pageTags.map((pageTag, index) => {
@@ -116,13 +132,11 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
                   // onClose={() => handleClose(pageTag)}
                 >
                   <span
-                  // onDoubleClick={(e) => {
-                  //   if (index !== 0) {
-                  //     setEditInputIndex(index);
-                  //     setEditInputValue(pageTag.tag.name);
-                  //     e.preventDefault();
-                  //   }
-                  // }}
+                    onDoubleClick={(e) => {
+                      if (index !== 0) {
+                        e.preventDefault();
+                      }
+                    }}
                   >
                     {isLongTag
                       ? `${pageTag.tag.name.slice(0, 20)}...`
@@ -184,6 +198,6 @@ const HitItem = ({ hit }: { hit: Hit<SearchResultPage> }) => {
       </div>
     </Card>
   );
-};
+}
 
 export default HitItem;

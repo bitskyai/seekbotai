@@ -93,6 +93,8 @@ export type PageMetadataDetail = {
   lastVisitTime?: Maybe<Scalars['DateTime']>;
   localMode?: Maybe<Scalars['Boolean']>;
   pageId: Scalars['UUID'];
+  screenshot?: Maybe<Scalars['String']>;
+  screenshotPreview?: Maybe<Scalars['String']>;
   tabId?: Maybe<Scalars['Int']>;
   typedCount?: Maybe<Scalars['Int']>;
   updatedAt: Scalars['DateTime'];

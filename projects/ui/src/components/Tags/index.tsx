@@ -1,19 +1,24 @@
-import { GetTagsDocument, type PageTagDetail } from "../../graphql/generated";
+import { GetTagsDocument } from "../../graphql/generated";
 import { useQuery } from "@apollo/client";
 import { Select } from "antd";
 import React from "react";
 import "./style.css";
 
 export type TagsSelectorProps = {
-  tags: PageTagDetail[];
+  value: string[];
+  onBlur: (value: string[]) => void;
 };
-const TagsSelector: React.FC<TagsSelectorProps> = ({ tags }) => {
+const Tags: React.FC<TagsSelectorProps> = ({ value, onBlur }) => {
   const { loading: fetchTags, data: tagsData } = useQuery(GetTagsDocument);
-  const handleChange = (value: any) => {
-    console.log(`selected ${value}`);
+  const [selectedTags, setSelectedTags] = React.useState<string[]>(value);
+  const handleChange = (value: string[]) => {
+    setSelectedTags(value);
   };
   const handleBlur = () => {
-    console.log("blur");
+    console.log("blur", selectedTags);
+    if (onBlur && typeof onBlur === "function") {
+      onBlur(selectedTags);
+    }
   };
   return (
     <Select
@@ -21,6 +26,7 @@ const TagsSelector: React.FC<TagsSelectorProps> = ({ tags }) => {
       style={{ width: "100%" }}
       placeholder="Tags Mode"
       loading={fetchTags}
+      value={selectedTags}
       onChange={handleChange}
       onBlur={handleBlur}
       options={
@@ -33,4 +39,4 @@ const TagsSelector: React.FC<TagsSelectorProps> = ({ tags }) => {
   );
 };
 
-export default TagsSelector;
+export default Tags;

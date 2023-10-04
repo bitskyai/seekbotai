@@ -6,13 +6,25 @@ import {
   saveRawPage,
   saveScreenshot,
 } from "../../helpers/pageExtraction";
+import { startPagesIndex } from "../../searchEngine";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
   PageCreateOrUpdatePayloadBM,
   CreateOrUpdatePageResBM,
+  UpdatePageTagShapeBM,
+  PageMetadataBM,
+  UpdatablePageMetadataShapeBM,
+  MutationResShapeBM,
 } from "./schema.type";
-import type { CreateOrUpdatePageRes, PageCreateOrUpdateShape } from "./types";
+import type {
+  CreateOrUpdatePageRes,
+  PageCreateOrUpdateShape,
+  UpdatePageTagShape,
+  UpdatablePageMetadataShape,
+  MutationResShape,
+} from "./types";
+import { PageMetadata } from "@prisma/client";
 import _ from "lodash";
 
 schemaBuilder.mutationField("createOrUpdatePages", (t) =>
@@ -209,4 +221,177 @@ export async function createOrUpdatePages({
   }
 
   return pagesResult;
+}
+
+schemaBuilder.mutationField("updatePageMetadata", (t) =>
+  t.field({
+    type: PageMetadataBM,
+    args: {
+      pageId: t.arg({ type: "String", required: true }),
+      pageMetadata: t.arg({
+        type: UpdatablePageMetadataShapeBM,
+        required: true,
+      }),
+    },
+    resolve: async (root, args, ctx) => {
+      const res = await updatePageMetadata({
+        ctx,
+        pageId: args.pageId,
+        pageMetadata: args.pageMetadata,
+      });
+
+      return res;
+    },
+  }),
+);
+
+export async function updatePageMetadata({
+  ctx,
+  pageId,
+  pageMetadata,
+}: {
+  ctx: GQLContext;
+  pageId: string;
+  pageMetadata: UpdatablePageMetadataShape;
+}): Promise<PageMetadata> {
+  const prismaClient = getPrismaClient();
+
+  const result = await prismaClient.pageMetadata.update({
+    where: {
+      userId_pageId_version: {
+        version: 0,
+        pageId: pageId,
+        userId: ctx.user.id,
+      },
+    },
+    data: pageMetadata,
+  });
+  await startPagesIndex();
+
+  return result;
+}
+
+// passed pageTags is the whole list of pageTags, not just the updated ones
+schemaBuilder.mutationField("updatePageTags", (t) =>
+  t.field({
+    type: MutationResShapeBM,
+    args: {
+      pageId: t.arg({ type: "String", required: true }),
+      pageTags: t.arg({
+        type: [UpdatePageTagShapeBM],
+        required: true,
+      }),
+    },
+    resolve: async (root, args, ctx) => {
+      const res = await updatePageTags({
+        ctx,
+        pageId: args.pageId,
+        pageTags: args.pageTags,
+      });
+
+      return res;
+    },
+  }),
+);
+
+export async function updatePageTags({
+  ctx,
+  pageId,
+  pageTags,
+}: {
+  ctx: GQLContext;
+  pageId: string;
+  pageTags: UpdatePageTagShape[];
+}): Promise<MutationResShape> {
+  const prismaClient = getPrismaClient();
+
+  const currentPageTags = await prismaClient.pageTag.findMany({
+    include: {
+      tag: {
+        select: {
+          createdAt: true,
+          updatedAt: true,
+          name: true,
+          id: true,
+          version: true,
+        },
+      },
+    },
+    where: {
+      userId: ctx.user.id,
+      pageId: pageId,
+    },
+  });
+  const removePageTagIds: string[] = [];
+  const updatePageTagsHash: { [key: string]: string } = {};
+  pageTags.map((pageTag) => (updatePageTagsHash[pageTag.name] = pageTag.name));
+
+  for (let i = 0; i < currentPageTags.length; i++) {
+    const currentPageTag = currentPageTags[i];
+    if (!updatePageTagsHash[currentPageTag.tag.name]) {
+      // user remove this page tag
+      removePageTagIds.push(currentPageTag.id);
+      delete updatePageTagsHash[currentPageTag.tag.name];
+    }
+    if (updatePageTagsHash[currentPageTag.tag.name]) {
+      // user didn't update this page tag
+      delete updatePageTagsHash[currentPageTag.tag.name];
+    }
+  }
+
+  const addPageTags = Object.keys(updatePageTagsHash);
+
+  const result = await prismaClient.$transaction(async (prisma) => {
+    // remove page tags
+    await prisma.pageTag.deleteMany({
+      where: {
+        id: {
+          in: removePageTagIds,
+        },
+      },
+    });
+
+    for (let i = 0; i < addPageTags.length; i++) {
+      const tagName = addPageTags[i];
+      const tag = await prisma.tag.upsert({
+        where: {
+          userId_name: { name: tagName, userId: ctx.user.id },
+        },
+        create: {
+          name: tagName,
+          userId: ctx.user.id,
+        },
+        update: {
+          name: tagName,
+          userId: ctx.user.id,
+        },
+      });
+      await prisma.pageTag.upsert({
+        where: {
+          userId_tagId_pageId: {
+            pageId: pageId,
+            tagId: tag.id,
+            userId: ctx.user.id,
+          },
+        },
+        create: {
+          userId: ctx.user.id,
+          pageId: pageId,
+          tagId: tag.id,
+        },
+        update: {
+          userId: ctx.user.id,
+          pageId: pageId,
+          tagId: tag.id,
+        },
+      });
+    }
+    return true;
+  });
+  await startPagesIndex();
+
+  return {
+    success: !!result,
+    message: "",
+  };
 }

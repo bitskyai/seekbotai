@@ -25,7 +25,7 @@ let url = import.meta.env.VITE_API_URL;
 if (!url) {
   url = `${window.location.origin}`;
 }
-console.log("url", url);
+
 const searchClient = instantMeiliSearch(
   url,
   "8499a9f9-a7a5-4bb2-a445-bc82afe1366c",

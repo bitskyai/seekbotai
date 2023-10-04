@@ -62,6 +62,7 @@ function whetherTriggeredByHTML2Canvas(mutationList: MutationRecord[]) {
       }
     }
   }
+
   return false
 }
 
@@ -82,7 +83,6 @@ const BitskyHelper = () => {
       setSaving(true)
       setSuccess(false)
       // document.body.style.background = "pink" // used for debugging
-      console.info(...logFormat.formatArgs("window.load event fired"))
       let pageImage = ""
       try {
         pageImage = await extractPageImage()
@@ -173,12 +173,10 @@ const BitskyHelper = () => {
       setupedPageCollect = true
       setupPageCollect()
     }, FREQUENTLY_SAVE_INTERVAL)
-    document.removeEventListener("DOMContentLoaded", setupPageCollect)
-    document.addEventListener("DOMContentLoaded", async () => {
+    window.removeEventListener("load", setupPageCollect)
+    window.addEventListener("load", async () => {
       console.info(
-        ...logFormat.formatArgs(
-          "bitsky content script: DOMContentLoaded event fired"
-        )
+        ...logFormat.formatArgs("bitsky content script: load event fired")
       )
       clearTimeout(setupPageCollectHandler)
       if (setupedPageCollect) return

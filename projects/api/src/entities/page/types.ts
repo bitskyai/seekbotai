@@ -26,6 +26,20 @@ export type PageCreateOrUpdateShape = PageShape & {
   pageMetadata?: PageMetadataShape;
 };
 
+export type UpdatablePageMetadataShape = Pick<
+  PageMetadata,
+  | "pageId"
+  | "displayTitle"
+  | "displayDescription"
+  | "localMode"
+  | "favorite"
+  | "bookmarked"
+  | "incognito"
+  | "tabId"
+>;
+
+export type UpdatePageTagShape = PageTagWithNameShape;
+
 export type PageTagOutput = PageTag & {
   tag: Tag;
 };
@@ -33,4 +47,9 @@ export type PageTagOutput = PageTag & {
 export type SearchResultPage = Page & {
   pageMetadata: PageMetadata;
   pageTags: PageTagOutput[];
+};
+
+export type MutationResShape = {
+  success: boolean;
+  message?: string;
 };

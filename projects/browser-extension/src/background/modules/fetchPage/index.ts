@@ -1,7 +1,5 @@
-import { log } from "console"
-import normalizeUrl from "normalize-url"
-
 import { LogFormat } from "~helpers/LogFormat"
+import { normalizeUrlWithoutError } from "~helpers/util"
 
 import { isHTML, isSupportedProtocol } from "./utils"
 
@@ -88,7 +86,7 @@ const fetchPage = ({
   let cancel: CancelFetch
 
   if (isSupportedProtocol(url)) {
-    url = normalizeUrl(url)
+    url = normalizeUrlWithoutError(url)
     if (isHTML(url)) {
       const { run: runFetchPage, cancel: cancelFetchPage } = fetchPageHTML({
         url,

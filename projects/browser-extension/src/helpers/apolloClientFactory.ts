@@ -10,6 +10,17 @@ import { LogFormat } from "./LogFormat"
 
 const logFormat = new LogFormat("helpers/apolloClientFactory")
 
+const noCache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {}
+    },
+    Mutation: {
+      fields: {}
+    }
+  }
+})
+
 export const newApolloClient = async ({
   protocol,
   hostName,
@@ -52,8 +63,18 @@ export const newApolloClient = async ({
   })
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: concat(authMiddleware, httpLink)
+    cache: noCache,
+    link: concat(authMiddleware, httpLink),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: "no-cache",
+        errorPolicy: "ignore"
+      },
+      query: {
+        fetchPolicy: "no-cache",
+        errorPolicy: "all"
+      }
+    }
   })
   return client
 }

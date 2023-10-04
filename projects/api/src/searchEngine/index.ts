@@ -211,7 +211,7 @@ async function updatePagesIndexSetting() {
  * start pages index
  * @param lastIndexAt: specific date to start indexing from
  */
-async function startPagesIndex(lastIndexAt?: Date) {
+export async function startPagesIndex(lastIndexAt?: Date) {
   const logger = getLogger();
   const config = getAppConfig();
   const pageIndexingRecord = await getPageIndex();
