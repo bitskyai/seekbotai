@@ -26,7 +26,7 @@ import {
 import type { Hit } from "instantsearch.js";
 import { createElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Highlight, Snippet } from "react-instantsearch";
+import { Highlight, Snippet, useInstantSearch } from "react-instantsearch";
 
 const { Link, Paragraph, Text } = Typography;
 
@@ -40,6 +40,7 @@ const IconText = ({ icon, text }: { icon: any; text: string }) => (
 function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const { t } = useTranslation();
   const [inputVisible, setInputVisible] = useState(false);
+  const { refresh } = useInstantSearch();
 
   const tagPlusStyle: React.CSSProperties = {
     height: 22,
@@ -58,6 +59,22 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         pageTags: tags.map((tag) => ({ name: tag })),
       },
     });
+
+    refresh();
+  };
+
+  const removePageTag = (tagName: string) => {
+    const newPageTags = hit.pageTags.filter(
+      (pageTag) => pageTag.tag.name !== tagName,
+    );
+    updatePageTagsMutation({
+      variables: {
+        pageId: hit.id,
+        pageTags: newPageTags.map((pageTag) => ({ name: pageTag?.tag?.name })),
+      },
+    });
+
+    refresh();
   };
 
   const titleHighlightAttribute = hit.title ? "title" : "url";
@@ -129,7 +146,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                   key={pageTag.tag.id}
                   closable
                   style={{ userSelect: "none" }}
-                  // onClose={() => handleClose(pageTag)}
+                  onClose={() => removePageTag(pageTag?.tag?.name)}
                 >
                   <span
                     onDoubleClick={(e) => {
@@ -192,6 +209,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
             />
           )}
           <Paragraph>
+            <p>{hit.id}</p>
             <Snippet attribute="content" hit={hit} />
           </Paragraph>
         </Space>

@@ -6,7 +6,7 @@ import {
   saveRawPage,
   saveScreenshot,
 } from "../../helpers/pageExtraction";
-import { startPagesIndex } from "../../searchEngine";
+import { addDocumentsToPagesIndexByIds } from "../../searchEngine";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
@@ -266,7 +266,9 @@ export async function updatePageMetadata({
     },
     data: pageMetadata,
   });
-  await startPagesIndex();
+
+  // update index
+  await addDocumentsToPagesIndexByIds([pageId]);
 
   return result;
 }
@@ -388,7 +390,8 @@ export async function updatePageTags({
     }
     return true;
   });
-  await startPagesIndex();
+  // update index
+  await addDocumentsToPagesIndexByIds([pageId]);
 
   return {
     success: !!result,

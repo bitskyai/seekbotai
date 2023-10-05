@@ -12,9 +12,11 @@ import {
   ToggleRefinement,
   RefinementList,
   Configure,
+  Stats,
 } from "react-instantsearch";
 import "./style.css";
 import Panel from "../../components/AisPanel";
+import Refresh from "../../components/Refresh";
 import "instantsearch.css/themes/satellite.css";
 import HitItem from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
@@ -34,7 +36,7 @@ const searchClient = instantMeiliSearch(
   },
 );
 
-const App = () => {
+const SearchPage = () => {
   const { t } = useTranslation();
   const transformBooleanToReadableValue = (
     refinements: CurrentRefinementsConnectorParamsRefinement[],
@@ -138,6 +140,8 @@ const App = () => {
                         resetButtonText: t("search.resetButtonText"),
                       }}
                     />
+                    <Refresh />
+                    <Stats />
                   </Space>
                 </div>
                 <div>
@@ -181,4 +185,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default SearchPage;
