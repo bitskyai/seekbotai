@@ -28,39 +28,9 @@ function extractPageHTML() {
   return currentPageHTML
 }
 
-function whetherTriggeredByHTML2Canvas(mutationList: MutationRecord[]) {
-  for (const mutation of mutationList) {
-    for (const node of mutation.addedNodes) {
-      if (
-        node instanceof HTMLIFrameElement &&
-        node.className === "html2canvas-container"
-      ) {
-        return true
-      }
-    }
-    if (
-      mutation.previousSibling instanceof HTMLIFrameElement &&
-      mutation.previousSibling.className === "html2canvas-container"
-    ) {
-      return true
-    }
-
-    for (const node of mutation.removedNodes) {
-      if (
-        node instanceof HTMLIFrameElement &&
-        node.className === "html2canvas-container"
-      ) {
-        return true
-      }
-    }
-  }
-
-  return false
-}
-
 const BitskyHelper = () => {
   const AUTO_CLOSE_NOTIFICATION = 5000
-  const FREQUENTLY_SAVE_INTERVAL = 15000
+  const FREQUENTLY_SAVE_INTERVAL = 5 * 1000
 
   const [saving, setSaving] = useState(null)
   const [success, setSuccess] = useState(null)
@@ -68,82 +38,80 @@ const BitskyHelper = () => {
   let saveIntervalHandler = null
   let hideNotificationHandler = null
   let observer = null
+  let _sendLatestPageHandler
 
   const sendLatestPage = async () => {
-    try {
-      setDisplayNotification(true)
-      setSaving(true)
-      setSuccess(false)
-      // document.body.style.background = "pink" // used for debugging
-      let pageImage = ""
+    // why use setTimeout?
+    // to avoid multiple save in a short time
+    clearTimeout(_sendLatestPageHandler)
+    _sendLatestPageHandler = setTimeout(async () => {
       try {
-        const result = await sendToBackground({
+        setDisplayNotification(true)
+        setSaving(true)
+        setSuccess(false)
+        // document.body.style.background = "pink" // used for debugging
+        // send to background to capture visible tab
+        sendToBackground({
           name: MessageSubject.captureVisibleTab
         })
-        pageImage = result.data
-        console.debug(...logFormat.formatArgs("pageImage", pageImage))
-      } catch (err) {
-        console.error(
-          ...logFormat.formatArgs("screenshot fail solution bk: ", err)
-        )
-      }
 
-      const currentPageData: PageCreateOrUpdatePayload = {
-        title: document.title,
-        pageTags: [{ name: HISTORY_TAG }],
-        url: window.location.href,
-        content: "",
-        raw: extractPageHTML() ?? "",
-        screenshot: pageImage,
-        pageMetadata: {
-          bookmarked: false,
-          lastVisitTime: new Date().toISOString()
+        const currentPageData: PageCreateOrUpdatePayload = {
+          title: document.title,
+          pageTags: [{ name: HISTORY_TAG }],
+          url: window.location.href,
+          content: "",
+          raw: extractPageHTML() ?? "",
+          pageMetadata: {
+            bookmarked: false,
+            lastVisitTime: new Date().toISOString()
+          }
         }
-      }
 
-      console.info(...logFormat.formatArgs("currentPageData", currentPageData))
-      const pages = [currentPageData]
-      // save current page
-      await sendToBackground({
-        name: MessageSubject.createOrUpdatePages,
-        body: pages
-      })
-      releaseMemory(pages) // release memory
-      setSaving(false)
-      setSuccess(true)
-      clearTimeout(hideNotificationHandler)
-      hideNotificationHandler = setTimeout(() => {
-        setDisplayNotification(false)
-      }, AUTO_CLOSE_NOTIFICATION)
-    } catch (err) {
-      setSaving(false)
-      setSuccess(false)
-      clearTimeout(hideNotificationHandler)
-      setTimeout(() => {
-        setDisplayNotification(false)
-        setSaving(null)
-        setSuccess(null)
-      }, AUTO_CLOSE_NOTIFICATION)
-      console.error(err)
-    }
+        console.info(
+          ...logFormat.formatArgs("currentPageData", currentPageData)
+        )
+        const pages = [currentPageData]
+        // save current page
+        await sendToBackground({
+          name: MessageSubject.createOrUpdatePages,
+          body: pages
+        })
+        releaseMemory(pages) // release memory
+        setSaving(false)
+        setSuccess(true)
+        clearTimeout(hideNotificationHandler)
+        hideNotificationHandler = setTimeout(() => {
+          setDisplayNotification(false)
+        }, AUTO_CLOSE_NOTIFICATION)
+      } catch (err) {
+        setSaving(false)
+        setSuccess(false)
+        clearTimeout(hideNotificationHandler)
+        setTimeout(() => {
+          setDisplayNotification(false)
+          setSaving(null)
+          setSuccess(null)
+        }, AUTO_CLOSE_NOTIFICATION)
+        console.error(err)
+      }
+    }, 500)
   }
 
   const setupPageCollect = async () => {
+    //==========================================================================
+    // Trigger one when setup
     await sendLatestPage()
 
+    //==========================================================================
+    // setup observer to listen DOM change
     const bodyNode = document.querySelector("body")
     const config = { childList: true, subtree: true }
     // Callback function to execute when mutations are observed
-    const callback = (mutationList) => {
-      if (whetherTriggeredByHTML2Canvas(mutationList)) {
-        console.info(`triggered by html2canvas, ignore`)
-        clearTimeout(saveIntervalHandler)
-      } else {
-        clearTimeout(saveIntervalHandler)
-        saveIntervalHandler = setTimeout(async () => {
-          await sendLatestPage()
-        }, FREQUENTLY_SAVE_INTERVAL)
-      }
+    const domTreeChangedCallback = () => {
+      clearTimeout(saveIntervalHandler)
+      saveIntervalHandler = setTimeout(async () => {
+        await sendLatestPage()
+      }, FREQUENTLY_SAVE_INTERVAL)
     }
 
     if (observer) {
@@ -151,10 +119,24 @@ const BitskyHelper = () => {
       observer = null
     }
     // Create an observer instance linked to the callback function
-    observer = new MutationObserver(callback)
+    observer = new MutationObserver(domTreeChangedCallback)
 
     // Start observing the target node for configured mutations
     observer.observe(bodyNode, config)
+
+    //==========================================================================
+    // setup window url change event
+    // Function to handle URL changes
+    const handleUrlChange = async () => {
+      await sendLatestPage()
+      // You can perform actions based on the URL change here
+    }
+
+    // Listen for changes in the page's URL
+    window.removeEventListener("hashchange", handleUrlChange)
+    window.removeEventListener("popstate", handleUrlChange)
+    window.addEventListener("hashchange", handleUrlChange)
+    window.addEventListener("popstate", handleUrlChange)
   }
 
   useEffect(() => {

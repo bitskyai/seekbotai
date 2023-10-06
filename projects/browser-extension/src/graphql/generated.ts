@@ -29,11 +29,31 @@ export type CreateOrUpdatePageRes = {
 export type Mutation = {
   __typename?: 'Mutation';
   createOrUpdatePages: Array<CreateOrUpdatePageRes>;
+  updatePageMetadata: PageMetadata;
+  updatePageTags: MutationRes;
 };
 
 
 export type MutationCreateOrUpdatePagesArgs = {
   pages: Array<PageCreateOrUpdatePayload>;
+};
+
+
+export type MutationUpdatePageMetadataArgs = {
+  pageId: Scalars['String'];
+  pageMetadata: UpdatablePageMetadataPayload;
+};
+
+
+export type MutationUpdatePageTagsArgs = {
+  pageId: Scalars['String'];
+  pageTags: Array<UpdatePageTagPayload>;
+};
+
+export type MutationRes = {
+  __typename?: 'MutationRes';
+  message?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
 };
 
 export type Page = {
@@ -58,7 +78,7 @@ export type PageCreateOrUpdatePayload = {
   pageTags?: InputMaybe<Array<PageTagPayload>>;
   raw?: InputMaybe<Scalars['String']>;
   screenshot?: InputMaybe<Scalars['String']>;
-  title: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
   url: Scalars['String'];
 };
 
@@ -195,6 +215,21 @@ export type TagDetail = {
   id: Scalars['ID'];
   name: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+};
+
+export type UpdatablePageMetadataPayload = {
+  bookmarked: Scalars['Boolean'];
+  displayDescription?: InputMaybe<Scalars['String']>;
+  displayTitle?: InputMaybe<Scalars['String']>;
+  favorite: Scalars['Boolean'];
+  incognito: Scalars['Boolean'];
+  localMode: Scalars['Boolean'];
+  pageId: Scalars['String'];
+  tabId?: InputMaybe<Scalars['Int']>;
+};
+
+export type UpdatePageTagPayload = {
+  name: Scalars['String'];
 };
 
 export type CreateOrUpdatePagesMutationVariables = Exact<{

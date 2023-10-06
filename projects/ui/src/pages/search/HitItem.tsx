@@ -59,8 +59,9 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         pageTags: tags.map((tag) => ({ name: tag })),
       },
     });
-
-    refresh();
+    setTimeout(() => {
+      refresh();
+    }, 10000);
   };
 
   const removePageTag = (tagName: string) => {
@@ -74,7 +75,9 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
       },
     });
 
-    refresh();
+    setTimeout(() => {
+      refresh();
+    }, 10000);
   };
 
   const titleHighlightAttribute = hit.title ? "title" : "url";
@@ -209,7 +212,6 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
             />
           )}
           <Paragraph>
-            <p>{hit.id}</p>
             <Snippet attribute="content" hit={hit} />
           </Paragraph>
         </Space>

@@ -91,7 +91,7 @@ export async function createOrUpdatePages({
             content: page.content,
           },
           update: {
-            title: page.title ?? page.url,
+            title: page.title,
             description: page.description,
             url: page.url,
             icon: page.icon,

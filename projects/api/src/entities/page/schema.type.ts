@@ -169,7 +169,7 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
   .inputRef<PageCreateOrUpdateShape>("PageCreateOrUpdatePayload")
   .implement({
     fields: (t) => ({
-      title: t.string({ required: true }),
+      title: t.string({ required: false }),
       description: t.string({ required: false }),
       url: t.string({ required: true }),
       icon: t.string({ required: false }),
