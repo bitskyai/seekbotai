@@ -1,6 +1,5 @@
 import { HISTORY_TAG } from "@bitsky/shared"
 import cssText from "data-text:~/contents/bitsky.css"
-import html2canvas from "html2canvas"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 
@@ -27,13 +26,6 @@ export const getStyle = () => {
 function extractPageHTML() {
   const currentPageHTML = document.documentElement.outerHTML
   return currentPageHTML
-}
-
-async function extractPageImage() {
-  const bodyElm = document.body
-  const canvas = await html2canvas(bodyElm, { logging: false })
-  const dataUrl = canvas.toDataURL()
-  return dataUrl
 }
 
 function whetherTriggeredByHTML2Canvas(mutationList: MutationRecord[]) {
@@ -85,10 +77,14 @@ const BitskyHelper = () => {
       // document.body.style.background = "pink" // used for debugging
       let pageImage = ""
       try {
-        pageImage = await extractPageImage()
+        const result = await sendToBackground({
+          name: MessageSubject.captureVisibleTab
+        })
+        pageImage = result.data
+        console.debug(...logFormat.formatArgs("pageImage", pageImage))
       } catch (err) {
         console.error(
-          ...logFormat.formatArgs("screenshot fail solution 2: ", err)
+          ...logFormat.formatArgs("screenshot fail solution bk: ", err)
         )
       }
 

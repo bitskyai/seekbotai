@@ -9,7 +9,8 @@ export enum MessageSubject {
   cleanImportBookmarks = "cleanImportBookmarks",
   startImportHistory = "startImportHistory",
   stopImportHistory = "stopImportHistory",
-  cleanImportHistory = "cleanImportHistory"
+  cleanImportHistory = "cleanImportHistory",
+  captureVisibleTab = "captureVisibleTab"
 }
 
 export const init = async () => {
