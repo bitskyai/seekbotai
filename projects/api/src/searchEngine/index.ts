@@ -12,6 +12,7 @@ import { getChangedPages, getPagesByIds } from "./pages";
 import { getPageIndex, updatePageIndex, pageIndexSettings } from "./pagesIndex";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import fs from "fs-extra";
+import { set } from "lodash";
 import { MeiliSearch, type Index } from "meilisearch";
 import { join } from "path";
 
@@ -235,6 +236,31 @@ export async function startPagesIndex(lastIndexAt?: Date) {
   logger.info(`startPagesIndex: done`);
 }
 
+export async function waitUtilPagesIndexFinish() {
+  const logger = getLogger();
+  const meiliSearch = await getMeiliSearchClient();
+  await new Promise((resolve) => {
+    const pagesIndexStatsHandler = setInterval(async () => {
+      const pagesIndexStats = await meiliSearch
+        .index(PAGES_INDEX_NAME)
+        .getStats();
+      logger.debug(`pagesIndexStats`, {
+        isIndexing: pagesIndexStats.isIndexing,
+      });
+      if (pagesIndexStats.isIndexing === false) {
+        clearInterval(pagesIndexStatsHandler);
+        resolve(true);
+      }
+    }, 200);
+
+    // max index time is 60 seconds
+    setTimeout(() => {
+      clearInterval(pagesIndexStatsHandler);
+      resolve(true);
+    }, 1000 * 60);
+  });
+}
+
 export async function removeDocumentsFromPagesIndexByIds(ids: string[]) {
   const logger = getLogger();
   const meiliSearch = await getMeiliSearchClient();
@@ -254,6 +280,7 @@ export async function addDocumentsToPagesIndexByIds(ids: string[]) {
       .index(PAGES_INDEX_NAME)
       .addDocuments(pages, { primaryKey: "id" });
     logger.debug(`indexRes`, { indexRes });
+    await waitUtilPagesIndexFinish();
   }
   // since we didn't updatePageIndex, so this maybe cause duplicate indexing, but it's ok since it doesn't have a huge number
   return true;

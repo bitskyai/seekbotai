@@ -2,7 +2,11 @@ import React from "react";
 import { useInstantSearch } from "react-instantsearch";
 import "./refresh.css";
 
-export default function Refresh() {
+export type TagsSelectorProps = {
+  onRefresh: () => void;
+};
+
+const Refresh: React.FC<TagsSelectorProps> = ({ onRefresh }) => {
   const { refresh } = useInstantSearch();
 
   return (
@@ -11,6 +15,7 @@ export default function Refresh() {
       type="button"
       onClick={() => {
         refresh();
+        onRefresh();
       }}
     >
       <svg
@@ -32,4 +37,6 @@ export default function Refresh() {
       </svg>
     </button>
   );
-}
+};
+
+export default Refresh;

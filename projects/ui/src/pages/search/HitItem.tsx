@@ -4,6 +4,7 @@ import {
   type SearchResultPage,
   UpdatePageTagsDocument,
 } from "../../graphql/generated";
+import { publish } from "../../helpers/event";
 import { getHost } from "../../helpers/utils";
 import {
   ClockCircleOutlined,
@@ -24,9 +25,12 @@ import {
 } from "antd";
 // import type { InputRef } from "antd";
 import type { Hit } from "instantsearch.js";
+import { differenceBy } from "lodash";
 import { createElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Highlight, Snippet, useInstantSearch } from "react-instantsearch";
+
+export const HIT_ITEM_REFRESH = "HIT_ITEM_REFRESH";
 
 const { Link, Paragraph, Text } = Typography;
 
@@ -41,43 +45,49 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const { t } = useTranslation();
   const [inputVisible, setInputVisible] = useState(false);
   const { refresh } = useInstantSearch();
+  const [updating, setUpdating] = useState(false);
 
   const tagPlusStyle: React.CSSProperties = {
     height: 22,
     borderStyle: "dashed",
   };
 
-  const [updatePageTagsMutation, { loading, error, data }] = useMutation(
-    UpdatePageTagsDocument,
-  );
+  const [updatePageTagsMutation] = useMutation(UpdatePageTagsDocument);
 
-  const updatePageTags = (tags: string[]) => {
+  const updatePageTags = async (tags: string[]) => {
     setInputVisible(false);
-    updatePageTagsMutation({
-      variables: {
-        pageId: hit.id,
-        pageTags: tags.map((tag) => ({ name: tag })),
-      },
-    });
-    setTimeout(() => {
+    const updatedTags = tags.map((tag) => ({ name: tag }));
+    const currentTags = hit.pageTags.map((pageTag) => ({
+      name: pageTag.tag.name,
+    }));
+    if (differenceBy(updatedTags, currentTags, "name").length) {
+      setUpdating(true);
+      await updatePageTagsMutation({
+        variables: {
+          pageId: hit.id,
+          pageTags: tags.map((tag) => ({ name: tag })),
+        },
+      });
       refresh();
-    }, 10000);
+      publish(HIT_ITEM_REFRESH, hit.id);
+      setUpdating(false);
+    }
   };
 
-  const removePageTag = (tagName: string) => {
+  const removePageTag = async (tagName: string) => {
+    setUpdating(true);
     const newPageTags = hit.pageTags.filter(
       (pageTag) => pageTag.tag.name !== tagName,
     );
-    updatePageTagsMutation({
+    await updatePageTagsMutation({
       variables: {
         pageId: hit.id,
         pageTags: newPageTags.map((pageTag) => ({ name: pageTag?.tag?.name })),
       },
     });
-
-    setTimeout(() => {
-      refresh();
-    }, 10000);
+    refresh();
+    publish(HIT_ITEM_REFRESH, hit.id);
+    setUpdating(false);
   };
 
   const titleHighlightAttribute = hit.title ? "title" : "url";
@@ -86,6 +96,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
     <Card
       hoverable
       key={hit.id}
+      loading={updating}
       title={
         <Space>
           <Avatar src={hit.icon} />
@@ -142,22 +153,16 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
           />
         ) : (
           <>
-            {hit.pageTags.map((pageTag, index) => {
+            {hit.pageTags.map((pageTag) => {
               const isLongTag = pageTag.tag.name.length > 20;
               const tagElem = (
                 <Tag
                   key={pageTag.tag.id}
-                  closable
+                  closable={!updating}
                   style={{ userSelect: "none" }}
                   onClose={() => removePageTag(pageTag?.tag?.name)}
                 >
-                  <span
-                    onDoubleClick={(e) => {
-                      if (index !== 0) {
-                        e.preventDefault();
-                      }
-                    }}
-                  >
+                  <span>
                     {isLongTag
                       ? `${pageTag.tag.name.slice(0, 20)}...`
                       : pageTag.tag.name}
@@ -172,15 +177,17 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                 tagElem
               );
             })}
-            <Tag
-              style={tagPlusStyle}
-              icon={<PlusOutlined rev={undefined} />}
-              onClick={() => {
-                setInputVisible(true);
-              }}
-            >
-              {t("search.newTag")}
-            </Tag>
+            {!updating && (
+              <Tag
+                style={tagPlusStyle}
+                icon={<PlusOutlined rev={undefined} />}
+                onClick={() => {
+                  setInputVisible(true);
+                }}
+              >
+                {t("search.newTag")}
+              </Tag>
+            )}
           </>
         )}
       </div>

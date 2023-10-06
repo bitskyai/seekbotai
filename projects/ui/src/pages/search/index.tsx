@@ -1,5 +1,6 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { Layout, Space } from "antd";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   CurrentRefinements,
@@ -18,7 +19,9 @@ import "./style.css";
 import Panel from "../../components/AisPanel";
 import Refresh from "../../components/Refresh";
 import "instantsearch.css/themes/satellite.css";
-import HitItem from "./HitItem";
+import { DEFAULT_MEILISEARCH_MASTER_KEY } from "../../../../shared";
+import { subscribe } from "../../helpers/event";
+import HitItem, { HIT_ITEM_REFRESH } from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
 
 const { Content, Sider } = Layout;
@@ -28,16 +31,13 @@ if (!url) {
   url = `${window.location.origin}`;
 }
 
-const searchClient = instantMeiliSearch(
-  url,
-  "8499a9f9-a7a5-4bb2-a445-bc82afe1366c",
-  {
-    finitePagination: true,
-  },
-);
+const searchClient = instantMeiliSearch(url, DEFAULT_MEILISEARCH_MASTER_KEY, {
+  finitePagination: true,
+});
 
 const SearchPage = () => {
   const { t } = useTranslation();
+  const [infiniteHitsKey, setInfiniteHitsKey] = useState(0);
   const transformBooleanToReadableValue = (
     refinements: CurrentRefinementsConnectorParamsRefinement[],
   ) => {
@@ -51,6 +51,14 @@ const SearchPage = () => {
     }
     return refinements;
   };
+
+  const onRefresh = () => {
+    setInfiniteHitsKey(infiniteHitsKey + 1);
+  };
+
+  subscribe(HIT_ITEM_REFRESH, () => {
+    onRefresh();
+  });
 
   return (
     <div className="search-container">
@@ -92,12 +100,12 @@ const SearchPage = () => {
                 label={t("search.bookmarked")}
               />
             </Panel>
-            {/* <Panel header={t("search.favorite")}>
+            <Panel header={t("search.favorite")}>
               <ToggleRefinement
                 attribute="pageMetadata.favorite"
                 label={t("search.favorited")}
               />
-            </Panel> */}
+            </Panel>
           </Sider>
           <Layout>
             <Content className="search-content">
@@ -140,7 +148,7 @@ const SearchPage = () => {
                         resetButtonText: t("search.resetButtonText"),
                       }}
                     />
-                    <Refresh />
+                    <Refresh onRefresh={onRefresh} />
                     <Stats />
                   </Space>
                 </div>
@@ -175,7 +183,8 @@ const SearchPage = () => {
                 </div>
               </div>
               <div className="search-results">
-                <InfiniteHits hitComponent={HitItem} />
+                {/* TODO: Fix this is a temp solution to fix hits not refreshed */}
+                <InfiniteHits key={infiniteHitsKey} hitComponent={HitItem} />
               </div>
             </Content>
           </Layout>
