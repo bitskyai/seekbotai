@@ -38,37 +38,34 @@ model User {
   pageTags        PageTag[]
   pageRaws        PageRaw[]
   pageScreenshots PageScreenshot[]
-  IgnoreURL       IgnoreURL?
+  IgnoreURL       IgnoreURL[]
   Trash           Trash[]
 
   @@map("bk_user")
 }
 
 model Preference {
-  id             String      @id @default(uuid())
-  createdAt      DateTime    @default(now()) @map("created_at")
-  updatedAt      DateTime    @updatedAt @map("updated_at")
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String      @unique @map("bk_user_id")
-  apiKey         String      @unique @map("api_key")
-  logLevel       String      @default("info") @map("log_level")
-  logSize        Int         @default(52428800) @map("log_size") // 50MB
-  indexFrequency Int         @default(60) @map("index_frequency") // 1 min
-  ignoreURLs     IgnoreURL[]
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String   @unique @map("bk_user_id")
+  apiKey         String   @unique @map("api_key")
+  logLevel       String   @default("info") @map("log_level")
+  logSize        Int      @default(52428800) @map("log_size") // 50MB
+  indexFrequency Int      @default(60) @map("index_frequency") // 1 min
 
   @@map("bk_preference")
 }
 
 model IgnoreURL {
-  id                String      @id @default(uuid())
-  createdAt         DateTime    @default(now()) @map("created_at")
-  updatedAt         DateTime    @updatedAt @map("updated_at")
-  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String      @unique @map("bk_user_id")
-  pattern           String      @unique @map("pattern")
-  regularExpression Boolean     @default(false) @map("regular_expression")
-  Preference        Preference? @relation(fields: [preferenceId], references: [id])
-  preferenceId      String?
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String   @map("bk_user_id")
+  pattern           String   @map("pattern")
+  regularExpression Boolean  @default(false) @map("regular_expression")
 
   @@unique([userId, pattern, regularExpression])
   @@map("bk_ignore_url")

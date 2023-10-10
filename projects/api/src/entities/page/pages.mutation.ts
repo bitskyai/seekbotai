@@ -470,6 +470,8 @@ export async function deletePages({
           },
         },
       });
+      // remove screenshot, raw page
+
       // also delete pages in pageIndex
       await removeDocumentsFromPagesIndexByIds(deletePageIds);
     });
