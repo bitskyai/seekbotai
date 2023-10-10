@@ -5,6 +5,8 @@ import {
   extractPageContent,
   saveRawPage,
   saveScreenshot,
+  removeRawPage,
+  removeScreenshot,
 } from "../../helpers/pageExtraction";
 import {
   addDocumentsToPagesIndexByIds,
@@ -63,22 +65,6 @@ export async function createOrUpdatePages({
   for (let page of pages) {
     try {
       const createdPage = await prismaClient.$transaction(async (prisma) => {
-        let rawPageFileName = null;
-        page.url = normalizeUrl(page.url);
-        let screenshot: {
-          fullSizeScreenshotPath?: string;
-          previewScreenshotPath?: string;
-        } = {};
-        if (page.screenshot) {
-          screenshot = await saveScreenshot(page.url, page.screenshot);
-        }
-        if (!page.content && page.raw) {
-          rawPageFileName = await saveRawPage(page.url, page.raw);
-          logger.debug(`rawPageFileName: ${rawPageFileName}`);
-          const extractedPage = await extractPageContent(page.url, page.raw);
-          page = _.merge(page, extractedPage);
-        }
-
         const result = await prisma.page.upsert({
           where: {
             userId_url_version: {
@@ -104,6 +90,22 @@ export async function createOrUpdatePages({
             content: page.content,
           },
         });
+
+        let rawPageFileName = null;
+        page.url = normalizeUrl(page.url);
+        let screenshot: {
+          fullSizeScreenshotPath?: string;
+          previewScreenshotPath?: string;
+        } = {};
+        if (page.screenshot) {
+          screenshot = await saveScreenshot(result.id, page.screenshot);
+        }
+        if (!page.content && page.raw) {
+          rawPageFileName = await saveRawPage(result.id, page.raw);
+          logger.debug(`rawPageFileName: ${rawPageFileName}`);
+          const extractedPage = await extractPageContent(page.url, page.raw);
+          page = _.merge(page, extractedPage);
+        }
 
         if (rawPageFileName) {
           // For now we only support one version of raw page, but we can support multiple versions in the future
@@ -470,7 +472,15 @@ export async function deletePages({
           },
         },
       });
-      // remove screenshot, raw page
+      // remove screenshot
+      deletePageIds.map(async (pageId) => {
+        await removeScreenshot(pageId);
+      });
+
+      // remove raw page
+      deletePageIds.map(async (pageId) => {
+        await removeRawPage(pageId);
+      });
 
       // also delete pages in pageIndex
       await removeDocumentsFromPagesIndexByIds(deletePageIds);

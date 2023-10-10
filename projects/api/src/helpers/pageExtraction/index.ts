@@ -1,7 +1,6 @@
 import { getAppConfig } from "../config";
 import * as cheerio from "cheerio";
-import * as crypto from "crypto";
-import * as fs from "fs";
+import * as fs from "fs-extra";
 import sizeOf from "image-size";
 import * as os from "os";
 import * as path from "path";
@@ -82,11 +81,12 @@ export async function extractPageContent(url: string, html: string) {
   };
 }
 
-export async function saveRawPage(url: string, html: string) {
+export async function saveRawPage(pageId: string, html: string) {
   try {
     const { SAVE_RAW_PAGE, APP_HOME_PATH } = getAppConfig();
     if (!SAVE_RAW_PAGE) return;
-    const fileName = crypto.createHash("sha256").update(url).digest("hex");
+    // const fileName = crypto.createHash("sha256").update(url).digest("hex");
+    const fileName = pageId;
     const fileDirectory = `${APP_HOME_PATH}/rawPages`;
     if (!fs.existsSync(fileDirectory)) {
       // If the directory doesn't exist, create it recursively
@@ -102,8 +102,23 @@ export async function saveRawPage(url: string, html: string) {
   }
 }
 
+export async function removeRawPage(pageId: string) {
+  try {
+    const { APP_HOME_PATH } = getAppConfig();
+    const fileName = pageId;
+    const fileDirectory = `${APP_HOME_PATH}/rawPages`;
+    const filePath = path.join(fileDirectory, `${fileName}.html`);
+    console.log(`Removing raw page from ${filePath}`);
+    fs.removeSync(filePath);
+    return fileName;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 export async function saveScreenshot(
-  url: string,
+  pageId: string,
   screenshot: string,
 ): Promise<{
   fullSizeScreenshotPath?: string;
@@ -119,7 +134,8 @@ export async function saveScreenshot(
       SCREENSHOT_PREVIEW_CROP_HEIGHT,
       SCREENSHOT_PREVIEW_CROP_WIDTH,
     } = getAppConfig();
-    const fileName = crypto.createHash("sha256").update(url).digest("hex");
+    // const fileName = crypto.createHash("sha256").update(url).digest("hex");
+    const fileName = pageId;
     const screenshotsPath = path.join(`${APP_HOME_PATH}`, SCREENSHOT_FOLDER);
     let fullSizePath = path.join(screenshotsPath, SCREENSHOT_FULL_SIZE_FOLDER);
     if (!SAVE_FULL_SIZE_SCREENSHOT) {
@@ -182,5 +198,38 @@ export async function saveScreenshot(
   } catch (err) {
     console.error(err);
     return {};
+  }
+}
+
+export async function removeScreenshot(pageId: string) {
+  try {
+    const {
+      APP_HOME_PATH,
+      SCREENSHOT_FOLDER,
+      SCREENSHOT_FULL_SIZE_FOLDER,
+      SCREENSHOT_PREVIEW_FOLDER,
+    } = getAppConfig();
+    const screenshotsPath = path.join(`${APP_HOME_PATH}`, SCREENSHOT_FOLDER);
+    const fileName = pageId;
+    const fullSizePath = path.join(
+      screenshotsPath,
+      SCREENSHOT_FULL_SIZE_FOLDER,
+    );
+    const previewPath = path.join(screenshotsPath, SCREENSHOT_PREVIEW_FOLDER);
+    const fullSizeScreenshotPath = path.join(fullSizePath, `${fileName}.png`);
+    const previewScreenshotPath = path.join(previewPath, `${fileName}.png`);
+    console.log(
+      `Removing full size screenshot page from ${fullSizeScreenshotPath}`,
+    );
+    fs.removeSync(fullSizeScreenshotPath);
+
+    console.log(
+      `Removing preview screenshot page from ${previewScreenshotPath}`,
+    );
+    fs.removeSync(previewScreenshotPath);
+    return fileName;
+  } catch (err) {
+    console.error(err);
+    return null;
   }
 }
