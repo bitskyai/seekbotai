@@ -70,6 +70,7 @@ model IgnoreURL {
   Preference        Preference? @relation(fields: [preferenceId], references: [id])
   preferenceId      String?
 
+  @@unique([userId, pattern, regularExpression])
   @@map("bk_ignore_url")
 }
 
@@ -240,9 +241,9 @@ model PageTag {
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @map("bk_user_id")
-  tag       Tag      @relation(fields: [tagId], references: [id])
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId     String   @map("bk_tag_id")
-  page      Page     @relation(fields: [pageId], references: [id])
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
   pageId    String   @map("bk_page_id")
   version   Int      @default(0)
 

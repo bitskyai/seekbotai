@@ -53,3 +53,10 @@ export type MutationResShape = {
   success: boolean;
   message?: string;
 };
+
+export type DeletePageShape = {
+  pageId: string;
+  pattern?: string;
+  ignore?: boolean;
+  regularExpression?: boolean;
+};

@@ -10,6 +10,7 @@ import type {
   UpdatablePageMetadataShape,
   UpdatePageTagShape,
   MutationResShape,
+  DeletePageShape,
 } from "./types";
 import type { PageMetadata, Tag } from "@prisma/client";
 
@@ -239,5 +240,16 @@ export const MutationResShapeBM = schemaBuilder
     fields: (t) => ({
       success: t.exposeBoolean("success", { nullable: false }),
       message: t.exposeString("message", { nullable: true }),
+    }),
+  });
+
+export const DeletePageShapeBM = schemaBuilder
+  .inputRef<DeletePageShape>("DeletePagePayload")
+  .implement({
+    fields: (t) => ({
+      pageId: t.string({ required: true }),
+      pattern: t.string({ required: false }),
+      ignore: t.boolean({ required: false }),
+      regularExpression: t.boolean({ required: false }),
     }),
   });

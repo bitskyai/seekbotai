@@ -3,14 +3,16 @@ import Tags from "../../components/Tags";
 import {
   type SearchResultPage,
   UpdatePageTagsDocument,
+  DeletePagesDocument,
 } from "../../graphql/generated";
 import { publish } from "../../helpers/event";
 import { getHost } from "../../helpers/utils";
 import {
   ClockCircleOutlined,
   PlusOutlined,
-  BookOutlined,
+  HeartFilled,
   DeleteOutlined,
+  HeartOutlined,
 } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import {
@@ -19,9 +21,12 @@ import {
   Card,
   Tag,
   Tooltip,
-  // Input,
+  Popover,
+  Input,
   Typography,
   Image,
+  Button,
+  List,
 } from "antd";
 // import type { InputRef } from "antd";
 import type { Hit } from "instantsearch.js";
@@ -33,6 +38,7 @@ import { Highlight, Snippet, useInstantSearch } from "react-instantsearch";
 export const HIT_ITEM_REFRESH = "HIT_ITEM_REFRESH";
 
 const { Link, Paragraph, Text } = Typography;
+const { TextArea } = Input;
 
 const IconText = ({ icon, text }: { icon: any; text: string }) => (
   <Space>
@@ -43,9 +49,10 @@ const IconText = ({ icon, text }: { icon: any; text: string }) => (
 
 function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const { t } = useTranslation();
-  const [inputVisible, setInputVisible] = useState(false);
   const { refresh } = useInstantSearch();
+  const [inputVisible, setInputVisible] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const tagPlusStyle: React.CSSProperties = {
     height: 22,
@@ -53,6 +60,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   };
 
   const [updatePageTagsMutation] = useMutation(UpdatePageTagsDocument);
+  const [deletePagesMutation] = useMutation(DeletePagesDocument);
 
   const updatePageTags = async (tags: string[]) => {
     setInputVisible(false);
@@ -90,7 +98,117 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
     setUpdating(false);
   };
 
+  const deletePages = async (
+    pageId: string,
+    pattern?: string,
+    ignore?: boolean,
+  ) => {
+    setOpen(false);
+    setUpdating(true);
+
+    await deletePagesMutation({
+      variables: {
+        pages: [
+          {
+            pageId,
+            pattern,
+            ignore,
+          },
+        ],
+      },
+    });
+
+    refresh();
+    publish(HIT_ITEM_REFRESH, hit.id);
+    setUpdating(false);
+  };
+
   const titleHighlightAttribute = hit.title ? "title" : "url";
+
+  //-----------------------------------------------
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
+
+  const deleteContent = ({ hit }: { hit: Hit<SearchResultPage> }) => {
+    const [deleteAllPagesUrl, setDeleteAllPagesUrl] = useState(hit.url);
+    const [deleteAndIgnoreAllPagesUrl, setDeleteAndIgnoreAllPagesUrl] =
+      useState(hit.url);
+
+    const onDeleteAllPagesChange = (event) => {
+      setDeleteAllPagesUrl(event?.target?.value);
+    };
+
+    const onDeleteAndIgnoreAllPagesChange = (event) => {
+      setDeleteAndIgnoreAllPagesUrl(event?.target?.value);
+    };
+
+    const options = [
+      {
+        title: t("search.deleteConfirmDialog.deleteCurrent"),
+        onClick: () => {
+          deletePages(hit.id);
+        },
+      },
+      {
+        title: t("search.deleteConfirmDialog.deleteAllPagesMatchedCondition"),
+        description: (
+          <TextArea
+            placeholder="Basic usage"
+            autoSize={{ minRows: 2, maxRows: 6 }}
+            value={deleteAllPagesUrl}
+            onChange={onDeleteAllPagesChange}
+          />
+        ),
+        onClick: () => {
+          deletePages(hit.id, deleteAllPagesUrl, false);
+        },
+      },
+      {
+        title: t(
+          "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedCondition",
+        ),
+        description: (
+          <TextArea
+            placeholder="Basic usage"
+            autoSize={{ minRows: 2, maxRows: 6 }}
+            value={deleteAndIgnoreAllPagesUrl}
+            onChange={onDeleteAndIgnoreAllPagesChange}
+          />
+        ),
+        onClick: () => {
+          deletePages(hit.id, deleteAndIgnoreAllPagesUrl, true);
+        },
+      },
+    ];
+
+    return (
+      <div>
+        <List
+          style={{ minWidth: 500 }}
+          dataSource={options}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <Button
+                  type="primary"
+                  key={`${hit.id}-ok`}
+                  onClick={item.onClick}
+                >
+                  {t("ok")}
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={item.title}
+                description={item.description}
+              />
+            </List.Item>
+          )}
+        ></List>
+      </div>
+    );
+  };
 
   return (
     <Card
@@ -129,20 +247,33 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         />
       }
       actions={[
-        <IconText
-          icon={BookOutlined}
-          text={
-            hit.pageMetadata.bookmarked
-              ? t("search.unbookmark")
-              : t("search.bookmark")
+        <Button
+          key="card-action-favorite"
+          type="text"
+          icon={
+            hit.pageMetadata.favorite ? (
+              <HeartFilled rev={undefined} />
+            ) : (
+              <HeartOutlined rev={undefined} />
+            )
           }
-          key="card-action-bookmark"
-        />,
-        <IconText
-          icon={DeleteOutlined}
-          text={t("delete")}
-          key="card-action-delete"
-        />,
+        >
+          {hit.pageMetadata.favorite
+            ? t("search.favorited")
+            : t("search.favorite")}
+        </Button>,
+        <Popover
+          key="card-action-delete-popover"
+          // title={t("search.deleteConfirmDialog.title")}
+          trigger="click"
+          open={open}
+          onOpenChange={handleOpenChange}
+          content={deleteContent({ hit })}
+        >
+          <Button type="text" icon={<DeleteOutlined rev={undefined} />}>
+            {t("delete")}
+          </Button>
+        </Popover>,
       ]}
     >
       <div>

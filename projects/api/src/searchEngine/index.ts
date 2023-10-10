@@ -268,6 +268,7 @@ export async function removeDocumentsFromPagesIndexByIds(ids: string[]) {
     .index(PAGES_INDEX_NAME)
     .deleteDocuments(ids);
   logger.debug(`indexRes`, { indexRes });
+  await waitUtilPagesIndexFinish();
   return true;
 }
 

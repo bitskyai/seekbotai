@@ -6,7 +6,10 @@ import {
   saveRawPage,
   saveScreenshot,
 } from "../../helpers/pageExtraction";
-import { addDocumentsToPagesIndexByIds } from "../../searchEngine";
+import {
+  addDocumentsToPagesIndexByIds,
+  removeDocumentsFromPagesIndexByIds,
+} from "../../searchEngine";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
 import {
@@ -16,6 +19,7 @@ import {
   PageMetadataBM,
   UpdatablePageMetadataShapeBM,
   MutationResShapeBM,
+  DeletePageShapeBM,
 } from "./schema.type";
 import type {
   CreateOrUpdatePageRes,
@@ -23,6 +27,7 @@ import type {
   UpdatePageTagShape,
   UpdatablePageMetadataShape,
   MutationResShape,
+  DeletePageShape,
 } from "./types";
 import { PageMetadata } from "@prisma/client";
 import _ from "lodash";
@@ -395,6 +400,113 @@ export async function updatePageTags({
 
   return {
     success: !!result,
+    message: "",
+  };
+}
+
+schemaBuilder.mutationField("deletePages", (t) =>
+  t.field({
+    type: MutationResShapeBM,
+    args: {
+      pages: t.arg({
+        type: [DeletePageShapeBM],
+        required: true,
+      }),
+    },
+    resolve: async (root, args, ctx) => {
+      const res = await deletePages({
+        ctx,
+        pages: args.pages,
+      });
+
+      return res;
+    },
+  }),
+);
+
+export async function deletePages({
+  ctx,
+  pages,
+}: {
+  ctx: GQLContext;
+  pages: DeletePageShape[];
+}): Promise<MutationResShape> {
+  const prismaClient = getPrismaClient();
+  let deletePageIds: string[] = [];
+  const ignoreURLContains: string[] = [];
+
+  // generate deletePageIds and ignoreURLContains
+  for (let i = 0; i < pages.length; i++) {
+    const page = pages[i];
+    if (page.pageId) {
+      deletePageIds.push(page.pageId);
+    }
+    if (page.pattern) {
+      const pagesIds = await prismaClient.page.findMany({
+        where: {
+          url: {
+            contains: page.pattern,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+      deletePageIds = deletePageIds.concat(pagesIds.map((page) => page.id));
+      if (page.ignore) {
+        ignoreURLContains.push(page.pattern);
+      }
+    }
+  }
+
+  deletePageIds = _.uniq(deletePageIds);
+
+  try {
+    await prismaClient.$transaction(async (prisma) => {
+      await prisma.page.deleteMany({
+        where: {
+          id: {
+            in: deletePageIds,
+          },
+        },
+      });
+      // also delete pages in pageIndex
+      await removeDocumentsFromPagesIndexByIds(deletePageIds);
+    });
+
+    // update ignoreURLContains
+    if (ignoreURLContains.length) {
+      for (let i = 0; i < ignoreURLContains.length; i++) {
+        await prismaClient.ignoreURL.upsert({
+          where: {
+            userId_pattern_regularExpression: {
+              userId: ctx.user.id,
+              pattern: ignoreURLContains[i],
+              regularExpression: false,
+            },
+          },
+          create: {
+            userId: ctx.user.id,
+            pattern: ignoreURLContains[i],
+            regularExpression: false,
+          },
+          update: {
+            userId: ctx.user.id,
+            pattern: ignoreURLContains[i],
+            regularExpression: false,
+          },
+        });
+      }
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "",
+    };
+  }
+
+  return {
+    success: true,
     message: "",
   };
 }
