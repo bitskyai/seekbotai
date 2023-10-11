@@ -78,6 +78,18 @@ const SearchPage = () => {
         />
         <Layout>
           <Sider className="search-side-bar" width={300} theme="light">
+            <Panel header={t("search.bookmark")}>
+              <ToggleRefinement
+                attribute="pageMetadata.bookmarked"
+                label={t("search.bookmarked")}
+              />
+            </Panel>
+            <Panel header={t("search.favorite")}>
+              <ToggleRefinement
+                attribute="pageMetadata.favorite"
+                label={t("search.favorited")}
+              />
+            </Panel>
             <Panel header={t("search.tag")}>
               <RefinementList
                 attribute="pageTags.tag.name"
@@ -92,18 +104,6 @@ const SearchPage = () => {
                 searchable={true}
                 searchablePlaceholder={t("search.searchHostName")}
                 showMore={true}
-              />
-            </Panel>
-            <Panel header={t("search.bookmark")}>
-              <ToggleRefinement
-                attribute="pageMetadata.bookmarked"
-                label={t("search.bookmarked")}
-              />
-            </Panel>
-            <Panel header={t("search.favorite")}>
-              <ToggleRefinement
-                attribute="pageMetadata.favorite"
-                label={t("search.favorited")}
               />
             </Panel>
           </Sider>
