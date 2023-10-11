@@ -31,7 +31,7 @@ import {
 // import type { InputRef } from "antd";
 import type { Hit } from "instantsearch.js";
 import { differenceBy } from "lodash";
-import { createElement, useState } from "react";
+import { ChangeEvent, createElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Highlight, Snippet, useInstantSearch } from "react-instantsearch";
 
@@ -135,11 +135,15 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
     const [deleteAndIgnoreAllPagesUrl, setDeleteAndIgnoreAllPagesUrl] =
       useState(hit.url);
 
-    const onDeleteAllPagesChange = (event) => {
+    const onDeleteAllPagesChange = (
+      event: ChangeEvent<HTMLTextAreaElement>,
+    ) => {
       setDeleteAllPagesUrl(event?.target?.value);
     };
 
-    const onDeleteAndIgnoreAllPagesChange = (event) => {
+    const onDeleteAndIgnoreAllPagesChange = (
+      event: ChangeEvent<HTMLTextAreaElement>,
+    ) => {
       setDeleteAndIgnoreAllPagesUrl(event?.target?.value);
     };
 

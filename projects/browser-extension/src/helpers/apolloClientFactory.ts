@@ -3,6 +3,7 @@ import {
   ApolloLink,
   HttpLink,
   InMemoryCache,
+  type NormalizedCacheObject,
   concat
 } from "@apollo/client"
 
@@ -31,7 +32,7 @@ export const newApolloClient = async ({
   hostName: string
   port: number
   apiKey: string
-}) => {
+}): Promise<ApolloClient<NormalizedCacheObject>> => {
   if (!protocol || !hostName) {
     console.error(
       ...logFormat.formatArgs(

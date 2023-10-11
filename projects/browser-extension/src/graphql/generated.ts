@@ -26,9 +26,17 @@ export type CreateOrUpdatePageRes = {
   url: Scalars['String'];
 };
 
+export type DeletePagePayload = {
+  ignore?: InputMaybe<Scalars['Boolean']>;
+  pageId: Scalars['String'];
+  pattern?: InputMaybe<Scalars['String']>;
+  regularExpression?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createOrUpdatePages: Array<CreateOrUpdatePageRes>;
+  deletePages: MutationRes;
   updatePageMetadata: PageMetadata;
   updatePageTags: MutationRes;
 };
@@ -36,6 +44,11 @@ export type Mutation = {
 
 export type MutationCreateOrUpdatePagesArgs = {
   pages: Array<PageCreateOrUpdatePayload>;
+};
+
+
+export type MutationDeletePagesArgs = {
+  pages: Array<DeletePagePayload>;
 };
 
 
@@ -163,12 +176,24 @@ export type PageTagPayload = {
   name: Scalars['String'];
 };
 
+export type Preference = {
+  __typename?: 'Preference';
+  apiKey: Scalars['String'];
+  id: Scalars['ID'];
+  indexFrequency: Scalars['Int'];
+  logLevel: Scalars['String'];
+  logSize: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  ignoreURLs: Array<IgnoreUrl>;
   pageMetadata: Array<PageMetadata>;
   pageTags: Array<PageTag>;
   pages: Array<SearchResultPage>;
+  preference: Preference;
   tags: Array<Tag>;
+  user: User;
 };
 
 
@@ -232,6 +257,26 @@ export type UpdatePageTagPayload = {
   name: Scalars['String'];
 };
 
+export type User = {
+  __typename?: 'User';
+  createdAt: Scalars['DateTime'];
+  email?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  ignoreURLs?: Maybe<Array<IgnoreUrl>>;
+  preference?: Maybe<Preference>;
+  updatedAt: Scalars['DateTime'];
+  username: Scalars['String'];
+};
+
+export type IgnoreUrl = {
+  __typename?: 'ignoreURL';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  pattern: Scalars['String'];
+  regularExpression: Scalars['Boolean'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type CreateOrUpdatePagesMutationVariables = Exact<{
   pages: Array<PageCreateOrUpdatePayload> | PageCreateOrUpdatePayload;
 }>;
@@ -239,5 +284,11 @@ export type CreateOrUpdatePagesMutationVariables = Exact<{
 
 export type CreateOrUpdatePagesMutation = { __typename?: 'Mutation', createOrUpdatePages: Array<{ __typename?: 'CreateOrUpdatePageRes', url: string, status?: string | null, id?: string | null, code?: string | null, message?: string | null }> };
 
+export type GetIgnoreUrLsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetIgnoreUrLsQuery = { __typename?: 'Query', ignoreURLs: Array<{ __typename?: 'ignoreURL', id: string, pattern: string, regularExpression: boolean }> };
+
 
 export const CreateOrUpdatePagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createOrUpdatePages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pages"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PageCreateOrUpdatePayload"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createOrUpdatePages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pages"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pages"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<CreateOrUpdatePagesMutation, CreateOrUpdatePagesMutationVariables>;
+export const GetIgnoreUrLsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetIgnoreURLs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ignoreURLs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pattern"}},{"kind":"Field","name":{"kind":"Name","value":"regularExpression"}}]}}]}}]} as unknown as DocumentNode<GetIgnoreUrLsQuery, GetIgnoreUrLsQueryVariables>;

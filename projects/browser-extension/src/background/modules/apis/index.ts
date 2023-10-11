@@ -3,6 +3,7 @@ import { LogFormat } from "~helpers/LogFormat"
 import { init as apolloClientInit } from "./apolloClient"
 
 export * from "./createOrUpdatePages"
+export * from "./getIgnoreURLs"
 
 export { setApolloClientToNull } from "./apolloClient"
 

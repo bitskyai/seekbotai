@@ -98,6 +98,18 @@ const BitskyHelper = () => {
   }
 
   const setupPageCollect = async () => {
+    const ignore = await sendToBackground({
+      name: MessageSubject.whetherIgnore,
+      body: {
+        url: window.location.href
+      }
+    })
+
+    if (ignore) {
+      console.warn(...logFormat.formatArgs("ignore this page"))
+      return
+    }
+
     //==========================================================================
     // Trigger one when setup
     await sendLatestPage()

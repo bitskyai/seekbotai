@@ -1,0 +1,7 @@
+query GetIgnoreURLs {
+  ignoreURLs {
+    id
+    pattern
+    regularExpression
+  }
+}

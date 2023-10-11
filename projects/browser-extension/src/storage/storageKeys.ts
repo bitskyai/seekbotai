@@ -16,5 +16,7 @@ export enum StorageKeys {
   ServiceDiscoverStatus = "ServiceDiscoverStatus",
   ServiceHealthStatus = "ServiceHealthStatus",
   BackgroundSyncUpKeyAPICreateOrUpdatePages = "BackgroundSyncUpKeyAPICreateOrUpdatePages", // `apis/createBookmarks`
-  BackgroundSyncUpKeyAPICreateOrUpdatePagesInProgress = "BackgroundSyncUpKeyAPICreateOrUpdatePagesInProgress"
+  BackgroundSyncUpKeyAPICreateOrUpdatePagesInProgress = "BackgroundSyncUpKeyAPICreateOrUpdatePagesInProgress",
+  IgnoreURLs = "IgnoreURLs",
+  IgnoreURLsHistory = "IgnoreURLsHistory"
 }
