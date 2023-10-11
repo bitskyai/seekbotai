@@ -38,8 +38,8 @@ model User {
   pageTags        PageTag[]
   pageRaws        PageRaw[]
   pageScreenshots PageScreenshot[]
-  IgnoreURL       IgnoreURL[]
-  Trash           Trash[]
+  ignoreURLs      IgnoreURL[]
+  trash           Trash[]
 
   @@map("bk_user")
 }

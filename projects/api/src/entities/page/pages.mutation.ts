@@ -65,6 +65,14 @@ export async function createOrUpdatePages({
   for (let page of pages) {
     try {
       const createdPage = await prismaClient.$transaction(async (prisma) => {
+        // extract page content
+        if (!page.content && page.raw) {
+          const extractedPage = await extractPageContent(page.url, page.raw);
+          page = _.merge(page, extractedPage);
+        }
+        page.url = normalizeUrl(page.url);
+
+        // create or update page
         const result = await prisma.page.upsert({
           where: {
             userId_url_version: {
@@ -91,22 +99,22 @@ export async function createOrUpdatePages({
           },
         });
 
+        // Save screenshot and raw page to disk
         let rawPageFileName = null;
-        page.url = normalizeUrl(page.url);
         let screenshot: {
           fullSizeScreenshotPath?: string;
           previewScreenshotPath?: string;
         } = {};
+
         if (page.screenshot) {
           screenshot = await saveScreenshot(result.id, page.screenshot);
         }
         if (!page.content && page.raw) {
           rawPageFileName = await saveRawPage(result.id, page.raw);
           logger.debug(`rawPageFileName: ${rawPageFileName}`);
-          const extractedPage = await extractPageContent(page.url, page.raw);
-          page = _.merge(page, extractedPage);
         }
 
+        // create or update `pageRaw`
         if (rawPageFileName) {
           // For now we only support one version of raw page, but we can support multiple versions in the future
           await prisma.pageRaw.upsert({
@@ -129,6 +137,8 @@ export async function createOrUpdatePages({
             },
           });
         }
+
+        // create or update `pageMetadata`
         const metadata = page.pageMetadata ?? {};
         metadata.hostName = new URL(page.url).hostname;
         const currentMetadata = await prisma.pageMetadata.findFirst({
@@ -169,6 +179,7 @@ export async function createOrUpdatePages({
           },
         });
 
+        // create or update `pageTags` and `tags`
         const pageTags = page.pageTags || [];
         for (let i = 0; i < pageTags.length; i++) {
           const pageTag = pageTags[i];

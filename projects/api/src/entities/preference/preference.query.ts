@@ -1,32 +1,26 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
 import { schemaBuilder } from "../gql-builder";
-import { QueryPreferenceBM } from "./schema.type";
-import { QueryPreference } from "./types";
+import { PreferenceBM } from "./schema.type";
 
 schemaBuilder.queryField("preference", (t) =>
   t.field({
-    type: QueryPreferenceBM,
+    type: PreferenceBM,
     resolve: async (parent, args, ctx) => {
       return getPreference({ ctx });
     },
   }),
 );
 
-export async function getPreference({
-  ctx,
-}: {
-  ctx: GQLContext;
-}): Promise<QueryPreference> {
+export async function getPreference({ ctx }: { ctx: GQLContext }) {
   const prisma = getPrismaClient();
   const preference = await prisma.preference.findFirst({
     where: {
-      id: ctx.user.id,
-    },
-    include: {
-      ignoreURLs: true,
+      userId: ctx.user.id,
     },
   });
-
-  return preference ?? {};
+  if (!preference) {
+    throw new Error("Preference not found");
+  }
+  return preference;
 }

@@ -1,0 +1,17 @@
+query GetUser {
+  user {
+    id
+    preference {
+      id
+      apiKey
+      logLevel
+      logSize
+      indexFrequency
+    }
+    ignoreURLs {
+      id
+      pattern
+      regularExpression
+    }
+  }
+}
