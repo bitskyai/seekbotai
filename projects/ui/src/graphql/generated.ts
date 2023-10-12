@@ -249,13 +249,13 @@ export type TagDetail = {
 };
 
 export type UpdatablePageMetadataPayload = {
-  bookmarked: Scalars['Boolean'];
+  bookmarked?: InputMaybe<Scalars['Boolean']>;
   displayDescription?: InputMaybe<Scalars['String']>;
   displayTitle?: InputMaybe<Scalars['String']>;
-  favorite: Scalars['Boolean'];
-  incognito: Scalars['Boolean'];
-  localMode: Scalars['Boolean'];
-  pageId: Scalars['String'];
+  favorite?: InputMaybe<Scalars['Boolean']>;
+  incognito?: InputMaybe<Scalars['Boolean']>;
+  localMode?: InputMaybe<Scalars['Boolean']>;
+  pageId?: InputMaybe<Scalars['String']>;
   tabId?: InputMaybe<Scalars['Int']>;
 };
 

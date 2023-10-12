@@ -192,13 +192,13 @@ export const UpdatablePageMetadataShapeBM = schemaBuilder
   .inputRef<UpdatablePageMetadataShape>("UpdatablePageMetadataPayload")
   .implement({
     fields: (t) => ({
-      pageId: t.string({ required: true }),
+      pageId: t.string({ required: false }),
       displayTitle: t.string({ required: false }),
       displayDescription: t.string({ required: false }),
-      localMode: t.boolean({ required: true }),
-      favorite: t.boolean({ required: true }),
-      bookmarked: t.boolean({ required: true }),
-      incognito: t.boolean({ required: true }),
+      localMode: t.boolean({ required: false }),
+      favorite: t.boolean({ required: false }),
+      bookmarked: t.boolean({ required: false }),
+      incognito: t.boolean({ required: false }),
       tabId: t.int({ required: false }),
     }),
   });

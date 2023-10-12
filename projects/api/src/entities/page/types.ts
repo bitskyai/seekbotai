@@ -26,16 +26,18 @@ export type PageCreateOrUpdateShape = PageShape & {
   pageMetadata?: PageMetadataShape;
 };
 
-export type UpdatablePageMetadataShape = Pick<
-  PageMetadata,
-  | "pageId"
-  | "displayTitle"
-  | "displayDescription"
-  | "localMode"
-  | "favorite"
-  | "bookmarked"
-  | "incognito"
-  | "tabId"
+export type UpdatablePageMetadataShape = Partial<
+  Pick<
+    PageMetadata,
+    | "pageId"
+    | "displayTitle"
+    | "displayDescription"
+    | "localMode"
+    | "favorite"
+    | "bookmarked"
+    | "incognito"
+    | "tabId"
+  >
 >;
 
 export type UpdatePageTagShape = PageTagWithNameShape;

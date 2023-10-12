@@ -4,6 +4,7 @@ import {
   type SearchResultPage,
   UpdatePageTagsDocument,
   DeletePagesDocument,
+  UpdatePageMetadataDocument,
 } from "../../graphql/generated";
 import { publish } from "../../helpers/event";
 import { getHost } from "../../helpers/utils";
@@ -61,6 +62,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
 
   const [updatePageTagsMutation] = useMutation(UpdatePageTagsDocument);
   const [deletePagesMutation] = useMutation(DeletePagesDocument);
+  const [updatePageMetadataMutation] = useMutation(UpdatePageMetadataDocument);
 
   const updatePageTags = async (tags: string[]) => {
     setInputVisible(false);
@@ -118,6 +120,21 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
       },
     });
 
+    refresh();
+    publish(HIT_ITEM_REFRESH, hit.id);
+    setUpdating(false);
+  };
+
+  const onFavoriteClick = async () => {
+    setUpdating(true);
+    await updatePageMetadataMutation({
+      variables: {
+        pageId: hit.id,
+        pageMetadata: {
+          favorite: !hit.pageMetadata.favorite,
+        },
+      },
+    });
     refresh();
     publish(HIT_ITEM_REFRESH, hit.id);
     setUpdating(false);
@@ -254,6 +271,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         <Button
           key="card-action-favorite"
           type="text"
+          onClick={onFavoriteClick}
           icon={
             hit.pageMetadata.favorite ? (
               <HeartFilled rev={undefined} />
@@ -268,7 +286,6 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         </Button>,
         <Popover
           key="card-action-delete-popover"
-          // title={t("search.deleteConfirmDialog.title")}
           trigger="click"
           open={open}
           onOpenChange={handleOpenChange}
