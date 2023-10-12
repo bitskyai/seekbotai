@@ -1,5 +1,3 @@
-// import { useQuery } from "@apollo/client";
-
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { Button, Layout, Space, Tabs, theme } from "antd"
 import { NavLink } from "react-router-dom"

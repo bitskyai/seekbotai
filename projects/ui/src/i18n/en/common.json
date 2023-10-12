@@ -1,6 +1,10 @@
 {
   "appName": "BitSky",
-  "settings": "Preferences",
+  "settings": {
+    "title": "Preferences",
+    "general": "General",
+    "ignoreURLs": "Ignore URLs"
+  },
   "extensionSettings": "Extension Settings",
   "sideNav": {
     "allBookmarks": "All Bookmarks",

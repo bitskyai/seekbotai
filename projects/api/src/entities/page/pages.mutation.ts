@@ -13,6 +13,7 @@ import {
   removeDocumentsFromPagesIndexByIds,
 } from "../../searchEngine";
 import { GQLContext } from "../../types";
+import { type MutationResShape, MutationResShapeBM } from "../common.type";
 import { schemaBuilder } from "../gql-builder";
 import {
   PageCreateOrUpdatePayloadBM,
@@ -20,7 +21,6 @@ import {
   UpdatePageTagShapeBM,
   PageMetadataBM,
   UpdatablePageMetadataShapeBM,
-  MutationResShapeBM,
   DeletePageShapeBM,
 } from "./schema.type";
 import type {
@@ -28,7 +28,6 @@ import type {
   PageCreateOrUpdateShape,
   UpdatePageTagShape,
   UpdatablePageMetadataShape,
-  MutationResShape,
   DeletePageShape,
 } from "./types";
 import { PageMetadata } from "@prisma/client";

@@ -145,7 +145,7 @@ export const checkServiceHealth = async (
     )
     if (status === ServiceStatus.Success) {
       // update ignoreURLs
-      getIgnoreURLs()
+      await getIgnoreURLs()
     }
     return status
   } catch (error) {

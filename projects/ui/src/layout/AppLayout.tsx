@@ -62,7 +62,7 @@ export function AppLayout(): JSX.Element {
       <FileTextOutlined rev={undefined} />,
     ),
     getItem(
-      <NavLink to="/settings">{t("settings")}</NavLink>,
+      <NavLink to="/settings">{t("settings.title")}</NavLink>,
       "settings",
       <SettingOutlined rev={undefined} />,
     ),

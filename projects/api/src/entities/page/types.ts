@@ -49,11 +49,6 @@ export type SearchResultPage = Page & {
   pageTags: PageTagOutput[];
 };
 
-export type MutationResShape = {
-  success: boolean;
-  message?: string;
-};
-
 export type DeletePageShape = {
   pageId: string;
   pattern?: string;

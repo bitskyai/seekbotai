@@ -1,0 +1,6 @@
+mutation DeleteIgnoreURLs($deleteIgnoreURLs: [deleteIgnoreURLPayload!]!) {
+  deleteIgnoreURLs(deleteIgnoreURLs: $deleteIgnoreURLs) {
+    success
+    message
+  }
+}

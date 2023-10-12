@@ -1,4 +1,5 @@
 import { SortOrder } from "../common.type";
+import type { MutationResShape } from "../common.type";
 import { schemaBuilder } from "../gql-builder";
 import type {
   PageMetadataShape,
@@ -9,7 +10,6 @@ import type {
   SearchResultPage,
   UpdatablePageMetadataShape,
   UpdatePageTagShape,
-  MutationResShape,
   DeletePageShape,
 } from "./types";
 import type { PageMetadata, Tag } from "@prisma/client";
@@ -233,15 +233,6 @@ export const PageSortOrderInput = schemaBuilder.inputType(
     }),
   },
 );
-
-export const MutationResShapeBM = schemaBuilder
-  .objectRef<MutationResShape>("MutationRes")
-  .implement({
-    fields: (t) => ({
-      success: t.exposeBoolean("success", { nullable: false }),
-      message: t.exposeString("message", { nullable: true }),
-    }),
-  });
 
 export const DeletePageShapeBM = schemaBuilder
   .inputRef<DeletePageShape>("DeletePagePayload")
