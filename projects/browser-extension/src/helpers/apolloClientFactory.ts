@@ -3,12 +3,24 @@ import {
   ApolloLink,
   HttpLink,
   InMemoryCache,
+  type NormalizedCacheObject,
   concat
 } from "@apollo/client"
 
 import { LogFormat } from "./LogFormat"
 
 const logFormat = new LogFormat("helpers/apolloClientFactory")
+
+const noCache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {}
+    },
+    Mutation: {
+      fields: {}
+    }
+  }
+})
 
 export const newApolloClient = async ({
   protocol,
@@ -20,7 +32,7 @@ export const newApolloClient = async ({
   hostName: string
   port: number
   apiKey: string
-}) => {
+}): Promise<ApolloClient<NormalizedCacheObject>> => {
   if (!protocol || !hostName) {
     console.error(
       ...logFormat.formatArgs(
@@ -52,8 +64,18 @@ export const newApolloClient = async ({
   })
 
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: concat(authMiddleware, httpLink)
+    cache: noCache,
+    link: concat(authMiddleware, httpLink),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: "no-cache",
+        errorPolicy: "ignore"
+      },
+      query: {
+        fetchPolicy: "no-cache",
+        errorPolicy: "all"
+      }
+    }
   })
   return client
 }

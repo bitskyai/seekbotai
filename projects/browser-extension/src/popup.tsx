@@ -1,12 +1,13 @@
 import {
-  BookOutlined,
+  // BookOutlined,
   QuestionCircleOutlined,
   SaveOutlined,
   SearchOutlined,
   SettingOutlined
 } from "@ant-design/icons"
 import { Button, List, Tooltip, Typography } from "antd"
-import { useState } from "react"
+
+// import { useState } from "react"
 
 import Logo from "~/components/logo"
 
@@ -15,17 +16,17 @@ import "./popup.style.css"
 const { Text } = Typography
 
 function IndexPopup() {
-  const [data, setData] = useState("")
+  // const [data, setData] = useState("")
 
   const menuData = [
     {
       title: (
         <div>
           {chrome.i18n.getMessage("searchTitle")}
-          <div style={{ float: "right" }}>
+          {/* <div style={{ float: "right" }}>
             <Text code>⌘(Cmd)</Text>+<Text code>⌥(Option)</Text>+
             <Text code>f</Text>
-          </div>
+          </div> */}
         </div>
       ),
       description: chrome.i18n.getMessage("searchDescription"),
@@ -36,30 +37,30 @@ function IndexPopup() {
       title: (
         <div>
           {chrome.i18n.getMessage("savePageTitle")}
-          <div style={{ float: "right" }}>
+          {/* <div style={{ float: "right" }}>
             <Text code>⌘(Cmd)</Text>+<Text code>⌥(Option)</Text>+
             <Text code>s</Text>
-          </div>
+          </div> */}
         </div>
       ),
       description: chrome.i18n.getMessage("savePageDescription"),
       key: "savePage",
       icon: <SaveOutlined style={{ fontSize: "18px" }} />
-    },
-    {
-      title: (
-        <div>
-          {chrome.i18n.getMessage("bookmarkPageTitle")}
-          <div style={{ float: "right" }}>
-            <Text code>⌘(Cmd)</Text>+<Text code>⌥(Option)</Text>+
-            <Text code>b</Text>
-          </div>
-        </div>
-      ),
-      description: chrome.i18n.getMessage("bookmarkPageDescription"),
-      key: "bookmarkPage",
-      icon: <BookOutlined style={{ fontSize: "18px" }} />
     }
+    // {
+    //   title: (
+    //     <div>
+    //       {chrome.i18n.getMessage("bookmarkPageTitle")}
+    //       <div style={{ float: "right" }}>
+    //         <Text code>⌘(Cmd)</Text>+<Text code>⌥(Option)</Text>+
+    //         <Text code>b</Text>
+    //       </div>
+    //     </div>
+    //   ),
+    //   description: chrome.i18n.getMessage("bookmarkPageDescription"),
+    //   key: "bookmarkPage",
+    //   icon: <BookOutlined style={{ fontSize: "18px" }} />
+    // }
   ]
 
   const onClickAction = (key: string) => {

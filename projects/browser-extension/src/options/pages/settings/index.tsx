@@ -1,12 +1,10 @@
-// import { useQuery } from "@apollo/client";
-
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { Button, Layout, Space, Tabs, theme } from "antd"
 import { NavLink } from "react-router-dom"
 
-import ExtensionSettingsImport from "./importBookmarks"
 // import ExtensionSettingsGeneral from "./general"
-// import ExtensionSettingsIgnorePatterns from "./ignorePatterns"
+import ExtensionSettingsIgnorePatterns from "./ignorePatterns"
+import ExtensionSettingsImport from "./importBookmarks"
 import ExtensionSettingImportHistory from "./importHistory"
 
 import "./index.css"
@@ -19,7 +17,7 @@ export default function ExtensionSettings(): JSX.Element {
   } = theme.useToken()
 
   return (
-    <Layout>
+    <Layout className="settings">
       <Header style={{ padding: 0, background: colorBgContainer }}>
         <Space>
           <NavLink to="/">
@@ -48,11 +46,11 @@ export default function ExtensionSettings(): JSX.Element {
             //   key: "general",
             //   children: <ExtensionSettingsGeneral />
             // },
-            // {
-            //   label: <div>{chrome.i18n.getMessage("ignorePatternsTitle")}</div>,
-            //   key: "ignorePatterns",
-            //   children: <ExtensionSettingsIgnorePatterns />
-            // },
+            {
+              label: <div>{chrome.i18n.getMessage("ignorePatternsTitle")}</div>,
+              key: "ignorePatterns",
+              children: <ExtensionSettingsIgnorePatterns />
+            },
             {
               label: <div>{chrome.i18n.getMessage("importTitle")}</div>,
               key: "importBookmarks",

@@ -1,6 +1,5 @@
 import { HISTORY_TAG } from "@bitsky/shared"
 import cssText from "data-text:~/contents/bitsky.css"
-import html2canvas from "html2canvas"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 
@@ -29,16 +28,9 @@ function extractPageHTML() {
   return currentPageHTML
 }
 
-async function extractPageImage() {
-  const bodyElm = document.body
-  const canvas = await html2canvas(bodyElm)
-  const dataUrl = canvas.toDataURL()
-  return dataUrl
-}
-
 const BitskyHelper = () => {
   const AUTO_CLOSE_NOTIFICATION = 5000
-  const FREQUENTLY_SAVE_INTERVAL = 15000
+  const FREQUENTLY_SAVE_INTERVAL = 5 * 1000
 
   const [saving, setSaving] = useState(null)
   const [success, setSuccess] = useState(null)
@@ -46,83 +38,117 @@ const BitskyHelper = () => {
   let saveIntervalHandler = null
   let hideNotificationHandler = null
   let observer = null
+  let _sendLatestPageHandler
 
   const sendLatestPage = async () => {
-    try {
-      setDisplayNotification(true)
-      setSaving(true)
-      setSuccess(false)
-      // document.body.style.background = "pink" // used for debugging
-      console.info(...logFormat.formatArgs("window.load event fired"))
-      let pageImage = ""
+    // why use setTimeout?
+    // to avoid multiple save in a short time
+    clearTimeout(_sendLatestPageHandler)
+    _sendLatestPageHandler = setTimeout(async () => {
       try {
-        pageImage = await extractPageImage()
-      } catch (err) {
-        console.error(
-          ...logFormat.formatArgs("screenshot fail solution 2: ", err)
-        )
-      }
-      const currentPageData: PageCreateOrUpdatePayload = {
-        title: document.title,
-        pageTags: [{ name: HISTORY_TAG }],
-        url: window.location.href,
-        content: "",
-        raw: extractPageHTML() ?? "",
-        screenshot: pageImage,
-        pageMetadata: {
-          bookmarked: false,
-          lastVisitTime: new Date().toISOString()
-        }
-      }
+        setDisplayNotification(true)
+        setSaving(true)
+        setSuccess(false)
+        // document.body.style.background = "pink" // used for debugging
+        // send to background to capture visible tab
+        sendToBackground({
+          name: MessageSubject.captureVisibleTab
+        })
 
-      console.info(...logFormat.formatArgs("currentPageData", currentPageData))
-      const pages = [currentPageData]
-      // save current page
-      await sendToBackground({
-        name: MessageSubject.createOrUpdatePages,
-        body: pages
-      })
-      releaseMemory(pages) // release memory
-      setSaving(false)
-      setSuccess(true)
-      clearTimeout(hideNotificationHandler)
-      hideNotificationHandler = setTimeout(() => {
-        setDisplayNotification(false)
-      }, AUTO_CLOSE_NOTIFICATION)
-    } catch (err) {
-      setSaving(false)
-      setSuccess(false)
-      clearTimeout(hideNotificationHandler)
-      setTimeout(() => {
-        setDisplayNotification(false)
-        setSaving(null)
-        setSuccess(null)
-      }, AUTO_CLOSE_NOTIFICATION)
-      console.error(err)
-    }
+        const currentPageData: PageCreateOrUpdatePayload = {
+          title: document.title,
+          pageTags: [{ name: HISTORY_TAG }],
+          url: window.location.href,
+          content: "",
+          raw: extractPageHTML() ?? "",
+          pageMetadata: {
+            bookmarked: false,
+            lastVisitTime: new Date().toISOString()
+          }
+        }
+
+        console.info(
+          ...logFormat.formatArgs("currentPageData", currentPageData)
+        )
+        const pages = [currentPageData]
+        // save current page
+        await sendToBackground({
+          name: MessageSubject.createOrUpdatePages,
+          body: pages
+        })
+        releaseMemory(pages) // release memory
+        setSaving(false)
+        setSuccess(true)
+        clearTimeout(hideNotificationHandler)
+        hideNotificationHandler = setTimeout(() => {
+          setDisplayNotification(false)
+        }, AUTO_CLOSE_NOTIFICATION)
+      } catch (err) {
+        setSaving(false)
+        setSuccess(false)
+        clearTimeout(hideNotificationHandler)
+        setTimeout(() => {
+          setDisplayNotification(false)
+          setSaving(null)
+          setSuccess(null)
+        }, AUTO_CLOSE_NOTIFICATION)
+        console.error(err)
+      }
+    }, 500)
   }
 
   const setupPageCollect = async () => {
+    const result = await sendToBackground({
+      name: MessageSubject.whetherIgnore,
+      body: {
+        url: window.location.href
+      }
+    })
+
+    if (result?.data) {
+      console.warn(...logFormat.formatArgs("ignore this page"))
+      return
+    }
+
+    //==========================================================================
+    // Trigger one when setup
     await sendLatestPage()
 
+    //==========================================================================
+    // setup observer to listen DOM change
     const bodyNode = document.querySelector("body")
     const config = { childList: true, subtree: true }
     // Callback function to execute when mutations are observed
-    const callback = () => {
+    const domTreeChangedCallback = () => {
       clearTimeout(saveIntervalHandler)
       saveIntervalHandler = setTimeout(async () => {
         await sendLatestPage()
       }, FREQUENTLY_SAVE_INTERVAL)
     }
+
     if (observer) {
       observer?.disconnect()
       observer = null
     }
     // Create an observer instance linked to the callback function
-    observer = new MutationObserver(callback)
+    observer = new MutationObserver(domTreeChangedCallback)
 
     // Start observing the target node for configured mutations
     observer.observe(bodyNode, config)
+
+    //==========================================================================
+    // setup window url change event
+    // Function to handle URL changes
+    const handleUrlChange = async () => {
+      await sendLatestPage()
+      // You can perform actions based on the URL change here
+    }
+
+    // Listen for changes in the page's URL
+    window.removeEventListener("hashchange", handleUrlChange)
+    window.removeEventListener("popstate", handleUrlChange)
+    window.addEventListener("hashchange", handleUrlChange)
+    window.addEventListener("popstate", handleUrlChange)
   }
 
   useEffect(() => {
@@ -137,12 +163,10 @@ const BitskyHelper = () => {
       setupedPageCollect = true
       setupPageCollect()
     }, FREQUENTLY_SAVE_INTERVAL)
-    document.removeEventListener("DOMContentLoaded", setupPageCollect)
-    document.addEventListener("DOMContentLoaded", async () => {
+    window.removeEventListener("load", setupPageCollect)
+    window.addEventListener("load", async () => {
       console.info(
-        ...logFormat.formatArgs(
-          "bitsky content script: DOMContentLoaded event fired"
-        )
+        ...logFormat.formatArgs("bitsky content script: load event fired")
       )
       clearTimeout(setupPageCollectHandler)
       if (setupedPageCollect) return

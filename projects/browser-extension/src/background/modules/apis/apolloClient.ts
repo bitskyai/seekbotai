@@ -1,3 +1,5 @@
+import { ApolloClient, type NormalizedCacheObject } from "@apollo/client"
+
 import { Storage } from "@plasmohq/storage"
 
 import { LogFormat } from "~helpers/LogFormat"
@@ -14,7 +16,7 @@ import { ServiceStatus } from "~types"
 
 const logFormat = new LogFormat("apis/apolloClient")
 
-let _apolloClient = undefined
+let _apolloClient: ApolloClient<NormalizedCacheObject>
 
 const _initApolloClient = async () => {
   const serviceHealthStatus = await getServiceHealthStatus()

@@ -1,6 +1,10 @@
 {
   "appName": "BitSky",
-  "settings": "Preferences",
+  "settings": {
+    "title": "Preferences",
+    "general": "General",
+    "ignoreURLs": "Ignore URLs"
+  },
   "extensionSettings": "Extension Settings",
   "sideNav": {
     "allBookmarks": "All Bookmarks",
@@ -34,16 +38,24 @@
     "bookmark": "Bookmark",
     "bookmarked": "Bookmarked",
     "unbookmark": "Unbookmark",
-    "favorite": "Favorite",
-    "favorited": "Favorited",
+    "favorite": "Star",
+    "favorited": "Stared",
     "resultsPerPage": "{{resultsNumber}} results per page",
     "lastVisited": "Last visited",
     "mostVisited": "Most visited",
     "resetButtonText": "Reset",
-    "newTag": "New Tag"
+    "newTag": "New Tag",
+    "deleteConfirmDialog": {
+      "title": "Delete",
+      "description": "You have following delete options:",
+      "deleteCurrent": "Delete this page only",
+      "deleteAllPagesMatchedCondition": "Delete all pages that url contains",
+      "deleteAndIgnoreAllPagesMatchedCondition": "Delete and ignore all pages that url contains"
+    }
   },
   "viewedAt": "Viewed At",
   "yes": "Yes",
   "no": "No",
-  "delete": "Delete"
+  "delete": "Delete",
+  "ok": "Ok"
 }

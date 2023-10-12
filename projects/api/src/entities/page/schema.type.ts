@@ -1,4 +1,5 @@
 import { SortOrder } from "../common.type";
+import type { MutationResShape } from "../common.type";
 import { schemaBuilder } from "../gql-builder";
 import type {
   PageMetadataShape,
@@ -7,8 +8,11 @@ import type {
   PageTagOutput,
   CreateOrUpdatePageRes,
   SearchResultPage,
+  UpdatablePageMetadataShape,
+  UpdatePageTagShape,
+  DeletePageShape,
 } from "./types";
-import type { PageMetadata, Page, Tag, PageTag } from "@prisma/client";
+import type { PageMetadata, Tag } from "@prisma/client";
 
 export const PageBM = schemaBuilder.prismaObject("Page", {
   fields: (t) => ({
@@ -166,7 +170,7 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
   .inputRef<PageCreateOrUpdateShape>("PageCreateOrUpdatePayload")
   .implement({
     fields: (t) => ({
-      title: t.string({ required: true }),
+      title: t.string({ required: false }),
       description: t.string({ required: false }),
       url: t.string({ required: true }),
       icon: t.string({ required: false }),
@@ -181,6 +185,29 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
         type: PageMetadataPayloadBM,
         required: false,
       }),
+    }),
+  });
+
+export const UpdatablePageMetadataShapeBM = schemaBuilder
+  .inputRef<UpdatablePageMetadataShape>("UpdatablePageMetadataPayload")
+  .implement({
+    fields: (t) => ({
+      pageId: t.string({ required: false }),
+      displayTitle: t.string({ required: false }),
+      displayDescription: t.string({ required: false }),
+      localMode: t.boolean({ required: false }),
+      favorite: t.boolean({ required: false }),
+      bookmarked: t.boolean({ required: false }),
+      incognito: t.boolean({ required: false }),
+      tabId: t.int({ required: false }),
+    }),
+  });
+
+export const UpdatePageTagShapeBM = schemaBuilder
+  .inputRef<UpdatePageTagShape>("UpdatePageTagPayload")
+  .implement({
+    fields: (t) => ({
+      name: t.string({ required: true }),
     }),
   });
 
@@ -206,3 +233,14 @@ export const PageSortOrderInput = schemaBuilder.inputType(
     }),
   },
 );
+
+export const DeletePageShapeBM = schemaBuilder
+  .inputRef<DeletePageShape>("DeletePagePayload")
+  .implement({
+    fields: (t) => ({
+      pageId: t.string({ required: true }),
+      pattern: t.string({ required: false }),
+      ignore: t.boolean({ required: false }),
+      regularExpression: t.boolean({ required: false }),
+    }),
+  });

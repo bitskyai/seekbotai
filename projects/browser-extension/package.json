@@ -25,8 +25,7 @@
     "antd": "^5.4.6",
     "lodash": "^4.17.21",
     "normalize-url": "^6.0.1",
-    "uuid": "^9.0.0",
-    "html2canvas": "^1.4.1"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.210",
@@ -65,7 +64,8 @@
       "notifications",
       "storage",
       "unlimitedStorage",
-      "scripting"
+      "scripting",
+      "activeTab"
     ]
   }
 }

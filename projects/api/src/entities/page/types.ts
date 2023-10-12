@@ -10,7 +10,7 @@ export type CreateOrUpdatePageRes = {
 
 export type PageMetadataShape = Partial<PageMetadata>;
 
-export type PageTagWithNameShape = Partial<PageTag> & Pick<Tag, "name">;
+export type PageTagWithNameShape = Pick<Tag, "name">;
 
 export type PageShape = Partial<Page>;
 
@@ -26,6 +26,22 @@ export type PageCreateOrUpdateShape = PageShape & {
   pageMetadata?: PageMetadataShape;
 };
 
+export type UpdatablePageMetadataShape = Partial<
+  Pick<
+    PageMetadata,
+    | "pageId"
+    | "displayTitle"
+    | "displayDescription"
+    | "localMode"
+    | "favorite"
+    | "bookmarked"
+    | "incognito"
+    | "tabId"
+  >
+>;
+
+export type UpdatePageTagShape = PageTagWithNameShape;
+
 export type PageTagOutput = PageTag & {
   tag: Tag;
 };
@@ -33,4 +49,11 @@ export type PageTagOutput = PageTag & {
 export type SearchResultPage = Page & {
   pageMetadata: PageMetadata;
   pageTags: PageTagOutput[];
+};
+
+export type DeletePageShape = {
+  pageId: string;
+  pattern?: string;
+  ignore?: boolean;
+  regularExpression?: boolean;
 };

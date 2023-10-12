@@ -1,0 +1,6 @@
+mutation updatePageTags($pageId: String!, $pageTags: [UpdatePageTagPayload!]!) {
+  updatePageTags(pageId: $pageId, pageTags: $pageTags) {
+    success
+    message
+  }
+}

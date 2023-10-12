@@ -1,3 +1,7 @@
 .settings-status-section {
   max-width: 800px;
 }
+
+.settings .ignore-urls-container {
+  padding: 24px 24px 24px 0;
+}

@@ -8,10 +8,11 @@ import {
   CHECK_NEW_INDEXES_INTERVAL,
   MEILI_SEARCH_BINARY_NAME_PREFIX,
 } from "./constants";
-import { getChangedPages } from "./pages";
+import { getChangedPages, getPagesByIds } from "./pages";
 import { getPageIndex, updatePageIndex, pageIndexSettings } from "./pagesIndex";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import fs from "fs-extra";
+import { set } from "lodash";
 import { MeiliSearch, type Index } from "meilisearch";
 import { join } from "path";
 
@@ -51,6 +52,29 @@ async function getMeiliSearchBinaryPathInSource() {
   );
   logger.info(`latestMeiliSearchBinaryPath: ${latestMeiliSearchBinaryPath}`);
   return latestMeiliSearchBinaryPath;
+}
+
+async function initPagesIndex() {
+  const logger = getLogger();
+  const meiliSearch = await getMeiliSearchClient();
+  logger.info(`Creating index ${PAGES_INDEX_NAME}`);
+  await meiliSearch.createIndex(PAGES_INDEX_NAME, { primaryKey: "id" });
+}
+
+async function updatePagesIndexSetting() {
+  const logger = getLogger();
+  const pageIndexingRecord = await getPageIndex();
+  const currentVersion = pageIndexingRecord?.version;
+  if (currentVersion !== pageIndexSettings.version) {
+    const meiliSearch = await getMeiliSearchClient();
+    logger.info(`Updating index ${PAGES_INDEX_NAME} settings`);
+    await meiliSearch
+      .index(PAGES_INDEX_NAME)
+      .updateSettings(pageIndexSettings.settings);
+    await updatePageIndex({ version: pageIndexSettings.version });
+  } else {
+    logger.info(`Index ${PAGES_INDEX_NAME} settings are up to date`);
+  }
 }
 
 export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
@@ -184,36 +208,12 @@ export async function waitMeiliSearchReady() {
   return healthCheck;
 }
 
-async function initPagesIndex() {
-  const logger = getLogger();
-  const meiliSearch = await getMeiliSearchClient();
-  logger.info(`Creating index ${PAGES_INDEX_NAME}`);
-  await meiliSearch.createIndex(PAGES_INDEX_NAME, { primaryKey: "id" });
-}
-
-async function updatePagesIndexSetting() {
-  const logger = getLogger();
-  const pageIndexingRecord = await getPageIndex();
-  const currentVersion = pageIndexingRecord?.version;
-  if (currentVersion !== pageIndexSettings.version) {
-    const meiliSearch = await getMeiliSearchClient();
-    logger.info(`Updating index ${PAGES_INDEX_NAME} settings`);
-    await meiliSearch
-      .index(PAGES_INDEX_NAME)
-      .updateSettings(pageIndexSettings.settings);
-    await updatePageIndex({ version: pageIndexSettings.version });
-  } else {
-    logger.info(`Index ${PAGES_INDEX_NAME} settings are up to date`);
-  }
-}
-
 /**
  * start pages index
  * @param lastIndexAt: specific date to start indexing from
  */
-async function startPagesIndex(lastIndexAt?: Date) {
+export async function startPagesIndex(lastIndexAt?: Date) {
   const logger = getLogger();
-  const config = getAppConfig();
   const pageIndexingRecord = await getPageIndex();
   if (!lastIndexAt) {
     lastIndexAt = pageIndexingRecord?.lastIndexAt ?? new Date(0);
@@ -225,10 +225,7 @@ async function startPagesIndex(lastIndexAt?: Date) {
   logger.info(`startPagesIndex: lastIndexAt: ${lastIndexAt}`);
   const pages = await getChangedPages(lastIndexAt);
   logger.info(`startPagesIndex: ${pages.length} pages`);
-  const meiliSearch = new MeiliSearch({
-    host: `${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
-    apiKey: config.MEILISEARCH_MASTER_KEY,
-  });
+  const meiliSearch = await getMeiliSearchClient();
   if (pages.length) {
     const indexRes = await meiliSearch
       .index(PAGES_INDEX_NAME)
@@ -237,6 +234,57 @@ async function startPagesIndex(lastIndexAt?: Date) {
   }
   await updatePageIndex({ lastIndexAt: new Date() });
   logger.info(`startPagesIndex: done`);
+}
+
+export async function waitUtilPagesIndexFinish() {
+  const logger = getLogger();
+  const meiliSearch = await getMeiliSearchClient();
+  await new Promise((resolve) => {
+    const pagesIndexStatsHandler = setInterval(async () => {
+      const pagesIndexStats = await meiliSearch
+        .index(PAGES_INDEX_NAME)
+        .getStats();
+      logger.debug(`pagesIndexStats`, {
+        isIndexing: pagesIndexStats.isIndexing,
+      });
+      if (pagesIndexStats.isIndexing === false) {
+        clearInterval(pagesIndexStatsHandler);
+        resolve(true);
+      }
+    }, 200);
+
+    // max index time is 60 seconds
+    setTimeout(() => {
+      clearInterval(pagesIndexStatsHandler);
+      resolve(true);
+    }, 1000 * 60);
+  });
+}
+
+export async function removeDocumentsFromPagesIndexByIds(ids: string[]) {
+  const logger = getLogger();
+  const meiliSearch = await getMeiliSearchClient();
+  const indexRes = await meiliSearch
+    .index(PAGES_INDEX_NAME)
+    .deleteDocuments(ids);
+  logger.debug(`indexRes`, { indexRes });
+  await waitUtilPagesIndexFinish();
+  return true;
+}
+
+export async function addDocumentsToPagesIndexByIds(ids: string[]) {
+  const logger = getLogger();
+  const meiliSearch = await getMeiliSearchClient();
+  const pages = await getPagesByIds(ids);
+  if (pages.length) {
+    const indexRes = await meiliSearch
+      .index(PAGES_INDEX_NAME)
+      .addDocuments(pages, { primaryKey: "id" });
+    logger.debug(`indexRes`, { indexRes });
+    await waitUtilPagesIndexFinish();
+  }
+  // since we didn't updatePageIndex, so this maybe cause duplicate indexing, but it's ok since it doesn't have a huge number
+  return true;
 }
 
 // export async function stopIndexingPages() {}

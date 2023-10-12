@@ -1,0 +1,6 @@
+mutation deletePages($pages: [DeletePagePayload!]!) {
+  deletePages(pages: $pages) {
+    success
+    message
+  }
+}

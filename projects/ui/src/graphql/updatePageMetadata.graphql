@@ -1,0 +1,8 @@
+mutation updatePageMetadata(
+  $pageId: String!
+  $pageMetadata: UpdatablePageMetadataPayload!
+) {
+  updatePageMetadata(pageId: $pageId, pageMetadata: $pageMetadata) {
+    id
+  }
+}
