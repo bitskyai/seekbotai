@@ -4,6 +4,7 @@ import { init as apolloClientInit } from "./apolloClient"
 
 export * from "./createOrUpdatePages"
 export * from "./getIgnoreURLs"
+export * from "./deleteIgnoreURLs"
 
 export { setApolloClientToNull } from "./apolloClient"
 

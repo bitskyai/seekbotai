@@ -29,34 +29,13 @@ import {
   ServiceStatus
 } from "~types"
 
-import {
-  BackgroundSyncUpStatus,
-  addToBackgroundSyncUpAPICreateOrUpdatePages,
-  getBackgroundSyncUpAPICreateOrUpdatePages,
-  initBackgroundSyncUp,
-  updateBackgroundSyncUpAPICreateOrUpdatePages
-} from "./backgroundSyncUp"
-import {
-  addIgnoreURLHistory,
-  getIgnoreURLs,
-  getIgnoreURLsHistory,
-  setIgnoreURLs
-} from "./ignoreURLs"
 import { StorageKeys } from "./storageKeys"
 
+export * from "./backgroundSyncUp"
+export * from "./ignoreURLs"
+
 //TODO: refactor index.ts, it should only focus on centralize exports
-export {
-  StorageKeys,
-  BackgroundSyncUpStatus,
-  initBackgroundSyncUp,
-  addToBackgroundSyncUpAPICreateOrUpdatePages,
-  getBackgroundSyncUpAPICreateOrUpdatePages,
-  updateBackgroundSyncUpAPICreateOrUpdatePages,
-  addIgnoreURLHistory,
-  getIgnoreURLs,
-  getIgnoreURLsHistory,
-  setIgnoreURLs
-}
+export { StorageKeys }
 
 const logFormat = new LogFormat("storage")
 

@@ -7,31 +7,23 @@ import {
 
 import { getApolloClient } from "./apolloClient"
 
-const logFormat = new LogFormat("apis/createOrUpdatePages")
+const logFormat = new LogFormat("apis/getIgnoreURLs")
 
 export async function getIgnoreURLs() {
-  console.info(...logFormat.formatArgs("getIgnoreURLs"))
   const apolloClient = await getApolloClient()
   if (!apolloClient) {
     console.warn(
       ...logFormat.formatArgs(
-        "getIgnoreURLs -> apolloClient is null, getIgnoreURLs from storage"
+        "apolloClient is null, getIgnoreURLs from storage"
       )
     )
     const ignoreURLs = await getIgnoreURLsFromStorage()
     return ignoreURLs
   }
-  console.debug(
-    ...logFormat.formatArgs("getIgnoreURLs -> apolloClient", {
-      apolloClient
-    })
-  )
   const result = await apolloClient.query({
     query: GetIgnoreUrLsDocument
   })
-  console.debug(
-    ...logFormat.formatArgs("createOrUpdatePages -> result", { result })
-  )
+  console.debug(...logFormat.formatArgs("getIgnoreURLs -> result", { result }))
   const ignoreURLs = result.data.ignoreURLs as IgnoreUrl[]
   await setIgnoreURLs(ignoreURLs)
   return ignoreURLs

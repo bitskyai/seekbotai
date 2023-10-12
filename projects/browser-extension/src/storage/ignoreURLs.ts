@@ -1,6 +1,6 @@
 import { Storage } from "@plasmohq/storage"
 
-import { type IgnoreUrl } from "~/graphql/generated"
+import type { DeleteIgnoreUrlPayload, IgnoreUrl } from "~/graphql/generated"
 import { LogFormat } from "~helpers/LogFormat"
 
 import { StorageKeys } from "./storageKeys"
@@ -26,6 +26,22 @@ export async function setIgnoreURLs(ignoreURLs: IgnoreUrl[]) {
   await storage.set(StorageKeys.IgnoreURLs, ignoreURLs)
   console.debug(
     ...logFormat.formatArgs("setIgnoreURLs -> ignoreURLs", { ignoreURLs })
+  )
+  return true
+}
+
+export async function deleteIgnoreURLs(ignoreURLs: DeleteIgnoreUrlPayload[]) {
+  const storage = new Storage({ area: "local" })
+  const currentIgnoreURLs =
+    (await storage.get<IgnoreUrl[]>(StorageKeys.IgnoreURLs)) || []
+  const newIgnoreURLs = currentIgnoreURLs.filter(
+    (currentIgnoreURL) =>
+      !ignoreURLs.some((ignoreURL) => ignoreURL.id === currentIgnoreURL.id)
+  )
+
+  await storage.set(StorageKeys.IgnoreURLs, newIgnoreURLs)
+  console.debug(
+    ...logFormat.formatArgs("deleteIgnoreURLs -> ignoreURLs", { ignoreURLs })
   )
   return true
 }

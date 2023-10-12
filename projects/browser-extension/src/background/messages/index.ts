@@ -12,6 +12,7 @@ export enum MessageSubject {
   cleanImportHistory = "cleanImportHistory",
   captureVisibleTab = "captureVisibleTab",
   getIgnoreURLs = "getIgnoreURLs",
+  deleteIgnoreURLs = "deleteIgnoreURLs",
   whetherIgnore = "whetherIgnore"
 }
 

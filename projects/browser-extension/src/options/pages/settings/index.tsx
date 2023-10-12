@@ -17,7 +17,7 @@ export default function ExtensionSettings(): JSX.Element {
   } = theme.useToken()
 
   return (
-    <Layout>
+    <Layout className="settings">
       <Header style={{ padding: 0, background: colorBgContainer }}>
         <Space>
           <NavLink to="/">
