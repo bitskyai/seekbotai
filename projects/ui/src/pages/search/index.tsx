@@ -73,7 +73,7 @@ const SearchPage = () => {
       >
         <Configure
           hitsPerPage={20}
-          attributesToSnippet={["content:300"]}
+          attributesToSnippet={["content:200"]}
           snippetEllipsisText={"..."}
         />
         <Layout>

@@ -153,7 +153,6 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const [displayTitle, setDisplayTitle] = useState(
     hit.pageMetadata.displayTitle ? hit.pageMetadata.displayTitle : hit.title,
   );
-  hit.description = hit.description ? hit.description : " ";
 
   const [displayDescription, setDisplayDescription] = useState(
     hit.pageMetadata.displayDescription
@@ -381,127 +380,142 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
       ]}
     >
       <div className="editable-content">
-        <Divider
-          style={{ fontSize: 14 }}
-          orientation="left"
-          orientationMargin="0"
-        >
-          {t("sideNav.tags.sectionTitle")}
-        </Divider>
-        {inputVisible ? (
-          <Tags
-            value={hit.pageTags.map((pageTag) => pageTag.tag.name)}
-            onBlur={updatePageTags}
-          />
-        ) : (
-          <>
-            {hit.pageTags.map((pageTag) => {
-              const isLongTag = pageTag.tag.name.length > 20;
-              const tagElem = (
-                <Tag
-                  key={pageTag.tag.id}
-                  closable={!updating}
-                  style={{ userSelect: "none" }}
-                  onClose={() => removePageTag(pageTag?.tag?.name)}
-                >
-                  <span>
-                    {isLongTag
-                      ? `${pageTag.tag.name.slice(0, 20)}...`
-                      : pageTag.tag.name}
-                  </span>
-                </Tag>
-              );
-              return isLongTag ? (
-                <Tooltip title={pageTag.tag.name} key={pageTag.tag.id}>
-                  {tagElem}
-                </Tooltip>
-              ) : (
-                tagElem
-              );
-            })}
-            {!updating && (
-              <Tag
-                style={tagPlusStyle}
-                icon={<PlusOutlined rev={undefined} />}
-                onClick={() => {
-                  setInputVisible(true);
-                }}
-              >
-                {t("search.newTag")}
-              </Tag>
-            )}
-          </>
-        )}
-        <Divider
-          style={{ fontSize: 14 }}
-          orientation="left"
-          orientationMargin="0"
-        >
-          {t("description")}
-        </Divider>
-        <div>
-          {!editingDescription && (
-            <div>
-              {hit.pageMetadata.displayDescription ? (
-                <Highlight
-                  attribute={"pageMetadata.displayDescription"}
-                  hit={hit}
-                />
-              ) : (
-                <Highlight attribute={"description"} hit={hit} />
-              )}
-              <Button
-                onClick={() => setEditingDescription(true)}
-                type="link"
-                icon={<EditOutlined rev={"edit-icon"} />}
-              />
-            </div>
-          )}
-          {editingDescription && (
-            <Paragraph
-              style={{
-                margin: "0 0 0 10px",
-                minWidth: "600px",
-              }}
-              editable={{
-                editing: true,
-                autoSize: true,
-                onCancel: () => {
-                  setEditingDescription(false);
-                },
-                onChange: (newDescription: string) => {
-                  console.log("onChange newDescription:", newDescription);
-                  setDisplayDescription(newDescription);
-                  console.log("onChange displayDescription:", newDescription);
-                },
-                onEnd: async () => {
-                  console.log("onEnd displayDescription:", displayDescription);
-                  if (
-                    displayDescription === hit.pageMetadata.displayDescription
-                  ) {
-                    setEditingDescription(false);
-                    return;
-                  }
-                  setUpdating(true);
-                  setEditingDescription(false);
-                  await updatePageMetadataMutation({
-                    variables: {
-                      pageId: hit.id,
-                      pageMetadata: {
-                        displayDescription: displayDescription,
-                      },
-                    },
-                  });
-                  refresh();
-                  publish(HIT_ITEM_REFRESH, hit.id);
-                  setUpdating(false);
-                },
-              }}
+        <Space.Compact block>
+          <div style={{ width: "50%", paddingRight: "20px" }}>
+            <Divider
+              style={{ fontSize: 14 }}
+              orientation="left"
+              orientationMargin="0"
             >
-              {displayDescription}
-            </Paragraph>
-          )}
-        </div>
+              {t("sideNav.tags.sectionTitle")}
+            </Divider>
+            {inputVisible ? (
+              <Tags
+                value={hit.pageTags.map((pageTag) => pageTag.tag.name)}
+                onBlur={updatePageTags}
+              />
+            ) : (
+              <>
+                {hit.pageTags.map((pageTag) => {
+                  const isLongTag = pageTag.tag.name.length > 20;
+                  const tagElem = (
+                    <Tag
+                      key={pageTag.tag.id}
+                      closable={!updating}
+                      style={{ userSelect: "none" }}
+                      onClose={() => removePageTag(pageTag?.tag?.name)}
+                    >
+                      <span>
+                        {isLongTag
+                          ? `${pageTag.tag.name.slice(0, 20)}...`
+                          : pageTag.tag.name}
+                      </span>
+                    </Tag>
+                  );
+                  return isLongTag ? (
+                    <Tooltip title={pageTag.tag.name} key={pageTag.tag.id}>
+                      {tagElem}
+                    </Tooltip>
+                  ) : (
+                    tagElem
+                  );
+                })}
+                {!updating && (
+                  <Tag
+                    style={tagPlusStyle}
+                    icon={<PlusOutlined rev={undefined} />}
+                    onClick={() => {
+                      setInputVisible(true);
+                    }}
+                  >
+                    {t("search.newTag")}
+                  </Tag>
+                )}
+              </>
+            )}
+          </div>
+          <div style={{ width: "50%" }}>
+            <Divider
+              style={{ fontSize: 14 }}
+              orientation="left"
+              orientationMargin="0"
+            >
+              {t("description")}
+            </Divider>
+            <div>
+              {!editingDescription && (
+                <>
+                  {hit.pageMetadata.displayDescription ||
+                    (hit.description &&
+                      (hit.pageMetadata.displayDescription ? (
+                        <Highlight
+                          attribute={"pageMetadata.displayDescription"}
+                          hit={hit}
+                        />
+                      ) : (
+                        <Highlight attribute={"description"} hit={hit} />
+                      )))}
+                  <Button
+                    onClick={() => setEditingDescription(true)}
+                    type="link"
+                    icon={<EditOutlined rev={"edit-icon"} />}
+                  />
+                </>
+              )}
+              {editingDescription && (
+                <Paragraph
+                  style={{
+                    margin: "0 0 0 10px",
+                    minWidth: "600px",
+                  }}
+                  editable={{
+                    editing: true,
+                    autoSize: true,
+                    onCancel: () => {
+                      setEditingDescription(false);
+                    },
+                    onChange: (newDescription: string) => {
+                      console.log("onChange newDescription:", newDescription);
+                      setDisplayDescription(newDescription);
+                      console.log(
+                        "onChange displayDescription:",
+                        newDescription,
+                      );
+                    },
+                    onEnd: async () => {
+                      console.log(
+                        "onEnd displayDescription:",
+                        displayDescription,
+                      );
+                      if (
+                        displayDescription ===
+                        hit.pageMetadata.displayDescription
+                      ) {
+                        setEditingDescription(false);
+                        return;
+                      }
+                      setUpdating(true);
+                      setEditingDescription(false);
+                      await updatePageMetadataMutation({
+                        variables: {
+                          pageId: hit.id,
+                          pageMetadata: {
+                            displayDescription: displayDescription,
+                          },
+                        },
+                      });
+                      refresh();
+                      publish(HIT_ITEM_REFRESH, hit.id);
+                      setUpdating(false);
+                    },
+                  }}
+                >
+                  {displayDescription}
+                </Paragraph>
+              )}
+            </div>
+          </div>
+        </Space.Compact>
       </div>
       <Divider
         style={{ fontSize: 14 }}
@@ -526,7 +540,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
             />
           )}
           <Paragraph>
-            {hit.pageMetadata.displayTitle && (
+            {hit.pageMetadata.displayTitle && hit.title && (
               <>
                 <Text strong>
                   <Highlight attribute="title" hit={hit} />
@@ -534,7 +548,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                 <br />
               </>
             )}
-            {hit.pageMetadata.displayDescription && (
+            {hit.pageMetadata.displayDescription && hit.description && (
               <>
                 <Text type="secondary">
                   <Highlight attribute="description" hit={hit} />
