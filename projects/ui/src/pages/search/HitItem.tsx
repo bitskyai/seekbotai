@@ -15,6 +15,7 @@ import {
   DeleteOutlined,
   HeartOutlined,
 } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import {
   Space,
@@ -28,8 +29,8 @@ import {
   Image,
   Button,
   List,
+  Divider,
 } from "antd";
-// import type { InputRef } from "antd";
 import type { Hit } from "instantsearch.js";
 import { differenceBy } from "lodash";
 import { ChangeEvent, createElement, useState } from "react";
@@ -48,12 +49,120 @@ const IconText = ({ icon, text }: { icon: any; text: string }) => (
   </Space>
 );
 
+const deleteContent = ({
+  hit,
+  deletePages,
+}: {
+  hit: Hit<SearchResultPage>;
+  deletePages: (pageId: string, pattern?: string, ignore?: boolean) => void;
+}) => {
+  const url = hit.url;
+  const { t } = useTranslation();
+  const [deleteAllPagesUrl, setDeleteAllPagesUrl] = useState(url);
+  const [deleteAndIgnoreAllPagesUrl, setDeleteAndIgnoreAllPagesUrl] =
+    useState(url);
+  console.log(
+    "deleteContent - hit.url",
+    url,
+    " deleteAllPagesUrl",
+    deleteAllPagesUrl,
+    " deleteAndIgnoreAllPagesUrl",
+    deleteAndIgnoreAllPagesUrl,
+  );
+
+  const onDeleteAllPagesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setDeleteAllPagesUrl(event?.target?.value);
+  };
+
+  const onDeleteAndIgnoreAllPagesChange = (
+    event: ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setDeleteAndIgnoreAllPagesUrl(event?.target?.value);
+  };
+
+  const options = [
+    {
+      title: t("search.deleteConfirmDialog.deleteCurrent"),
+      onClick: () => {
+        deletePages(hit.id);
+      },
+    },
+    {
+      title: t("search.deleteConfirmDialog.deleteAllPagesMatchedCondition"),
+      description: (
+        <TextArea
+          placeholder="Basic usage"
+          autoSize={{ minRows: 2, maxRows: 6 }}
+          value={deleteAllPagesUrl}
+          onChange={onDeleteAllPagesChange}
+        />
+      ),
+      onClick: () => {
+        deletePages(hit.id, deleteAllPagesUrl, false);
+      },
+    },
+    {
+      title: t(
+        "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedCondition",
+      ),
+      description: (
+        <TextArea
+          placeholder="Basic usage"
+          autoSize={{ minRows: 2, maxRows: 6 }}
+          value={deleteAndIgnoreAllPagesUrl}
+          onChange={onDeleteAndIgnoreAllPagesChange}
+        />
+      ),
+      onClick: () => {
+        deletePages(hit.id, deleteAndIgnoreAllPagesUrl, true);
+      },
+    },
+  ];
+
+  return (
+    <div>
+      <List
+        style={{ minWidth: 500 }}
+        dataSource={options}
+        renderItem={(item) => (
+          <List.Item
+            actions={[
+              <Button
+                type="primary"
+                key={`${hit.id}-ok`}
+                onClick={item.onClick}
+              >
+                {t("ok")}
+              </Button>,
+            ]}
+          >
+            <List.Item.Meta title={item.title} description={item.description} />
+          </List.Item>
+        )}
+      ></List>
+    </div>
+  );
+};
+
 function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const { t } = useTranslation();
   const { refresh } = useInstantSearch();
   const [inputVisible, setInputVisible] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [open, setOpen] = useState(false);
+  const [displayTitle, setDisplayTitle] = useState(
+    hit.pageMetadata.displayTitle ? hit.pageMetadata.displayTitle : hit.title,
+  );
+  hit.description = hit.description ? hit.description : " ";
+
+  const [displayDescription, setDisplayDescription] = useState(
+    hit.pageMetadata.displayDescription
+      ? hit.pageMetadata.displayDescription
+      : hit.description,
+  );
+
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [editingDescription, setEditingDescription] = useState(false);
 
   const tagPlusStyle: React.CSSProperties = {
     height: 22,
@@ -142,93 +251,8 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
 
   const titleHighlightAttribute = hit.title ? "title" : "url";
 
-  //-----------------------------------------------
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-  };
-
-  const deleteContent = ({ hit }: { hit: Hit<SearchResultPage> }) => {
-    const [deleteAllPagesUrl, setDeleteAllPagesUrl] = useState(hit.url);
-    const [deleteAndIgnoreAllPagesUrl, setDeleteAndIgnoreAllPagesUrl] =
-      useState(hit.url);
-
-    const onDeleteAllPagesChange = (
-      event: ChangeEvent<HTMLTextAreaElement>,
-    ) => {
-      setDeleteAllPagesUrl(event?.target?.value);
-    };
-
-    const onDeleteAndIgnoreAllPagesChange = (
-      event: ChangeEvent<HTMLTextAreaElement>,
-    ) => {
-      setDeleteAndIgnoreAllPagesUrl(event?.target?.value);
-    };
-
-    const options = [
-      {
-        title: t("search.deleteConfirmDialog.deleteCurrent"),
-        onClick: () => {
-          deletePages(hit.id);
-        },
-      },
-      {
-        title: t("search.deleteConfirmDialog.deleteAllPagesMatchedCondition"),
-        description: (
-          <TextArea
-            placeholder="Basic usage"
-            autoSize={{ minRows: 2, maxRows: 6 }}
-            value={deleteAllPagesUrl}
-            onChange={onDeleteAllPagesChange}
-          />
-        ),
-        onClick: () => {
-          deletePages(hit.id, deleteAllPagesUrl, false);
-        },
-      },
-      {
-        title: t(
-          "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedCondition",
-        ),
-        description: (
-          <TextArea
-            placeholder="Basic usage"
-            autoSize={{ minRows: 2, maxRows: 6 }}
-            value={deleteAndIgnoreAllPagesUrl}
-            onChange={onDeleteAndIgnoreAllPagesChange}
-          />
-        ),
-        onClick: () => {
-          deletePages(hit.id, deleteAndIgnoreAllPagesUrl, true);
-        },
-      },
-    ];
-
-    return (
-      <div>
-        <List
-          style={{ minWidth: 500 }}
-          dataSource={options}
-          renderItem={(item) => (
-            <List.Item
-              actions={[
-                <Button
-                  type="primary"
-                  key={`${hit.id}-ok`}
-                  onClick={item.onClick}
-                >
-                  {t("ok")}
-                </Button>,
-              ]}
-            >
-              <List.Item.Meta
-                title={item.title}
-                description={item.description}
-              />
-            </List.Item>
-          )}
-        ></List>
-      </div>
-    );
   };
 
   return (
@@ -239,11 +263,70 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
       title={
         <Space>
           <Avatar src={hit.icon} />
-          <Tooltip title={hit.url}>
-            <Link target="blank" href={hit.url}>
-              <Highlight attribute={titleHighlightAttribute} hit={hit} />
-            </Link>
-          </Tooltip>
+          {!editingTitle && (
+            <Tooltip title={hit.url}>
+              <Space>
+                <Link target="blank" href={hit.url}>
+                  {hit.pageMetadata.displayTitle ? (
+                    <Highlight
+                      attribute="pageMetadata.displayTitle"
+                      hit={hit}
+                    />
+                  ) : (
+                    <Highlight attribute={titleHighlightAttribute} hit={hit} />
+                  )}
+                </Link>
+                <Button
+                  onClick={() => setEditingTitle(true)}
+                  type="link"
+                  icon={<EditOutlined rev={"edit-icon"} />}
+                />
+              </Space>
+            </Tooltip>
+          )}
+          {editingTitle && (
+            <Paragraph
+              style={{
+                display: editingTitle ? "block" : "none",
+                margin: "0 0 0 10px",
+                minWidth: "600px",
+              }}
+              editable={{
+                editing: true,
+                autoSize: true,
+                onCancel: () => {
+                  setEditingTitle(false);
+                },
+                onChange: (newTitle: string) => {
+                  console.log("onChange newTitle:", newTitle);
+                  setDisplayTitle(newTitle);
+                  console.log("onChange displayTitle:", displayTitle);
+                },
+                onEnd: async () => {
+                  console.log("onEnd displayTitle:", displayTitle);
+                  if (displayTitle === hit.pageMetadata.displayTitle) {
+                    setEditingTitle(false);
+                    return;
+                  }
+                  setUpdating(true);
+                  setEditingTitle(false);
+                  await updatePageMetadataMutation({
+                    variables: {
+                      pageId: hit.id,
+                      pageMetadata: {
+                        displayTitle: displayTitle,
+                      },
+                    },
+                  });
+                  refresh();
+                  publish(HIT_ITEM_REFRESH, hit.id);
+                  setUpdating(false);
+                },
+              }}
+            >
+              {displayTitle}
+            </Paragraph>
+          )}
         </Space>
       }
       extra={
@@ -289,7 +372,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
           trigger="click"
           open={open}
           onOpenChange={handleOpenChange}
-          content={deleteContent({ hit })}
+          content={deleteContent({ hit, deletePages })}
         >
           <Button type="text" icon={<DeleteOutlined rev={undefined} />}>
             {t("delete")}
@@ -297,7 +380,14 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         </Popover>,
       ]}
     >
-      <div>
+      <div className="editable-content">
+        <Divider
+          style={{ fontSize: 14 }}
+          orientation="left"
+          orientationMargin="0"
+        >
+          {t("sideNav.tags.sectionTitle")}
+        </Divider>
         {inputVisible ? (
           <Tags
             value={hit.pageTags.map((pageTag) => pageTag.tag.name)}
@@ -342,20 +432,85 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
             )}
           </>
         )}
+        <Divider
+          style={{ fontSize: 14 }}
+          orientation="left"
+          orientationMargin="0"
+        >
+          {t("description")}
+        </Divider>
+        <div>
+          {!editingDescription && (
+            <div>
+              {hit.pageMetadata.displayDescription ? (
+                <Highlight
+                  attribute={"pageMetadata.displayDescription"}
+                  hit={hit}
+                />
+              ) : (
+                <Highlight attribute={"description"} hit={hit} />
+              )}
+              <Button
+                onClick={() => setEditingDescription(true)}
+                type="link"
+                icon={<EditOutlined rev={"edit-icon"} />}
+              />
+            </div>
+          )}
+          {editingDescription && (
+            <Paragraph
+              style={{
+                margin: "0 0 0 10px",
+                minWidth: "600px",
+              }}
+              editable={{
+                editing: true,
+                autoSize: true,
+                onCancel: () => {
+                  setEditingDescription(false);
+                },
+                onChange: (newDescription: string) => {
+                  console.log("onChange newDescription:", newDescription);
+                  setDisplayDescription(newDescription);
+                  console.log("onChange displayDescription:", newDescription);
+                },
+                onEnd: async () => {
+                  console.log("onEnd displayDescription:", displayDescription);
+                  if (
+                    displayDescription === hit.pageMetadata.displayDescription
+                  ) {
+                    setEditingDescription(false);
+                    return;
+                  }
+                  setUpdating(true);
+                  setEditingDescription(false);
+                  await updatePageMetadataMutation({
+                    variables: {
+                      pageId: hit.id,
+                      pageMetadata: {
+                        displayDescription: displayDescription,
+                      },
+                    },
+                  });
+                  refresh();
+                  publish(HIT_ITEM_REFRESH, hit.id);
+                  setUpdating(false);
+                },
+              }}
+            >
+              {displayDescription}
+            </Paragraph>
+          )}
+        </div>
       </div>
+      <Divider
+        style={{ fontSize: 14 }}
+        orientation="left"
+        orientationMargin="0"
+      >
+        Auto Extracted Content
+      </Divider>
       <div className="hit-content">
-        <Space.Compact block>
-          {hit.pageMetadata.displayTitle && (
-            <Text strong>
-              <Highlight attribute="title" hit={hit} />
-            </Text>
-          )}
-          {hit.pageMetadata.displayDescription && (
-            <Text type="secondary">
-              <Highlight attribute="description" hit={hit} />
-            </Text>
-          )}
-        </Space.Compact>
         <Space>
           {hit.pageMetadata.screenshotPreview && (
             <Image
@@ -371,6 +526,22 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
             />
           )}
           <Paragraph>
+            {hit.pageMetadata.displayTitle && (
+              <>
+                <Text strong>
+                  <Highlight attribute="title" hit={hit} />
+                </Text>
+                <br />
+              </>
+            )}
+            {hit.pageMetadata.displayDescription && (
+              <>
+                <Text type="secondary">
+                  <Highlight attribute="description" hit={hit} />
+                </Text>
+                <br />
+              </>
+            )}
             <Snippet attribute="content" hit={hit} />
           </Paragraph>
         </Space>

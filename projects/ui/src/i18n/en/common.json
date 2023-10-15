@@ -57,5 +57,6 @@
   "yes": "Yes",
   "no": "No",
   "delete": "Delete",
-  "ok": "Ok"
+  "ok": "Ok",
+  "description": "Description"
 }
