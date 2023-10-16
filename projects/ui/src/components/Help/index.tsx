@@ -2,18 +2,16 @@ import "./index.css";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React from "react";
-import { useTranslation } from "react-i18next";
 
 export type LogoProps = {
   style?: React.CSSProperties;
-  i18nKey: string;
+  title: string;
 };
 
-const Logo: React.FC<LogoProps> = ({ i18nKey, style }) => {
-  const { t } = useTranslation();
+const Logo: React.FC<LogoProps> = ({ title, style }) => {
   return (
     <span style={{ paddingLeft: 5, ...style }}>
-      <Tooltip title={t(i18nKey)}>
+      <Tooltip title={title}>
         <QuestionCircleOutlined rev={"question-mark"} />
       </Tooltip>
     </span>

@@ -78,7 +78,7 @@ const deleteContent = ({
       title: (
         <>
           {t("search.deleteConfirmDialog.deleteCurrent")}
-          <Help i18nKey="search.deleteConfirmDialog.deleteCurrentTooltip" />
+          <Help title={t("search.deleteConfirmDialog.deleteCurrentTooltip")} />
         </>
       ),
       onClick: () => {
@@ -89,7 +89,11 @@ const deleteContent = ({
       title: (
         <>
           {t("search.deleteConfirmDialog.deleteAllPagesMatchedCondition")}
-          <Help i18nKey="search.deleteConfirmDialog.deleteAllPagesMatchedConditionTooltip" />
+          <Help
+            title={t(
+              "search.deleteConfirmDialog.deleteAllPagesMatchedConditionTooltip",
+            )}
+          />
         </>
       ),
       description: (
@@ -110,7 +114,11 @@ const deleteContent = ({
           {t(
             "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedCondition",
           )}
-          <Help i18nKey="search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedConditionTooltip" />
+          <Help
+            title={t(
+              "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedConditionTooltip",
+            )}
+          />
         </>
       ),
       description: (
@@ -274,7 +282,9 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                 <Link target="blank" href={hit.url}>
                   {hit.pageMetadata.displayTitle ? (
                     <Highlight
-                      attribute="pageMetadata.displayTitle"
+                      attribute={
+                        "pageMetadata.displayTitle" as keyof SearchResultPage
+                      }
                       hit={hit}
                     />
                   ) : (
@@ -460,7 +470,9 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                     (hit.description &&
                       (hit.pageMetadata.displayDescription ? (
                         <Highlight
-                          attribute={"pageMetadata.displayDescription"}
+                          attribute={
+                            "pageMetadata.displayDescription" as keyof SearchResultPage
+                          }
                           hit={hit}
                         />
                       ) : (
@@ -534,7 +546,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
         orientationMargin="0"
       >
         {t("search.autoExtractedContent.title")}
-        <Help i18nKey="search.autoExtractedContent.tooltip" />
+        <Help title={t("search.autoExtractedContent.tooltip")} />
       </Divider>
       <div className="hit-content">
         <Space>

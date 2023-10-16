@@ -37,7 +37,7 @@ export default function ExtensionSettingsIgnorePatterns() {
       title: (
         <>
           {t("settings.containsText")}
-          <Help i18nKey="settings.containsTextTooltip" />
+          <Help title={t("settings.containsTextTooltip")} />
         </>
       ),
       dataIndex: "pattern",
