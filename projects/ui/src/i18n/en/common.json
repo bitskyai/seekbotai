@@ -51,6 +51,10 @@
       "deleteCurrent": "Delete this page only",
       "deleteAllPagesMatchedCondition": "Delete all pages that url contains",
       "deleteAndIgnoreAllPagesMatchedCondition": "Delete and ignore all pages that url contains"
+    },
+    "autoExtractedContent": {
+      "title": "Auto Extracted Content",
+      "tooltip": "Content and screenshot are auto extracted from the page by browser extension"
     }
   },
   "viewedAt": "Viewed At",

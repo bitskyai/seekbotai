@@ -1,4 +1,5 @@
 import { SCREENSHOT_PREVIEW_CROP_WIDTH } from "../../../../shared";
+import Help from "../../components/Help";
 import Tags from "../../components/Tags";
 import {
   type SearchResultPage,
@@ -15,7 +16,7 @@ import {
   DeleteOutlined,
   HeartOutlined,
 } from "@ant-design/icons";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import {
   Space,
@@ -31,6 +32,7 @@ import {
   List,
   Divider,
 } from "antd";
+import { set } from "husky";
 import type { Hit } from "instantsearch.js";
 import { differenceBy } from "lodash";
 import { ChangeEvent, createElement, useState } from "react";
@@ -61,14 +63,6 @@ const deleteContent = ({
   const [deleteAllPagesUrl, setDeleteAllPagesUrl] = useState(url);
   const [deleteAndIgnoreAllPagesUrl, setDeleteAndIgnoreAllPagesUrl] =
     useState(url);
-  console.log(
-    "deleteContent - hit.url",
-    url,
-    " deleteAllPagesUrl",
-    deleteAllPagesUrl,
-    " deleteAndIgnoreAllPagesUrl",
-    deleteAndIgnoreAllPagesUrl,
-  );
 
   const onDeleteAllPagesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setDeleteAllPagesUrl(event?.target?.value);
@@ -150,15 +144,13 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
   const [inputVisible, setInputVisible] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [open, setOpen] = useState(false);
-  const [displayTitle, setDisplayTitle] = useState(
-    hit.pageMetadata.displayTitle ? hit.pageMetadata.displayTitle : hit.title,
-  );
 
-  const [displayDescription, setDisplayDescription] = useState(
-    hit.pageMetadata.displayDescription
-      ? hit.pageMetadata.displayDescription
-      : hit.description,
-  );
+  let displayTitle = hit.pageMetadata.displayTitle
+    ? hit.pageMetadata.displayTitle
+    : hit.title;
+  let displayDescription = hit.pageMetadata.displayDescription
+    ? hit.pageMetadata.displayDescription
+    : hit.description;
 
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
@@ -276,7 +268,12 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                   )}
                 </Link>
                 <Button
-                  onClick={() => setEditingTitle(true)}
+                  onClick={() => {
+                    displayTitle = hit.pageMetadata.displayTitle
+                      ? hit.pageMetadata.displayTitle
+                      : hit.title;
+                    setEditingTitle(true);
+                  }}
                   type="link"
                   icon={<EditOutlined rev={"edit-icon"} />}
                 />
@@ -294,15 +291,15 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                 editing: true,
                 autoSize: true,
                 onCancel: () => {
+                  displayTitle = hit.pageMetadata.displayTitle
+                    ? hit.pageMetadata.displayTitle
+                    : hit.title;
                   setEditingTitle(false);
                 },
                 onChange: (newTitle: string) => {
-                  console.log("onChange newTitle:", newTitle);
-                  setDisplayTitle(newTitle);
-                  console.log("onChange displayTitle:", displayTitle);
+                  displayTitle = newTitle;
                 },
                 onEnd: async () => {
-                  console.log("onEnd displayTitle:", displayTitle);
                   if (displayTitle === hit.pageMetadata.displayTitle) {
                     setEditingTitle(false);
                     return;
@@ -456,7 +453,12 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                         <Highlight attribute={"description"} hit={hit} />
                       )))}
                   <Button
-                    onClick={() => setEditingDescription(true)}
+                    onClick={() => {
+                      displayDescription = hit.pageMetadata.displayDescription
+                        ? hit.pageMetadata.displayDescription
+                        : hit.description;
+                      setEditingDescription(true);
+                    }}
                     type="link"
                     icon={<EditOutlined rev={"edit-icon"} />}
                   />
@@ -472,21 +474,15 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
                     editing: true,
                     autoSize: true,
                     onCancel: () => {
+                      displayDescription = hit.pageMetadata.displayDescription
+                        ? hit.pageMetadata.displayDescription
+                        : hit.description;
                       setEditingDescription(false);
                     },
                     onChange: (newDescription: string) => {
-                      console.log("onChange newDescription:", newDescription);
-                      setDisplayDescription(newDescription);
-                      console.log(
-                        "onChange displayDescription:",
-                        newDescription,
-                      );
+                      displayDescription = newDescription;
                     },
                     onEnd: async () => {
-                      console.log(
-                        "onEnd displayDescription:",
-                        displayDescription,
-                      );
                       if (
                         displayDescription ===
                         hit.pageMetadata.displayDescription
@@ -517,12 +513,14 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
           </div>
         </Space.Compact>
       </div>
+
       <Divider
         style={{ fontSize: 14 }}
         orientation="left"
         orientationMargin="0"
       >
-        Auto Extracted Content
+        {t("search.autoExtractedContent.title")}
+        <Help i18nKey="search.autoExtractedContent.tooltip" />
       </Divider>
       <div className="hit-content">
         <Space>

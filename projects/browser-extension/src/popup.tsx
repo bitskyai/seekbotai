@@ -32,21 +32,21 @@ function IndexPopup() {
       description: chrome.i18n.getMessage("searchDescription"),
       key: "search",
       icon: <SearchOutlined style={{ fontSize: "18px" }} />
-    },
-    {
-      title: (
-        <div>
-          {chrome.i18n.getMessage("savePageTitle")}
-          {/* <div style={{ float: "right" }}>
-            <Text code>⌘(Cmd)</Text>+<Text code>⌥(Option)</Text>+
-            <Text code>s</Text>
-          </div> */}
-        </div>
-      ),
-      description: chrome.i18n.getMessage("savePageDescription"),
-      key: "savePage",
-      icon: <SaveOutlined style={{ fontSize: "18px" }} />
     }
+    // {
+    //   title: (
+    //     <div>
+    //       {chrome.i18n.getMessage("savePageTitle")}
+    //       {/* <div style={{ float: "right" }}>
+    //         <Text code>⌘(Cmd)</Text>+<Text code>⌥(Option)</Text>+
+    //         <Text code>s</Text>
+    //       </div> */}
+    //     </div>
+    //   ),
+    //   description: chrome.i18n.getMessage("savePageDescription"),
+    //   key: "savePage",
+    //   icon: <SaveOutlined style={{ fontSize: "18px" }} />
+    // }
     // {
     //   title: (
     //     <div>
