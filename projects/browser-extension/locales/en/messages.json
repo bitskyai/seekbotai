@@ -13,6 +13,12 @@
   "settingsTitle": {
     "message": "Settings"
   },
+  "containsText": { "message": "Contains Text" },
+  "containsTextTooltip": {
+    "message": "E.g. 'google.com' means all pages that url contains 'google.com' like https://www.google.com, https://www.google.com/abc, https://xyz.google.com"
+  },
+  "action": { "message": "Action" },
+  "sureToDelete": { "message": "Are you sure to delete?" },
   "importTitle": {
     "message": "Import Bookmarks"
   },

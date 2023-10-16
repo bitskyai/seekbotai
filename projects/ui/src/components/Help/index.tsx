@@ -1,9 +1,8 @@
 import "./index.css";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import "./index.css";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 export type LogoProps = {
   style?: React.CSSProperties;

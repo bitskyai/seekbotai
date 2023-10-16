@@ -12,7 +12,6 @@ import { getChangedPages, getPagesByIds } from "./pages";
 import { getPageIndex, updatePageIndex, pageIndexSettings } from "./pagesIndex";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import fs from "fs-extra";
-import { set } from "lodash";
 import { MeiliSearch, type Index } from "meilisearch";
 import { join } from "path";
 

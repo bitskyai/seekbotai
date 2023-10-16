@@ -1,7 +1,6 @@
 import { DEFAULT_SELF_IDENTIFICATION, PORT_RANGE } from "@bitsky/shared"
 
 import { setApolloClientToNull } from "~background/modules/apis"
-import { getIgnoreURLs } from "~background/modules/apis"
 import { ImportThread } from "~background/modules/imports"
 import { LogFormat } from "~helpers/LogFormat"
 import { releaseMemory } from "~helpers/util"
@@ -143,10 +142,10 @@ export const checkServiceHealth = async (
         `checkServiceHealth finished, time: ${Date.now() - startTime}ms`
       )
     )
-    if (status === ServiceStatus.Success) {
-      // update ignoreURLs
-      await getIgnoreURLs()
-    }
+    // if (status === ServiceStatus.Success) {
+    //   // update ignoreURLs
+    //   await getIgnoreURLs()
+    // }
     return status
   } catch (error) {
     console.error(

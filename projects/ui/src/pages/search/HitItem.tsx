@@ -16,7 +16,7 @@ import {
   DeleteOutlined,
   HeartOutlined,
 } from "@ant-design/icons";
-import { EditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import {
   Space,
@@ -32,7 +32,6 @@ import {
   List,
   Divider,
 } from "antd";
-import { set } from "husky";
 import type { Hit } from "instantsearch.js";
 import { differenceBy } from "lodash";
 import { ChangeEvent, createElement, useState } from "react";
@@ -76,13 +75,23 @@ const deleteContent = ({
 
   const options = [
     {
-      title: t("search.deleteConfirmDialog.deleteCurrent"),
+      title: (
+        <>
+          {t("search.deleteConfirmDialog.deleteCurrent")}
+          <Help i18nKey="search.deleteConfirmDialog.deleteCurrentTooltip" />
+        </>
+      ),
       onClick: () => {
         deletePages(hit.id);
       },
     },
     {
-      title: t("search.deleteConfirmDialog.deleteAllPagesMatchedCondition"),
+      title: (
+        <>
+          {t("search.deleteConfirmDialog.deleteAllPagesMatchedCondition")}
+          <Help i18nKey="search.deleteConfirmDialog.deleteAllPagesMatchedConditionTooltip" />
+        </>
+      ),
       description: (
         <TextArea
           placeholder="Basic usage"
@@ -96,8 +105,13 @@ const deleteContent = ({
       },
     },
     {
-      title: t(
-        "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedCondition",
+      title: (
+        <>
+          {t(
+            "search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedCondition",
+          )}
+          <Help i18nKey="search.deleteConfirmDialog.deleteAndIgnoreAllPagesMatchedConditionTooltip" />
+        </>
       ),
       description: (
         <TextArea
