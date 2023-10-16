@@ -3,7 +3,9 @@
   "settings": {
     "title": "Preferences",
     "general": "General",
-    "ignoreURLs": "Ignore URLs"
+    "ignoreURLs": "Ignore URLs",
+    "containsText": "Contains Text",
+    "containsTextTooltip": "E.g. 'google.com' means all pages that url contains 'google.com' like https://www.google.com, https://www.google.com/abc, https://xyz.google.com"
   },
   "extensionSettings": "Extension Settings",
   "sideNav": {
@@ -49,13 +51,23 @@
       "title": "Delete",
       "description": "You have following delete options:",
       "deleteCurrent": "Delete this page only",
+      "deleteCurrentTooltip": "Delete this page only will not effect other pages with similar url",
       "deleteAllPagesMatchedCondition": "Delete all pages that url contains",
-      "deleteAndIgnoreAllPagesMatchedCondition": "Delete and ignore all pages that url contains"
+      "deleteAllPagesMatchedConditionTooltip": "E.g. Delete all pages that url contains 'google.com' means page's url like https://www.google.com, https://www.google.com/abc, https://xyz.google.com will be deleted",
+      "deleteAndIgnoreAllPagesMatchedCondition": "Delete and ignore all pages that url contains",
+      "deleteAndIgnoreAllPagesMatchedConditionTooltip": "E.g. Delete and ignore all pages that url contains 'google.com' means page's url like https://www.google.com, https://www.google.com/abc, https://xyz.google.com will be deleted will be deleted and ignored. Ignore means the page will not be saved in the future"
+    },
+    "autoExtractedContent": {
+      "title": "Auto Extracted Content",
+      "tooltip": "Content and screenshot are auto extracted from the page by browser extension"
     }
   },
   "viewedAt": "Viewed At",
   "yes": "Yes",
   "no": "No",
   "delete": "Delete",
-  "ok": "Ok"
+  "ok": "Ok",
+  "description": "Description",
+  "action": "Action",
+  "sureToDelete": "Are you sure to delete?"
 }

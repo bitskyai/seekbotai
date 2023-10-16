@@ -8,6 +8,8 @@ import { MessageSubject } from "~background/messages"
 import { type IgnoreUrl } from "~graphql/generated"
 import { LogFormat } from "~helpers/LogFormat"
 
+import Help from "../../../components/Help"
+
 const logFormat = new LogFormat("settings/ignorePatterns")
 
 export default function ExtensionSettingsIgnorePatterns() {
@@ -38,19 +40,24 @@ export default function ExtensionSettingsIgnorePatterns() {
 
   const columns: ColumnsType<IgnoreUrl> = [
     {
-      title: "Contains Text",
+      title: (
+        <>
+          {chrome.i18n.getMessage("containsText")}
+          <Help i18nKey="containsTextTooltip" />
+        </>
+      ),
       dataIndex: "pattern",
       key: "pattern"
     },
     {
-      title: "Action",
+      title: chrome.i18n.getMessage("action"),
       dataIndex: "action",
       render: (_, record: { id: string }) =>
         ignoreURLs.length >= 1 ? (
           <Popconfirm
-            title="Sure to delete?"
+            title={chrome.i18n.getMessage("sureToDelete")}
             onConfirm={() => handleDelete(record.id)}>
-            <a>Delete</a>
+            <a>{chrome.i18n.getMessage("delete")}</a>
           </Popconfirm>
         ) : null
     }
@@ -63,6 +70,7 @@ export default function ExtensionSettingsIgnorePatterns() {
         bordered
         dataSource={ignoreURLs}
         columns={columns}
+        pagination={{ pageSize: 100 }}
       />
     </div>
   )

@@ -1,3 +1,4 @@
+import Help from "../../components/Help";
 import {
   type IgnoreUrl,
   GetIgnoreUrLsDocument,
@@ -7,8 +8,10 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { Popconfirm, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ExtensionSettingsIgnorePatterns() {
+  const { t } = useTranslation();
   const [ignoreURLs, setIgnoreURLs] = useState<IgnoreUrl[]>([]);
   const [getIgnoreURLs, { loading }] = useLazyQuery(GetIgnoreUrLsDocument);
   const [deleteIgnoreURLs] = useMutation(DeleteIgnoreUrLsDocument);
@@ -31,20 +34,25 @@ export default function ExtensionSettingsIgnorePatterns() {
 
   const columns: ColumnsType<IgnoreUrl> = [
     {
-      title: "Contains Text",
+      title: (
+        <>
+          {t("settings.containsText")}
+          <Help i18nKey="settings.containsTextTooltip" />
+        </>
+      ),
       dataIndex: "pattern",
       key: "pattern",
     },
     {
-      title: "Action",
+      title: t("action"),
       dataIndex: "action",
       render: (_, record: { id: string }) =>
         ignoreURLs.length >= 1 ? (
           <Popconfirm
-            title="Sure to delete?"
+            title={t("sureToDelete")}
             onConfirm={() => handleDelete(record.id)}
           >
-            <a>Delete</a>
+            <a>{t("delete")}</a>
           </Popconfirm>
         ) : null,
     },
@@ -57,6 +65,7 @@ export default function ExtensionSettingsIgnorePatterns() {
         bordered
         dataSource={ignoreURLs}
         columns={columns}
+        pagination={{ pageSize: 100 }}
       />
     </div>
   );

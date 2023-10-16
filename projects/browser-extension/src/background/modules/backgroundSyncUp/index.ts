@@ -19,7 +19,8 @@ const logFormat = new LogFormat("modules/backgroundSyncUp")
 let _intervalCheckBackgroundSyncUpList = null
 let _sending_request = false
 
-const BACKGROUND_SYNC_UP_INTERVAL_VALUE = 1000 * 1 // 10 S
+const BACKGROUND_SYNC_UP_INTERVAL_VALUE = 1000 * 30 // 1min
+// const temp_sync_up_interval_value = 1000 * 1 //
 
 const sendCreateBookmarksRequest = async () => {
   const syncUpItem = await getBackgroundSyncUpAPICreateOrUpdatePages()

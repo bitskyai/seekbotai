@@ -20,6 +20,7 @@ import Panel from "../../components/AisPanel";
 import Refresh from "../../components/Refresh";
 import "instantsearch.css/themes/satellite.css";
 import { DEFAULT_MEILISEARCH_MASTER_KEY } from "../../../../shared";
+import { usePageEffect } from "../../core/page.js";
 import { subscribe } from "../../helpers/event";
 import HitItem, { HIT_ITEM_REFRESH } from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
@@ -37,6 +38,7 @@ const searchClient = instantMeiliSearch(url, DEFAULT_MEILISEARCH_MASTER_KEY, {
 
 const SearchPage = () => {
   const { t } = useTranslation();
+  usePageEffect({ title: "Search" });
   const [infiniteHitsKey, setInfiniteHitsKey] = useState(0);
   const transformBooleanToReadableValue = (
     refinements: CurrentRefinementsConnectorParamsRefinement[],
@@ -73,7 +75,7 @@ const SearchPage = () => {
       >
         <Configure
           hitsPerPage={20}
-          attributesToSnippet={["content:300"]}
+          attributesToSnippet={["content:200"]}
           snippetEllipsisText={"..."}
         />
         <Layout>

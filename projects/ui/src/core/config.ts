@@ -13,7 +13,7 @@ export type Config = {
 export const config: Config = {
   app: {
     env: "local",
-    name: "Bookmark Intelligence",
+    name: "BitSky",
     origin: "http://localhost:5173",
     hostname: "localhost",
   },

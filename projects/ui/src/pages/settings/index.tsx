@@ -9,7 +9,7 @@ const { Content } = Layout;
 
 export default function AccountDetails(): JSX.Element {
   const { t } = useTranslation();
-  usePageEffect({ title: "Settings" });
+  usePageEffect({ title: "Preferences" });
 
   return (
     <Layout className="settings">
