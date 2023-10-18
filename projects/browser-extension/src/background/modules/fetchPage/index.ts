@@ -81,7 +81,7 @@ const fetchPage = ({
   url,
   timeout = DEFAULT_TIMEOUT
 }: FetchPageOptions): FetchPageInstance => {
-  console.info(...logFormat.formatArgs("fetchPage", { url, timeout }))
+  console.debug(...logFormat.formatArgs("fetchPage", { url, timeout }))
   let run: RunFetch
   let cancel: CancelFetch
 
@@ -128,7 +128,7 @@ const fetchWithTimeout = async (
   timeout = DEFAULT_TIMEOUT,
   { signal, ...options }: { signal?: AbortSignal } = {}
 ) => {
-  console.info(...logFormat.formatArgs("fetchWithTimeout", { url, timeout }))
+  console.debug(...logFormat.formatArgs("fetchWithTimeout", { url, timeout }))
   const abortController = new AbortController()
   const promise = fetch(url, { signal: abortController.signal, ...options })
   if (signal) {
@@ -197,7 +197,7 @@ export const fetchPageHTML = ({
   url,
   timeout
 }: FetchPageOptions): { run: RunFetch; cancel: CancelFetch } => {
-  console.info(...logFormat.formatArgs("fetchPageHTML", { url, timeout }))
+  console.debug(...logFormat.formatArgs("fetchPageHTML", { url, timeout }))
   const abortController = new AbortController()
   return {
     cancel: () => abortController.abort(),
@@ -224,7 +224,7 @@ export const fetchPageHTML = ({
           content: text
         }
       } catch (error) {
-        console.error(
+        console.warn(
           ...logFormat.formatArgs(
             "fetchPageHTML -> run -> error",
             { error },
@@ -252,7 +252,7 @@ export const fetchPageHTML = ({
 }
 
 export const init = async () => {
-  console.info(...logFormat.formatArgs("init"))
+  console.debug(...logFormat.formatArgs("init"))
 }
 
 export default fetchPage

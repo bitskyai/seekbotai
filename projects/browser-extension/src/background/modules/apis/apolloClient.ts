@@ -49,7 +49,7 @@ export const init = async () => {
   await _initApolloClient()
 
   // watch service config change
-  const storage = new Storage()
+  const storage = new Storage({ area: "local" })
   let refreshApolloClientHandler = null
   // refresh apollo client when service config changed, add timeout to avoid refresh too frequently
   const refreshApolloClient = async () => {

@@ -3,6 +3,7 @@ import {
   type PageCreateOrUpdatePayload
 } from "~/graphql/generated"
 import { LogFormat } from "~helpers/LogFormat"
+import { releaseMemory } from "~helpers/util"
 import { addToBackgroundSyncUpAPICreateOrUpdatePages } from "~storage"
 
 import { getApolloClient } from "./apolloClient"
@@ -32,12 +33,15 @@ export async function createOrUpdatePages(
       apolloClient
     })
   )
+
   const result = await apolloClient.mutate({
     mutation: CreateOrUpdatePagesDocument,
-    variables: { pages }
+    variables: { pages },
+    fetchPolicy: "no-cache"
   })
   console.debug(
     ...logFormat.formatArgs("createOrUpdatePages -> result", { result })
   )
+  releaseMemory(pages)
   return result.data.createOrUpdatePages
 }
