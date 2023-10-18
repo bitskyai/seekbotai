@@ -19,6 +19,7 @@
   },
   "action": { "message": "Action" },
   "sureToDelete": { "message": "Are you sure to delete?" },
+  "delete": { "message": "Delete" },
   "importTitle": {
     "message": "Import Bookmarks"
   },
