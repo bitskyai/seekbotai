@@ -1120,7 +1120,6 @@ export const startImportHistory = async ({
     inProgress: history,
     remaining: remaining
   })
-  releaseMemory(history) // release memory
   return history
 }
 

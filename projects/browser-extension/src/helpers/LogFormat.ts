@@ -126,7 +126,7 @@ export enum LogLevel {
 // const logLevel = process?.env?.LOG_LEVEL
 //   ? parseInt(process.env.LOG_LEVEL)
 //   : LogLevel.ERROR + 1
-const logLevel = LogLevel.DEBUG
+const logLevel = LogLevel.WARN
 if (logLevel > LogLevel.ERROR) {
   console.error = () => {}
 }

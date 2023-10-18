@@ -21,7 +21,8 @@ export async function getIgnoreURLs() {
     return ignoreURLs
   }
   const result = await apolloClient.query({
-    query: GetIgnoreUrLsDocument
+    query: GetIgnoreUrLsDocument,
+    fetchPolicy: "no-cache"
   })
   console.debug(...logFormat.formatArgs("getIgnoreURLs -> result", { result }))
   const ignoreURLs = result.data.ignoreURLs as IgnoreUrl[]

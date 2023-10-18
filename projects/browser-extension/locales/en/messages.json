@@ -19,6 +19,7 @@
   },
   "action": { "message": "Action" },
   "sureToDelete": { "message": "Are you sure to delete?" },
+  "delete": { "message": "Delete" },
   "importTitle": {
     "message": "Import Bookmarks"
   },
@@ -32,7 +33,7 @@
     "message": "Import browser history to BitSky. Import will not delete your browser history, if a history need to login  or connect VPN, it maybe failed to import."
   },
   "importHistoryDetail": {
-    "message": "Import passed 300 days browser history, and max import 10000 records"
+    "message": "Import passed $1 days browser history, and max import $2 records"
   },
   "importButton": {
     "message": "Start Import"

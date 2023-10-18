@@ -19,7 +19,8 @@ export async function deleteIgnoreURLs(ignoreURLs: DeleteIgnoreUrlPayload[]) {
     mutation: DeleteIgnoreUrLsDocument,
     variables: {
       deleteIgnoreURLs: ignoreURLs
-    }
+    },
+    fetchPolicy: "no-cache"
   })
   console.debug(
     ...logFormat.formatArgs("createOrUpdatePages -> result", { result })

@@ -64,7 +64,7 @@ const _checkBackgroundSyncUpList = async () => {
         const promises = [sendCreateBookmarksRequest()]
         await Promise.all(promises)
       } catch (err) {
-        console.error(
+        console.warn(
           ...logFormat.formatArgs("send request has error. Error: ", err)
         )
       }

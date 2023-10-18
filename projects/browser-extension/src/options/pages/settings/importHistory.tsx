@@ -16,6 +16,10 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { MessageSubject } from "~background/messages"
+import {
+  DEFAULT_HISTORY_DAYS_FROM_TODAY,
+  DEFAULT_MAX_RESULTS
+} from "~background/modules/history"
 import { LogFormat } from "~helpers/LogFormat"
 import { StorageKeys, getImportHistoryDetail } from "~storage"
 import {
@@ -177,7 +181,12 @@ export default function ExtensionSettingImportHistory() {
       <Title level={5}>{chrome.i18n.getMessage("importHistoryTitle")}</Title>
       <Text type="secondary">
         <p>{chrome.i18n.getMessage("importHistoryDescription")}</p>
-        <p>{chrome.i18n.getMessage("importHistoryDetail")}</p>
+        <p>
+          {chrome.i18n.getMessage("importHistoryDetail", [
+            DEFAULT_HISTORY_DAYS_FROM_TODAY.toString(),
+            DEFAULT_MAX_RESULTS.toString()
+          ])}
+        </p>
       </Text>
       <div className="settings-status-section">
         <Progress

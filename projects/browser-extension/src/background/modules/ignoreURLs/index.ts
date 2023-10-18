@@ -49,7 +49,7 @@ export async function whetherIgnore(url: string) {
 
     return ignore
   } catch (e) {
-    console.error(...logFormat.formatArgs("whetherIgnore -> error", { e }))
+    console.warn(...logFormat.formatArgs("whetherIgnore -> error", { e }))
     // if has error, then not ignore
     return false
   }
@@ -59,7 +59,7 @@ export async function syncUpIgnoreURLs() {
   try {
     await getIgnoreURLs()
   } catch (e) {
-    console.error(...logFormat.formatArgs("syncUpIgnoreURLs -> error", { e }))
+    console.warn(...logFormat.formatArgs("syncUpIgnoreURLs -> error", { e }))
   }
 }
 

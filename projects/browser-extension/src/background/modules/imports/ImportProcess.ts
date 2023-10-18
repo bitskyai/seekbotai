@@ -5,14 +5,14 @@ import { releaseMemory } from "~helpers/util"
 import ImportThread from "./ImportThread"
 
 export class ImportProcess {
-  static MAX_CONCURRENT = 20
-  static DEFAULT_TIMEOUT = 1 * 60 * 1000 // 1 minute
+  static MAX_CONCURRENT = 25
+  static DEFAULT_TIMEOUT = 0.5 * 60 * 1000 // 30 minute
   private stopped = true
   private initialized = false
   protected importThreads: ImportThread[] = []
   protected jobIndex = 0
   protected logFormat = new LogFormat("modules/imports/ImportProcess")
-  protected concurrent = 10
+  protected concurrent = 25
   protected timeout: number = ImportProcess.DEFAULT_TIMEOUT
 
   constructor({
