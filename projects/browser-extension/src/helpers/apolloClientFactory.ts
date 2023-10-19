@@ -52,7 +52,6 @@ export const newApolloClient = async ({
   const authMiddleware = new ApolloLink((operation, forward) => {
     // add the authorization to the headers
     if (apiKey) {
-      console.info(...logFormat.formatArgs("newApolloClient", uri))
       operation.setContext(({ headers = {} }) => ({
         headers: {
           ...headers,

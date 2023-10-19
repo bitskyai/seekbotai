@@ -29,6 +29,22 @@ const _initApolloClient = async () => {
     const hostName = await getServiceHostName()
     const port = await getServicePort()
     const apiKey = await getServiceAPIKey()
+    console.info(
+      ...logFormat.formatArgs("current service config", {
+        _current_protocol,
+        _current_hostName,
+        _current_port,
+        _current_apiKey
+      })
+    )
+    console.info(
+      ...logFormat.formatArgs("new service config", {
+        protocol,
+        hostName,
+        port,
+        apiKey
+      })
+    )
     if (
       protocol === _current_protocol &&
       hostName === _current_hostName &&
@@ -52,7 +68,7 @@ const _initApolloClient = async () => {
     _current_hostName = hostName
     _current_port = port
     _current_apiKey = apiKey
-  } else {
+  } else if (serviceHealthStatus == ServiceStatus.Failed) {
     _apolloClient = undefined
   }
 }
@@ -92,9 +108,11 @@ export const init = async () => {
   console.info(...logFormat.formatArgs("init finished"))
 }
 
-export const waitUtilApolloClientReady = async () => {
+export const waitUtilApolloClientReady = async (): Promise<
+  ApolloClient<NormalizedCacheObject>
+> => {
   if (_apolloClient) {
-    return true
+    return _apolloClient
   }
   return new Promise((resolve) => {
     const interval = setInterval(() => {
@@ -109,8 +127,10 @@ export const waitUtilApolloClientReady = async () => {
 // what happens if apollo client is not ready for a long time?
 // since background cannot show UI, we can only log error
 // UI also need to listen to `storageWatchList` to give user feedback
-export const getApolloClient = async () => {
-  // await waitUtilApolloClientReady()
+export const getApolloClient = async (): Promise<
+  ApolloClient<NormalizedCacheObject>
+> => {
+  // return await waitUtilApolloClientReady()
   return _apolloClient
 }
 

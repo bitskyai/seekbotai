@@ -1,4 +1,3 @@
-import { getIgnoreURLs } from "~/background/modules/apis"
 import { type IgnoreUrl } from "~graphql/generated"
 import { LogFormat } from "~helpers/LogFormat"
 import { normalizeUrlWithoutError } from "~helpers/util"
@@ -8,7 +7,6 @@ import {
 } from "~storage"
 
 const logFormat = new LogFormat("modules/ignoreURLs")
-let _syncUpIgnoreIntervalHandler
 export async function whetherIgnore(url: string) {
   try {
     const ignoreURLs = await getIgnoreURLsFromStorage()
@@ -55,16 +53,6 @@ export async function whetherIgnore(url: string) {
   }
 }
 
-export async function syncUpIgnoreURLs() {
-  try {
-    await getIgnoreURLs()
-  } catch (e) {
-    console.warn(...logFormat.formatArgs("syncUpIgnoreURLs -> error", { e }))
-  }
-}
-
 export const init = async () => {
   console.info(...logFormat.formatArgs("init"))
-  clearInterval(_syncUpIgnoreIntervalHandler)
-  _syncUpIgnoreIntervalHandler = setInterval(syncUpIgnoreURLs, 1000 * 60)
 }
