@@ -19,12 +19,12 @@ export default class ImportThread {
     console.debug(...this.logFormat.formatArgs("constructor", { options }))
     this.options = options
     this.fetchPageInstance = fetchPage(options)
-    console.info(...this.logFormat.formatArgs("constructor finished"))
+    console.debug(...this.logFormat.formatArgs("constructor finished"))
   }
 
   async start() {
     let pageData: PageData
-    console.info(...this.logFormat.formatArgs("start"))
+    console.debug(...this.logFormat.formatArgs("start"))
     try {
       pageData = await this.fetchPageInstance.run()
       console.debug(
@@ -53,7 +53,7 @@ export default class ImportThread {
   async stop() {
     this.cancelled = true
     await this.fetchPageInstance.cancel()
-    console.info(...this.logFormat.formatArgs("stop"))
+    console.debug(...this.logFormat.formatArgs("stop"))
     return true
   }
 }

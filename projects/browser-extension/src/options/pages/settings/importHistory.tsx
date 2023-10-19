@@ -192,13 +192,14 @@ export default function ExtensionSettingImportHistory() {
         <Progress
           percent={
             importHistorySummary?.totalCount
-              ? parseFloat(
+              ? parseInt(
                   (
-                    (importHistorySummary.totalCount -
+                    ((importHistorySummary.totalCount -
                       importHistorySummary.remainingCount) /
-                    importHistorySummary.totalCount
+                      importHistorySummary.totalCount) *
+                    10000
                   ).toFixed(3)
-                ) * 100
+                ) / 100
               : 0
           }
         />
