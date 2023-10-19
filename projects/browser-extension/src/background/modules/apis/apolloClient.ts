@@ -29,7 +29,7 @@ const _initApolloClient = async () => {
     const hostName = await getServiceHostName()
     const port = await getServicePort()
     const apiKey = await getServiceAPIKey()
-    console.info(
+    console.debug(
       ...logFormat.formatArgs("current service config", {
         _current_protocol,
         _current_hostName,
@@ -37,7 +37,7 @@ const _initApolloClient = async () => {
         _current_apiKey
       })
     )
-    console.info(
+    console.debug(
       ...logFormat.formatArgs("new service config", {
         protocol,
         hostName,
