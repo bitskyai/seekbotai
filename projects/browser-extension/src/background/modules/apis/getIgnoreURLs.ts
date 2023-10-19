@@ -24,7 +24,7 @@ export async function getIgnoreURLs() {
     query: GetIgnoreUrLsDocument,
     fetchPolicy: "no-cache"
   })
-  console.debug(...logFormat.formatArgs("getIgnoreURLs -> result", { result }))
+  console.info(...logFormat.formatArgs("getIgnoreURLs -> result", { result }))
   const ignoreURLs = result.data.ignoreURLs as IgnoreUrl[]
   await setIgnoreURLs(ignoreURLs)
   return ignoreURLs

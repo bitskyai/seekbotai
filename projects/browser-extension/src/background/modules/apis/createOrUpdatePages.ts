@@ -2,6 +2,7 @@ import {
   CreateOrUpdatePagesDocument,
   type PageCreateOrUpdatePayload
 } from "~/graphql/generated"
+import { whetherIgnore } from "~background/modules/ignoreURLs"
 import { LogFormat } from "~helpers/LogFormat"
 import { releaseMemory } from "~helpers/util"
 import { addToBackgroundSyncUpAPICreateOrUpdatePages } from "~storage"
@@ -12,7 +13,8 @@ const logFormat = new LogFormat("apis/createOrUpdatePages")
 
 export async function createOrUpdatePages(
   pages: PageCreateOrUpdatePayload[],
-  skipAddToBackgroundSyncUp = false
+  skipAddToBackgroundSyncUp = false,
+  options?: { checkWhetherIgnore?: boolean }
 ) {
   console.info(...logFormat.formatArgs("createOrUpdatePages", { pages }))
   const apolloClient = await getApolloClient()
@@ -34,9 +36,14 @@ export async function createOrUpdatePages(
     })
   )
 
+  let filteredPages = pages
+  if (options?.checkWhetherIgnore) {
+    filteredPages = pages.filter((page) => !whetherIgnore(page.url))
+  }
+
   const result = await apolloClient.mutate({
     mutation: CreateOrUpdatePagesDocument,
-    variables: { pages },
+    variables: { pages: filteredPages },
     fetchPolicy: "no-cache"
   })
   console.debug(

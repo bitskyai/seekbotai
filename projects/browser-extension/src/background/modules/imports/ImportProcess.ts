@@ -36,7 +36,7 @@ export class ImportProcess {
       this.timeout = timeout
     }
     // this.init()
-    console.info(...this.logFormat.formatArgs("constructor finished"))
+    console.debug(...this.logFormat.formatArgs("constructor finished"))
   }
 
   // by default ImportProcess will import bookmarks
@@ -76,11 +76,11 @@ export class ImportProcess {
     this.initialized = false
     await this.prepare()
     this.initialized = true
-    console.info(...this.logFormat.formatArgs("init finished"))
+    console.debug(...this.logFormat.formatArgs("init finished"))
   }
 
   async start() {
-    console.info(...this.logFormat.formatArgs("start"))
+    console.debug(...this.logFormat.formatArgs("start"))
     await this.init()
     this.stopped = false
     let inProgressPages = await this.getImportPages()

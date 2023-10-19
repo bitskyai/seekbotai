@@ -203,7 +203,7 @@ export const fetchPageHTML = ({
     cancel: () => abortController.abort(),
     run: async () => {
       try {
-        console.info(...logFormat.formatArgs("fetchPageHTML -> run", { url }))
+        console.debug(...logFormat.formatArgs("fetchPageHTML -> run", { url }))
         const response = await fetchWithTimeout(url, timeout, {
           signal: abortController.signal
         })
