@@ -40,7 +40,6 @@ export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions
  */
 export function createMainWindow(): Electron.BrowserWindow {
   const browserWindow = new BrowserWindow(getMainWindowOptions());
-  // browserWindow.loadFile('./dist/static/index.html');
 
   browserWindow.webContents.once("dom-ready", () => {
     browserWindow.show();
@@ -55,14 +54,9 @@ export function createMainWindow(): Electron.BrowserWindow {
     // global.browserWindows.main = null;
   });
 
-  // browserWindow.webContents.on("new-window", (event, url) => {
-  //   event.preventDefault();
-  //   shell.openExternal(url);
-  // });
-
-  browserWindow.webContents.on("will-navigate", (event, url) => {
-    event.preventDefault();
+  browserWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
+    return { action: "deny" };
   });
 
   // browserWindow.webContents.toggleDevTools();
