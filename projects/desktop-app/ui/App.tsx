@@ -13,7 +13,8 @@ function App() {
       <div className="logo-box">
         <a
           href="https://github.com/electron-vite/electron-vite-react"
-          target="_blank" rel="noreferrer"
+          target="_blank"
+          rel="noreferrer"
         >
           <img
             src={logoVite}
