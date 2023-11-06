@@ -16,7 +16,7 @@
     "target": "ES6"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "src/web-app"],
+  "exclude": ["node_modules", "src/web-app", "src/ui"],
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2

@@ -27,7 +27,7 @@ export function getPreferencesJSON(): Preferences {
   try {
     const defaultPreferencesJSON = getDefaultPreferences();
     // if doesn't exist then return default preferences
-    let preferencesJSON: Preferences;
+    let preferencesJSON: Partial<Preferences> = {};
     // let mergedPreferencesJSON: Preferences;
     // if file exist then return
     fs.ensureFileSync(PREFERENCES_JSON_PATH);

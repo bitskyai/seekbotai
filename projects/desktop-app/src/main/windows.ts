@@ -1,5 +1,6 @@
 import { createContextMenu } from "./context-menu";
 import { BrowserWindow, shell } from "electron";
+import { resolve } from "path";
 
 interface browserWindowHash {
   [key: string]: BrowserWindow | null;
@@ -15,6 +16,7 @@ const browserWindows: browserWindowHash = {};
  * @returns {Electron.BrowserWindowConstructorOptions}
  */
 export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions {
+  const preload = resolve(__dirname, "../preload/index.js");
   return {
     width: 1200,
     height: 900,
@@ -25,9 +27,13 @@ export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions
     backgroundColor: "#1d2427",
     webPreferences: {
       devTools: true,
-      // preload: path.join(__dirname, "preload.js"),
+      preload: preload,
       webviewTag: false,
+      // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
+      // Consider using contextBridge.exposeInMainWorld
+      // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
+      contextIsolation: false,
     },
   };
 }
@@ -62,6 +68,15 @@ export function createMainWindow(): Electron.BrowserWindow {
   // browserWindow.webContents.toggleDevTools();
   // browserWindows.push(browserWindow);
   browserWindows.main = browserWindow;
+  const url = process.env.VITE_DEV_SERVER_URL;
+  const indexHtml = resolve(__dirname, "../ui/index.html");
+
+  browserWindows.main.loadFile(indexHtml);
+  // if (url) {
+  //   browserWindows.main.loadURL(url);
+  // } else {
+  //   browserWindows.main.loadFile(indexHtml);
+  // }
   // global.browserWindows.main = browserWindow;
 
   return browserWindow;

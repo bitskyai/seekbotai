@@ -65,10 +65,10 @@ class WebApp {
       logger.info("webAppConfig", webAppConfig);
       await startServer(webAppConfig);
       logger.info("bitsky successfully started.");
-      const mainWindow = getOrCreateMainWindow();
-      mainWindow.loadURL(
-        `http://${preferences.WEB_APP_HOST_NAME}:${this.port}`,
-      );
+      // const mainWindow = getOrCreateMainWindow();
+      // mainWindow.loadURL(
+      //   `http://${preferences.WEB_APP_HOST_NAME}:${this.port}`,
+      // );
       process.env.BITSKY_BASE_URL = `http://${preferences.WEB_APP_HOST_NAME}:${this.port}`;
       // Only used for UI Develop
       // mainWindow.loadURL(`http://localhost:8000`);
