@@ -10,7 +10,8 @@ import { listenForProtocolHandler, setupProtocolHandler } from "./protocol";
 import { shouldQuit } from "./squirrel";
 import { setupTray } from "./tray";
 import { getOrCreateMainWindow } from "./windows";
-import { app } from "electron";
+import { app, BrowserWindow } from "electron";
+import { release } from "node:os";
 
 /**
  * Handle the app's "ready" event. This is essentially
@@ -19,7 +20,7 @@ import { app } from "electron";
 export async function onReady() {
   try {
     logger.info("onReady()");
-
+    getOrCreateMainWindow();
     await onFirstRunMaybe();
     // if (!isDevMode()) process.env.NODE_ENV = "production";
     try {
@@ -46,6 +47,7 @@ export async function onReady() {
 }
 
 export function onWindowsAllClosed(event: Electron.Event) {
+  // Hide the app from the dock and tray if it's not supported
   app.dock.hide();
   // Prevent the app from quitting when all windows are closed
   event.preventDefault();
@@ -73,17 +75,31 @@ export function main() {
     return;
   }
 
+  // Disable GPU Acceleration for Windows 7
+  if (release().startsWith("6.1")) app.disableHardwareAcceleration();
+
+  if (!app.requestSingleInstanceLock()) {
+    app.quit();
+    process.exit(0);
+  }
+
   // Set the app's name
   app.name = "BitSky";
 
-  // Ensure that there's only ever one Fiddle running
   listenForProtocolHandler();
 
   // Launch
-  app.on("ready", onReady);
+  app.whenReady().then(onReady);
   app.on("before-quit", onBeforeQuit);
   app.on("window-all-closed", onWindowsAllClosed);
-  app.on("activate", getOrCreateMainWindow);
+  app.on("activate", () => {
+    const allWindows = BrowserWindow.getAllWindows();
+    if (allWindows.length) {
+      allWindows[0].focus();
+    } else {
+      getOrCreateMainWindow();
+    }
+  });
 }
 
 main();

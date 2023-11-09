@@ -1,3 +1,4 @@
+import logger from "../helpers/logger";
 import { createContextMenu } from "./context-menu";
 import { BrowserWindow, shell } from "electron";
 import { resolve } from "path";
@@ -47,6 +48,25 @@ export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions
 export function createMainWindow(): Electron.BrowserWindow {
   const browserWindow = new BrowserWindow(getMainWindowOptions());
 
+  browserWindows.main = browserWindow;
+  // used for development
+  const url = process.env.DESKTOP_VITE_DEV_SERVER_URL;
+  const indexHtml = resolve(__dirname, "../ui/index.html");
+
+  if (url) {
+    browserWindows.main.loadURL(url);
+  } else {
+    browserWindows.main.loadFile(indexHtml);
+  }
+
+  // Test actively push message to the Electron-Renderer
+  browserWindow.webContents.on("did-finish-load", () => {
+    browserWindow?.webContents.send(
+      "main-process-message",
+      new Date().toLocaleString(),
+    );
+  });
+
   browserWindow.webContents.once("dom-ready", () => {
     browserWindow.show();
 
@@ -57,27 +77,13 @@ export function createMainWindow(): Electron.BrowserWindow {
 
   browserWindow.on("closed", () => {
     browserWindows.main = null;
-    // global.browserWindows.main = null;
   });
 
+  // Make all links open with the browser, not with the application
   browserWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: "deny" };
   });
-
-  // browserWindow.webContents.toggleDevTools();
-  // browserWindows.push(browserWindow);
-  browserWindows.main = browserWindow;
-  const url = process.env.VITE_DEV_SERVER_URL;
-  const indexHtml = resolve(__dirname, "../ui/index.html");
-
-  browserWindows.main.loadFile(indexHtml);
-  // if (url) {
-  //   browserWindows.main.loadURL(url);
-  // } else {
-  //   browserWindows.main.loadFile(indexHtml);
-  // }
-  // global.browserWindows.main = browserWindow;
 
   return browserWindow;
 }

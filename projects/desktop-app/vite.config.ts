@@ -1,12 +1,12 @@
 import pkg from "./package.json";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, UserConfig } from "vite";
 import renderer from "vite-plugin-electron-renderer";
 
 // https://vitejs.dev/config/
-export default defineConfig(() => {
-  return {
+export default defineConfig(({ command }) => {
+  const config: UserConfig = {
     resolve: {
       alias: {
         "@": path.join(__dirname, "ui"),
@@ -20,17 +20,17 @@ export default defineConfig(() => {
       // Use Node.js API in the Renderer-process
       renderer(),
     ],
-    server:
-      process.env.VSCODE_DEBUG &&
-      (() => {
-        const url = new URL(
-          process.env.VITE_DEV_SERVER_URL ?? pkg.debug.env.VITE_DEV_SERVER_URL,
-        );
-        return {
-          host: url.hostname,
-          port: +url.port,
-        };
-      })(),
     clearScreen: false,
   };
+
+  if (command === "serve" && process.env.DESKTOP_VITE_DEV_SERVER_URL) {
+    config.server = (() => {
+      const url = new URL(process.env.DESKTOP_VITE_DEV_SERVER_URL);
+      return {
+        host: url.hostname,
+        port: +url.port,
+      };
+    })();
+  }
+  return config;
 });

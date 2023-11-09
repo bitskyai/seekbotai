@@ -5,17 +5,12 @@
   "private": true,
   "description": "Bitsky desktop app",
   "main": "./dist/main/index.js",
-  "debug": {
-    "env": {
-      "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777/"
-    }
-  },
   "scripts": {
     "tsc": "node ./scripts/tsc.js",
-    "electron:start": "electron-forge start",
-    "dev": "npm run build:webapp && npm run dev:watch",
-    "dev:ui": "cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:7777 && vite",
-    "dev:watch": "cross-env WATCH=true VITE_DEV_SERVER_URL=http://127.0.0.1:7777 && bash ../../scripts/copy-libs.sh && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && cp -rf ./src/ui ./dist/ && npm run electron:start",
+    "electron:start": "dotenv -e ../../env/.env -c -- electron-forge start",
+    "dev": "dotenv -e ../../env/.env -c -- npm run build:webapp && npm run dev:watch",
+    "dev:ui": "dotenv -e ../../env/.env -c -- vite serve",
+    "dev:watch": "dotenv -e ../../env/.env -c -- cross-env WATCH=true && bash ../../scripts/copy-libs.sh && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && cp -rf ./src/ui ./dist/ && npm run electron:start",
     "build": "bash ../../scripts/build-desktop-app.sh",
     "build:ui": "tsc --project ./tsconfig-ui.json && vite build",
     "build:webapp": "bash ../../scripts/build-web-app-to-desktop-app.sh",
@@ -34,7 +29,7 @@
     "@electron-forge/maker-rpm": "^6.4.2",
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
-    "electron": "27.0.3",
+    "electron": "27.0.4",
     "node-loader": "^2.0.0",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.5.0",
@@ -42,24 +37,26 @@
     "cross-env": "7.0.3",
     "rimraf": "5.0.5",
     "typescript": "^5.2.2",
-    "@types/lodash": "4.14.200",
-    "@types/uuid": "9.0.6",
-    "@types/detect-port": "1.3.4",
-    "@types/cross-zip": "4.0.1",
+    "@types/lodash": "4.14.201",
+    "@types/uuid": "9.0.7",
+    "@types/detect-port": "1.3.5",
+    "@types/cross-zip": "4.0.2",
     "cross-zip": "4.0.0",
     "glob": "10.3.10",
     "vite": "4.5.0",
     "@playwright/test": "^1.39.0",
-    "@types/react": "^18.2.34",
-    "@types/react-dom": "^18.2.14",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.1.1",
     "autoprefixer": "^10.4.16",
     "electron-builder": "^24.6.4",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite-plugin-electron": "^0.14.1",
-    "vite-plugin-electron-renderer": "^0.14.5"
+    "vite-plugin-electron": "^0.15.4",
+    "vite-plugin-electron-renderer": "^0.14.5",
+    "dotenv": "16.3.1",
+    "dotenv-cli": "7.3.0"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
@@ -76,7 +73,7 @@
     "@apollo/client": "^3.8.7",
     "i18next": "^23.6.0",
     "react-i18next": "^13.3.1",
-    "antd": "^5.11.0"
+    "antd": "^5.11.1"
   },
   "envars": {
     "cwd": "../../env"
