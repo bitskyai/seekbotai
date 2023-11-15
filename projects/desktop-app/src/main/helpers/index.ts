@@ -1,5 +1,5 @@
-import { PORT_RANGE } from "../bitskyLibs/shared";
-import { DirStructure, DirType } from "../interfaces";
+import { PORT_RANGE } from "../../bitskyLibs/shared";
+import { DirStructure, DirType } from "../../types";
 import getPort, { portNumbers } from "./get-port";
 import logger from "./logger";
 import { shell } from "electron";

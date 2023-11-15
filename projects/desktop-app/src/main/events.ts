@@ -1,10 +1,14 @@
 // Setup Event Listeners
-import logger from "../helpers/logger";
-import { Preferences } from "../interfaces";
+
 import { IpcEvents } from "../ipc-events";
+import { AppPreferences } from "../types";
+import logger from "./helpers/logger";
+// import {
+//   getPreferencesJSON,
+//   updatePreferencesJSON,
+// } from "./helpers/preferences";
 import { ipcMainManager } from "./ipc";
 import { hideSettings } from "./menu";
-import { getPreferencesJSON, updatePreferencesJSON } from "./preferences";
 
 export function setUpEventListeners() {
   ipcMainManager.on(IpcEvents.CLOSE_SETTINGS, () => {
@@ -17,19 +21,16 @@ export function setUpEventListeners() {
 
   ipcMainManager.on(
     IpcEvents.SYNC_GET_PREFERENCES_JSON,
-    (event: {
+    async (event: {
       returnValue: {
         status: boolean;
-        payload?: { preferences: Preferences };
+        payload?: { preferences?: AppPreferences };
         error?: unknown;
       };
     }) => {
       try {
         event.returnValue = {
           status: true,
-          payload: {
-            preferences: getPreferencesJSON(),
-          },
         };
       } catch (err) {
         event.returnValue = {
@@ -44,10 +45,10 @@ export function setUpEventListeners() {
     IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
     async (
       event: { returnValue: { status: boolean; error?: unknown } },
-      arg: { preferences: Preferences },
+      arg: { preferences: AppPreferences },
     ) => {
       try {
-        updatePreferencesJSON(arg.preferences);
+        // updatePreferencesJSON(arg.preferences);
         event.returnValue = {
           status: true,
         };

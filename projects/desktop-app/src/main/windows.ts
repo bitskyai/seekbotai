@@ -1,5 +1,5 @@
-import logger from "../helpers/logger";
 import { createContextMenu } from "./context-menu";
+import logger from "./helpers/logger";
 import { BrowserWindow, shell } from "electron";
 import { resolve } from "path";
 

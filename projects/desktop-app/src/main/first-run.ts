@@ -1,5 +1,5 @@
-import { isFirstRun } from "../helpers/check-first-run";
-import { isDevMode } from "../helpers/devmode";
+import { isFirstRun } from "./helpers/check-first-run";
+import { isDevMode } from "./helpers/devmode";
 import { app, dialog } from "electron";
 
 /**
@@ -7,7 +7,7 @@ import { app, dialog } from "electron";
  * tasks that we only want to do in this case.
  */
 export async function onFirstRunMaybe() {
-  if (isFirstRun()) {
+  if (await isFirstRun()) {
     await promptMoveToApplicationsFolder();
   }
 }

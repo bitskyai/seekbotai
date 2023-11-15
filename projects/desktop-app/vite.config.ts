@@ -1,4 +1,3 @@
-import pkg from "./package.json";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
 import { defineConfig, UserConfig } from "vite";

@@ -22,7 +22,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "dependencies": {
     "@pothos/core": "^3.24.1",
     "@pothos/plugin-prisma": "^3.40.2",

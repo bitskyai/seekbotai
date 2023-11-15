@@ -1,10 +1,11 @@
 // import { setupUpdates } from "./update";
-import logger from "../helpers/logger";
-import { setupAboutPanel } from "../helpers/set-about-panel";
-import webApp from "../helpers/web-app";
+
 import { setupDevTools } from "./devtools";
 import { setUpEventListeners } from "./events";
 import { onFirstRunMaybe } from "./first-run";
+import logger from "./helpers/logger";
+import { setupAboutPanel } from "./helpers/set-about-panel";
+import webApp from "./helpers/web-app";
 import { setupMenu } from "./menu";
 import { listenForProtocolHandler, setupProtocolHandler } from "./protocol";
 import { shouldQuit } from "./squirrel";
@@ -12,6 +13,7 @@ import { setupTray } from "./tray";
 import { getOrCreateMainWindow } from "./windows";
 import { app, BrowserWindow } from "electron";
 import { release } from "node:os";
+import "./helpers/loadEnv";
 
 /**
  * Handle the app's "ready" event. This is essentially

@@ -1,4 +1,4 @@
-import { isDevMode } from "../helpers/devmode";
+import { isDevMode } from "./helpers/devmode";
 import {
   BrowserWindow,
   ContextMenuParams,
