@@ -1,3 +1,2 @@
-import { startServer } from "./server";
-
-startServer();
+export * from "./server";
+export * from "./types";

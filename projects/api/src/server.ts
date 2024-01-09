@@ -1,10 +1,10 @@
 import { createApp } from "./app";
 import { setupDB } from "./db";
 import { overwriteAppConfig } from "./helpers/config";
-import { DEFAULT_APP_CONFIG } from "./helpers/constants";
+import { DEFAULT_APP_OPTIONS } from "./helpers/constants";
 import getLogger from "./helpers/logger";
 import { startSearchEngine, stopSearchEngine } from "./searchEngine";
-import { ServerOptions } from "./types";
+import { WebAppOptions } from "./types";
 import * as http from "http";
 import enableDestroy from "server-destroy";
 
@@ -15,26 +15,30 @@ let processExit = false;
  * start start, it is useful when you need to programmatically start server
  * @param serverOptions : you should only use this when it isn't possible for you to set config in environment value
  */
-export async function startServer(serverOptions?: ServerOptions) {
+export async function startServer(serverOptions?: WebAppOptions) {
   const logger = getLogger();
   try {
     const config = overwriteAppConfig(
-      serverOptions ?? { DATABASE_URL: DEFAULT_APP_CONFIG.DATABASE_URL },
+      serverOptions ?? {
+        WEB_APP_DATABASE_URL: DEFAULT_APP_OPTIONS.WEB_APP_DATABASE_URL,
+      },
     );
     logger.info(`application config`, { config: config });
 
     // start search engine
-    await startSearchEngine(serverOptions);
+    if (config.WEB_APP_START_SEARCH_ENGINE) {
+      await startSearchEngine(serverOptions);
+    }
 
     await setupDB();
     const app = await createApp();
     if (server) {
       server.destroy();
     }
-    server = app.listen(config.PORT, function () {
+    server = app.listen(config.WEB_APP_PORT, function () {
       logger.info(
-        `API Server listening on http://${config.HOST_NAME}:%d/ in %s mode`,
-        config.PORT,
+        `API Server listening on http://${config.SEARCH_ENGINE_HOST_NAME}:%d/ in %s mode`,
+        config.WEB_APP_PORT,
         config.NODE_ENV,
       );
     });

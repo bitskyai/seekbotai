@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "postinstall": "npm run prisma:generate",
-    "dev": "bash ../../scripts/copy-libs.sh && bash ../../scripts/copy-meilisearch-to-api.sh && dotenv -e ../../env/.env -c -- ts-node-dev --respawn --inspect --inspect-port=9229 --project ./tsconfig.json src/index.ts",
+    "dev": "bash ../../scripts/copy-libs.sh && bash ../../scripts/copy-meilisearch-to-api.sh && dotenv -e ../../env/.env -c -- ts-node-dev --respawn --inspect --inspect-port=9229 --project ./tsconfig.json src/startServer.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "bash ../../scripts/build-web-app.sh",
     "prisma:generate": "dotenv -e ../../env/.env -c -- prisma generate",

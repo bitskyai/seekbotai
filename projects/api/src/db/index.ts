@@ -16,7 +16,7 @@ let _prismaClient: PrismaClient;
 let databaseURL: string;
 
 export function getPrismaClient() {
-  const latestDatabaseURL = getAppConfig().DATABASE_URL;
+  const latestDatabaseURL = getAppConfig().WEB_APP_DATABASE_URL;
   if (latestDatabaseURL != databaseURL) {
     databaseURL = latestDatabaseURL;
     _prismaClient = new PrismaClient({
@@ -42,7 +42,7 @@ export function getPrismaClient() {
     });
   }
   logger.info(`getPrismaClient->
-   ${getAppConfig().DATABASE_URL}`);
+   ${getAppConfig().WEB_APP_DATABASE_URL}`);
   return _prismaClient;
 }
 
@@ -74,17 +74,17 @@ export const platformToExecutables: any = {
 export async function setupDB() {
   const config = getAppConfig();
   logger.debug(`setupDB->config: ${JSON.stringify(config, null, 2)}`);
-  if (!config.SETUP_DB) {
+  if (!config.WEB_APP_SETUP_DB) {
     logger.info(`Don't need to setup DB`);
     return;
   }
   let needsMigration = false;
-  if (config.DATABASE_PROVIDER !== "sqlite") {
+  if (config.WEB_APP_DATABASE_PROVIDER !== "sqlite") {
     // currently setupDB only for sqlite
     return;
   }
   // remove `file:`
-  const dbPath = trim(config.DATABASE_URL).substring(5);
+  const dbPath = trim(config.WEB_APP_DATABASE_URL).substring(5);
   const dbExists = fs.existsSync(dbPath);
   logger.info(`dbPath: ${dbPath}`);
   if (!dbExists) {
@@ -92,7 +92,7 @@ export async function setupDB() {
     // prisma for whatever reason has trouble if the database file does not exist yet.
     // So just touch it here
     fs.copySync(
-      path.join(config.APP_SOURCE_PATH, "./prisma/bi-latest.db"),
+      path.join(config.WEB_APP_SOURCE_ROOT_PATH, "./prisma/bi-latest.db"),
       dbPath,
     );
   } else {
@@ -125,7 +125,7 @@ export async function setupDB() {
   if (needsMigration) {
     try {
       const schemaPath = path.join(
-        config.APP_SOURCE_PATH,
+        config.WEB_APP_SOURCE_ROOT_PATH,
         "prisma",
         "schema.prisma",
       );
@@ -138,9 +138,9 @@ export async function setupDB() {
       // to run when the production app is started. That way if the user updates AriNote and the schema has
       // changed, it will transparently migrate their DB.
       await runPrismaCommand({
-        appSourcePath: config.APP_SOURCE_PATH,
+        appSourcePath: config.WEB_APP_SOURCE_ROOT_PATH,
         command: ["migrate", "deploy", "--schema", schemaPath],
-        dbUrl: config.DATABASE_URL,
+        dbUrl: config.WEB_APP_DATABASE_URL,
       });
     } catch (e) {
       logger.error(e);
@@ -153,7 +153,7 @@ export async function setupDB() {
   logger.info("seeding prod...");
   await seedProd(prismaClient);
 
-  if (config.SEED_DB) {
+  if (config.WEB_APP_SEED_DB) {
     // seed
     logger.info("Seeding...");
     await seedDev(prismaClient);
@@ -199,7 +199,7 @@ export async function runPrismaCommand({
       const child = fork(prismaPath, command, {
         env: {
           ...process.env,
-          DATABASE_URL: dbUrl,
+          WEB_APP_DATABASE_URL: dbUrl,
           PRISMA_MIGRATION_ENGINE_BINARY: mePath,
           PRISMA_QUERY_ENGINE_LIBRARY: qePath,
 

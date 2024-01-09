@@ -5,9 +5,9 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 export async function setupProxy(app: Express) {
   const config = getAppConfig();
   const proxy = createProxyMiddleware({
-    target: `http://${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
+    target: `http://${config.SEARCH_ENGINE_HOST_NAME}:${config.SEARCH_ENGINE_PORT}`,
     headers: {
-      authorization: `Bearer ${config.MEILISEARCH_MASTER_KEY}`,
+      authorization: `Bearer ${config.SEARCH_ENGINE_MASTER_KEY}`,
     },
   });
   app.use("/indexes", proxy);

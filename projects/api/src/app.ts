@@ -38,7 +38,7 @@ export async function createApp() {
   printGraphqlSchema(schemaBuilder.toSchema({}));
   app.use(express.static(path.join(__dirname + "/public")));
   app.use(express.static(path.join(__dirname + "/ui")));
-  app.use(express.static(path.join(config.APP_HOME_PATH)));
+  app.use(express.static(path.join(config.WEB_APP_HOME_PATH)));
   app.use("/graphql", yoga);
   await setupProxy(app);
 

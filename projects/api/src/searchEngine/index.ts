@@ -1,6 +1,6 @@
 import { overwriteAppConfig, getAppConfig } from "../helpers/config";
 import getLogger from "../helpers/logger";
-import { type MeiliSearchConfig } from "../types";
+import { type SearchEngineOptions } from "../types";
 import {
   PAGES_INDEX_NAME,
   MAX_TRIES_UNTIL_HEALTH,
@@ -42,10 +42,10 @@ async function getMeiliSearchBinaryPathInSource() {
   const config = getAppConfig();
   const latestMeiliSearchBinaryName =
     (await getMeiliSearchBinaryName(
-      join(config.APP_SOURCE_PATH, "./src/searchEngine"),
+      join(config.WEB_APP_SOURCE_ROOT_PATH, "./src/searchEngine"),
     )) ?? MEILI_SEARCH_BINARY_NAME_PREFIX;
   const latestMeiliSearchBinaryPath = join(
-    config.APP_SOURCE_PATH,
+    config.WEB_APP_SOURCE_ROOT_PATH,
     "./src/searchEngine",
     latestMeiliSearchBinaryName,
   );
@@ -76,15 +76,12 @@ async function updatePagesIndexSetting() {
   }
 }
 
-export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
+export async function startSearchEngine(serverOptions?: SearchEngineOptions) {
   try {
     const logger = getLogger();
     const config = overwriteAppConfig(serverOptions ?? {});
 
-    const meiliSearchDBPath = join(
-      config.APP_HOME_PATH,
-      config.MEILISEARCH_DB_FOLDER,
-    );
+    const meiliSearchDBPath = config.SEARCH_ENGINE_HOME_PATH;
 
     const meiliSearchBinaryPath = await getMeiliSearchBinaryPathInSource();
     logger.info(`meiliSearchBinaryPath: ${meiliSearchBinaryPath}`);
@@ -96,18 +93,18 @@ export async function startSearchEngine(serverOptions?: MeiliSearchConfig) {
       meiliSearchBinaryPath,
       [
         "--http-addr",
-        `${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
+        `${config.SEARCH_ENGINE_HOST_NAME}:${config.SEARCH_ENGINE_PORT}`,
         "--master-key",
-        config.MEILISEARCH_MASTER_KEY,
+        config.SEARCH_ENGINE_MASTER_KEY,
         "--max-indexing-memory",
-        config.MEILI_MAX_INDEXING_MEMORY.toString(),
+        config.SEARCH_ENGINE_MAX_INDEXING_MEMORY.toString(),
         "--max-indexing-threads",
-        config.MEILI_MAX_INDEXING_THREADS.toString(),
+        config.SEARCH_ENGINE_MAX_INDEXING_THREADS.toString(),
         "--db-path",
         meiliSearchDBPath,
         "--no-analytics",
       ],
-      { cwd: config.APP_HOME_PATH },
+      { cwd: config.WEB_APP_HOME_PATH },
     );
     meiliSearchProcess.stdout.on("data", (data) => {
       logger.info(`meilisearch stdout`, { data: data.toString() });
@@ -157,13 +154,14 @@ export async function setupIndexes() {
 }
 
 export async function startIndexing() {
+  const appConfig = getAppConfig();
   await setupIndexes();
   console.log("startIndexing");
   await startPagesIndex();
   clearInterval(indexingIntervalHandler);
   indexingIntervalHandler = setInterval(async () => {
     await startPagesIndex();
-  }, CHECK_NEW_INDEXES_INTERVAL);
+  }, appConfig.SEARCH_ENGINE_INDEXING_FREQUENCY);
 }
 
 export async function stopSearchEngine() {
@@ -176,8 +174,8 @@ export async function stopSearchEngine() {
 export async function getMeiliSearchClient() {
   const config = getAppConfig();
   const meiliSearch = new MeiliSearch({
-    host: `${config.HOST_NAME}:${config.MEILISEARCH_PORT}`,
-    apiKey: config.MEILISEARCH_MASTER_KEY,
+    host: `${config.SEARCH_ENGINE_HOST_NAME}:${config.SEARCH_ENGINE_PORT}`,
+    apiKey: config.SEARCH_ENGINE_MASTER_KEY,
   });
   return meiliSearch;
 }

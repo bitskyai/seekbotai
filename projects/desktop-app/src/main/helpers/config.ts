@@ -224,14 +224,7 @@ export async function getAppConfig(forceUpdate?: boolean): Promise<AppConfig> {
       appOptions.DESKTOP_APP_USER_DATA_PATH,
       appOptions.DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME,
     ),
-    WEB_APP_HOME_PATH: path.join(
-      appOptions.DESKTOP_APP_USER_DATA_PATH,
-      appOptions.WEB_APP_NAME,
-    ),
-    SEARCH_ENGINE_HOME_PATH: path.join(
-      appOptions.DESKTOP_APP_HOME_PATH,
-      appOptions.SEARCH_ENGINE_NAME,
-    ),
+    APP_HOME_PATH: appOptions.DESKTOP_APP_USER_DATA_PATH,
   };
 
   const appConfig = _.merge(appOptions, dynamicAppConfig);

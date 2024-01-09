@@ -55,10 +55,10 @@ export interface WebAppPreferences {
 
 // AppConfig are configurable
 export interface WebAppOptions extends WebAppPreferences {
-  WEB_APP_NAME: string;
+  WEB_APP_NAME?: string;
   WEB_APP_PORT: number;
-  WEB_APP_DATABASE_NAME: string;
-  WEB_APP_HOST_NAME: string;
+  WEB_APP_DATABASE_NAME?: string;
+  WEB_APP_HOST_NAME?: string;
 }
 
 // user configurable preferences for search engine
