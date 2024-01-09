@@ -16,6 +16,8 @@ const appRootPath = path.join(os.homedir(), ".bitsky-app");
 export const DEFAULT_APP_OPTIONS: Required<WebAppOptions> = {
   APP_ROOT_PATH: path.join(os.homedir(), ".bitsky-app"),
   NODE_ENV: "development",
+  DESKTOP_MODE: false,
+  VERSION: "0.0.1",
   SEARCH_ENGINE_HOME_PATH: path.join(appRootPath, "search-engine"),
   SEARCH_ENGINE_HOST_NAME: DEFAULT_HOST_NAME,
   SEARCH_ENGINE_INDEXING_FREQUENCY: CHECK_NEW_INDEXES_INTERVAL,

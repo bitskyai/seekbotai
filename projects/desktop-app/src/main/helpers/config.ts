@@ -2,6 +2,7 @@ import { AppConfig, AppOptions } from "../../types";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import { getAvailablePort } from "./index";
 import { getPreferencesJSON, getDefaultPreferences } from "./preferences";
+import { app } from "electron";
 import { bool, cleanEnv, num, str } from "envalid";
 import * as fs from "fs-extra";
 import _ from "lodash";
@@ -225,6 +226,14 @@ export async function getAppConfig(forceUpdate?: boolean): Promise<AppConfig> {
       appOptions.DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME,
     ),
     APP_HOME_PATH: appOptions.DESKTOP_APP_USER_DATA_PATH,
+    WEB_APP_HOME_PATH: path.join(
+      appOptions.DESKTOP_APP_USER_DATA_PATH,
+      appOptions.WEB_APP_NAME,
+    ),
+    SEARCH_ENGINE_HOME_PATH: path.join(
+      appOptions.DESKTOP_APP_HOME_PATH,
+      appOptions.SEARCH_ENGINE_NAME,
+    ),
   };
 
   const appConfig = _.merge(appOptions, dynamicAppConfig);

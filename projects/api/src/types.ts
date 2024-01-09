@@ -1,6 +1,8 @@
 export interface BaseServiceOptions {
   APP_ROOT_PATH?: string; // root path for the app, default to `home` directory
   NODE_ENV: string;
+  DESKTOP_MODE?: boolean; // default to `true`
+  VERSION?: string; // default to `1.0.0`
 }
 
 export interface SearchEnginePreferences {
