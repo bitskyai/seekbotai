@@ -3,7 +3,6 @@ import { setupDB } from "./db";
 import { overwriteAppConfig } from "./helpers/config";
 import { DEFAULT_APP_OPTIONS } from "./helpers/constants";
 import getLogger from "./helpers/logger";
-import { startSearchEngine, stopSearchEngine } from "./searchEngine";
 import { WebAppOptions } from "./types";
 import * as http from "http";
 import enableDestroy from "server-destroy";
@@ -26,9 +25,9 @@ export async function startServer(serverOptions?: WebAppOptions) {
     logger.info(`application config`, { config: config });
 
     // start search engine
-    if (config.WEB_APP_START_SEARCH_ENGINE) {
-      await startSearchEngine(serverOptions);
-    }
+    // if (config.WEB_APP_START_SEARCH_ENGINE) {
+    //   await startSearchEngine(serverOptions);
+    // }
 
     await setupDB();
     const app = await createApp();
@@ -77,7 +76,7 @@ export async function stopServer() {
   try {
     // close server
     server.destroy();
-    await stopSearchEngine();
+    // await stopSearchEngine();
   } catch (err) {
     logger.error(err);
     throw err;

@@ -1,6 +1,5 @@
 export interface BaseServiceOptions {
-  APP_ROOT_PATH?: string; // root path for the app, default to `home` directory
-  NODE_ENV: string;
+  NODE_ENV?: string;
   DESKTOP_MODE?: boolean; // default to `true`
   VERSION?: string; // default to `1.0.0`
 }
@@ -24,6 +23,7 @@ export interface SearchEngineOptions
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SearchEngineConfig extends Required<SearchEngineOptions> {}
 
+// Preferences are end user configurable
 export interface WebAppPreferences {
   WEB_APP_LOG_LEVEL?: string;
   WEB_APP_LOG_MAX_SIZE?: number;
@@ -32,10 +32,9 @@ export interface WebAppPreferences {
   WEB_APP_SAVE_FULL_SIZE_SCREENSHOT?: boolean;
 }
 
-export interface WebAppOptions
-  extends SearchEngineOptions,
-    WebAppPreferences,
-    BaseServiceOptions {
+// Options are not end user configurable, but configurable by system(e.g. desktop app, docker) during start up
+export interface WebAppOptions extends WebAppPreferences, BaseServiceOptions {
+  WEB_APP_HOME_PATH?: string; // app home path. This is where all data stored
   WEB_APP_PORT?: number;
   WEB_APP_DATABASE_PROVIDER?: string;
   WEB_APP_DATABASE_URL?: string;
@@ -49,17 +48,14 @@ export interface WebAppOptions
   WEB_APP_LOG_FILES_FOLDER?: string;
   WEB_APP_COMBINED_LOG_FILE_NAME?: string;
   WEB_APP_ERROR_LOG_FILE_NAME?: string;
-  WEB_APP_START_SEARCH_ENGINE?: boolean;
   WEB_APP_SETUP_DB?: boolean;
   WEB_APP_SEED_DB?: boolean;
 }
 
-export interface WebAppConfig
-  extends Required<WebAppOptions>,
-    Required<SearchEngineConfig> {
+// App config is normally only contains those generated configure, and those are not configurable
+export interface WebAppConfig extends Required<WebAppOptions> {
   [key: string]: string | number | boolean | undefined;
-  // following are not configurable
-  WEB_APP_HOME_PATH: string; // app home path. This is where all data stored
+  // following are not configurable, normally those are generated from other config
   WEB_APP_SCREENSHOT_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_SCREENSHOT_FOLDER`
   WEB_APP_SCREENSHOT_PREVIEW_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_SCREENSHOT_FOLDER/WEB_APP_SCREENSHOT_PREVIEW_FOLDER`
   WEB_APP_SCREENSHOT_FULL_SIZE_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_SCREENSHOT_FOLDER/WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER`
@@ -67,6 +63,9 @@ export interface WebAppConfig
   WEB_APP_COMBINED_LOG_FILE_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_LOG_FILES_FOLDER/WEB_APP_COMBINED_LOG_FILE_NAME`
   WEB_APP_ERROR_LOG_FILE_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_LOG_FILES_FOLDER/WEB_APP_ERROR_LOG_FILE_NAME`
 }
+
+export interface AppOptions extends WebAppOptions, SearchEngineOptions {}
+export interface AppConfig extends WebAppConfig, SearchEngineConfig {}
 
 export interface Migration {
   id: string;

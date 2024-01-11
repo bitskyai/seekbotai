@@ -39,6 +39,7 @@ class WebApp {
         MEILISEARCH_PORT: appConfig.SEARCH_ENGINE_PORT,
         MEILISEARCH_MASTER_KEY: appConfig.SEARCH_ENGINE_MASTER_KEY,
       };
+
       logger.info("webAppConfig", webAppConfig);
       await startServer(webAppConfig);
       logger.info("bitsky successfully started.");

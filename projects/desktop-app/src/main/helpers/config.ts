@@ -2,7 +2,6 @@ import { AppConfig, AppOptions } from "../../types";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import { getAvailablePort } from "./index";
 import { getPreferencesJSON, getDefaultPreferences } from "./preferences";
-import { app } from "electron";
 import { bool, cleanEnv, num, str } from "envalid";
 import * as fs from "fs-extra";
 import _ from "lodash";
@@ -167,7 +166,7 @@ export function updateAppOptions(
       ...curAppOptions,
       ...appOptions,
     };
-
+    console.log("appOptionsPath: ", appOptionsPath);
     fs.outputJSONSync(appOptionsPath, curAppOptions);
     return curAppOptions;
   } catch (err) {

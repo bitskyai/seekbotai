@@ -1,18 +1,15 @@
-import { WebAppConfig, WebAppOptions } from "../types";
+import { AppConfig, AppOptions } from "../types";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import { bool, cleanEnv, num, str } from "envalid";
 import _ from "lodash";
 import * as path from "path";
 
-let _app_config: WebAppConfig;
+let _app_config: AppConfig;
 
-function getCleanEnv(overwriteProcessEnv?: object): Required<WebAppOptions> {
+function getCleanEnv(overwriteProcessEnv?: object): Required<AppOptions> {
   const envValues = cleanEnv(
     _.merge({}, process.env, overwriteProcessEnv ?? {}),
     {
-      APP_ROOT_PATH: str({
-        default: DEFAULT_APP_OPTIONS.APP_ROOT_PATH,
-      }),
       DESKTOP_MODE: bool({
         default: true,
       }),
@@ -45,6 +42,9 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<WebAppOptions> {
       }),
       VERSION: str({
         default: "1.0.0",
+      }),
+      WEB_APP_HOME_PATH: str({
+        default: DEFAULT_APP_OPTIONS.WEB_APP_HOME_PATH,
       }),
       WEB_APP_COMBINED_LOG_FILE_NAME: str({
         default: DEFAULT_APP_OPTIONS.WEB_APP_COMBINED_LOG_FILE_NAME,
@@ -106,15 +106,11 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<WebAppOptions> {
       WEB_APP_SOURCE_ROOT_PATH: str({
         default: DEFAULT_APP_OPTIONS.WEB_APP_SOURCE_ROOT_PATH,
       }),
-      WEB_APP_START_SEARCH_ENGINE: bool({
-        default: DEFAULT_APP_OPTIONS.WEB_APP_START_SEARCH_ENGINE,
-      }),
     },
   );
 
   // TODO: need to improve this. The reason is if _.merge(envValues,{}) will throw an exception
   return {
-    APP_ROOT_PATH: envValues.APP_ROOT_PATH,
     DESKTOP_MODE: envValues.DESKTOP_MODE,
     NODE_ENV: envValues.NODE_ENV,
     SEARCH_ENGINE_HOME_PATH: envValues.SEARCH_ENGINE_HOME_PATH,
@@ -129,6 +125,9 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<WebAppOptions> {
     SEARCH_ENGINE_NAME: envValues.SEARCH_ENGINE_NAME,
     SEARCH_ENGINE_PORT: envValues.SEARCH_ENGINE_PORT,
     VERSION: envValues.VERSION,
+
+    // web app config
+    WEB_APP_HOME_PATH: envValues.WEB_APP_HOME_PATH,
     WEB_APP_COMBINED_LOG_FILE_NAME: envValues.WEB_APP_COMBINED_LOG_FILE_NAME,
     WEB_APP_DATABASE_PROVIDER: envValues.WEB_APP_DATABASE_PROVIDER,
     WEB_APP_DATABASE_URL: envValues.WEB_APP_DATABASE_URL,
@@ -154,59 +153,48 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<WebAppOptions> {
     WEB_APP_SEED_DB: envValues.WEB_APP_SEED_DB,
     WEB_APP_SETUP_DB: envValues.WEB_APP_SETUP_DB,
     WEB_APP_SOURCE_ROOT_PATH: envValues.WEB_APP_SOURCE_ROOT_PATH,
-    WEB_APP_START_SEARCH_ENGINE: envValues.WEB_APP_START_SEARCH_ENGINE,
   };
 }
 
-export function overwriteAppConfig(appConfig: object): WebAppConfig {
+export function overwriteAppConfig(appConfig: object): AppConfig {
   const currentAppConfig = getAppConfig();
   _app_config = _.merge({}, currentAppConfig, appConfig);
   return _app_config;
 }
 
-export function getAppConfig(forceUpdate?: boolean): WebAppConfig {
+export function getAppConfig(forceUpdate?: boolean): AppConfig {
   if (_app_config && !forceUpdate) {
     return _app_config;
   }
   const appOptionsWithDefaultValue = getCleanEnv();
   const dynamicAppConfig = {
-    WEB_APP_HOME_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
-    ),
     WEB_APP_SCREENSHOT_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
+      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FOLDER),
     ),
     WEB_APP_SCREENSHOT_PREVIEW_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
+      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FOLDER),
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_PREVIEW_FOLDER),
     ),
     WEB_APP_SCREENSHOT_FULL_SIZE_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
+      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FOLDER),
       _.snakeCase(
         appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
       ),
     ),
     WEB_APP_LOG_FILES_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
+      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_LOG_FILES_FOLDER),
     ),
     WEB_APP_COMBINED_LOG_FILE_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
+      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_LOG_FILES_FOLDER),
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_COMBINED_LOG_FILE_NAME),
     ),
     WEB_APP_ERROR_LOG_FILE_PATH: path.join(
-      appOptionsWithDefaultValue.APP_ROOT_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_NAME),
+      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_LOG_FILES_FOLDER),
       _.snakeCase(appOptionsWithDefaultValue.WEB_APP_ERROR_LOG_FILE_NAME),
     ),
