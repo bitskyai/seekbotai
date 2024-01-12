@@ -1,3 +1,10 @@
+import {
+  WebAppOptions,
+  SearchEngineOptions,
+  WebAppPreferences,
+  SearchEnginePreferences,
+} from "./web-app";
+
 export interface NpmVersion {
   version: string;
   name?: string;
@@ -43,43 +50,12 @@ export const enum LogLevel {
 // xxxOptions are included xxxPreferences and system options(that are not configurable from user, but can be changed by environment)
 // xxxConfig are included xxxOptions and dynamic generated config
 
-// user configurable preferences for web app
-export interface WebAppPreferences {
-  WEB_APP_LOG_LEVEL: string;
-  WEB_APP_LOG_MAX_SIZE: number;
-  WEB_APP_SAVE_RAW_PAGE: boolean;
-  WEB_APP_MASTER_KEY: string;
-  WEB_APP_SETUP_DB: boolean;
-  WEB_APP_SEED_DB: boolean;
-}
-
-// AppConfig are configurable
-export interface WebAppOptions extends WebAppPreferences {
-  WEB_APP_NAME?: string;
-  WEB_APP_PORT: number;
-  WEB_APP_DATABASE_NAME?: string;
-  WEB_APP_HOST_NAME?: string;
-}
-
-// user configurable preferences for search engine
-export interface SearchEnginePreferences {
-  SEARCH_ENGINE_INDEXING_FREQUENCY: number;
-  SEARCH_ENGINE_MASTER_KEY: string;
-}
-
-export interface SearchEngineOptions extends SearchEnginePreferences {
-  SEARCH_ENGINE_START: boolean;
-  SEARCH_ENGINE_NAME: string;
-  SEARCH_ENGINE_PORT: number;
-}
-
 // user configurable preferences for desktop app
 export interface DesktopAppPreferences {
   DESKTOP_APP_USER_DATA_PATH: string; // Home path for current user, used to store user's data
 }
 
 export interface DesktopAppOptions extends DesktopAppPreferences {
-  VERSION: string;
   DESKTOP_APP_HOME_PATH: string;
   DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME: string;
   DESKTOP_APP_LOG_FILES_FOLDER: string;

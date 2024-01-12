@@ -43,6 +43,9 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<AppOptions> {
       VERSION: str({
         default: "1.0.0",
       }),
+      WEB_APP_HOST_NAME: str({
+        default: DEFAULT_APP_OPTIONS.WEB_APP_HOST_NAME,
+      }),
       WEB_APP_HOME_PATH: str({
         default: DEFAULT_APP_OPTIONS.WEB_APP_HOME_PATH,
       }),
@@ -128,6 +131,7 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<AppOptions> {
 
     // web app config
     WEB_APP_HOME_PATH: envValues.WEB_APP_HOME_PATH,
+    WEB_APP_HOST_NAME: envValues.WEB_APP_HOST_NAME,
     WEB_APP_COMBINED_LOG_FILE_NAME: envValues.WEB_APP_COMBINED_LOG_FILE_NAME,
     WEB_APP_DATABASE_PROVIDER: envValues.WEB_APP_DATABASE_PROVIDER,
     WEB_APP_DATABASE_URL: envValues.WEB_APP_DATABASE_URL,

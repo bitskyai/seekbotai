@@ -14,7 +14,7 @@ let processExit = false;
  * start start, it is useful when you need to programmatically start server
  * @param serverOptions : you should only use this when it isn't possible for you to set config in environment value
  */
-export async function startServer(serverOptions?: WebAppOptions) {
+export async function startWebApp(serverOptions?: WebAppOptions) {
   const logger = getLogger();
   try {
     const config = overwriteAppConfig(
@@ -71,7 +71,7 @@ export async function startServer(serverOptions?: WebAppOptions) {
   }
 }
 
-export async function stopServer() {
+export async function stopWebApp() {
   const logger = getLogger();
   try {
     // close server

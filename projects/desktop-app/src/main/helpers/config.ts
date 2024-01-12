@@ -57,20 +57,11 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     WEB_APP_PORT: num({
       default: DEFAULT_APP_OPTIONS.WEB_APP_PORT,
     }),
-    WEB_APP_DATABASE_NAME: str({
-      default: DEFAULT_APP_OPTIONS.WEB_APP_DATABASE_NAME,
-    }),
-    WEB_APP_HOST_NAME: str({
-      default: DEFAULT_APP_OPTIONS.WEB_APP_HOST_NAME,
-    }),
     SEARCH_ENGINE_INDEXING_FREQUENCY: num({
       default: DEFAULT_APP_OPTIONS.SEARCH_ENGINE_INDEXING_FREQUENCY,
     }),
     SEARCH_ENGINE_MASTER_KEY: str({
       default: DEFAULT_APP_OPTIONS.SEARCH_ENGINE_MASTER_KEY,
-    }),
-    SEARCH_ENGINE_START: bool({
-      default: DEFAULT_APP_OPTIONS.SEARCH_ENGINE_START,
     }),
     SEARCH_ENGINE_NAME: str({
       default: DEFAULT_APP_OPTIONS.SEARCH_ENGINE_NAME,
@@ -100,12 +91,9 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     WEB_APP_SEED_DB: envValues.WEB_APP_SEED_DB,
     WEB_APP_NAME: envValues.WEB_APP_NAME,
     WEB_APP_PORT: envValues.WEB_APP_PORT,
-    WEB_APP_DATABASE_NAME: envValues.WEB_APP_DATABASE_NAME,
-    WEB_APP_HOST_NAME: envValues.WEB_APP_HOST_NAME,
     SEARCH_ENGINE_INDEXING_FREQUENCY:
       envValues.SEARCH_ENGINE_INDEXING_FREQUENCY,
     SEARCH_ENGINE_MASTER_KEY: envValues.SEARCH_ENGINE_MASTER_KEY,
-    SEARCH_ENGINE_START: envValues.SEARCH_ENGINE_START,
     SEARCH_ENGINE_NAME: envValues.SEARCH_ENGINE_NAME,
     SEARCH_ENGINE_PORT: envValues.SEARCH_ENGINE_PORT,
   };
@@ -230,7 +218,8 @@ export async function getAppConfig(forceUpdate?: boolean): Promise<AppConfig> {
       appOptions.WEB_APP_NAME,
     ),
     SEARCH_ENGINE_HOME_PATH: path.join(
-      appOptions.DESKTOP_APP_HOME_PATH,
+      // appOptions.DESKTOP_APP_HOME_PATH,
+      appOptions.DESKTOP_APP_USER_DATA_PATH,
       appOptions.SEARCH_ENGINE_NAME,
     ),
   };

@@ -5,7 +5,6 @@ import {
   PAGES_INDEX_NAME,
   MAX_TRIES_UNTIL_HEALTH,
   HEALTH_CHECK_INTERVAL,
-  CHECK_NEW_INDEXES_INTERVAL,
   MEILI_SEARCH_BINARY_NAME_PREFIX,
 } from "./constants";
 import { getChangedPages, getPagesByIds } from "./pages";

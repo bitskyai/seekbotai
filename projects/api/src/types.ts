@@ -12,7 +12,7 @@ export interface SearchEnginePreferences {
 export interface SearchEngineOptions
   extends SearchEnginePreferences,
     BaseServiceOptions {
-  SEARCH_ENGINE_HOME_PATH: string; // `APP_ROOT_PATH/SEARCH_ENGINE_NAME`
+  SEARCH_ENGINE_HOME_PATH?: string; // `APP_ROOT_PATH/SEARCH_ENGINE_NAME`
   SEARCH_ENGINE_HOST_NAME?: string; // default to `localhost`
   SEARCH_ENGINE_PORT?: number;
   SEARCH_ENGINE_NAME?: string; // default to `search-engine`
@@ -35,6 +35,7 @@ export interface WebAppPreferences {
 // Options are not end user configurable, but configurable by system(e.g. desktop app, docker) during start up
 export interface WebAppOptions extends WebAppPreferences, BaseServiceOptions {
   WEB_APP_HOME_PATH?: string; // app home path. This is where all data stored
+  WEB_APP_HOST_NAME?: string;
   WEB_APP_PORT?: number;
   WEB_APP_DATABASE_PROVIDER?: string;
   WEB_APP_DATABASE_URL?: string;

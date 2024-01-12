@@ -30,6 +30,7 @@ export const DEFAULT_APP_OPTIONS: Required<AppOptions> = {
   SEARCH_ENGINE_PORT: 47700,
 
   WEB_APP_HOME_PATH: path.join(appRootPath, webAppName),
+  WEB_APP_HOST_NAME: DEFAULT_HOST_NAME,
   WEB_APP_COMBINED_LOG_FILE_NAME: "combined.log",
   WEB_APP_DATABASE_PROVIDER: "sqlite",
   WEB_APP_DATABASE_URL: `file:${appRootPath}/bitsky.db`,

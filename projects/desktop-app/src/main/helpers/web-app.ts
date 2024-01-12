@@ -1,4 +1,12 @@
-import { startServer, stopServer } from "../../web-app/src/server";
+import {
+  // startSearchEngine,
+  stopSearchEngine,
+  // startWebApp,
+  stopWebApp,
+  WebAppOptions,
+  SearchEngineOptions,
+  startWebAppAndSearchEngine,
+} from "../../web-app";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
@@ -24,24 +32,33 @@ class WebApp {
       // start
       updateProcessEnvs(appConfig);
       logger.info("starting bitsky...");
-      const webAppConfig = {
+      const webAppOptions: WebAppOptions = {
         DESKTOP_MODE: true,
-        PORT: appConfig.WEB_APP_PORT,
-        DATABASE_NAME: appConfig.WEB_APP_DATABASE_NAME,
-        APP_HOME_PATH: appConfig.WEB_APP_HOME_PATH,
-        APP_SOURCE_PATH: webAppSourcePath,
-        SETUP_DB: appConfig.WEB_APP_SETUP_DB,
-        SEED_DB: appConfig.WEB_APP_SEED_DB,
-        LOG_LEVEL: appConfig.WEB_APP_LOG_LEVEL,
-        LOG_MAX_SIZE: appConfig.WEB_APP_LOG_MAX_SIZE,
-        HOST_NAME: appConfig.WEB_APP_HOST_NAME,
-        START_MEILISEARCH: appConfig.SEARCH_ENGINE_START,
-        MEILISEARCH_PORT: appConfig.SEARCH_ENGINE_PORT,
-        MEILISEARCH_MASTER_KEY: appConfig.SEARCH_ENGINE_MASTER_KEY,
+        WEB_APP_PORT: appConfig.WEB_APP_PORT,
+        WEB_APP_HOME_PATH: appConfig.WEB_APP_HOME_PATH,
+        WEB_APP_SOURCE_ROOT_PATH: webAppSourcePath,
+        WEB_APP_SETUP_DB: appConfig.WEB_APP_SETUP_DB,
+        WEB_APP_SEED_DB: appConfig.WEB_APP_SEED_DB,
+        WEB_APP_LOG_LEVEL: appConfig.WEB_APP_LOG_LEVEL,
+        WEB_APP_LOG_MAX_SIZE: appConfig.WEB_APP_LOG_MAX_SIZE,
       };
 
-      logger.info("webAppConfig", webAppConfig);
-      await startServer(webAppConfig);
+      logger.info("webAppOptions: ", webAppOptions);
+      // await startWebApp(webAppOptions);
+
+      const searchEngineOptions: SearchEngineOptions = {
+        SEARCH_ENGINE_PORT: appConfig.SEARCH_ENGINE_PORT,
+        SEARCH_ENGINE_HOME_PATH: appConfig.SEARCH_ENGINE_HOME_PATH,
+        SEARCH_ENGINE_MAX_INDEXING_MEMORY:
+          appConfig.SEARCH_ENGINE_MAX_INDEXING_MEMORY,
+        SEARCH_ENGINE_MAX_INDEXING_THREADS:
+          appConfig.SEARCH_ENGINE_MAX_INDEXING_THREADS,
+        SEARCH_ENGINE_INDEXING_FREQUENCY:
+          appConfig.SEARCH_ENGINE_INDEXING_FREQUENCY,
+      };
+      logger.info("searchEngineOptions: ", searchEngineOptions);
+      // await startSearchEngine(searchEngineOptions);
+      await startWebAppAndSearchEngine(webAppOptions, searchEngineOptions);
       logger.info("bitsky successfully started.");
       process.env.BITSKY_BASE_URL = `http://${appConfig.WEB_APP_HOST_NAME}:${this.port}`;
     } catch (err) {
@@ -75,7 +92,8 @@ class WebApp {
   public async stop() {
     try {
       logger.info("Stop BitSky...");
-      await stopServer();
+      await stopSearchEngine();
+      await stopWebApp();
       logger.info("Stopped BitSky");
     } catch (err) {
       dialog.showErrorBox(
