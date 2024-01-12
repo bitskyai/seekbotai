@@ -1,4 +1,4 @@
-import { overwriteAppConfig, getAppConfig } from "../helpers/config";
+import { getAppConfig } from "../helpers/config";
 import getLogger from "../helpers/logger";
 import { type SearchEngineOptions } from "../types";
 import {
@@ -78,7 +78,7 @@ async function updatePagesIndexSetting() {
 export async function startSearchEngine(serverOptions?: SearchEngineOptions) {
   try {
     const logger = getLogger();
-    const config = overwriteAppConfig(serverOptions ?? {});
+    const config = getAppConfig(serverOptions ?? {});
 
     const meiliSearchDBPath = config.SEARCH_ENGINE_HOME_PATH;
 

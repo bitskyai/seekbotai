@@ -1,7 +1,6 @@
 import { createApp } from "./app";
 import { setupDB } from "./db";
-import { overwriteAppConfig } from "./helpers/config";
-import { DEFAULT_APP_OPTIONS } from "./helpers/constants";
+import { getAppConfig } from "./helpers/config";
 import getLogger from "./helpers/logger";
 import { WebAppOptions } from "./types";
 import * as http from "http";
@@ -17,11 +16,7 @@ let processExit = false;
 export async function startWebApp(serverOptions?: WebAppOptions) {
   const logger = getLogger();
   try {
-    const config = overwriteAppConfig(
-      serverOptions ?? {
-        WEB_APP_DATABASE_URL: DEFAULT_APP_OPTIONS.WEB_APP_DATABASE_URL,
-      },
-    );
+    const config = getAppConfig(serverOptions);
     logger.info(`application config`, { config: config });
 
     // start search engine

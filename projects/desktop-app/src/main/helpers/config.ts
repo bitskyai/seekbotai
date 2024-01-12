@@ -218,8 +218,8 @@ export async function getAppConfig(forceUpdate?: boolean): Promise<AppConfig> {
       appOptions.WEB_APP_NAME,
     ),
     SEARCH_ENGINE_HOME_PATH: path.join(
-      // appOptions.DESKTOP_APP_HOME_PATH,
-      appOptions.DESKTOP_APP_USER_DATA_PATH,
+      appOptions.DESKTOP_APP_HOME_PATH,
+      // appOptions.DESKTOP_APP_USER_DATA_PATH,
       appOptions.SEARCH_ENGINE_NAME,
     ),
   };

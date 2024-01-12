@@ -38,7 +38,7 @@ export interface WebAppOptions extends WebAppPreferences, BaseServiceOptions {
   WEB_APP_HOST_NAME?: string;
   WEB_APP_PORT?: number;
   WEB_APP_DATABASE_PROVIDER?: string;
-  WEB_APP_DATABASE_URL?: string;
+  WEB_APP_DATABASE_NAME?: string;
   WEB_APP_SOURCE_ROOT_PATH?: string;
   WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT?: number;
   WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH?: number;
@@ -57,6 +57,7 @@ export interface WebAppOptions extends WebAppPreferences, BaseServiceOptions {
 export interface WebAppConfig extends Required<WebAppOptions> {
   [key: string]: string | number | boolean | undefined;
   // following are not configurable, normally those are generated from other config
+  WEB_APP_DATABASE_URL: string;
   WEB_APP_SCREENSHOT_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_SCREENSHOT_FOLDER`
   WEB_APP_SCREENSHOT_PREVIEW_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_SCREENSHOT_FOLDER/WEB_APP_SCREENSHOT_PREVIEW_FOLDER`
   WEB_APP_SCREENSHOT_FULL_SIZE_PATH: string; // `WEB_APP_HOME_PATH/WEB_APP_SCREENSHOT_FOLDER/WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER`

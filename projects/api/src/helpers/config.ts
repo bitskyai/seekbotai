@@ -55,8 +55,8 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<AppOptions> {
       WEB_APP_DATABASE_PROVIDER: str({
         default: DEFAULT_APP_OPTIONS.WEB_APP_DATABASE_PROVIDER,
       }),
-      WEB_APP_DATABASE_URL: str({
-        default: DEFAULT_APP_OPTIONS.WEB_APP_DATABASE_URL,
+      WEB_APP_DATABASE_NAME: str({
+        default: DEFAULT_APP_OPTIONS.WEB_APP_DATABASE_NAME,
       }),
       WEB_APP_ERROR_LOG_FILE_NAME: str({
         default: DEFAULT_APP_OPTIONS.WEB_APP_ERROR_LOG_FILE_NAME,
@@ -134,7 +134,7 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<AppOptions> {
     WEB_APP_HOST_NAME: envValues.WEB_APP_HOST_NAME,
     WEB_APP_COMBINED_LOG_FILE_NAME: envValues.WEB_APP_COMBINED_LOG_FILE_NAME,
     WEB_APP_DATABASE_PROVIDER: envValues.WEB_APP_DATABASE_PROVIDER,
-    WEB_APP_DATABASE_URL: envValues.WEB_APP_DATABASE_URL,
+    WEB_APP_DATABASE_NAME: envValues.WEB_APP_DATABASE_NAME,
     WEB_APP_ERROR_LOG_FILE_NAME: envValues.WEB_APP_ERROR_LOG_FILE_NAME,
     WEB_APP_LOG_FILES_FOLDER: envValues.WEB_APP_LOG_FILES_FOLDER,
     WEB_APP_LOG_LEVEL: envValues.WEB_APP_LOG_LEVEL,
@@ -160,51 +160,52 @@ function getCleanEnv(overwriteProcessEnv?: object): Required<AppOptions> {
   };
 }
 
-export function overwriteAppConfig(appConfig: object): AppConfig {
-  const currentAppConfig = getAppConfig();
-  _app_config = _.merge({}, currentAppConfig, appConfig);
-  return _app_config;
-}
-
-export function getAppConfig(forceUpdate?: boolean): AppConfig {
-  if (_app_config && !forceUpdate) {
+export function getAppConfig(appOptions?: Partial<AppOptions>): AppConfig {
+  if (_app_config && !appOptions) {
     return _app_config;
   }
   const appOptionsWithDefaultValue = getCleanEnv();
+  const overwriteAppOptions = _.merge(
+    {},
+    appOptionsWithDefaultValue,
+    appOptions ?? {},
+  );
   const dynamicAppConfig = {
+    WEB_APP_DATABASE_URL: `file:${path.join(
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      overwriteAppOptions.WEB_APP_DATABASE_NAME,
+    )}`,
     WEB_APP_SCREENSHOT_PATH: path.join(
-      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FOLDER),
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      _.snakeCase(overwriteAppOptions.WEB_APP_SCREENSHOT_FOLDER),
     ),
     WEB_APP_SCREENSHOT_PREVIEW_PATH: path.join(
-      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FOLDER),
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_PREVIEW_FOLDER),
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      _.snakeCase(overwriteAppOptions.WEB_APP_SCREENSHOT_FOLDER),
+      _.snakeCase(overwriteAppOptions.WEB_APP_SCREENSHOT_PREVIEW_FOLDER),
     ),
     WEB_APP_SCREENSHOT_FULL_SIZE_PATH: path.join(
-      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FOLDER),
-      _.snakeCase(
-        appOptionsWithDefaultValue.WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
-      ),
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      _.snakeCase(overwriteAppOptions.WEB_APP_SCREENSHOT_FOLDER),
+      _.snakeCase(overwriteAppOptions.WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER),
     ),
     WEB_APP_LOG_FILES_PATH: path.join(
-      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_LOG_FILES_FOLDER),
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      _.snakeCase(overwriteAppOptions.WEB_APP_LOG_FILES_FOLDER),
     ),
     WEB_APP_COMBINED_LOG_FILE_PATH: path.join(
-      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_LOG_FILES_FOLDER),
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_COMBINED_LOG_FILE_NAME),
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      _.snakeCase(overwriteAppOptions.WEB_APP_LOG_FILES_FOLDER),
+      _.snakeCase(overwriteAppOptions.WEB_APP_COMBINED_LOG_FILE_NAME),
     ),
     WEB_APP_ERROR_LOG_FILE_PATH: path.join(
-      appOptionsWithDefaultValue.WEB_APP_HOME_PATH,
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_LOG_FILES_FOLDER),
-      _.snakeCase(appOptionsWithDefaultValue.WEB_APP_ERROR_LOG_FILE_NAME),
+      overwriteAppOptions.WEB_APP_HOME_PATH,
+      _.snakeCase(overwriteAppOptions.WEB_APP_LOG_FILES_FOLDER),
+      _.snakeCase(overwriteAppOptions.WEB_APP_ERROR_LOG_FILE_NAME),
     ),
   };
 
-  const appConfig = _.merge({}, appOptionsWithDefaultValue, dynamicAppConfig);
+  const appConfig = _.merge({}, overwriteAppOptions, dynamicAppConfig);
   _app_config = appConfig;
   return _app_config;
 }
