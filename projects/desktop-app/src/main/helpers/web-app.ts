@@ -1,12 +1,4 @@
-import {
-  // startSearchEngine,
-  stopSearchEngine,
-  // startWebApp,
-  stopWebApp,
-  WebAppOptions,
-  SearchEngineOptions,
-  startWebAppAndSearchEngine,
-} from "../../web-app";
+import { WebAppOptions, SearchEngineOptions } from "../../web-app/src/types";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
@@ -32,6 +24,9 @@ class WebApp {
       // start
       updateProcessEnvs(appConfig);
       logger.info("starting bitsky...");
+      // Why need to dynamic import here?
+      // The reason is we need to setup environment variables before import web-app and search-engine
+      const { startWebAppAndSearchEngine } = await import("../../web-app");
       const webAppOptions: WebAppOptions = {
         DESKTOP_MODE: true,
         WEB_APP_PORT: appConfig.WEB_APP_PORT,
@@ -92,8 +87,8 @@ class WebApp {
   public async stop() {
     try {
       logger.info("Stop BitSky...");
-      await stopSearchEngine();
-      await stopWebApp();
+      const { stopWebAppAndSearchEngine } = await import("../../web-app");
+      await stopWebAppAndSearchEngine();
       logger.info("Stopped BitSky");
     } catch (err) {
       dialog.showErrorBox(

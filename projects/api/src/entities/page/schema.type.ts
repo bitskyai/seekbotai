@@ -1,6 +1,6 @@
 import { SortOrder } from "../common.type";
 import type { MutationResShape } from "../common.type";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import type {
   PageMetadataShape,
   PageCreateOrUpdateShape,
@@ -14,7 +14,7 @@ import type {
 } from "./types";
 import type { PageMetadata, Tag } from "@prisma/client";
 
-export const PageBM = schemaBuilder.prismaObject("Page", {
+export const PageBM = getSchemaBuilder().prismaObject("Page", {
   fields: (t) => ({
     id: t.expose("id", { type: "UUID" }),
     createdAt: t.expose("createdAt", { type: "DateTime" }),
@@ -29,7 +29,7 @@ export const PageBM = schemaBuilder.prismaObject("Page", {
   }),
 });
 
-export const PageMetadataBM = schemaBuilder.prismaObject("PageMetadata", {
+export const PageMetadataBM = getSchemaBuilder().prismaObject("PageMetadata", {
   fields: (t) => ({
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "DateTime" }),
@@ -54,7 +54,7 @@ export const PageMetadataBM = schemaBuilder.prismaObject("PageMetadata", {
   }),
 });
 
-export const PageTagBM = schemaBuilder.prismaObject("PageTag", {
+export const PageTagBM = getSchemaBuilder().prismaObject("PageTag", {
   fields: (t) => ({
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "DateTime" }),
@@ -65,16 +65,18 @@ export const PageTagBM = schemaBuilder.prismaObject("PageTag", {
   }),
 });
 
-export const TagTypeBM = schemaBuilder.objectRef<Tag>("TagDetail").implement({
-  fields: (t) => ({
-    id: t.exposeID("id"),
-    createdAt: t.expose("createdAt", { type: "DateTime" }),
-    updatedAt: t.expose("updatedAt", { type: "DateTime" }),
-    name: t.exposeString("name"),
-  }),
-});
+export const TagTypeBM = getSchemaBuilder()
+  .objectRef<Tag>("TagDetail")
+  .implement({
+    fields: (t) => ({
+      id: t.exposeID("id"),
+      createdAt: t.expose("createdAt", { type: "DateTime" }),
+      updatedAt: t.expose("updatedAt", { type: "DateTime" }),
+      name: t.exposeString("name"),
+    }),
+  });
 
-export const PageTagTypeBM = schemaBuilder
+export const PageTagTypeBM = getSchemaBuilder()
   .objectRef<PageTagOutput>("PageTagDetail")
   .implement({
     fields: (t) => ({
@@ -89,7 +91,7 @@ export const PageTagTypeBM = schemaBuilder
     }),
   });
 
-export const PageMetadataShapeTypeBM = schemaBuilder
+export const PageMetadataShapeTypeBM = getSchemaBuilder()
   .objectRef<PageMetadata>("PageMetadataDetail")
   .implement({
     fields: (t) => ({
@@ -120,7 +122,7 @@ export const PageMetadataShapeTypeBM = schemaBuilder
     }),
   });
 
-export const SearchResultPageBM = schemaBuilder
+export const SearchResultPageBM = getSchemaBuilder()
   .objectRef<SearchResultPage>("SearchResultPage")
   .implement({
     fields: (t) => ({
@@ -141,7 +143,7 @@ export const SearchResultPageBM = schemaBuilder
     }),
   });
 
-export const PageMetadataPayloadBM = schemaBuilder
+export const PageMetadataPayloadBM = getSchemaBuilder()
   .inputRef<PageMetadataShape>("PageMetadataPayload")
   .implement({
     fields: (t) => ({
@@ -158,7 +160,7 @@ export const PageMetadataPayloadBM = schemaBuilder
     }),
   });
 
-export const PageTagPayloadBM = schemaBuilder
+export const PageTagPayloadBM = getSchemaBuilder()
   .inputRef<PageTagWithNameShape>("PageTagPayload")
   .implement({
     fields: (t) => ({
@@ -166,7 +168,7 @@ export const PageTagPayloadBM = schemaBuilder
     }),
   });
 
-export const PageCreateOrUpdatePayloadBM = schemaBuilder
+export const PageCreateOrUpdatePayloadBM = getSchemaBuilder()
   .inputRef<PageCreateOrUpdateShape>("PageCreateOrUpdatePayload")
   .implement({
     fields: (t) => ({
@@ -188,7 +190,7 @@ export const PageCreateOrUpdatePayloadBM = schemaBuilder
     }),
   });
 
-export const UpdatablePageMetadataShapeBM = schemaBuilder
+export const UpdatablePageMetadataShapeBM = getSchemaBuilder()
   .inputRef<UpdatablePageMetadataShape>("UpdatablePageMetadataPayload")
   .implement({
     fields: (t) => ({
@@ -203,7 +205,7 @@ export const UpdatablePageMetadataShapeBM = schemaBuilder
     }),
   });
 
-export const UpdatePageTagShapeBM = schemaBuilder
+export const UpdatePageTagShapeBM = getSchemaBuilder()
   .inputRef<UpdatePageTagShape>("UpdatePageTagPayload")
   .implement({
     fields: (t) => ({
@@ -211,7 +213,7 @@ export const UpdatePageTagShapeBM = schemaBuilder
     }),
   });
 
-export const CreateOrUpdatePageResBM = schemaBuilder
+export const CreateOrUpdatePageResBM = getSchemaBuilder()
   .objectRef<CreateOrUpdatePageRes>("CreateOrUpdatePageRes")
   .implement({
     fields: (t) => ({
@@ -223,7 +225,7 @@ export const CreateOrUpdatePageResBM = schemaBuilder
     }),
   });
 
-export const PageSortOrderInput = schemaBuilder.inputType(
+export const PageSortOrderInput = getSchemaBuilder().inputType(
   "PageSortOrderInput",
   {
     fields: (t) => ({
@@ -234,7 +236,7 @@ export const PageSortOrderInput = schemaBuilder.inputType(
   },
 );
 
-export const DeletePageShapeBM = schemaBuilder
+export const DeletePageShapeBM = getSchemaBuilder()
   .inputRef<DeletePageShape>("DeletePagePayload")
   .implement({
     fields: (t) => ({

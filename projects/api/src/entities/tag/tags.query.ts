@@ -1,9 +1,9 @@
 import { getPrismaClient } from "../../db";
 import { systemShare } from "../../db/seedData/defaultUsers";
 import { GQLContext } from "../../types";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 
-schemaBuilder.queryField("tags", (t) =>
+getSchemaBuilder().queryField("tags", (t) =>
   t.prismaField({
     type: ["Tag"],
     resolve: async (query, root, args, ctx, info) => {

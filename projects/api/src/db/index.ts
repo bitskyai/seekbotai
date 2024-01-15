@@ -10,13 +10,12 @@ import fs from "fs-extra";
 import { last, trim } from "lodash";
 import path from "path";
 
-const logger = getLogger();
-
 let _prismaClient: PrismaClient;
 let databaseURL: string;
 
 export function getPrismaClient() {
   const latestDatabaseURL = getAppConfig().WEB_APP_DATABASE_URL;
+  const logger = getLogger();
   if (latestDatabaseURL != databaseURL) {
     databaseURL = latestDatabaseURL;
     _prismaClient = new PrismaClient({
@@ -73,6 +72,7 @@ export const platformToExecutables: any = {
 
 export async function setupDB() {
   const config = getAppConfig();
+  const logger = getLogger();
   logger.debug(`setupDB->config: ${JSON.stringify(config, null, 2)}`);
   if (!config.WEB_APP_SETUP_DB) {
     logger.info(`Don't need to setup DB`);
@@ -171,6 +171,7 @@ export async function runPrismaCommand({
   command: string[];
   dbUrl: string;
 }): Promise<number> {
+  const logger = getLogger();
   const platformName = getPlatformName();
 
   const qePath = path.join(

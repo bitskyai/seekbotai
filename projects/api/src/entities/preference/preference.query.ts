@@ -1,9 +1,9 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import { PreferenceBM } from "./schema.type";
 
-schemaBuilder.queryField("preference", (t) =>
+getSchemaBuilder().queryField("preference", (t) =>
   t.field({
     type: PreferenceBM,
     resolve: async (parent, args, ctx) => {

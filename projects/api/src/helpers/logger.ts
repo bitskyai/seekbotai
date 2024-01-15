@@ -1,7 +1,5 @@
 import { getAppConfig } from "./config";
-import { DEFAULT_APP_OPTIONS } from "./constants";
 import fs from "fs-extra";
-import path from "path";
 import { createLogger, format, Logger, transports } from "winston";
 
 // Only need one logger instance in whole system
@@ -9,14 +7,14 @@ let logger: Logger;
 
 export default function getLogger() {
   try {
-    // if (logger) {
-    //   // console.log('logger already created.');
-    //   return logger;
-    // }
+    if (logger) {
+      console.log("logger already created.");
+      return logger;
+    }
     const config = getAppConfig();
     const logFilesPath = config.WEB_APP_LOG_FILES_PATH;
     fs.ensureDirSync(logFilesPath);
-    // console.log('[createLogger] starting...');
+    console.log("[createLogger] starting...");
     logger = createLogger({
       level: config.WEB_APP_LOG_LEVEL,
       format: format.combine(
@@ -61,7 +59,7 @@ export default function getLogger() {
       );
     }
 
-    // console.log('[createLogger] end');
+    console.log("[createLogger] end");
     return logger;
   } catch (err) {
     console.error("error: ", err);

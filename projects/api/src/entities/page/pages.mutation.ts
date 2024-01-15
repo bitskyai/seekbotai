@@ -14,7 +14,7 @@ import {
 } from "../../searchEngine";
 import { GQLContext } from "../../types";
 import { type MutationResShape, MutationResShapeBM } from "../common.type";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import {
   PageCreateOrUpdatePayloadBM,
   CreateOrUpdatePageResBM,
@@ -33,7 +33,7 @@ import type {
 import { PageMetadata } from "@prisma/client";
 import _ from "lodash";
 
-schemaBuilder.mutationField("createOrUpdatePages", (t) =>
+getSchemaBuilder().mutationField("createOrUpdatePages", (t) =>
   t.field({
     type: [CreateOrUpdatePageResBM],
     args: {
@@ -240,7 +240,7 @@ export async function createOrUpdatePages({
   return pagesResult;
 }
 
-schemaBuilder.mutationField("updatePageMetadata", (t) =>
+getSchemaBuilder().mutationField("updatePageMetadata", (t) =>
   t.field({
     type: PageMetadataBM,
     args: {
@@ -291,7 +291,7 @@ export async function updatePageMetadata({
 }
 
 // passed pageTags is the whole list of pageTags, not just the updated ones
-schemaBuilder.mutationField("updatePageTags", (t) =>
+getSchemaBuilder().mutationField("updatePageTags", (t) =>
   t.field({
     type: MutationResShapeBM,
     args: {
@@ -416,7 +416,7 @@ export async function updatePageTags({
   };
 }
 
-schemaBuilder.mutationField("deletePages", (t) =>
+getSchemaBuilder().mutationField("deletePages", (t) =>
   t.field({
     type: MutationResShapeBM,
     args: {

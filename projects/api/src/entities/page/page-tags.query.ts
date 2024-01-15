@@ -1,11 +1,11 @@
 import { getPrismaClient } from "../../db";
 import getLogger from "../../helpers/logger";
 import { GQLContext } from "../../types";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 
 const logger = getLogger();
 
-schemaBuilder.queryField("pageTags", (t) =>
+getSchemaBuilder().queryField("pageTags", (t) =>
   t.prismaField({
     type: ["PageTag"],
     resolve: async (query, root, args, ctx, info) => {

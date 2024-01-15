@@ -14,15 +14,10 @@ let processExit = false;
  * @param serverOptions : you should only use this when it isn't possible for you to set config in environment value
  */
 export async function startWebApp(serverOptions?: WebAppOptions) {
+  const config = getAppConfig(serverOptions);
   const logger = getLogger();
   try {
-    const config = getAppConfig(serverOptions);
     logger.info(`application config`, { config: config });
-
-    // start search engine
-    // if (config.WEB_APP_START_SEARCH_ENGINE) {
-    //   await startSearchEngine(serverOptions);
-    // }
 
     await setupDB();
     const app = await createApp();

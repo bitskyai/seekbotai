@@ -6,13 +6,13 @@ import { loadModule } from "../utils";
 import { PrismaClient } from "@prisma/client";
 import * as path from "path";
 
-const logger = getLogger();
 /**
  * Seed data for production purpose
  * TODO: improve the error handle of seed prod - issue-17
  * @param prismaClient
  */
 async function seed(prismaClient?: PrismaClient) {
+  const logger = getLogger();
   if (!prismaClient) {
     prismaClient = getPrismaClient();
   }

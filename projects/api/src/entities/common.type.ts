@@ -1,15 +1,15 @@
-import { schemaBuilder } from "./gql-builder";
+import { getSchemaBuilder } from "./gql-builder";
 
 export type MutationResShape = {
   success: boolean;
   message?: string;
 };
 
-export const SortOrder = schemaBuilder.enumType("SortOrder", {
+export const SortOrder = getSchemaBuilder().enumType("SortOrder", {
   values: ["asc", "desc"] as const,
 });
 
-export const MutationResShapeBM = schemaBuilder
+export const MutationResShapeBM = getSchemaBuilder()
   .objectRef<MutationResShape>("MutationRes")
   .implement({
     fields: (t) => ({

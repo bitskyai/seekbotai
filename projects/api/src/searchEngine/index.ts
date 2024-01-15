@@ -2,24 +2,24 @@ import { getAppConfig } from "../helpers/config";
 import getLogger from "../helpers/logger";
 import { type SearchEngineOptions } from "../types";
 import {
-  PAGES_INDEX_NAME,
-  MAX_TRIES_UNTIL_HEALTH,
   HEALTH_CHECK_INTERVAL,
+  MAX_TRIES_UNTIL_HEALTH,
   MEILI_SEARCH_BINARY_NAME_PREFIX,
+  PAGES_INDEX_NAME,
 } from "./constants";
 import { getChangedPages, getPagesByIds } from "./pages";
-import { getPageIndex, updatePageIndex, pageIndexSettings } from "./pagesIndex";
+import { getPageIndex, pageIndexSettings, updatePageIndex } from "./pagesIndex";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import fs from "fs-extra";
 import { MeiliSearch, type Index } from "meilisearch";
 import { join } from "path";
 
 export {
-  PAGES_INDEX_NAME,
-  MAX_TRIES_UNTIL_HEALTH,
-  HEALTH_CHECK_INTERVAL,
   CHECK_NEW_INDEXES_INTERVAL,
+  HEALTH_CHECK_INTERVAL,
+  MAX_TRIES_UNTIL_HEALTH,
   MEILI_SEARCH_BINARY_NAME_PREFIX,
+  PAGES_INDEX_NAME,
 } from "./constants";
 
 let meiliSearchProcess: ChildProcessWithoutNullStreams;
@@ -77,8 +77,8 @@ async function updatePagesIndexSetting() {
 
 export async function startSearchEngine(serverOptions?: SearchEngineOptions) {
   try {
-    const logger = getLogger();
     const config = getAppConfig(serverOptions ?? {});
+    const logger = getLogger();
 
     const meiliSearchDBPath = config.SEARCH_ENGINE_HOME_PATH;
 

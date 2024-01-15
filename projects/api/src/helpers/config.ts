@@ -196,12 +196,12 @@ export function getAppConfig(appOptions?: Partial<AppOptions>): AppConfig {
     WEB_APP_COMBINED_LOG_FILE_PATH: path.join(
       overwriteAppOptions.WEB_APP_HOME_PATH,
       _.snakeCase(overwriteAppOptions.WEB_APP_LOG_FILES_FOLDER),
-      _.snakeCase(overwriteAppOptions.WEB_APP_COMBINED_LOG_FILE_NAME),
+      overwriteAppOptions.WEB_APP_COMBINED_LOG_FILE_NAME,
     ),
     WEB_APP_ERROR_LOG_FILE_PATH: path.join(
       overwriteAppOptions.WEB_APP_HOME_PATH,
       _.snakeCase(overwriteAppOptions.WEB_APP_LOG_FILES_FOLDER),
-      _.snakeCase(overwriteAppOptions.WEB_APP_ERROR_LOG_FILE_NAME),
+      overwriteAppOptions.WEB_APP_ERROR_LOG_FILE_NAME,
     ),
   };
 

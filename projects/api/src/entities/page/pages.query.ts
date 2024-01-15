@@ -1,11 +1,11 @@
 import { getPrismaClient } from "../../db";
 import { PAGES_INDEX_NAME, getMeiliSearchClient } from "../../searchEngine";
 import { GQLContext } from "../../types";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import { PageSortOrderInput, SearchResultPageBM } from "./schema.type";
 import { SearchResultPage } from "./types";
 
-schemaBuilder.queryField("pages", (t) =>
+getSchemaBuilder().queryField("pages", (t) =>
   t.field({
     type: [SearchResultPageBM],
     args: {

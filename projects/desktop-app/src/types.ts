@@ -3,7 +3,7 @@ import {
   SearchEngineOptions,
   WebAppPreferences,
   SearchEnginePreferences,
-} from "./web-app";
+} from "./web-app/src/types";
 
 export interface NpmVersion {
   version: string;

@@ -1,9 +1,9 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import { IgnoreURLBM } from "./schema.type";
 
-schemaBuilder.queryField("ignoreURLs", (t) =>
+getSchemaBuilder().queryField("ignoreURLs", (t) =>
   t.field({
     type: [IgnoreURLBM],
     resolve: async (parent, args, ctx) => {
