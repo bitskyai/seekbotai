@@ -1,40 +1,20 @@
-import { getAppConfig } from "./helpers/config";
-import getLogger from "./helpers/logger";
-import { startSearchEngine, stopSearchEngine } from "./searchEngine";
-import { startWebApp, stopWebApp } from "./server";
 import {
-  SearchEnginePreferences,
-  WebAppPreferences,
+  startWebAppAndSearchEngine,
+  stopWebAppAndSearchEngine,
+} from "./server";
+import {
   SearchEngineOptions,
+  SearchEnginePreferences,
   WebAppOptions,
+  WebAppPreferences,
 } from "./types";
-import _ from "lodash";
 
-export { startSearchEngine, stopSearchEngine, startWebApp, stopWebApp };
+// Normally following two functions are used if you want to programmatically start or stop
+// if you don't want to use default app config, make sure you set the env variables before calling these functions and use dynamic import
+export { startWebAppAndSearchEngine, stopWebAppAndSearchEngine };
 export type {
-  SearchEnginePreferences,
-  WebAppPreferences,
   SearchEngineOptions,
+  SearchEnginePreferences,
   WebAppOptions,
+  WebAppPreferences,
 };
-
-export async function startWebAppAndSearchEngine(
-  webAppOptions: WebAppOptions,
-  searchEngineOptions: SearchEngineOptions,
-) {
-  // init app config
-  getAppConfig(_.merge({}, webAppOptions, searchEngineOptions));
-  const logger = getLogger();
-  logger.info("startWebAppAndSearchEngine...");
-  await startSearchEngine(searchEngineOptions);
-  await startWebApp(webAppOptions);
-  logger.info("finished startWebAppAndSearchEngine");
-}
-
-export async function stopWebAppAndSearchEngine() {
-  const logger = getLogger();
-  logger.info("stopWebAppAndSearchEngine...");
-  await stopSearchEngine();
-  await stopWebApp();
-  logger.info("finished stopWebAppAndSearchEngine");
-}

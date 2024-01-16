@@ -1,7 +1,8 @@
 import { AppConfig, AppOptions } from "../../types";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import { getAvailablePort } from "./index";
-import { getPreferencesJSON, getDefaultPreferences } from "./preferences";
+import { getDefaultPreferences, getPreferencesJSON } from "./preferences";
+import { app } from "electron";
 import { bool, cleanEnv, num, str } from "envalid";
 import * as fs from "fs-extra";
 import _ from "lodash";
@@ -72,6 +73,12 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
   };
   const envValues = cleanEnv(env, spec);
 
+  const webAppSourcePath = path.join(
+    app.getAppPath(),
+    "dist",
+    envValues.WEB_APP_NAME,
+  );
+
   // TODO: need to improve this. The reason is if _.merge(envValues,{}) will throw an exception
   return {
     VERSION: envValues.VERSION,
@@ -87,6 +94,7 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     WEB_APP_LOG_MAX_SIZE: envValues.WEB_APP_LOG_MAX_SIZE,
     WEB_APP_SAVE_RAW_PAGE: envValues.WEB_APP_SAVE_RAW_PAGE,
     WEB_APP_MASTER_KEY: envValues.WEB_APP_MASTER_KEY,
+    WEB_APP_SOURCE_ROOT_PATH: webAppSourcePath,
     WEB_APP_SETUP_DB: envValues.WEB_APP_SETUP_DB,
     WEB_APP_SEED_DB: envValues.WEB_APP_SEED_DB,
     WEB_APP_NAME: envValues.WEB_APP_NAME,
