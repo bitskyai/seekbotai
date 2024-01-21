@@ -4,7 +4,6 @@ import { getAvailablePort } from "./index";
 import { getDefaultPreferences, getPreferencesJSON } from "./preferences";
 import { app } from "electron";
 import { bool, cleanEnv, num, str } from "envalid";
-import * as fs from "fs-extra";
 import _ from "lodash";
 import * as path from "path";
 
@@ -16,6 +15,9 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     VERSION: str({
       default: DEFAULT_APP_OPTIONS.VERSION,
     }),
+    PREFERENCES_JSON_FILE_NAME: str({
+      default: DEFAULT_APP_OPTIONS.PREFERENCES_JSON_FILE_NAME,
+    }),
     DESKTOP_APP_USER_DATA_PATH: str({
       default: DEFAULT_APP_OPTIONS.DESKTOP_APP_USER_DATA_PATH,
     }),
@@ -25,14 +27,8 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME: str({
       default: DEFAULT_APP_OPTIONS.DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME,
     }),
-    DESKTOP_APP_CONFIG_FILE_NAME: str({
-      default: DEFAULT_APP_OPTIONS.DESKTOP_APP_CONFIG_FILE_NAME,
-    }),
     DESKTOP_APP_LOG_FILES_FOLDER: str({
       default: DEFAULT_APP_OPTIONS.DESKTOP_APP_LOG_FILES_FOLDER,
-    }),
-    DESKTOP_APP_PREFERENCES_JSON_FILE_NAME: str({
-      default: DEFAULT_APP_OPTIONS.DESKTOP_APP_PREFERENCES_JSON_FILE_NAME,
     }),
     WEB_APP_LOG_LEVEL: str({
       default: DEFAULT_APP_OPTIONS.WEB_APP_LOG_LEVEL,
@@ -82,14 +78,12 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
   // TODO: need to improve this. The reason is if _.merge(envValues,{}) will throw an exception
   return {
     VERSION: envValues.VERSION,
+    PREFERENCES_JSON_FILE_NAME: envValues.PREFERENCES_JSON_FILE_NAME,
     DESKTOP_APP_USER_DATA_PATH: envValues.DESKTOP_APP_USER_DATA_PATH,
     DESKTOP_APP_HOME_PATH: envValues.DESKTOP_APP_HOME_PATH,
     DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME:
       envValues.DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME,
-    DESKTOP_APP_CONFIG_FILE_NAME: envValues.DESKTOP_APP_CONFIG_FILE_NAME,
     DESKTOP_APP_LOG_FILES_FOLDER: envValues.DESKTOP_APP_LOG_FILES_FOLDER,
-    DESKTOP_APP_PREFERENCES_JSON_FILE_NAME:
-      envValues.DESKTOP_APP_PREFERENCES_JSON_FILE_NAME,
     WEB_APP_LOG_LEVEL: envValues.WEB_APP_LOG_LEVEL,
     WEB_APP_LOG_MAX_SIZE: envValues.WEB_APP_LOG_MAX_SIZE,
     WEB_APP_SAVE_RAW_PAGE: envValues.WEB_APP_SAVE_RAW_PAGE,
@@ -126,79 +120,42 @@ export function updateProcessEnvs(appConfig: AppConfig): boolean {
   }
 }
 
-export function getAppOptions(appOptionsPath: string): Partial<AppOptions> {
-  try {
-    // if doesn't exist then return default preferences
-    let appOptions: Partial<AppOptions> = {};
-
-    // if file exist then return
-    fs.ensureFileSync(appOptionsPath);
-    try {
-      const appOptionsStr = fs.readFileSync(appOptionsPath)?.toString();
-      if (appOptionsStr) {
-        appOptions = JSON.parse(appOptionsStr);
-      }
-    } catch (err) {
-      console.info(err);
-    }
-    return appOptions;
-  } catch (err) {
-    console.error(
-      `getAppOptions fail. appOptionsPath:${appOptionsPath}. error: `,
-      err,
-    );
-    return {};
-  }
-}
-
-export function updateAppOptions(
-  appOptions: Partial<AppOptions>,
-  appOptionsPath: string,
-): Partial<AppOptions> {
-  try {
-    let curAppOptions = getAppOptions(appOptionsPath);
-
-    curAppOptions = {
-      ...curAppOptions,
-      ...appOptions,
-    };
-    console.log("appOptionsPath: ", appOptionsPath);
-    fs.outputJSONSync(appOptionsPath, curAppOptions);
-    return curAppOptions;
-  } catch (err) {
-    console.error(
-      "updateAppOptions fail. Path: ",
-      appOptionsPath,
-      "appOptions: ",
-      appOptions,
-      "Error: ",
-      err,
-    );
-    return {};
-  }
-}
-
-export async function getAppConfig(forceUpdate?: boolean): Promise<AppConfig> {
-  if (_app_config && !forceUpdate) {
+export async function getAppConfig(
+  overwriteProcessEnv?: object,
+): Promise<AppConfig> {
+  if (_app_config && !overwriteProcessEnv) {
     return _app_config;
   }
-  const appOptionsWithDefaultValue = getCleanEnv();
-  const preferencesJSONPath = path.join(
-    appOptionsWithDefaultValue.DESKTOP_APP_USER_DATA_PATH,
-    appOptionsWithDefaultValue.DESKTOP_APP_PREFERENCES_JSON_FILE_NAME,
-  );
-  const appConfigPath = path.join(
+  let appOptionsWithDefaultValue = getCleanEnv(overwriteProcessEnv);
+  const desktopAppPreferencesPath = path.join(
     appOptionsWithDefaultValue.DESKTOP_APP_HOME_PATH,
-    appOptionsWithDefaultValue.DESKTOP_APP_CONFIG_FILE_NAME,
+    appOptionsWithDefaultValue.PREFERENCES_JSON_FILE_NAME,
   );
-  const preferences = getPreferencesJSON(preferencesJSONPath);
-  const appOptionsFromFile = getAppOptions(appConfigPath);
+
+  // Get desktop app preferences
+  const desktopAppPreferencesJSON = getPreferencesJSON(
+    desktopAppPreferencesPath,
+  );
+
+  // To overwrite default app options with preferences
+  // `DESKTOP_APP_USER_DATA_PATH` is possible re-configure in desktop app preferences
+  appOptionsWithDefaultValue = _.merge(
+    {},
+    appOptionsWithDefaultValue,
+    desktopAppPreferencesJSON ?? {},
+  );
+
+  const appPreferencesJSONPath = path.join(
+    appOptionsWithDefaultValue.DESKTOP_APP_USER_DATA_PATH,
+    appOptionsWithDefaultValue.PREFERENCES_JSON_FILE_NAME,
+  );
+  const appPreferencesJSON = getPreferencesJSON(appPreferencesJSONPath);
+
   const defaultPreferences = getDefaultPreferences();
   const appOptions = _.merge(
-    appOptionsFromFile,
     defaultPreferences,
     appOptionsWithDefaultValue,
-    preferences,
+    appPreferencesJSON,
   );
 
   appOptions.WEB_APP_PORT = await getAvailablePort(appOptions.WEB_APP_PORT);
@@ -206,12 +163,7 @@ export async function getAppConfig(forceUpdate?: boolean): Promise<AppConfig> {
     appOptions.SEARCH_ENGINE_PORT,
   );
 
-  // update app options
-  updateAppOptions(appOptions, appConfigPath);
-
   const dynamicAppConfig = {
-    DESKTOP_APP_PREFERENCES_JSON_FILE_PATH: preferencesJSONPath,
-    DESKTOP_APP_CONFIG_FILE_PATH: appConfigPath,
     DESKTOP_APP_LOG_FILES_PATH: path.join(
       appOptions.DESKTOP_APP_USER_DATA_PATH,
       appOptions.DESKTOP_APP_LOG_FILES_FOLDER,
