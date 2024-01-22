@@ -13,8 +13,13 @@ export const ipcMainEvents = [
   IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
 ];
 
-// message send to retailer editor
-// export const ipcRendererEvents = [];
+// message send to renderer
+export const ipcRendererEvents = [
+  IpcEvents.OPEN_SETTINGS,
+  IpcEvents.CLOSE_SETTINGS,
+  IpcEvents.SYNC_GET_PREFERENCES_JSON,
+  IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
+];
 
 export const WEBCONTENTS_READY_FOR_IPC_SIGNAL =
   "WEBCONTENTS_READY_FOR_IPC_SIGNAL";
