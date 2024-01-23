@@ -1,12 +1,9 @@
 // Setup Event Listeners
 
 import { IpcEvents } from "../ipc-events";
-import { AppPreferences } from "../types";
+import type { AppConfig, AppPreferences } from "../types";
+import { getAppConfig } from "./helpers/config";
 import logger from "./helpers/logger";
-// import {
-//   getPreferencesJSON,
-//   updatePreferencesJSON,
-// } from "./helpers/preferences";
 import { ipcMainManager } from "./ipc";
 import { hideSettings } from "./menu";
 
@@ -20,17 +17,19 @@ export function setUpEventListeners() {
   });
 
   ipcMainManager.on(
-    IpcEvents.SYNC_GET_PREFERENCES_JSON,
+    IpcEvents.SYNC_GET_APP_CONFIG,
     async (event: {
       returnValue: {
         status: boolean;
-        payload?: { preferences?: AppPreferences };
+        payload?: { config?: AppConfig };
         error?: unknown;
       };
     }) => {
       try {
+        const config = await getAppConfig();
         event.returnValue = {
           status: true,
+          payload: { config: config },
         };
       } catch (err) {
         event.returnValue = {

@@ -1,3 +1,4 @@
+import type { EventResponse } from "../ipc-events";
 import { IpcEvents, ipcRendererEvents } from "../ipc-events";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
@@ -41,9 +42,10 @@ export class IpcRendererManager extends EventEmitter {
    * @param {...Array<any>} args
    * @memberof IpcRendererManager
    */
-  public sendSync(channel: IpcEvents, ...args: Array<any>) {
+  public sendSync(channel: IpcEvents, ...args: Array<any>): EventResponse {
     return ipcRenderer.sendSync(channel, ...args);
   }
 }
 
-export const ipcRendererManager = new IpcRendererManager();
+const ipcRendererManager = new IpcRendererManager();
+export default ipcRendererManager;

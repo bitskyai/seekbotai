@@ -1,7 +1,6 @@
 import { DEFAULT_SELF_IDENTIFICATION, PORT_RANGE } from "@bitsky/shared"
 
-import { getIgnoreURLs } from "~background/modules/apis"
-import { setApolloClientToNull } from "~background/modules/apis"
+import { getIgnoreURLs, setApolloClientToNull } from "~background/modules/apis"
 import { ImportThread } from "~background/modules/imports"
 import { LogFormat } from "~helpers/LogFormat"
 import { releaseMemory } from "~helpers/util"
@@ -119,7 +118,7 @@ export const checkServiceHealth = async (
       // let us discover service again
       status = await discoverService(timeout)
     } else {
-      const url = `${protocol}://${hostname}:${port}/heartbeat`
+      const url = `${protocol}://${hostname}:${port}/agent`
       console.info(...logFormat.formatArgs(`checkServiceHealth url: ${url}`))
       const importThread = new ImportThread({
         url,

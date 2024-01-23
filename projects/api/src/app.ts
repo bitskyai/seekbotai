@@ -1,5 +1,6 @@
 import { DEFAULT_SELF_IDENTIFICATION } from "./bitskyLibs/shared";
 import { defaultUser } from "./db/seedData/defaultUsers";
+import cors from "cors";
 import express from "express";
 import { createYoga } from "graphql-yoga";
 import helmet from "helmet";
@@ -13,6 +14,7 @@ import { setupProxy } from "./searchEngine";
 export async function createApp() {
   const config = getAppConfig();
   const app = express();
+  app.use(cors());
   app.disable("x-powered-by");
   app.use(
     helmet({
@@ -21,6 +23,10 @@ export async function createApp() {
     }),
   );
   app.use("/heartbeat", (req, res) => {
+    res.send(DEFAULT_SELF_IDENTIFICATION);
+  });
+
+  app.use("/agent", (req, res) => {
     res.send(DEFAULT_SELF_IDENTIFICATION);
   });
 

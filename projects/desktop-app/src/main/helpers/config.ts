@@ -30,6 +30,9 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     DESKTOP_APP_LOG_FILES_FOLDER: str({
       default: DEFAULT_APP_OPTIONS.DESKTOP_APP_LOG_FILES_FOLDER,
     }),
+    WEB_APP_HOST_NAME: str({
+      default: DEFAULT_APP_OPTIONS.WEB_APP_HOST_NAME,
+    }),
     WEB_APP_LOG_LEVEL: str({
       default: DEFAULT_APP_OPTIONS.WEB_APP_LOG_LEVEL,
     }),
@@ -53,6 +56,9 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     }),
     WEB_APP_PORT: num({
       default: DEFAULT_APP_OPTIONS.WEB_APP_PORT,
+    }),
+    SEARCH_ENGINE_HOST_NAME: str({
+      default: DEFAULT_APP_OPTIONS.SEARCH_ENGINE_HOST_NAME,
     }),
     SEARCH_ENGINE_INDEXING_FREQUENCY: num({
       default: DEFAULT_APP_OPTIONS.SEARCH_ENGINE_INDEXING_FREQUENCY,
@@ -84,6 +90,7 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME:
       envValues.DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME,
     DESKTOP_APP_LOG_FILES_FOLDER: envValues.DESKTOP_APP_LOG_FILES_FOLDER,
+    WEB_APP_HOST_NAME: envValues.WEB_APP_HOST_NAME,
     WEB_APP_LOG_LEVEL: envValues.WEB_APP_LOG_LEVEL,
     WEB_APP_LOG_MAX_SIZE: envValues.WEB_APP_LOG_MAX_SIZE,
     WEB_APP_SAVE_RAW_PAGE: envValues.WEB_APP_SAVE_RAW_PAGE,
@@ -93,6 +100,7 @@ function getCleanEnv(overwriteProcessEnv?: object): AppOptions {
     WEB_APP_SEED_DB: envValues.WEB_APP_SEED_DB,
     WEB_APP_NAME: envValues.WEB_APP_NAME,
     WEB_APP_PORT: envValues.WEB_APP_PORT,
+    SEARCH_ENGINE_HOST_NAME: envValues.SEARCH_ENGINE_HOST_NAME,
     SEARCH_ENGINE_INDEXING_FREQUENCY:
       envValues.SEARCH_ENGINE_INDEXING_FREQUENCY,
     SEARCH_ENGINE_MASTER_KEY: envValues.SEARCH_ENGINE_MASTER_KEY,
