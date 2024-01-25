@@ -1,5 +1,4 @@
 import { createContextMenu } from "./context-menu";
-import logger from "./helpers/logger";
 import { BrowserWindow, shell } from "electron";
 import { resolve } from "path";
 
@@ -19,8 +18,8 @@ const browserWindows: browserWindowHash = {};
 export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions {
   const preload = resolve(__dirname, "../preload/index.js");
   return {
-    width: 1200,
-    height: 900,
+    width: 1000,
+    height: 800,
     minHeight: 600,
     minWidth: 600,
     // titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,

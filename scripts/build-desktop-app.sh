@@ -22,6 +22,10 @@ cd $TARGET_PATH
 print "Remove previous build"
 rm -rf ./dist
 
+# Build desktop app UI
+print "Build desktop app UI"
+npm run build:ui
+
 bash ${ROOT_DIR}/copy-libs.sh
 
 print "Complie Typescript"
@@ -29,6 +33,7 @@ npm run tsc
 
 print "Copy files to dist"
 cp -rf ./src/web-app ./dist/
+cp -rf ./src/ui ./dist/
 cp package.json ./dist
 cp yarn.lock ./dist
 
