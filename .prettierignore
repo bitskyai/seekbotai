@@ -16,6 +16,7 @@ dist/
 **/api/src/ui
 **/.plasmo
 **/desktop-app/out
+**/desktop-app/src/ui
 **/.bi-api
 **/*.html
 **/forkRepos
