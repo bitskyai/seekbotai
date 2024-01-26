@@ -1,6 +1,6 @@
 {
   "extensionName": {
-    "message": "BitSky",
+    "message": "SeedBot",
     "description": "name of the extension"
   },
   "extensionDescription": {
@@ -24,13 +24,13 @@
     "message": "Import Bookmarks"
   },
   "importDescription": {
-    "message": "Import Bookmarks from current browser to BitSky. Import will not delete your browser bookmarks, if a bookmark need to login or connect VPN, it maybe failed to import."
+    "message": "Import your bookmarks from the current browser to SeedBot. This process will not delete your browser bookmarks, and it will only import URL, name, and folder information, excluding content. The content will be imported when you open the respective page."
   },
   "importHistoryTitle": {
     "message": "Import Browser History"
   },
   "importHistoryDescription": {
-    "message": "Import browser history to BitSky. Import will not delete your browser history, if a history need to login  or connect VPN, it maybe failed to import."
+    "message": "Import your browser history to SeedBot. This import process will not delete your browser history; it will only bring in the URL, name, and folder information, excluding content. The content will be imported when you open the respective page."
   },
   "importHistoryDetail": {
     "message": "Import passed $1 days browser history, and max import $2 records"
@@ -144,9 +144,9 @@
     "message": "Failed, will auto retry in background"
   },
   "serviceNotHealthTitle": {
-    "message": "Unable to connect to the Bitsky desktop application"
+    "message": "Unable to connect to the SeedBot desktop application"
   },
   "serviceNotHealthDetail": {
-    "message": "Please ensure that the BitSky desktop application is currently running. If the application is running, please allow a few moments for the connection to establish. If you still encounter this message after a brief wait, kindly consider restarting the BitSky desktop application"
+    "message": "Please ensure that the SeedBot desktop application is currently running. If the application is running, please allow a few moments for the connection to establish. If you still encounter this message after a brief wait, kindly consider restarting the SeedBot desktop application"
   }
 }

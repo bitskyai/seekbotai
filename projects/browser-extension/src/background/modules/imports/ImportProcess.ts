@@ -5,14 +5,15 @@ import { releaseMemory } from "~helpers/util"
 import ImportThread from "./ImportThread"
 
 export class ImportProcess {
-  static MAX_CONCURRENT = 25
+  static MAX_CONCURRENT = 50
   static DEFAULT_TIMEOUT = 0.5 * 60 * 1000 // 30 minute
+  private skipGetPageData = false // skip to get page data, this only import metadata: url, name, tags
   private stopped = true
   private initialized = false
   protected importThreads: ImportThread[] = []
   protected jobIndex = 0
   protected logFormat = new LogFormat("modules/imports/ImportProcess")
-  protected concurrent = 25
+  protected concurrent = 50
   protected timeout: number = ImportProcess.DEFAULT_TIMEOUT
 
   constructor({
@@ -96,28 +97,32 @@ export class ImportProcess {
           inProgressPages
         )
       )
-      for (let i = 0; i < inProgressPages.length; i++) {
-        const page = inProgressPages[i]
-        if (!page.url) continue
+      if (!this.skipGetPageData) {
+        for (let i = 0; i < inProgressPages.length; i++) {
+          const page = inProgressPages[i]
+          if (!page.url) continue
 
-        const importThread = new ImportThread({
-          url: page.url,
-          timeout: this.timeout
-        })
-        this.importThreads.push(importThread)
-      }
+          const importThread = new ImportThread({
+            url: page.url,
+            timeout: this.timeout
+          })
+          this.importThreads.push(importThread)
+        }
 
-      const pagesData = await Promise.all(
-        this.importThreads.map((thread) => thread.start())
-      )
-      console.debug(
-        ...this.logFormat.formatArgs(
-          `jobIndex: ${this.jobIndex}, pagesData:`,
-          pagesData
+        const pagesData = await Promise.all(
+          this.importThreads.map((thread) => thread.start())
         )
-      )
+        console.debug(
+          ...this.logFormat.formatArgs(
+            `jobIndex: ${this.jobIndex}, pagesData:`,
+            pagesData
+          )
+        )
 
-      await this.updateImportPages(pagesData)
+        await this.updateImportPages(pagesData)
+      } else {
+        await this.updateImportPages(inProgressPages)
+      }
       // fetch next
       inProgressPages = await this.getImportPages()
     }
