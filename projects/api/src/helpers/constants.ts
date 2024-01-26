@@ -1,6 +1,6 @@
 import {
-  DEFAULT_HOST_NAME,
   DEFAULT_API_KEY,
+  DEFAULT_HOST_NAME,
   WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT,
   WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH,
 } from "../bitskyLibs/shared";
@@ -10,7 +10,6 @@ import { AppOptions } from "../types";
 import os from "os";
 import path from "path";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const appRootPath = path.join(os.homedir(), ".bitsky-app");
 const searchEngineName = "search_engine";
 const webAppName = "web_app";

@@ -82,5 +82,6 @@ module.exports = {
     "/**/api/src/ui",
     "/**/.bi-api",
     "/**/forkRepos",
+    "/**/desktop-app/src/ui",
   ],
 };
