@@ -53,7 +53,7 @@ function getHelpItems(): Array<MenuItemConstructorOptions> {
 }
 
 /**
- * Depending on the OS, the `Preferences` either go into the `Fiddle`
+ * Depending on the OS, the `AppConfig` either go into the `Fiddle`
  * menu (macOS) or under `File` (Linux, Windows)
  *
  * @returns {Array<Electron.MenuItemConstructorOptions>}
@@ -64,7 +64,7 @@ function getPreferencesItems(): Array<MenuItemConstructorOptions> {
       type: "separator",
     },
     {
-      label: "Preferences",
+      label: "AppConfig",
       accelerator: "CmdOrCtrl+,",
       click() {
         // console.log('send message: ', IpcEvents.OPEN_SETTINGS);

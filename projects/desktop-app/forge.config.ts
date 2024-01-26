@@ -28,7 +28,7 @@ const config: ForgeConfig = {
       /^\/yarn\.lock/,
       /^\/package-lock\.json/,
       /^\/LICENSE/,
-      /^\/webpack\..*\.ts/,
+      /^\/vite\.*\.ts/,
     ],
   },
   rebuildConfig: {},

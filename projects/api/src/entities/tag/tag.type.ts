@@ -1,7 +1,7 @@
 import { systemShare } from "../../db/seedData/defaultUsers";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 
-schemaBuilder.prismaObject("Tag", {
+getSchemaBuilder().prismaObject("Tag", {
   fields: (t) => ({
     id: t.exposeID("id"),
     createdAt: t.expose("createdAt", { type: "DateTime" }),

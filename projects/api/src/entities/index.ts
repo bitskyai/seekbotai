@@ -6,4 +6,4 @@ import "./user";
 import "./preference";
 import "./ignoreURL";
 
-export { schemaBuilder } from "./gql-builder";
+export { getSchemaBuilder } from "./gql-builder";

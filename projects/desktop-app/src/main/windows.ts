@@ -1,5 +1,6 @@
 import { createContextMenu } from "./context-menu";
 import { BrowserWindow, shell } from "electron";
+import { resolve } from "path";
 
 interface browserWindowHash {
   [key: string]: BrowserWindow | null;
@@ -15,9 +16,10 @@ const browserWindows: browserWindowHash = {};
  * @returns {Electron.BrowserWindowConstructorOptions}
  */
 export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions {
+  const preload = resolve(__dirname, "../preload/index.js");
   return {
-    width: 1200,
-    height: 900,
+    width: 1000,
+    height: 800,
     minHeight: 600,
     minWidth: 600,
     // titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,
@@ -25,9 +27,13 @@ export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions
     backgroundColor: "#1d2427",
     webPreferences: {
       devTools: true,
-      // preload: path.join(__dirname, "preload.js"),
+      preload: preload,
       webviewTag: false,
+      // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
+      // Consider using contextBridge.exposeInMainWorld
+      // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
+      contextIsolation: false,
     },
   };
 }
@@ -40,7 +46,25 @@ export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions
  */
 export function createMainWindow(): Electron.BrowserWindow {
   const browserWindow = new BrowserWindow(getMainWindowOptions());
-  // browserWindow.loadFile('./dist/static/index.html');
+
+  browserWindows.main = browserWindow;
+  // used for development
+  const url = process.env.DESKTOP_VITE_DEV_SERVER_URL;
+  const indexHtml = resolve(__dirname, "../ui/index.html");
+
+  if (url) {
+    browserWindows.main.loadURL(url);
+  } else {
+    browserWindows.main.loadFile(indexHtml);
+  }
+
+  // Test actively push message to the Electron-Renderer
+  browserWindow.webContents.on("did-finish-load", () => {
+    browserWindow?.webContents.send(
+      "main-process-message",
+      new Date().toLocaleString(),
+    );
+  });
 
   browserWindow.webContents.once("dom-ready", () => {
     browserWindow.show();
@@ -52,23 +76,13 @@ export function createMainWindow(): Electron.BrowserWindow {
 
   browserWindow.on("closed", () => {
     browserWindows.main = null;
-    // global.browserWindows.main = null;
   });
 
-  // browserWindow.webContents.on("new-window", (event, url) => {
-  //   event.preventDefault();
-  //   shell.openExternal(url);
-  // });
-
-  browserWindow.webContents.on("will-navigate", (event, url) => {
-    event.preventDefault();
+  // Make all links open with the browser, not with the application
+  browserWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
+    return { action: "deny" };
   });
-
-  // browserWindow.webContents.toggleDevTools();
-  // browserWindows.push(browserWindow);
-  browserWindows.main = browserWindow;
-  // global.browserWindows.main = browserWindow;
 
   return browserWindow;
 }

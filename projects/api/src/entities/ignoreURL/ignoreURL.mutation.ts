@@ -1,11 +1,11 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
 import { type MutationResShape, MutationResShapeBM } from "../common.type";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import { DeleteIgnoreURLBM } from "./schema.type";
 import { DeleteIgnoreURLShape } from "./types";
 
-schemaBuilder.mutationField("deleteIgnoreURLs", (t) =>
+getSchemaBuilder().mutationField("deleteIgnoreURLs", (t) =>
   t.field({
     type: MutationResShapeBM,
     args: {

@@ -1,6 +1,6 @@
-import { getPreferencesJSON } from "./preferences";
+import { getAppConfig } from "./helpers/config";
 import { getOrCreateMainWindow } from "./windows";
-import { app, Tray, Menu, nativeImage } from "electron";
+import { Menu, Tray, app, nativeImage } from "electron";
 import { join } from "path";
 
 export function setupTray() {
@@ -9,13 +9,21 @@ export function setupTray() {
   const tray = new Tray(trayIcon.resize({ width: 16, height: 16 }));
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "Show Bitsky",
-      click: () => {
-        const preferences = getPreferencesJSON();
+      label: "Search",
+      click: async () => {
+        const appConfig = await getAppConfig();
         const mainWindow = getOrCreateMainWindow();
         mainWindow.loadURL(
-          `http://${preferences.WEB_APP_HOST_NAME}:${preferences.WEB_APP_PORT}`,
+          `http://${appConfig.WEB_APP_HOST_NAME}:${appConfig.WEB_APP_PORT}`,
         );
+        app.dock.show();
+      },
+    },
+    {
+      label: "Dashboard",
+      click: async () => {
+        // const appConfig = await getAppConfig();
+        await getOrCreateMainWindow();
         app.dock.show();
       },
     },

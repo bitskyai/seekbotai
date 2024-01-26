@@ -1,4 +1,4 @@
-import { isDevMode } from "../helpers/devmode";
+import { isDevMode } from "./helpers/devmode";
 import {
   BrowserWindow,
   ContextMenuParams,
@@ -28,7 +28,7 @@ export function getInspectItems(
 
         try {
           if (browserWindow.webContents.isDevToolsOpened()) {
-            browserWindow.webContents.devToolsWebContents.focus();
+            browserWindow.webContents.devToolsWebContents?.focus();
           }
         } catch (error) {
           console.warn(`Tried to focus dev tools, but failed`, { error });

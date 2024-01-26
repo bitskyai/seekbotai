@@ -1,6 +1,6 @@
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 
-export const PreferenceBM = schemaBuilder.prismaObject("Preference", {
+export const PreferenceBM = getSchemaBuilder().prismaObject("Preference", {
   fields: (t) => ({
     id: t.exposeID("id"),
     apiKey: t.exposeString("apiKey"),

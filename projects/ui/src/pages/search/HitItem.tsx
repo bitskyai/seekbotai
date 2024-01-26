@@ -1,4 +1,4 @@
-import { SCREENSHOT_PREVIEW_CROP_WIDTH } from "../../../../shared";
+import { WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH } from "../../../../shared";
 import Help from "../../components/Help";
 import Tags from "../../components/Tags";
 import {
@@ -553,7 +553,7 @@ function HitItem({ hit }: { hit: Hit<SearchResultPage> }): JSX.Element {
           {hit.pageMetadata.screenshotPreview && (
             <Image
               src={`${getHost()}/${hit.pageMetadata.screenshotPreview}`}
-              width={SCREENSHOT_PREVIEW_CROP_WIDTH}
+              width={WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH}
               preview={
                 hit.pageMetadata.screenshot
                   ? {

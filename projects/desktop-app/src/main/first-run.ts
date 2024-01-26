@@ -1,14 +1,30 @@
-import { isFirstRun } from "../helpers/check-first-run";
-import { isDevMode } from "../helpers/devmode";
-import { app, dialog } from "electron";
+import { isFirstRun } from "./helpers/check-first-run";
+import { getAppConfig } from "./helpers/config";
+import { appName } from "./helpers/constants";
+import { updateUserDataPath } from "./helpers/preferences";
+import { dialog } from "electron";
 
 /**
  * Is this the first run of Fiddle? If so, perform
  * tasks that we only want to do in this case.
  */
 export async function onFirstRunMaybe() {
-  if (isFirstRun()) {
-    await promptMoveToApplicationsFolder();
+  if (await isFirstRun()) {
+    await promptSelectUserDataPathDialog();
+  }
+}
+
+async function openSelectFolderDialog() {
+  const result = await dialog.showOpenDialog({
+    title: "Select a folder",
+    properties: ["openDirectory"],
+  });
+  // Show a dialog to select a folder
+
+  if (!result.canceled && result.filePaths.length > 0) {
+    const selectedFolderPath = result.filePaths[0];
+    console.log("Selected Folder Path:", selectedFolderPath);
+    await updateUserDataPath(selectedFolderPath);
   }
 }
 
@@ -16,18 +32,16 @@ export async function onFirstRunMaybe() {
  * Ask the user if the app should be moved to the
  * applications folder.
  */
-async function promptMoveToApplicationsFolder(): Promise<void> {
-  if (process.platform !== "darwin") return;
-  if (isDevMode() || app.isInApplicationsFolder()) return;
-
+async function promptSelectUserDataPathDialog(): Promise<void> {
+  const config = await getAppConfig();
   const { response } = await dialog.showMessageBox({
     type: "question",
-    buttons: ["Move to Applications Folder", "Do Not Move"],
+    buttons: ["Yes", "No"],
     defaultId: 0,
-    message: "Move to Applications Folder?",
+    message: `Do you want to keep the default home folder? Home folder will store all your data. Default: ${config.DESKTOP_APP_USER_DATA_PATH}. If you want to change it, please select No, and select a new folder, we will create a new home folder(${appName}) under the selected folder.`,
   });
 
-  if (response === 0) {
-    app.moveToApplicationsFolder();
+  if (response === 1) {
+    await openSelectFolderDialog();
   }
 }

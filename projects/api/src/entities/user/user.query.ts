@@ -1,12 +1,12 @@
 import { getPrismaClient } from "../../db";
 import { GQLContext } from "../../types";
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import { getIgnoreURLs } from "../ignoreURL/ignoreURL.query";
 import { getPreference } from "../preference/preference.query";
 import { UserBM } from "./schema.type";
 import { UserShape } from "./type";
 
-schemaBuilder.queryField("user", (t) =>
+getSchemaBuilder().queryField("user", (t) =>
   t.field({
     type: UserBM,
     resolve: async (parent, args, ctx) => {

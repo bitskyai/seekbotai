@@ -83,11 +83,11 @@ export async function extractPageContent(url: string, html: string) {
 
 export async function saveRawPage(pageId: string, html: string) {
   try {
-    const { SAVE_RAW_PAGE, APP_HOME_PATH } = getAppConfig();
-    if (!SAVE_RAW_PAGE) return;
+    const { WEB_APP_SAVE_RAW_PAGE, WEB_APP_HOME_PATH } = getAppConfig();
+    if (!WEB_APP_SAVE_RAW_PAGE) return;
     // const fileName = crypto.createHash("sha256").update(url).digest("hex");
     const fileName = pageId;
-    const fileDirectory = `${APP_HOME_PATH}/rawPages`;
+    const fileDirectory = `${WEB_APP_HOME_PATH}/rawPages`;
     if (!fs.existsSync(fileDirectory)) {
       // If the directory doesn't exist, create it recursively
       fs.mkdirSync(fileDirectory, { recursive: true });
@@ -104,9 +104,9 @@ export async function saveRawPage(pageId: string, html: string) {
 
 export async function removeRawPage(pageId: string) {
   try {
-    const { APP_HOME_PATH } = getAppConfig();
+    const { WEB_APP_HOME_PATH } = getAppConfig();
     const fileName = pageId;
-    const fileDirectory = `${APP_HOME_PATH}/rawPages`;
+    const fileDirectory = `${WEB_APP_HOME_PATH}/rawPages`;
     const filePath = path.join(fileDirectory, `${fileName}.html`);
     console.log(`Removing raw page from ${filePath}`);
     fs.removeSync(filePath);
@@ -126,22 +126,31 @@ export async function saveScreenshot(
 }> {
   try {
     const {
-      APP_HOME_PATH,
-      SAVE_FULL_SIZE_SCREENSHOT,
-      SCREENSHOT_FOLDER,
-      SCREENSHOT_FULL_SIZE_FOLDER,
-      SCREENSHOT_PREVIEW_FOLDER,
-      SCREENSHOT_PREVIEW_CROP_HEIGHT,
-      SCREENSHOT_PREVIEW_CROP_WIDTH,
+      WEB_APP_HOME_PATH,
+      WEB_APP_SAVE_FULL_SIZE_SCREENSHOT,
+      WEB_APP_SCREENSHOT_FOLDER,
+      WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
+      WEB_APP_SCREENSHOT_PREVIEW_FOLDER,
+      WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT,
+      WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH,
     } = getAppConfig();
     // const fileName = crypto.createHash("sha256").update(url).digest("hex");
     const fileName = pageId;
-    const screenshotsPath = path.join(`${APP_HOME_PATH}`, SCREENSHOT_FOLDER);
-    let fullSizePath = path.join(screenshotsPath, SCREENSHOT_FULL_SIZE_FOLDER);
-    if (!SAVE_FULL_SIZE_SCREENSHOT) {
+    const screenshotsPath = path.join(
+      `${WEB_APP_HOME_PATH}`,
+      WEB_APP_SCREENSHOT_FOLDER,
+    );
+    let fullSizePath = path.join(
+      screenshotsPath,
+      WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
+    );
+    if (!WEB_APP_SAVE_FULL_SIZE_SCREENSHOT) {
       fullSizePath = os.tmpdir();
     }
-    const previewPath = path.join(screenshotsPath, SCREENSHOT_PREVIEW_FOLDER);
+    const previewPath = path.join(
+      screenshotsPath,
+      WEB_APP_SCREENSHOT_PREVIEW_FOLDER,
+    );
     if (!fs.existsSync(fullSizePath)) {
       // If the directory doesn't exist, create it recursively
       fs.mkdirSync(fullSizePath, {
@@ -165,33 +174,37 @@ export async function saveScreenshot(
 
     const targetScreenHeight = Math.floor(
       (dimensions.width ?? 1024) *
-        (SCREENSHOT_PREVIEW_CROP_HEIGHT / SCREENSHOT_PREVIEW_CROP_WIDTH),
+        (WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT /
+          WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH),
     );
     const dimensionsHeight =
-      dimensions.height ?? SCREENSHOT_PREVIEW_CROP_HEIGHT;
+      dimensions.height ?? WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT;
     await sharp(buffer)
       .extract({
         left: 0,
-        width: dimensions.width ?? SCREENSHOT_PREVIEW_CROP_WIDTH,
+        width: dimensions.width ?? WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH,
         top: 0,
         height:
           targetScreenHeight > dimensionsHeight
             ? dimensionsHeight
             : targetScreenHeight,
       })
-      .resize(SCREENSHOT_PREVIEW_CROP_WIDTH, SCREENSHOT_PREVIEW_CROP_HEIGHT)
+      .resize(
+        WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH,
+        WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT,
+      )
       .toFile(previewScreenshotPath);
     return {
-      fullSizeScreenshotPath: SAVE_FULL_SIZE_SCREENSHOT
+      fullSizeScreenshotPath: WEB_APP_SAVE_FULL_SIZE_SCREENSHOT
         ? path.join(
-            SCREENSHOT_FOLDER,
-            SCREENSHOT_FULL_SIZE_FOLDER,
+            WEB_APP_SCREENSHOT_FOLDER,
+            WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
             `${fileName}.png`,
           )
         : undefined,
       previewScreenshotPath: path.join(
-        SCREENSHOT_FOLDER,
-        SCREENSHOT_PREVIEW_FOLDER,
+        WEB_APP_SCREENSHOT_FOLDER,
+        WEB_APP_SCREENSHOT_PREVIEW_FOLDER,
         `${fileName}.png`,
       ),
     };
@@ -204,18 +217,24 @@ export async function saveScreenshot(
 export async function removeScreenshot(pageId: string) {
   try {
     const {
-      APP_HOME_PATH,
-      SCREENSHOT_FOLDER,
-      SCREENSHOT_FULL_SIZE_FOLDER,
-      SCREENSHOT_PREVIEW_FOLDER,
+      WEB_APP_HOME_PATH,
+      WEB_APP_SCREENSHOT_FOLDER,
+      WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
+      WEB_APP_SCREENSHOT_PREVIEW_FOLDER,
     } = getAppConfig();
-    const screenshotsPath = path.join(`${APP_HOME_PATH}`, SCREENSHOT_FOLDER);
+    const screenshotsPath = path.join(
+      `${WEB_APP_HOME_PATH}`,
+      WEB_APP_SCREENSHOT_FOLDER,
+    );
     const fileName = pageId;
     const fullSizePath = path.join(
       screenshotsPath,
-      SCREENSHOT_FULL_SIZE_FOLDER,
+      WEB_APP_SCREENSHOT_FULL_SIZE_FOLDER,
     );
-    const previewPath = path.join(screenshotsPath, SCREENSHOT_PREVIEW_FOLDER);
+    const previewPath = path.join(
+      screenshotsPath,
+      WEB_APP_SCREENSHOT_PREVIEW_FOLDER,
+    );
     const fullSizeScreenshotPath = path.join(fullSizePath, `${fileName}.png`);
     const previewScreenshotPath = path.join(previewPath, `${fileName}.png`);
     console.log(

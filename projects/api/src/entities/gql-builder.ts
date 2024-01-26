@@ -12,35 +12,59 @@ import {
   UUIDResolver,
 } from "graphql-scalars";
 
-export const schemaBuilder = new SchemaBuilder<{
-  Objects: {
-    SearchResultPage: SearchResultPage;
-  };
-  Scalars: {
-    Date: { Input: Date; Output: Date };
-    DateTime: { Input: Date; Output: Date };
-    URL: { Input: string; Output: string };
-    UUID: { Input: string; Output: string };
-  };
-  PrismaTypes: PrismaTypes;
-  Context: GQLContext;
-}>({
-  plugins: [PrismaPlugin, SimpleObjectsPlugin],
-  prisma: {
-    client: getPrismaClient(),
-    filterConnectionTotalCount: true,
-  },
-});
+let _schemaBuilder:
+  | PothosSchemaTypes.SchemaBuilder<
+      PothosSchemaTypes.ExtendDefaultTypes<{
+        Objects: {
+          SearchResultPage: SearchResultPage;
+        };
+        Scalars: {
+          Date: { Input: Date; Output: Date };
+          DateTime: { Input: Date; Output: Date };
+          URL: { Input: string; Output: string };
+          UUID: { Input: string; Output: string };
+        };
+        PrismaTypes: PrismaTypes;
+        Context: GQLContext;
+      }>
+    >
+  | undefined;
 
-schemaBuilder.addScalarType("Date", DateResolver, {});
-schemaBuilder.addScalarType("DateTime", DateTimeResolver, {});
-schemaBuilder.addScalarType("URL", URLResolver, {});
-schemaBuilder.addScalarType("UUID", UUIDResolver, {});
+export function getSchemaBuilder() {
+  if (_schemaBuilder) {
+    return _schemaBuilder;
+  }
+  _schemaBuilder = new SchemaBuilder<{
+    Objects: {
+      SearchResultPage: SearchResultPage;
+    };
+    Scalars: {
+      Date: { Input: Date; Output: Date };
+      DateTime: { Input: Date; Output: Date };
+      URL: { Input: string; Output: string };
+      UUID: { Input: string; Output: string };
+    };
+    PrismaTypes: PrismaTypes;
+    Context: GQLContext;
+  }>({
+    plugins: [PrismaPlugin, SimpleObjectsPlugin],
+    prisma: {
+      client: getPrismaClient(),
+      filterConnectionTotalCount: true,
+    },
+  });
+  _schemaBuilder.toSchema;
+  _schemaBuilder.addScalarType("Date", DateResolver, {});
+  _schemaBuilder.addScalarType("DateTime", DateTimeResolver, {});
+  _schemaBuilder.addScalarType("URL", URLResolver, {});
+  _schemaBuilder.addScalarType("UUID", UUIDResolver, {});
 
-// We create empty root query, mutation, and subscription
-// because we'll define individual nodes in other files
-// since those nodes can have multiple resolvers and possibly
-// can lead to really large and hard to read/navigate files
-schemaBuilder.queryType({});
-schemaBuilder.mutationType({});
-// schemaBuilder.subscriptionType({});
+  // We create empty root query, mutation, and subscription
+  // because we'll define individual nodes in other files
+  // since those nodes can have multiple resolvers and possibly
+  // can lead to really large and hard to read/navigate files
+  _schemaBuilder.queryType({});
+  _schemaBuilder.mutationType({});
+  // _schemaBuilder.subscriptionType({});
+  return _schemaBuilder;
+}

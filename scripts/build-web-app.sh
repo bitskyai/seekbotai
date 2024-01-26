@@ -40,7 +40,7 @@ cp -rf ./src/forkRepos ./dist/src/
 cp -rf ./src/db/seedData/files ./dist/src/db/seedData/
 cp -rf ./src/searchEngine/meilisearch_bin* ./dist/src/searchEngine/
 # remove typescript files
-find dist -type f -name "*.ts" -delete
+# find dist -type f -name "*.ts" -delete
 
 # Install node_modules
 print "Install node_modules"

@@ -13,10 +13,12 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "ES6"
+    "target": "ESNext",
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "src/web-app"],
+  "exclude": ["node_modules", "src/web-app", "src/ui", "src/ui-src"],
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2

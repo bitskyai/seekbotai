@@ -1,8 +1,8 @@
-import { schemaBuilder } from "../gql-builder";
+import { getSchemaBuilder } from "../gql-builder";
 import { DeleteIgnoreURLShape } from "./types";
 import type { IgnoreURL } from "@prisma/client";
 
-export const IgnoreURLBM = schemaBuilder
+export const IgnoreURLBM = getSchemaBuilder()
   .objectRef<IgnoreURL>("ignoreURL")
   .implement({
     fields: (t) => ({
@@ -14,7 +14,7 @@ export const IgnoreURLBM = schemaBuilder
     }),
   });
 
-export const DeleteIgnoreURLBM = schemaBuilder
+export const DeleteIgnoreURLBM = getSchemaBuilder()
   .inputRef<DeleteIgnoreURLShape>("deleteIgnoreURLPayload")
   .implement({
     fields: (t) => ({

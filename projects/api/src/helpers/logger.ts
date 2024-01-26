@@ -1,7 +1,5 @@
 import { getAppConfig } from "./config";
-import { DEFAULT_APP_CONFIG } from "./constants";
 import fs from "fs-extra";
-import path from "path";
 import { createLogger, format, Logger, transports } from "winston";
 
 // Only need one logger instance in whole system
@@ -9,19 +7,16 @@ let logger: Logger;
 
 export default function getLogger() {
   try {
-    // if (logger) {
-    //   // console.log('logger already created.');
-    //   return logger;
-    // }
+    if (logger) {
+      console.log("logger already created.");
+      return logger;
+    }
     const config = getAppConfig();
-    const logFilesPath = path.join(
-      config.APP_HOME_PATH,
-      config.LOG_FILES_FOLDER,
-    );
+    const logFilesPath = config.WEB_APP_LOG_FILES_PATH;
     fs.ensureDirSync(logFilesPath);
-    // console.log('[createLogger] starting...');
+    console.log("[createLogger] starting...");
     logger = createLogger({
-      level: config.LOG_LEVEL,
+      level: config.WEB_APP_LOG_LEVEL,
       format: format.combine(
         format.ms(),
         format.errors({ stack: true }),
@@ -30,7 +25,7 @@ export default function getLogger() {
         format.json(),
       ),
       defaultMeta: {
-        service: config.SERVICE_NAME,
+        service: config.WEB_APP_NAME,
       },
       transports: [
         //
@@ -38,16 +33,16 @@ export default function getLogger() {
         // - Write all logs error (and below) to `error.log`.
         //
         new transports.File({
-          filename: `${logFilesPath}/${DEFAULT_APP_CONFIG.ERROR_LOG_FILE_NAME}`,
+          filename: config.WEB_APP_COMBINED_LOG_FILE_PATH,
           level: "error",
           tailable: true,
-          maxsize: config.LOG_MAX_SIZE,
+          maxsize: config.WEB_APP_LOG_MAX_SIZE,
           maxFiles: 1,
         }),
         new transports.File({
-          filename: `${logFilesPath}/${DEFAULT_APP_CONFIG.COMBINED_LOG_FILE_NAME}`,
+          filename: config.WEB_APP_ERROR_LOG_FILE_PATH,
           tailable: true,
-          maxsize: config.LOG_MAX_SIZE,
+          maxsize: config.WEB_APP_LOG_MAX_SIZE,
           maxFiles: 1,
         }),
       ],
@@ -64,7 +59,7 @@ export default function getLogger() {
       );
     }
 
-    // console.log('[createLogger] end');
+    console.log("[createLogger] end");
     return logger;
   } catch (err) {
     console.error("error: ", err);
