@@ -1,8 +1,11 @@
 import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig } from "../../../types";
 import ipcRendererManager from "../../ipc";
-import { Card, Col, Row, Typography } from "antd";
+import { Badge, Card, Col, Row, Typography } from "antd";
 import React, { useEffect } from "react";
+import "./style.css";
+
+const { Meta } = Card;
 
 const { Title } = Typography;
 enum HealthStatus {
@@ -55,18 +58,47 @@ export default function Dashboard() {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const getBadge = (healthStatus: HealthStatus) => {
+    switch (healthStatus) {
+      case HealthStatus.CHECKING:
+        return <Badge className="seek-bot-status-dot" status="processing" />;
+      case HealthStatus.UP:
+        return <Badge className="seek-bot-status-dot" status="success" />;
+      case HealthStatus.DOWN:
+        return <Badge className="seek-bot-status-dot" status="error" />;
+    }
+  };
+  const getDisplayHealthStatus = (healthStatus: HealthStatus) => {
+    switch (healthStatus) {
+      case HealthStatus.CHECKING:
+        return "Trying to connect";
+      case HealthStatus.UP:
+        return "Service is running";
+      case HealthStatus.DOWN:
+        return "Service is down, please restart the desktop app";
+    }
+  };
   return (
     <div style={{ padding: "0 24px" }}>
       <Title level={4}>Dashboard</Title>
       <Row gutter={16}>
         <Col span={8}>
-          <Card title="API Service">
-            <p>{webAppHealthStatus}</p>
+          <Card>
+            <Meta
+              avatar={getBadge(webAppHealthStatus)}
+              title="API Service"
+              description={getDisplayHealthStatus(webAppHealthStatus)}
+            ></Meta>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Search Engine Service">
-            <p>{searchEngineHealthStatus}</p>
+          <Card>
+            <Meta
+              avatar={getBadge(searchEngineHealthStatus)}
+              title="Search Engine"
+              description={getDisplayHealthStatus(webAppHealthStatus)}
+            ></Meta>
           </Card>
         </Col>
       </Row>
