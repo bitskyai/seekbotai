@@ -49,9 +49,9 @@ Since this product is implemented by NodeJS(Typescript), and by design this prod
 1. [DB Browser for SQLite](https://sqlitebrowser.org/): A database browser for SQLite
 2. [Railway](https://railway.app/): Provision a test database. For now, please provision PostgreSQL
 
-## Bookmark Intelligence ERD
+## SeekBot ERD
 
-Please read [Bookmark Intelligence ERD](https://lucid.app/lucidchart/2bac9da0-4e10-491c-a509-eb68ba695403/edit?beaconFlowId=0AB803401E4957D7&invitationId=inv_77370d48-ebf7-41ed-b3dd-ac1856bcb367&page=0_0#) to have a high-level understanding of database schema
+Please read [SeekBot ERD](https://lucid.app/lucidchart/2bac9da0-4e10-491c-a509-eb68ba695403/edit?beaconFlowId=0AB803401E4957D7&invitationId=inv_77370d48-ebf7-41ed-b3dd-ac1856bcb367&page=0_0#) to have a high-level understanding of database schema
 
 ### Tables
 
@@ -62,7 +62,7 @@ Please read [Bookmark Intelligence ERD](https://lucid.app/lucidchart/2bac9da0-4e
 
 ### Step 1: CRUD a Schema
 
-1. Add new Schema to [Bookmark Intelligence ERD](https://lucid.app/lucidchart/2bac9da0-4e10-491c-a509-eb68ba695403/edit?beaconFlowId=0AB803401E4957D7&invitationId=inv_77370d48-ebf7-41ed-b3dd-ac1856bcb367&page=0_0#)
+1. Add new Schema to [SeekBot ERD](https://lucid.app/lucidchart/2bac9da0-4e10-491c-a509-eb68ba695403/edit?beaconFlowId=0AB803401E4957D7&invitationId=inv_77370d48-ebf7-41ed-b3dd-ac1856bcb367&page=0_0#)
 2. Add Schema to `projects/api/prisma/schema.prisma`
    - Model uses `Upper Camel Case`. E.g: `BookmarkContent`
    - Table uses `Lower Snake Case` with prefix `bk_`. E.g: `bk_bookmark_content`

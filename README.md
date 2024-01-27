@@ -1,4 +1,4 @@
-# bookmark-intelligence
+# SeekBot
 
 ## Architecture Principle
 
