@@ -1,4 +1,3 @@
-import type { BrowserExtensionConnectedData } from "./event";
 import getEventEmitter, {
   emitBrowserExtensionConnected,
   listenBrowserExtensionConnected,
@@ -8,6 +7,7 @@ import {
   stopWebAppAndSearchEngine,
 } from "./server";
 import {
+  BrowserExtensionConnectedData,
   SearchEngineOptions,
   SearchEnginePreferences,
   WebAppOptions,

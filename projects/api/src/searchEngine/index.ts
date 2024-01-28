@@ -214,22 +214,20 @@ export async function startPagesIndex(lastIndexAt?: Date) {
   if (!lastIndexAt) {
     lastIndexAt = pageIndexingRecord?.lastIndexAt ?? new Date(0);
   }
-
-  logger.debug(`startPagesIndex `, {
-    pageIndexingRecord: pageIndexingRecord,
-  });
-  logger.info(`startPagesIndex: lastIndexAt: ${lastIndexAt}`);
   const pages = await getChangedPages(lastIndexAt);
-  logger.info(`startPagesIndex: ${pages.length} pages`);
   const meiliSearch = await getMeiliSearchClient();
   if (pages.length) {
     const indexRes = await meiliSearch
       .index(PAGES_INDEX_NAME)
       .addDocuments(pages, { primaryKey: "id" });
     logger.debug(`indexRes`, { indexRes });
+
+    logger.info("pagesIndex success", {
+      lastIndexAt: lastIndexAt,
+      pageIndexingRecord: pages.length,
+    });
   }
   await updatePageIndex({ lastIndexAt: new Date() });
-  logger.info(`startPagesIndex: done`);
 }
 
 export async function waitUtilPagesIndexFinish() {

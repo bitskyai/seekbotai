@@ -39,6 +39,11 @@ export async function createApp() {
         extensionId = extensionId[0];
       }
 
+      let extensionVersion = req.headers["x-seekbot-extension-version"];
+      if (Array.isArray(extensionVersion)) {
+        extensionVersion = extensionVersion[0];
+      }
+
       let optionsUrl = req.headers["x-seekbot-extension-options-url"];
       if (Array.isArray(optionsUrl)) {
         optionsUrl = optionsUrl[0];
@@ -52,6 +57,8 @@ export async function createApp() {
       // this is a browser extension request
       emitBrowserExtensionConnected({
         extensionId: extensionId,
+        extensionVersion: extensionVersion ?? "",
+        lastConnectedAt: Date.now(),
         optionsUrl: optionsUrl ?? "",
         browserName: browserName ?? "",
       });

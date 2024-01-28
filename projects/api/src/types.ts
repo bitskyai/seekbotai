@@ -91,3 +91,11 @@ export interface User {
 export interface GQLContext {
   user: User;
 }
+
+export type BrowserExtensionConnectedData = {
+  extensionId: string;
+  extensionVersion: string;
+  optionsUrl: string;
+  browserName: string;
+  lastConnectedAt: number;
+};

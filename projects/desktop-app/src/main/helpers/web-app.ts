@@ -1,3 +1,5 @@
+import { IpcEvents } from "../../ipc-events";
+import { ipcMainManager } from "../ipc";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
@@ -25,7 +27,10 @@ class WebApp {
 
       await startWebAppAndSearchEngine();
       listenBrowserExtensionConnected((data) => {
-        logger.info(`Browser Extension Connected: ${JSON.stringify(data)}`);
+        logger.info("extension connected", { data: data });
+        ipcMainManager.send(IpcEvents.EXTENSION_CONNECTED, [
+          { status: "success", payload: data },
+        ]);
       });
       logger.info("bitsky successfully started.");
       process.env.BITSKY_BASE_URL = `http://${appConfig.WEB_APP_HOST_NAME}:${this.port}`;
