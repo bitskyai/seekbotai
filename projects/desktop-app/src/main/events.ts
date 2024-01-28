@@ -6,6 +6,7 @@ import { getAppConfig } from "./helpers/config";
 import logger from "./helpers/logger";
 import { ipcMainManager } from "./ipc";
 import { hideSettings } from "./menu";
+import { openSearchWindow } from "./windows";
 
 export function setUpEventListeners() {
   ipcMainManager.on(IpcEvents.CLOSE_SETTINGS, () => {
@@ -30,6 +31,23 @@ export function setUpEventListeners() {
         event.returnValue = {
           status: true,
           payload: { config: config },
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_OPEN_SEARCH_WINDOW,
+    async (event: { returnValue: { status: boolean; error?: unknown } }) => {
+      try {
+        await openSearchWindow();
+        event.returnValue = {
+          status: true,
         };
       } catch (err) {
         event.returnValue = {

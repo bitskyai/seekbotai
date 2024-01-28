@@ -1,4 +1,7 @@
 // import { useQuery } from "@apollo/client";
+
+import { IpcEvents } from "../../ipc-events";
+import ipcRendererManager from "../ipc";
 import { DashboardOutlined, SearchOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
@@ -6,7 +9,7 @@ import { Fragment, Key, ReactNode, Suspense, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import "./AppLayout.css";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -34,14 +37,14 @@ export function AppLayout(): JSX.Element {
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to="/search">{"Search"}</NavLink>,
-      "search",
-      <SearchOutlined rev={undefined} />,
-    ),
-    getItem(
       <NavLink to="/">{"Dashboard"}</NavLink>,
       "dashboard",
       <DashboardOutlined rev={undefined} />,
+    ),
+    getItem(
+      <NavLink>{"Search"}</NavLink>,
+      "search",
+      <SearchOutlined rev={undefined} />,
     ),
     // getItem(
     //   <NavLink to="/settings">{"Settings"}</NavLink>,
@@ -49,6 +52,14 @@ export function AppLayout(): JSX.Element {
     //   <SettingOutlined rev={undefined} />,
     // ),
   ];
+
+  const clickMenu = (e: any) => {
+    console.log(e);
+    if (e.key === "search") {
+      e?.domEvent?.preventDefault();
+      ipcRendererManager.sendSync(IpcEvents.SYNC_OPEN_SEARCH_WINDOW);
+    }
+  };
 
   useEffect(() => {
     // Set the body's height to the browser's height on mount
@@ -84,6 +95,7 @@ export function AppLayout(): JSX.Element {
           <Menu
             theme="dark"
             mode="inline"
+            onClick={clickMenu}
             defaultSelectedKeys={["dashboard"]}
             items={items}
           />
