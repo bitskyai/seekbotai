@@ -40,7 +40,7 @@ export function getPrismaClient() {
       ],
     });
   }
-  logger.info(`getPrismaClient->
+  logger.debug(`getPrismaClient->
    ${getAppConfig().WEB_APP_DATABASE_URL}`);
   return _prismaClient;
 }

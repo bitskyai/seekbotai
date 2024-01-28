@@ -1,5 +1,5 @@
 import { LogFormat } from "~helpers/LogFormat"
-import { normalizeUrlWithoutError } from "~helpers/util"
+import { getSeekBotHeaders, normalizeUrlWithoutError } from "~helpers/util"
 
 import { isHTML, isSupportedProtocol } from "./utils"
 
@@ -130,7 +130,12 @@ const fetchWithTimeout = async (
 ) => {
   console.debug(...logFormat.formatArgs("fetchWithTimeout", { url, timeout }))
   const abortController = new AbortController()
-  const promise = fetch(url, { signal: abortController.signal, ...options })
+  const seekbotHeaders = await getSeekBotHeaders()
+  const promise = fetch(url, {
+    signal: abortController.signal,
+    ...options,
+    headers: seekbotHeaders
+  })
   if (signal) {
     signal.addEventListener("abort", () => abortController.abort())
   }

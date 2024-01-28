@@ -2,7 +2,7 @@
   "name": "bi-browser-extension",
   "displayName": "SeekBot - Make Life Productive",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine and chatbot.",
   "author": "help.bitskyai@gmail.com",
   "license": "GPL-3.0",

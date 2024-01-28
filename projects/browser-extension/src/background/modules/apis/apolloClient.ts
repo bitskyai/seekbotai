@@ -49,7 +49,8 @@ const _initApolloClient = async () => {
       protocol === _current_protocol &&
       hostName === _current_hostName &&
       port === _current_port &&
-      apiKey === _current_apiKey
+      apiKey === _current_apiKey &&
+      _apolloClient
     ) {
       console.info(
         ...logFormat.formatArgs(
@@ -130,7 +131,10 @@ export const waitUtilApolloClientReady = async (): Promise<
 export const getApolloClient = async (): Promise<
   ApolloClient<NormalizedCacheObject>
 > => {
-  // return await waitUtilApolloClientReady()
+  if (!_apolloClient) {
+    // if apollo client is not ready, try to init it
+    _initApolloClient()
+  }
   return _apolloClient
 }
 

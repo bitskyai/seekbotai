@@ -1,5 +1,5 @@
 // import { useQuery } from "@apollo/client";
-import { DashboardOutlined, SettingOutlined } from "@ant-design/icons";
+import { DashboardOutlined, SearchOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
 import { Fragment, Key, ReactNode, Suspense, useEffect } from "react";
@@ -34,15 +34,20 @@ export function AppLayout(): JSX.Element {
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to="/">{"Dashboard"}</NavLink>,
-      "Dashboard",
-      <DashboardOutlined rev={undefined} />,
+      <NavLink to="/search">{"Search"}</NavLink>,
+      "search",
+      <SearchOutlined rev={undefined} />,
     ),
     getItem(
-      <NavLink to="/settings">{"Settings"}</NavLink>,
-      "settings",
-      <SettingOutlined rev={undefined} />,
+      <NavLink to="/">{"Dashboard"}</NavLink>,
+      "dashboard",
+      <DashboardOutlined rev={undefined} />,
     ),
+    // getItem(
+    //   <NavLink to="/settings">{"Settings"}</NavLink>,
+    //   "settings",
+    //   <SettingOutlined rev={undefined} />,
+    // ),
   ];
 
   useEffect(() => {
@@ -79,7 +84,7 @@ export function AppLayout(): JSX.Element {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["4"]}
+            defaultSelectedKeys={["dashboard"]}
             items={items}
           />
         </Sider>

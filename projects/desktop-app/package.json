@@ -9,7 +9,7 @@
     "tsc": "node ./scripts/tsc.js",
     "electron:start": "dotenv -e ../../env/.env -c -- electron-forge start",
     "dev": "dotenv -e ../../env/.env -c -- npm run build:webapp && npm run dev:watch",
-    "dev:ui": "dotenv -e ../../env/.env -c -- vite serve",
+    "dev:ui": "dotenv -e ../../env/.env -c -- vite serve --port 7777",
     "dev:watch": "dotenv -e ../../env/.env -c -- cross-env WATCH=true && bash ../../scripts/copy-libs.sh && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && cp -rf ./src/ui ./dist/ && npm run electron:start",
     "build": "bash ../../scripts/build-desktop-app.sh",
     "build:ui": "tsc --project ./tsconfig-ui.json && vite build",

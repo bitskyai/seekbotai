@@ -20,9 +20,13 @@ class WebApp {
       logger.info("starting bitsky...");
       // Why need to dynamic import here?
       // The reason is we need to setup environment variables before import web-app and search-engine
-      const { startWebAppAndSearchEngine } = await import("../../web-app");
+      const { startWebAppAndSearchEngine, listenBrowserExtensionConnected } =
+        await import("../../web-app");
 
       await startWebAppAndSearchEngine();
+      listenBrowserExtensionConnected((data) => {
+        logger.info(`Browser Extension Connected: ${JSON.stringify(data)}`);
+      });
       logger.info("bitsky successfully started.");
       process.env.BITSKY_BASE_URL = `http://${appConfig.WEB_APP_HOST_NAME}:${this.port}`;
     } catch (err) {
