@@ -1,9 +1,9 @@
-import { Badge, Card, Col, Row, Typography } from "antd";
-import React, { useEffect, useState } from "react";
 import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig } from "../../../types";
 import { BrowserExtensionConnectedData } from "../../../web-app/src/types";
 import ipcRendererManager from "../../ipc";
+import { Badge, Card, Col, Row, Typography } from "antd";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 
 const { Meta } = Card;
