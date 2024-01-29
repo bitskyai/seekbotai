@@ -33,14 +33,14 @@ export default function getLogger() {
         // - Write all logs error (and below) to `error.log`.
         //
         new transports.File({
-          filename: config.WEB_APP_COMBINED_LOG_FILE_PATH,
+          filename: config.WEB_APP_ERROR_LOG_FILE_PATH,
           level: "error",
           tailable: true,
           maxsize: config.WEB_APP_LOG_MAX_SIZE,
           maxFiles: 1,
         }),
         new transports.File({
-          filename: config.WEB_APP_ERROR_LOG_FILE_PATH,
+          filename: config.WEB_APP_COMBINED_LOG_FILE_PATH,
           tailable: true,
           maxsize: config.WEB_APP_LOG_MAX_SIZE,
           maxFiles: 1,

@@ -7,18 +7,19 @@ import {
   DEFAULT_HOST_NAME,
   DEFAULT_PROTOCOL
 } from "@bitsky/shared"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 
 // import { useNavigate } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import LoseConnection from "~components/LoseConnection"
 import { StorageKeys } from "~storage"
 
 export default function Search() {
   // const navigate = useNavigate()
   const iframeElem = useRef(null)
-
+  const [connected, setConnected] = useState(true)
   const [protocol] = useStorage(StorageKeys.ServiceProtocol)
   const [hostName] = useStorage(StorageKeys.ServiceHostName)
 
@@ -46,13 +47,18 @@ export default function Search() {
 
   return (
     <div>
-      <iframe
-        id="test"
-        ref={iframeElem}
-        src={url}
-        className="full-screen"
-        style={{ height: window.screen.height }}
-      />
+      {!connected ? (
+        <LoseConnection />
+      ) : (
+        <iframe
+          id="search-iframe"
+          ref={iframeElem}
+          src={url}
+          onError={() => setConnected(false)}
+          className="full-screen"
+          style={{ height: window.screen.height }}
+        />
+      )}
     </div>
   )
 }

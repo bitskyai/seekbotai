@@ -1,11 +1,11 @@
 // import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
 
-import { Result } from "antd"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { RouterProvider } from "react-router-dom"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
+import LoseConnection from "~components/LoseConnection"
 import { StorageKeys } from "~storage"
 import { ServiceStatus } from "~types"
 
@@ -15,27 +15,25 @@ import { router } from "./routes"
 
 function Options() {
   const [serviceHealthStatus] = useStorage(StorageKeys.ServiceHealthStatus)
+  const [status, setStatus] = useState(ServiceStatus.Failed)
 
-  return (
-    <React.StrictMode>
-      {serviceHealthStatus === ServiceStatus.Failed ? (
-        <div style={{ maxWidth: 650, margin: "0 auto" }}>
-          <Result
-            status="404"
-            title={chrome.i18n.getMessage("serviceNotHealthTitle")}
-            subTitle={chrome.i18n.getMessage("serviceNotHealthDetail")}
-          />
-        </div>
-      ) : (
-        ""
-      )}
-      {serviceHealthStatus !== ServiceStatus.Failed ? (
-        <RouterProvider router={router} />
-      ) : (
-        ""
-      )}
-    </React.StrictMode>
-  )
+  const getContent = (status) => {
+    if (status === ServiceStatus.Failed) {
+      return <LoseConnection />
+    } else if (status === ServiceStatus.Success) {
+      return <RouterProvider router={router} />
+    }
+  }
+
+  useEffect(() => {
+    if (serviceHealthStatus === ServiceStatus.Failed) {
+      setStatus(ServiceStatus.Failed)
+    } else if (serviceHealthStatus === ServiceStatus.Success) {
+      setStatus(ServiceStatus.Success)
+    }
+  }, [serviceHealthStatus])
+
+  return <React.StrictMode>{getContent(status)}</React.StrictMode>
 }
 
 export default Options

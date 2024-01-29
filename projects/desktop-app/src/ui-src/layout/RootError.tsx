@@ -7,7 +7,7 @@ export function RootError(): JSX.Element {
   return (
     <Result
       status={"error"}
-      title={chrome.i18n.getMessage("errorPageTitle")}
+      title={"Error"}
       subTitle={err.statusText ?? err.message}
     ></Result>
   );

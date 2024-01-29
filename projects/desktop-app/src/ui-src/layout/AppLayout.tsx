@@ -1,12 +1,15 @@
 // import { useQuery } from "@apollo/client";
-import { DashboardOutlined, SettingOutlined } from "@ant-design/icons";
+
+import { IpcEvents } from "../../ipc-events";
+import ipcRendererManager from "../ipc";
+import { DashboardOutlined, SearchOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Menu, theme } from "antd";
-import { Fragment, Key, ReactNode, Suspense, useEffect } from "react";
+import { Layout, Menu, Tooltip, theme } from "antd";
+import React, { Fragment, Key, ReactNode, Suspense, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import "./AppLayout.css";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -34,16 +37,33 @@ export function AppLayout(): JSX.Element {
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to="/">{"Dashboard"}</NavLink>,
-      "Dashboard",
+      <Tooltip title="Check all the services status, connected SeekBot browser extension">
+        <NavLink to="/">{"Dashboard"}</NavLink>
+      </Tooltip>,
+      "dashboard",
       <DashboardOutlined rev={undefined} />,
     ),
     getItem(
-      <NavLink to="/settings">{"Settings"}</NavLink>,
-      "settings",
-      <SettingOutlined rev={undefined} />,
+      <Tooltip title="Search collected browser pages. You also can use SeekBot browser extension to search">
+        <NavLink>{"Search"}</NavLink>
+      </Tooltip>,
+      "search",
+      <SearchOutlined rev={undefined} />,
     ),
+    // getItem(
+    //   <NavLink to="/settings">{"Settings"}</NavLink>,
+    //   "settings",
+    //   <SettingOutlined rev={undefined} />,
+    // ),
   ];
+
+  const clickMenu = (e: any) => {
+    console.log(e);
+    if (e.key === "search") {
+      e?.domEvent?.preventDefault();
+      ipcRendererManager.sendSync(IpcEvents.SYNC_OPEN_SEARCH_WINDOW);
+    }
+  };
 
   useEffect(() => {
     // Set the body's height to the browser's height on mount
@@ -79,7 +99,8 @@ export function AppLayout(): JSX.Element {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["4"]}
+            onClick={clickMenu}
+            defaultSelectedKeys={["dashboard"]}
             items={items}
           />
         </Sider>

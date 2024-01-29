@@ -6,7 +6,7 @@ import { type ImportHistoryRecord } from "~types"
 const logFormat = new LogFormat("history")
 
 export const DEFAULT_MAX_RESULTS = 10000
-export const DEFAULT_HISTORY_DAYS_FROM_TODAY = 300
+export const DEFAULT_HISTORY_DAYS_FROM_TODAY = 365
 
 export function getDateBefore(days: number): number {
   const currentDate = new Date()

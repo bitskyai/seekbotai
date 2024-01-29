@@ -8,6 +8,7 @@ import {
 } from "@apollo/client"
 
 import { LogFormat } from "./LogFormat"
+import { getSeekBotHeaders } from "./util"
 
 const logFormat = new LogFormat("helpers/apolloClientFactory")
 
@@ -49,6 +50,7 @@ export const newApolloClient = async ({
   uri = `${uri}/graphql`
   console.info(...logFormat.formatArgs("newApolloClient", uri))
   const httpLink = new HttpLink({ uri })
+  const seekbotHeaders = await getSeekBotHeaders()
   const authMiddleware = new ApolloLink((operation, forward) => {
     // add the authorization to the headers
     if (apiKey) {
@@ -59,6 +61,12 @@ export const newApolloClient = async ({
         }
       }))
     }
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        ...seekbotHeaders
+      }
+    }))
     return forward(operation)
   })
 

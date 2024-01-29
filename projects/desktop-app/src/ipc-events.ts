@@ -3,6 +3,8 @@ export enum IpcEvents {
   OPEN_SETTINGS = "OPEN_SETTINGS",
   SYNC_GET_APP_CONFIG = "SYNC_GET_APP_CONFIG",
   SYNC_UPDATE_PREFERENCES_JSON = "SYNC_UPDATE_PREFERENCES_JSON",
+  SYNC_OPEN_SEARCH_WINDOW = "SYNC_OPEN_SEARCH_WINDOW",
+  EXTENSION_CONNECTED = "EXTENSION_CONNECTED",
 }
 
 // message send to main
@@ -11,6 +13,7 @@ export const ipcMainEvents = [
   IpcEvents.CLOSE_SETTINGS,
   IpcEvents.SYNC_GET_APP_CONFIG,
   IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
+  IpcEvents.SYNC_OPEN_SEARCH_WINDOW,
 ];
 
 // message send to renderer
@@ -19,6 +22,7 @@ export const ipcRendererEvents = [
   IpcEvents.CLOSE_SETTINGS,
   IpcEvents.SYNC_GET_APP_CONFIG,
   IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
+  IpcEvents.EXTENSION_CONNECTED,
 ];
 
 export const WEBCONTENTS_READY_FOR_IPC_SIGNAL =

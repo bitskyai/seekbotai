@@ -4,7 +4,7 @@ import { setupDevTools } from "./devtools";
 import { setUpEventListeners } from "./events";
 import { onFirstRunMaybe } from "./first-run";
 import { isDevMode } from "./helpers/devmode";
-import { BrowserWindow, app } from "electron";
+import { app } from "electron";
 import { release } from "node:os";
 import "./helpers/loadEnv";
 import logger from "./helpers/logger";
@@ -87,7 +87,7 @@ export function main() {
   }
 
   // Set the app's name
-  app.name = "BitSky";
+  app.name = "SeekBot";
 
   listenForProtocolHandler();
 
@@ -96,12 +96,10 @@ export function main() {
   app.on("before-quit", onBeforeQuit);
   app.on("window-all-closed", onWindowsAllClosed);
   app.on("activate", () => {
-    const allWindows = BrowserWindow.getAllWindows();
-    if (allWindows.length) {
-      allWindows[0].focus();
-    } else {
-      getOrCreateMainWindow();
-    }
+    // const allWindows = BrowserWindow.getAllWindows();
+    // if (allWindows.length) {
+    //   allWindows[0].focus();
+    // }
   });
 }
 

@@ -1,4 +1,5 @@
 import { createContextMenu } from "./context-menu";
+import { getAppConfig } from "./helpers/config";
 import { BrowserWindow, shell } from "electron";
 import { resolve } from "path";
 
@@ -18,7 +19,7 @@ const browserWindows: browserWindowHash = {};
 export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions {
   const preload = resolve(__dirname, "../preload/index.js");
   return {
-    width: 1000,
+    width: 1200,
     height: 800,
     minHeight: 600,
     minWidth: 600,
@@ -99,8 +100,45 @@ export function getOrCreateMainWindow(): Electron.BrowserWindow {
   return browserWindows.main || createMainWindow();
 }
 
+export function getMainWindow() {
+  return browserWindows.main;
+}
+
 export function getBrowserWindow(key: string) {
   return browserWindows[key];
+}
+
+export async function openSearchWindow() {
+  if (browserWindows.search) {
+    browserWindows.search.focus();
+    return;
+  }
+  const appConfig = await getAppConfig();
+  const url = `http://${appConfig.WEB_APP_HOST_NAME}:${appConfig.WEB_APP_PORT}`;
+  const searchWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    modal: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  // Load your popup HTML file
+  searchWindow.loadURL(url);
+
+  searchWindow.on("closed", () => {
+    browserWindows.search = null;
+    delete browserWindows.search;
+  });
+
+  // Make all links open with the browser, not with the application
+  searchWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: "deny" };
+  });
+
+  browserWindows.search = searchWindow;
 }
 
 export function setBrowserWindow(key: string, value: Electron.BrowserWindow) {
