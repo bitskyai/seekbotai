@@ -8,7 +8,7 @@ import "./style.css";
 
 const { Meta } = Card;
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 enum HealthStatus {
   CHECKING = "CHECKING",
   UP = "UP",
@@ -195,7 +195,7 @@ export default function Dashboard() {
           <Card hoverable>
             <Meta
               avatar={getBadge(webAppHealthStatus)}
-              title="API Service"
+              title="API Server"
               description={getDisplayHealthStatus(
                 webAppHealthStatus,
                 lastCheckedTime,
@@ -219,7 +219,20 @@ export default function Dashboard() {
       <Row>
         <Title level={5}>Browser Extensions</Title>
       </Row>
-      <Row gutter={16}>{getBrowserExtensionCard()}</Row>
+      <Row gutter={16}>
+        {Object.keys(browserExtensionConnected).length ? (
+          getBrowserExtensionCard()
+        ) : (
+          <>
+            <Text type="secondary">
+              No connected SeekBot browser extensions. If you already opened a
+              browser that installed SeekBot extension, please wait a minute,
+              SeekBot browser extension will automatically connect SeekBot API
+              Server.
+            </Text>
+          </>
+        )}
+      </Row>
     </div>
   );
 }
