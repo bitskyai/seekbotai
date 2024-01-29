@@ -1,6 +1,6 @@
 import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig } from "../../../types";
-import { BrowserExtensionConnectedData } from "../../../web-app/src/types";
+import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
 import ipcRendererManager from "../../ipc";
 import { Badge, Card, Col, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
@@ -28,21 +28,17 @@ export default function Dashboard() {
   }>({});
 
   useEffect(() => {
-    const response = ipcRendererManager.sendSync(IpcEvents.SYNC_GET_APP_CONFIG);
-    const appConfig: AppConfig = response.payload.config;
-    const webAppHealthURL = `${"http://"}${appConfig.WEB_APP_HOST_NAME}:${
-      appConfig.WEB_APP_PORT
-    }/health`;
-    const searchEngineHealthURL = `${"http://"}${
-      appConfig.SEARCH_ENGINE_HOST_NAME
-    }:${appConfig.SEARCH_ENGINE_PORT}/health`;
     ipcRendererManager.on(IpcEvents.EXTENSION_CONNECTED, (event, args) => {
-      console.log("Extension connected: ", args);
       const data: BrowserExtensionConnectedData = args.payload;
+      console.info("extension connected", data);
+      if (!data || !data.extensionId) {
+        return;
+      }
+      const key = `${data.browserName}:${data.extensionId}`;
       setBrowserExtensionConnected((prevState) => {
         return {
           ...prevState,
-          [data.extensionId]: data,
+          [key]: data,
         };
       });
     });
@@ -63,13 +59,25 @@ export default function Dashboard() {
       }
     };
 
-    checkServiceHealth(webAppHealthURL, setWebAppHealthStatus);
-    checkServiceHealth(searchEngineHealthURL, setSearchEngineHealthStatus);
-
-    const intervalId = setInterval(() => {
+    const checkServiceHealthStatus = async () => {
+      const response = ipcRendererManager.sendSync(
+        IpcEvents.SYNC_GET_APP_CONFIG,
+      );
+      const appConfig: AppConfig = response?.payload?.config ?? {};
+      const webAppHealthURL = `${"http://"}${appConfig?.WEB_APP_HOST_NAME}:${
+        appConfig?.WEB_APP_PORT
+      }/health`;
+      const searchEngineHealthURL = `${"http://"}${
+        appConfig.SEARCH_ENGINE_HOST_NAME
+      }:${appConfig.SEARCH_ENGINE_PORT}/health`;
       checkServiceHealth(webAppHealthURL, setWebAppHealthStatus);
       checkServiceHealth(searchEngineHealthURL, setSearchEngineHealthStatus);
       setLastCheckedTime(new Date());
+    };
+
+    checkServiceHealthStatus();
+    const intervalId = setInterval(() => {
+      checkServiceHealthStatus();
     }, 30 * 1000);
 
     return () => clearInterval(intervalId);
@@ -86,25 +94,24 @@ export default function Dashboard() {
     }
   };
 
-  const getBrowserExtensionCard = () => {
-    for (const browserExtensionId in browserExtensionConnected) {
-      const browserExtension = browserExtensionConnected[browserExtensionId];
-      let status = HealthStatus.DOWN;
-      if (Date.now() - browserExtension.lastConnectedAt < 1.5 * 60 * 1000) {
-        status = HealthStatus.UP;
-      }
-      return (
-        <Col span={4} style={{ minWidth: 300 }}>
-          <Card hoverable>
-            <Meta
-              avatar={getBadge(status)}
-              title={browserExtension.browserName}
-              description={getExtensionDescription(status, browserExtension)}
-            ></Meta>
-          </Card>
-        </Col>
-      );
+  const getBrowserExtensionCard = (
+    browserExtension: BrowserExtensionConnectedData,
+  ) => {
+    let status = HealthStatus.DOWN;
+    if (Date.now() - browserExtension.lastConnectedAt < 1.5 * 60 * 1000) {
+      status = HealthStatus.UP;
     }
+    return (
+      <Col span={4} style={{ minWidth: 300 }}>
+        <Card hoverable>
+          <Meta
+            avatar={getBadge(status)}
+            title={browserExtension.browserName}
+            description={getExtensionDescription(status, browserExtension)}
+          ></Meta>
+        </Card>
+      </Col>
+    );
   };
   const getDisplayHealthStatus = (
     healthStatus: HealthStatus,
@@ -221,7 +228,9 @@ export default function Dashboard() {
       </Row>
       <Row gutter={16}>
         {Object.keys(browserExtensionConnected).length ? (
-          getBrowserExtensionCard()
+          Object.keys(browserExtensionConnected).map((key) =>
+            getBrowserExtensionCard(browserExtensionConnected[key]),
+          )
         ) : (
           <>
             <Text type="secondary">
