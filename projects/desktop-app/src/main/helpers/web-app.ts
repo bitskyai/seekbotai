@@ -1,5 +1,6 @@
 import { IpcEvents } from "../../ipc-events";
 import { ipcMainManager } from "../ipc";
+import { getMainWindow } from "../windows";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
@@ -28,18 +29,23 @@ class WebApp {
       await startWebAppAndSearchEngine();
       listenBrowserExtensionConnected((data) => {
         logger.info("extension connected", { data: data });
-        ipcMainManager.send(IpcEvents.EXTENSION_CONNECTED, [
-          { status: "success", payload: data },
-        ]);
+        const mainWindow = getMainWindow();
+        if (mainWindow) {
+          ipcMainManager.send(IpcEvents.EXTENSION_CONNECTED, [
+            { status: "success", payload: data },
+          ]);
+        }
       });
       logger.info("bitsky successfully started.");
       process.env.BITSKY_BASE_URL = `http://${appConfig.WEB_APP_HOST_NAME}:${this.port}`;
     } catch (err) {
+      const appConfig = await getAppConfig();
+
       dialog.showErrorBox(
-        "Open BitSky Failed",
-        `You can try to close BitSky and reopen it again, if still doesn't work, try to delete bitsky folder in your home folder. Error:${JSON.stringify(
-          err,
-        )}`,
+        "Open SeekBot Failed",
+        `You can try to close SeekBot and reopen it again, if still doesn't work, try to delete SeekBot folder in ${
+          appConfig.DESKTOP_APP_USER_DATA_PATH
+        }. Error:${JSON.stringify(err)}`,
       );
       throw err;
     }

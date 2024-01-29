@@ -100,6 +100,10 @@ export function getOrCreateMainWindow(): Electron.BrowserWindow {
   return browserWindows.main || createMainWindow();
 }
 
+export function getMainWindow() {
+  return browserWindows.main;
+}
+
 export function getBrowserWindow(key: string) {
   return browserWindows[key];
 }

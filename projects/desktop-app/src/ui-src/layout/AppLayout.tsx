@@ -4,8 +4,8 @@ import { IpcEvents } from "../../ipc-events";
 import ipcRendererManager from "../ipc";
 import { DashboardOutlined, SearchOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Menu, theme } from "antd";
-import { Fragment, Key, ReactNode, Suspense, useEffect } from "react";
+import { Layout, Menu, Tooltip, theme } from "antd";
+import React, { Fragment, Key, ReactNode, Suspense, useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import "./AppLayout.css";
 
@@ -37,12 +37,16 @@ export function AppLayout(): JSX.Element {
 
   const items: MenuItem[] = [
     getItem(
-      <NavLink to="/">{"Dashboard"}</NavLink>,
+      <Tooltip title="Check all the services status, connected SeekBot browser extension">
+        <NavLink to="/">{"Dashboard"}</NavLink>
+      </Tooltip>,
       "dashboard",
       <DashboardOutlined rev={undefined} />,
     ),
     getItem(
-      <NavLink>{"Search"}</NavLink>,
+      <Tooltip title="Search collected browser pages. You also can use SeekBot browser extension to search">
+        <NavLink>{"Search"}</NavLink>
+      </Tooltip>,
       "search",
       <SearchOutlined rev={undefined} />,
     ),
