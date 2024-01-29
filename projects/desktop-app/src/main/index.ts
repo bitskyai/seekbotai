@@ -87,7 +87,7 @@ export function main() {
   }
 
   // Set the app's name
-  app.name = "BitSky";
+  app.name = "SeekBot";
 
   listenForProtocolHandler();
 
@@ -99,8 +99,6 @@ export function main() {
     const allWindows = BrowserWindow.getAllWindows();
     if (allWindows.length) {
       allWindows[0].focus();
-    } else {
-      getOrCreateMainWindow();
     }
   });
 }

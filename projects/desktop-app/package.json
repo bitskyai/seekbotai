@@ -1,9 +1,9 @@
 {
-  "name": "bitsky",
-  "productName": "Bitsky",
+  "name": "seekbot",
+  "productName": "SeekBot",
   "version": "1.0.0",
   "private": true,
-  "description": "Bitsky desktop app",
+  "description": "SeekBot desktop app",
   "main": "./dist/main/index.js",
   "scripts": {
     "tsc": "node ./scripts/tsc.js",

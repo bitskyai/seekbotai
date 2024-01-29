@@ -10,7 +10,7 @@ import { AppOptions } from "../types";
 import os from "os";
 import path from "path";
 
-const appRootPath = path.join(os.homedir(), ".bitsky-app");
+const appRootPath = path.join(os.homedir(), ".seekbot-app");
 const searchEngineName = "search_engine";
 const webAppName = "web_app";
 export const DEFAULT_APP_OPTIONS: Required<AppOptions> = {
@@ -32,7 +32,7 @@ export const DEFAULT_APP_OPTIONS: Required<AppOptions> = {
   WEB_APP_HOST_NAME: DEFAULT_HOST_NAME,
   WEB_APP_COMBINED_LOG_FILE_NAME: "combined.log",
   WEB_APP_DATABASE_PROVIDER: "sqlite",
-  WEB_APP_DATABASE_NAME: `bitsky.db`,
+  WEB_APP_DATABASE_NAME: `seekbot.db`,
   WEB_APP_ERROR_LOG_FILE_NAME: "error.log",
   WEB_APP_LOG_FILES_FOLDER: "log",
   // relative to `WEB_APP_HOME_PATH`

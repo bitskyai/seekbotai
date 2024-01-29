@@ -10,7 +10,7 @@ import { app } from "electron";
 import _ from "lodash";
 import * as path from "path";
 
-export const appName = "Bitsky";
+export const appName = "SeekBot";
 export const preferencesFileName = "preferences.json";
 export const configFileName = "config.json";
 

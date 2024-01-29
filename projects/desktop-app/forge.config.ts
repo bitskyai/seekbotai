@@ -11,8 +11,8 @@ import path from "path";
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: "bitsky",
-    executableName: "bitsky",
+    name: "seekbot",
+    executableName: "seekbot",
     icon: path.resolve(__dirname, "assets", "icons", "bitsky"),
     ignore: [
       /^\/\.vscode/,
@@ -43,8 +43,8 @@ const config: ForgeConfig = {
       name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          owner: "bitskyai",
-          name: "bitsky",
+          owner: "seekbotai",
+          name: "seekbot",
         },
         draft: true,
         prerelease: true,

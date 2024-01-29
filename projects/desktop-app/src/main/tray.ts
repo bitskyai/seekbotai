@@ -28,14 +28,14 @@ export function setupTray() {
       },
     },
     {
-      label: "Quit Bitsky",
+      label: "Quit",
       click: () => {
         app.quit(); // actually quit the app.
       },
     },
   ]);
   tray.setContextMenu(contextMenu);
-  tray.setToolTip("Bitsky");
+  tray.setToolTip("SeekBot is running in the background");
 
   return tray;
 }
