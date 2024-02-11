@@ -3,7 +3,7 @@
   "displayName": "SeekBot - Make Life Productive",
   "private": true,
   "version": "0.2.0",
-  "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine and chatbot.",
+  "description": "Your personal data assistant who organize your browser information, making your data accessible through AI-powered search engine",
   "author": "help.bitskyai@gmail.com",
   "license": "GPL-3.0",
   "scripts": {
@@ -53,18 +53,10 @@
       "<all_urls>"
     ],
     "permissions": [
-      "alarms",
       "bookmarks",
       "history",
-      "scripting",
       "tabs",
-      "contextMenus",
-      "unlimitedStorage",
-      "webNavigation",
-      "notifications",
       "storage",
-      "unlimitedStorage",
-      "scripting",
       "activeTab"
     ]
   }

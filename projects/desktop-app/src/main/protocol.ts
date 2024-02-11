@@ -1,4 +1,5 @@
 // import { IpcEvents } from '../ipc-events';
+
 import { isDevMode } from "./helpers/devmode";
 import { app } from "electron";
 import * as fs from "fs";
@@ -7,11 +8,11 @@ import * as nodeUrl from "url";
 
 // import { ipcMainManager } from './ipc';
 
-const PROTOCOL = "bitsky";
+const PROTOCOL = "seekbot";
 const squirrelPath = path.resolve(
   path.dirname(process.execPath),
   "..",
-  "bitsky.exe",
+  "seekbot.exe",
 );
 
 const handlePotentialProtocolLaunch = (url: string) => {

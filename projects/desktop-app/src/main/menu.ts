@@ -1,4 +1,5 @@
 // import logger from "../utils/logger";
+
 import { getOrCreateMainWindow } from "./windows";
 import { BrowserView, Menu, MenuItemConstructorOptions, shell } from "electron";
 // import { defaultMenu } from "electron-default-menu";
@@ -32,21 +33,21 @@ function getHelpItems(): Array<MenuItemConstructorOptions> {
   preferencesMenu.shift();
   return preferencesMenu.concat([
     {
-      label: "Open BitSky Repository...",
+      label: "Open SeekBot Repository...",
       click() {
-        shell.openExternal("https://github.com/bitskyai");
+        shell.openExternal("https://github.com/seekbotai");
       },
     },
     {
       label: "Documents",
       click() {
-        shell.openExternal("https://docs.bitsky.ai");
+        shell.openExternal("https://docs.seekbot.ai");
       },
     },
     {
-      label: "Open BitSky Issue Tracker...",
+      label: "Open SeekBot Issue Tracker...",
       click() {
-        shell.openExternal("https://github.com/bitskyai/bitsky/issues");
+        shell.openExternal("https://github.com/seekbotai/seekbot/issues");
       },
     },
   ]);
