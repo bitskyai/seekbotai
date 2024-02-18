@@ -1,29 +1,29 @@
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { Layout, Space } from "antd";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import {
-  CurrentRefinements,
-  HitsPerPage,
-  InfiniteHits,
-  InstantSearch,
-  SortBy,
-  SearchBox,
-  ClearRefinements,
-  ToggleRefinement,
-  RefinementList,
-  Configure,
-  Stats,
-} from "react-instantsearch";
-import "./style.css";
-import Panel from "../../components/AisPanel";
-import Refresh from "../../components/Refresh";
 import "instantsearch.css/themes/satellite.css";
 import { DEFAULT_MEILISEARCH_MASTER_KEY } from "../../../../shared";
+import Panel from "../../components/AisPanel";
+import Refresh from "../../components/Refresh";
 import { usePageEffect } from "../../core/page.js";
 import { subscribe } from "../../helpers/event";
 import HitItem, { HIT_ITEM_REFRESH } from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  ClearRefinements,
+  Configure,
+  CurrentRefinements,
+  HitsPerPage,
+  InfiniteHits,
+  InstantSearch,
+  RefinementList,
+  SearchBox,
+  SortBy,
+  Stats,
+  ToggleRefinement,
+} from "react-instantsearch";
+import "./style.css";
 
 const { Content, Sider } = Layout;
 
@@ -80,13 +80,13 @@ const SearchPage = () => {
         />
         <Layout>
           <Sider className="search-side-bar" width={300} theme="light">
-            <Panel header={t("search.bookmark")}>
+            <Panel>
               <ToggleRefinement
                 attribute="pageMetadata.bookmarked"
                 label={t("search.bookmarked")}
               />
             </Panel>
-            <Panel header={t("search.favorite")}>
+            <Panel>
               <ToggleRefinement
                 attribute="pageMetadata.favorite"
                 label={t("search.favorited")}
