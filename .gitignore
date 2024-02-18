@@ -44,3 +44,4 @@ meilisearch*
 meilisearch*.exe
 
 keys.json
+.yarn
