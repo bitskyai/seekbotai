@@ -82,9 +82,6 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
           npm run release:desktop-app
-
-      # - name: Build
-      #   run: npm run release:desktop-app
       - name: List generate files
         run: cd ./projects/desktop-app/out && ls
       - name: Get Release
