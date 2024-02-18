@@ -33,9 +33,9 @@ const config: ForgeConfig = {
     ],
     osxSign: {},
     osxNotarize: {
-      appleId: "shaokexu@gmail.com",
-      appleIdPassword: "wlmd-zsed-kpsi-cqad",
-      teamId: "9XFMW955R5",
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_ID_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID,
     },
   },
   rebuildConfig: {},
