@@ -15,7 +15,7 @@
     "build:ui": "dotenv -e ../../env/.env -c -- tsc --project ./tsconfig-ui.json && vite build",
     "build:webapp": "dotenv -e ../../env/.env -c -- bash ../../scripts/build-web-app-to-desktop-app.sh",
     "app:package": "dotenv -e ../../env/.env -c -- npm run build && electron-forge package",
-    "app:make": "dotenv -e ../../env/.env -c -- npm run build && electron-forge make",
+    "app:make": "dotenv -e ../../env/.env -c -- npm run build && electron-forge make --platform=darwin --verbose",
     "app:publish": "dotenv -e ../../env/.env -c -- npm run build && electron-forge publish"
   },
   "keywords": [],
