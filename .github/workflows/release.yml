@@ -47,7 +47,8 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest]
+        # os: [macos-latest, ubuntu-latest]
         # os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
@@ -58,8 +59,19 @@ jobs:
         with:
           node-version: "16.x"
           registry-url: https://registry.npmjs.org/
-      - name: Build
-        run: npm run release:desktop-app
+      - name: Build and Sign Electron app for macOS
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.MACOS_APPLICATION_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_APPLICATION_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          echo "$APPLE_CERTIFICATE" | base64 --decode > certificate.p12
+          npm run release:desktop-app
+
+      # - name: Build
+      #   run: npm run release:desktop-app
       - name: List generate files
         run: cd ./projects/desktop-app/out && ls
       - name: Get Release

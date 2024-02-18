@@ -20,7 +20,7 @@ class WebApp {
 
       // start
       updateProcessEnvs(appConfig);
-      logger.info("starting bitsky...");
+      logger.info("starting SeekBot...");
       // Why need to dynamic import here?
       // The reason is we need to setup environment variables before import web-app and search-engine
       const { startWebAppAndSearchEngine, listenBrowserExtensionConnected } =
@@ -36,7 +36,7 @@ class WebApp {
           ]);
         }
       });
-      logger.info("bitsky successfully started.");
+      logger.info("SeekBot successfully started.");
       process.env.BITSKY_BASE_URL = `http://${appConfig.WEB_APP_HOST_NAME}:${this.port}`;
     } catch (err) {
       const appConfig = await getAppConfig();
@@ -53,14 +53,14 @@ class WebApp {
 
   public async restart() {
     try {
-      logger.info("Restarting BitSky...");
+      logger.info("Restarting SeekBot...");
       this.stop();
       this.start();
-      logger.info("Restarted BitSky");
+      logger.info("Restarted SeekBot");
     } catch (err) {
       dialog.showErrorBox(
-        "Restart BitSky Failed",
-        `You can try to close BitSky and reopen it again, if still doesn't work, try to delete bitsky folder in your home folder. Error:${JSON.stringify(
+        "Restart SeekBot Failed",
+        `You can try to close SeekBot and reopen it again, if still doesn't work, try to delete seekbot folder in your home folder. Error:${JSON.stringify(
           err,
         )}`,
       );
@@ -70,16 +70,16 @@ class WebApp {
 
   public async stop() {
     try {
-      logger.info("Stop BitSky...");
+      logger.info("Stop SeekBot...");
       const { stopWebAppAndSearchEngine } = await import("../../web-app");
       await stopWebAppAndSearchEngine();
       // Also need to delete cache, otherwise, it will use old configure
       delete require.cache[path.resolve("../../web-app")];
-      logger.info("Stopped BitSky");
+      logger.info("Stopped SeekBot");
     } catch (err) {
       dialog.showErrorBox(
-        "Stop BitSky Failed",
-        `You can try to force close BitSky. Error:${JSON.stringify(err)}`,
+        "Stop SeekBot Failed",
+        `You can try to force close SeekBot. Error:${JSON.stringify(err)}`,
       );
       throw err;
     }

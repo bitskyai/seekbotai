@@ -2,12 +2,8 @@ import { MakerDeb } from "@electron-forge/maker-deb";
 import { MakerRpm } from "@electron-forge/maker-rpm";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
-// import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import type { ForgeConfig } from "@electron-forge/shared-types";
 import path from "path";
-
-// import { mainConfig } from "./webpack.main.config";
-// import { rendererConfig } from "./webpack.renderer.config";
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -24,12 +20,23 @@ const config: ForgeConfig = {
       /^\/\.gitignore/,
       /^\/\.eslintrc\.json/,
       /^\/tsconfig\.json/,
+      /^\/tsconfig-ui\.json/,
+      /^\/tsconfig.node\.json/,
       /^\/README\.md/,
+      /^\/\.env.prod.template/,
+      /^\/\.yarn/,
       /^\/yarn\.lock/,
       /^\/package-lock\.json/,
       /^\/LICENSE/,
-      /^\/vite\.*\.ts/,
+      /^\/vite\.config\.ts/,
+      /^\/playwright\.config\.ts/,
     ],
+    osxSign: {},
+    osxNotarize: {
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_ID_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID,
+    },
   },
   rebuildConfig: {},
   makers: [

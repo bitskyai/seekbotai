@@ -9,23 +9,23 @@ export function setupAboutPanel(): void {
   if (process.platform === "win32") return;
 
   const options: AboutPanelOptionsOptions = {
-    applicationName: "BitSky",
+    applicationName: "SeekBot",
     applicationVersion: app.getVersion(),
     version: process.versions.electron,
-    copyright: "© bitsky.ai",
+    copyright: "© seekbot.ai",
   };
 
   // TODO: need to implement about page information
   switch (process.platform) {
     case "linux":
-      options.website = "https://www.bitsky.ai";
+      options.website = "https://www.seekbot.ai";
       break;
     case "darwin":
-      options.credits = "https://www.bitsky.ai";
+      options.credits = "https://www.seekbot.ai";
       break;
     default:
       // fallthrough
-      options.credits = "https://www.bitsky.ai";
+      options.credits = "https://www.seekbot.ai";
   }
 
   console.log("About Panel Options: ", options);
