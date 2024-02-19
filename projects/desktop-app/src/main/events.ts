@@ -2,6 +2,8 @@
 
 import { IpcEvents } from "../ipc-events";
 import type { AppConfig, AppPreferences } from "../types";
+import type { BrowserExtensionConnectedData } from "../web-app/src/types";
+import { getBrowserExtensions } from "./helpers/browserExtensions";
 import { getAppConfig } from "./helpers/config";
 import logger from "./helpers/logger";
 import { ipcMainManager } from "./ipc";
@@ -31,6 +33,30 @@ export function setUpEventListeners() {
         event.returnValue = {
           status: true,
           payload: { config: config },
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_GET_EXTENSIONS,
+    async (event: {
+      returnValue: {
+        status: boolean;
+        payload?: BrowserExtensionConnectedData[];
+        error?: unknown;
+      };
+    }) => {
+      try {
+        const browserExtensions = await getBrowserExtensions();
+        event.returnValue = {
+          status: true,
+          payload: browserExtensions ?? [],
         };
       } catch (err) {
         event.returnValue = {

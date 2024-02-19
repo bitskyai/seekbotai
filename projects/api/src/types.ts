@@ -93,9 +93,14 @@ export interface GQLContext {
 }
 
 export type BrowserExtensionConnectedData = {
+  uuid: string;
   extensionId: string;
   extensionVersion: string;
   optionsUrl: string;
   browserName: string;
+  browserVersion: string;
+  browserUserAgent: string;
+  os: string;
+  osArch: string;
   lastConnectedAt: number;
 };

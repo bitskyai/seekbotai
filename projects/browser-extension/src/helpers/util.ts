@@ -1,5 +1,8 @@
 import _ from "lodash"
 import normalizeUrl from "normalize-url"
+import { runtime } from "webextension-polyfill"
+
+import { getExtensionUUID } from "~storage"
 
 export const releaseMemory = (target: any) => {
   if (_.isArray(target)) {
@@ -49,17 +52,18 @@ export const getExtensionInfo = async () => {
 
 export const getSeekBotHeaders = async () => {
   const extensionInfo = await getExtensionInfo()
-  const browserInfo = {
-    name: getBrowserName(),
-    version: getBrowserVersion(),
-    userAgent: navigator.userAgent
-  }
+  const extensionUUID = await getExtensionUUID()
+  const browserInfo = await runtime.getBrowserInfo()
+  const osInfo = await runtime.getPlatformInfo()
   return {
+    "x-seekbot-extension-uuid": extensionUUID,
     "x-seekbot-extension-id": extensionInfo.id,
     "x-seekbot-extension-version": extensionInfo.version,
     "x-seekbot-extension-options-url": extensionInfo.optionsUrl,
     "x-seekbot-browser-name": browserInfo.name,
     "x-seekbot-browser-version": browserInfo.version,
-    "x-seekbot-browser-user-agent": browserInfo.userAgent
+    "x-seekbot-browser-user-agent": navigator.userAgent,
+    "x-seekbot-os": osInfo.os,
+    "x-seekbot-os-arch": osInfo.arch
   }
 }

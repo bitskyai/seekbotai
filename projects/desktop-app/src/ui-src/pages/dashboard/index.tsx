@@ -23,24 +23,24 @@ export default function Dashboard() {
   const [lastCheckedTime, setLastCheckedTime] = React.useState<Date>(
     new Date(),
   );
-  const [browserExtensionConnected, setBrowserExtensionConnected] = useState<{
-    [key: string]: BrowserExtensionConnectedData;
-  }>({});
+  const [browserExtensionConnected, setBrowserExtensionConnected] = useState<
+    BrowserExtensionConnectedData[]
+  >([]);
 
   useEffect(() => {
+    const getExtensionsResponse = ipcRendererManager.sendSync(
+      IpcEvents.SYNC_GET_EXTENSIONS,
+    );
+
+    if (getExtensionsResponse.status) {
+      const extensions: BrowserExtensionConnectedData[] =
+        getExtensionsResponse?.payload;
+      setBrowserExtensionConnected(extensions);
+    }
+
     ipcRendererManager.on(IpcEvents.EXTENSION_CONNECTED, (event, args) => {
-      const data: BrowserExtensionConnectedData = args.payload;
-      console.info("extension connected", data);
-      if (!data || !data.extensionId) {
-        return;
-      }
-      const key = `${data.browserName}:${data.extensionId}`;
-      setBrowserExtensionConnected((prevState) => {
-        return {
-          ...prevState,
-          [key]: data,
-        };
-      });
+      const extensions: BrowserExtensionConnectedData[] = args.payload;
+      setBrowserExtensionConnected(extensions);
     });
 
     const checkServiceHealth = async (
@@ -227,14 +227,14 @@ export default function Dashboard() {
         <Title level={5}>Browser Extensions</Title>
       </Row>
       <Row gutter={16}>
-        {Object.keys(browserExtensionConnected).length ? (
-          Object.keys(browserExtensionConnected).map((key) =>
-            getBrowserExtensionCard(browserExtensionConnected[key]),
+        {browserExtensionConnected.length ? (
+          browserExtensionConnected.map((extension) =>
+            getBrowserExtensionCard(extension),
           )
         ) : (
           <>
             <Text type="secondary">
-              No connected SeekBot browser extensions. If you already opened a
+              No connected SeekBot browser extensions. If you already opened the
               browser that installed SeekBot extension, please wait a minute,
               SeekBot browser extension will automatically connect SeekBot API
               Server.

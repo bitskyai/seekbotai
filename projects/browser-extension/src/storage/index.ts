@@ -4,7 +4,7 @@ import {
   DEFAULT_PROTOCOL,
   HISTORY_TAG
 } from "@bitsky/shared"
-import _ from "lodash"
+import { v4 as uuidv4 } from "uuid"
 import { type Bookmarks, type History } from "webextension-polyfill"
 
 import { Storage } from "@plasmohq/storage"
@@ -15,8 +15,7 @@ import { getFlatBookmarks } from "~background/modules/bookmarks"
 import { type PageData } from "~background/modules/fetchPage"
 import { getHistory } from "~background/modules/history"
 import { LogFormat } from "~helpers/LogFormat"
-import { normalizeUrlWithoutError } from "~helpers/util"
-import { releaseMemory } from "~helpers/util"
+import { normalizeUrlWithoutError, releaseMemory } from "~helpers/util"
 import {
   type ImportBookmarkRecord,
   type ImportBookmarks,
@@ -40,6 +39,26 @@ export { StorageKeys }
 const logFormat = new LogFormat("storage")
 
 // Service Relative Configuration
+export const getExtensionUUID = async (): Promise<string> => {
+  const storage = new Storage()
+  let extensionUUID = (await storage.get(StorageKeys.ExtensionUUID)) as string
+  if (!extensionUUID) {
+    extensionUUID = uuidv4()
+  }
+  await setExtensionUUID(extensionUUID)
+  console.debug(...logFormat.formatArgs("getExtensionUUID", extensionUUID))
+  releaseMemory(storage)
+  return extensionUUID
+}
+
+export const setExtensionUUID = async (extensionUUID: string) => {
+  const storage = new Storage()
+  await storage.set(StorageKeys.ExtensionUUID, extensionUUID)
+  console.debug(...logFormat.formatArgs("setExtensionUUID", extensionUUID))
+  releaseMemory(storage)
+  return extensionUUID
+}
+
 export const getServiceHostName = async (): Promise<string> => {
   const storage = new Storage()
   const hostName = (await storage.get(StorageKeys.ServiceHostName)) as string

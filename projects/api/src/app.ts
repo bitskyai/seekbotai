@@ -34,6 +34,10 @@ export async function createApp() {
       req.method.toLowerCase() === "get" &&
       req.headers["x-seekbot-extension-id"]
     ) {
+      let uuid = req.headers["x-seekbot-extension-uuid"];
+      if (Array.isArray(uuid)) {
+        uuid = uuid[0];
+      }
       let extensionId = req.headers["x-seekbot-extension-id"];
       if (Array.isArray(extensionId)) {
         extensionId = extensionId[0];
@@ -54,13 +58,38 @@ export async function createApp() {
         browserName = browserName[0];
       }
 
+      let browserVersion = req.headers["x-seekbot-browser-version"];
+      if (Array.isArray(browserVersion)) {
+        browserVersion = browserVersion[0];
+      }
+
+      let browserUserAgent = req.headers["x-seekbot-browser-user-agent"];
+      if (Array.isArray(browserUserAgent)) {
+        browserUserAgent = browserUserAgent[0];
+      }
+
+      let os = req.headers["x-seekbot-os"];
+      if (Array.isArray(os)) {
+        os = os[0];
+      }
+
+      let osArch = req.headers["x-seekbot-os-arch"];
+      if (Array.isArray(osArch)) {
+        osArch = osArch[0];
+      }
+
       // this is a browser extension request
       emitBrowserExtensionConnected({
+        uuid: uuid ?? "",
         extensionId: extensionId,
         extensionVersion: extensionVersion ?? "",
         lastConnectedAt: Date.now(),
         optionsUrl: optionsUrl ?? "",
         browserName: browserName ?? "",
+        browserVersion: browserVersion ?? "",
+        browserUserAgent: browserUserAgent ?? "",
+        os: os ?? "",
+        osArch: osArch ?? "",
       });
     }
 

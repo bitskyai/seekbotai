@@ -1,6 +1,7 @@
 import { IpcEvents } from "../../ipc-events";
 import { ipcMainManager } from "../ipc";
 import { getMainWindow } from "../windows";
+import { setBrowserExtension } from "./browserExtensions";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
@@ -32,7 +33,7 @@ class WebApp {
         const mainWindow = getMainWindow();
         if (mainWindow) {
           ipcMainManager.send(IpcEvents.EXTENSION_CONNECTED, [
-            { status: "success", payload: data },
+            { status: "success", payload: setBrowserExtension(data) },
           ]);
         }
       });

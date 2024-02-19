@@ -1,6 +1,6 @@
 {
   "name": "bi-browser-extension",
-  "displayName": "SeekBot - Make Life Productive",
+  "displayName": "SeekBot",
   "private": true,
   "version": "0.2.0",
   "description": "Your personal data assistant who organize your browser information, making your data accessible through AI-powered search engine",
