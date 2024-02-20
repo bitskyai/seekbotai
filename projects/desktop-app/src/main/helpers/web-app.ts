@@ -28,12 +28,12 @@ class WebApp {
         await import("../../web-app");
 
       await startWebAppAndSearchEngine();
-      listenBrowserExtensionConnected((data) => {
+      listenBrowserExtensionConnected(async (data) => {
         logger.info("extension connected", { data: data });
         const mainWindow = getMainWindow();
         if (mainWindow) {
           ipcMainManager.send(IpcEvents.EXTENSION_CONNECTED, [
-            { status: "success", payload: setBrowserExtension(data) },
+            { status: "success", payload: await setBrowserExtension(data) },
           ]);
         }
       });

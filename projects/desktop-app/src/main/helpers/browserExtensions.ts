@@ -1,4 +1,6 @@
 import type { BrowserExtensionConnectedData } from "../../web-app/src/types";
+import { getAppConfig } from "./config";
+import { pathExistsSync, readJSONSync, writeJSONSync } from "fs-extra";
 
 export const BROWSER_EXTENSIONS_KEY = "SEEKBOT_AI_BROWSER_EXTENSIONS";
 
@@ -14,20 +16,21 @@ function getBrowserExtensionUUID(
   return extUUID;
 }
 
-export function getBrowserExtensions(): BrowserExtensionConnectedData[] {
-  const extensions = localStorage.getItem(BROWSER_EXTENSIONS_KEY);
-  try {
-    return extensions ? JSON.parse(extensions) : [];
-  } catch (err) {
-    console.log(err);
+export async function getBrowserExtensions(): Promise<
+  BrowserExtensionConnectedData[]
+> {
+  const config = await getAppConfig();
+  if (pathExistsSync(config.DESKTOP_APP_EXTENSIONS_PATH)) {
+    return readJSONSync(config.DESKTOP_APP_EXTENSIONS_PATH);
+  } else {
     return [];
   }
 }
 
-export function setBrowserExtension(
+export async function setBrowserExtension(
   extension: BrowserExtensionConnectedData,
-): BrowserExtensionConnectedData[] {
-  const extensions = getBrowserExtensions();
+): Promise<BrowserExtensionConnectedData[]> {
+  const extensions = await getBrowserExtensions();
   const uuid = getBrowserExtensionUUID(extension);
   const index = extensions.findIndex(
     (item) => getBrowserExtensionUUID(item) === uuid,
@@ -37,7 +40,8 @@ export function setBrowserExtension(
   } else {
     extensions.push(extension);
   }
-  localStorage.setItem(BROWSER_EXTENSIONS_KEY, JSON.stringify(extensions));
+  const config = await getAppConfig();
+  writeJSONSync(config.DESKTOP_APP_EXTENSIONS_PATH, extensions);
   // remove
   return extensions;
 }

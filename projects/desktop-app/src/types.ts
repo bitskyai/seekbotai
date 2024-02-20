@@ -68,6 +68,7 @@ export interface DesktopAppOptions
   DESKTOP_APP_HOME_PATH: string;
   DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME: string;
   DESKTOP_APP_LOG_FILES_FOLDER: string;
+  DESKTOP_APP_EXTENSIONS_PATH: string;
 }
 
 // user configurable preferences for app

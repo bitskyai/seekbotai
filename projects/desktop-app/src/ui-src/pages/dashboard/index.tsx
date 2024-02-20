@@ -1,6 +1,7 @@
 import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig } from "../../../types";
 import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
+import { getFullDateString } from "../../helpers";
 import ipcRendererManager from "../../ipc";
 import { Badge, Card, Col, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
@@ -117,7 +118,7 @@ export default function Dashboard() {
     healthStatus: HealthStatus,
     checkedTime: Date,
   ) => {
-    const updatedAt = `${checkedTime.getHours()}:${checkedTime.getMinutes()}:${checkedTime.getSeconds()}`;
+    const updatedAt = getFullDateString(checkedTime);
     const commonFields = (
       <>
         <p>Last checked time: {updatedAt}</p>
@@ -156,7 +157,7 @@ export default function Dashboard() {
     extensionInfo: BrowserExtensionConnectedData,
   ) => {
     const checkedTime = new Date(extensionInfo.lastConnectedAt);
-    const updatedAt = `${checkedTime.getHours()}:${checkedTime.getMinutes()}:${checkedTime.getSeconds()}`;
+    const updatedAt = getFullDateString(checkedTime);
     const commonFields = (
       <>
         <p>Extension Version: {extensionInfo.extensionVersion}</p>
@@ -183,8 +184,7 @@ export default function Dashboard() {
           <>
             <p>
               Down. Check whether {extensionInfo.browserName} is running or
-              whether SeekBot Browser Extension is disabled or Whether you
-              changed API key but forgot to update in SeekBot browser extension
+              whether SeekBot Browser Extension is disabled
             </p>
             {commonFields}
           </>
