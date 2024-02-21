@@ -7,6 +7,8 @@ export enum IpcEvents {
   SYNC_GET_EXTENSIONS = "SYNC_GET_EXTENSIONS",
   EXTENSION_CONNECTED = "EXTENSION_CONNECTED",
   SYNC_REMOVE_EXTENSION = "SYNC_REMOVE_EXTENSION",
+  SYNC_GET_PRODUCT_TOUR = "SYNC_GET_PRODUCT_TOUR",
+  SYNC_UPDATE_PRODUCT_TOUR = "SYNC_UPDATE_PRODUCT_TOUR",
 }
 
 // message send to main
@@ -18,6 +20,7 @@ export const ipcMainEvents = [
   IpcEvents.SYNC_OPEN_SEARCH_WINDOW,
   IpcEvents.SYNC_GET_EXTENSIONS,
   IpcEvents.SYNC_REMOVE_EXTENSION,
+  IpcEvents.SYNC_GET_PRODUCT_TOUR,
 ];
 
 // message send to renderer
@@ -27,6 +30,7 @@ export const ipcRendererEvents = [
   IpcEvents.SYNC_GET_APP_CONFIG,
   IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
   IpcEvents.EXTENSION_CONNECTED,
+  IpcEvents.SYNC_UPDATE_PRODUCT_TOUR,
 ];
 
 export const WEBCONTENTS_READY_FOR_IPC_SIGNAL =

@@ -28,6 +28,7 @@ export const DEFAULT_APP_OPTIONS: AppOptions = {
     app.getPath("userData"),
     "extensions.json",
   ),
+  DESKTOP_APP_TOUR_PATH: path.join(app.getPath("userData"), "tour.json"),
   DESKTOP_APP_HOME_PATH: app.getPath("userData"),
   DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME: _.snakeCase(`${appName}_first_run`),
   DESKTOP_APP_LOG_FILES_FOLDER: "logs",

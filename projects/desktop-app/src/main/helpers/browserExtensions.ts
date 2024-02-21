@@ -2,8 +2,6 @@ import type { BrowserExtensionConnectedData } from "../../web-app/src/types";
 import { getAppConfig } from "./config";
 import { pathExistsSync, readJSONSync, writeJSONSync } from "fs-extra";
 
-export const BROWSER_EXTENSIONS_KEY = "SEEKBOT_AI_BROWSER_EXTENSIONS";
-
 function getBrowserExtensionUUID(
   extension: BrowserExtensionConnectedData,
 ): string {

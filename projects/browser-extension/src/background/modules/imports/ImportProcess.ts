@@ -18,10 +18,12 @@ export class ImportProcess {
 
   constructor({
     concurrent,
-    timeout
+    timeout,
+    skipGetPageData
   }: {
     concurrent?: number
     timeout?: number
+    skipGetPageData?: boolean
   }) {
     console.debug(
       ...this.logFormat.formatArgs("constructor", { concurrent, timeout })
@@ -36,6 +38,7 @@ export class ImportProcess {
     if (timeout) {
       this.timeout = timeout
     }
+    this.skipGetPageData = !!skipGetPageData
     // this.init()
     console.debug(...this.logFormat.formatArgs("constructor finished"))
   }

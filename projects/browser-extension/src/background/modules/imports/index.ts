@@ -22,7 +22,7 @@ let _importHistory
 
 export const startImportBookmarks = async () => {
   console.info(...logFormat.formatArgs("startImportBookmarks"))
-  _importBookmarks = new ImportBookmarks({})
+  _importBookmarks = new ImportBookmarks({ skipGetPageData: true })
   _importBookmarks?.start()
 }
 

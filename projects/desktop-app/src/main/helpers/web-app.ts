@@ -5,6 +5,7 @@ import { setBrowserExtension } from "./browserExtensions";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
+import { finishedInstallExtensionStep } from "./tour";
 import { dialog } from "electron";
 import path from "path";
 
@@ -30,6 +31,7 @@ class WebApp {
       await startWebAppAndSearchEngine();
       listenBrowserExtensionConnected(async (data) => {
         logger.info("extension connected", { data: data });
+        finishedInstallExtensionStep();
         const mainWindow = getMainWindow();
         if (mainWindow) {
           ipcMainManager.send(IpcEvents.EXTENSION_CONNECTED, [

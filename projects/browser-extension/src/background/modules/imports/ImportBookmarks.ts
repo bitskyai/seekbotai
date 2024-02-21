@@ -14,12 +14,14 @@ export class ImportBookmarks extends ImportProcess {
 
   constructor({
     concurrent,
-    timeout
+    timeout,
+    skipGetPageData
   }: {
     concurrent?: number
     timeout?: number
+    skipGetPageData?: boolean
   }) {
-    super({ concurrent, timeout })
+    super({ concurrent, timeout, skipGetPageData })
     console.debug(
       ...this.logFormat.formatArgs("constructor", { concurrent, timeout })
     )

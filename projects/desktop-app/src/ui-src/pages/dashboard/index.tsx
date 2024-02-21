@@ -1,10 +1,11 @@
 import { CHECK_SERVICE_HEALTH_INTERVAL_VALUE } from "../../../bitskyLibs/shared";
 import { IpcEvents } from "../../../ipc-events";
-import type { AppConfig } from "../../../types";
+import type { AppConfig, Tour as ProductTour } from "../../../types";
 import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
 import { getFullDateString, isVersionLessThan } from "../../helpers";
 import ipcRendererManager from "../../ipc";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import type { TourProps } from "antd";
 import {
   Alert,
   Badge,
@@ -13,10 +14,12 @@ import {
   Col,
   Collapse,
   Row,
+  Steps,
   Tooltip,
+  Tour,
   Typography,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./style.css";
 
 const { Meta } = Card;
@@ -27,8 +30,11 @@ enum HealthStatus {
   UP = "UP",
   DOWN = "DOWN",
 }
+const cardMinWidth = 400;
 
 export default function Dashboard() {
+  const [open, setOpen] = useState<boolean>(false);
+  const [productTour, setProductTour] = useState<ProductTour>();
   const [webAppHealthStatus, setWebAppHealthStatus] =
     React.useState<HealthStatus>(HealthStatus.CHECKING);
   const [searchEngineHealthStatus, setSearchEngineHealthStatus] =
@@ -39,12 +45,25 @@ export default function Dashboard() {
   const [browserExtensionConnected, setBrowserExtensionConnected] = useState<
     BrowserExtensionConnectedData[]
   >([]);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     ipcRendererManager.on(IpcEvents.EXTENSION_CONNECTED, (event, args) => {
       const extensions: BrowserExtensionConnectedData[] = args.payload;
       setBrowserExtensionConnected(extensions);
     });
+
+    ipcRendererManager.on(IpcEvents.SYNC_UPDATE_PRODUCT_TOUR, (event, args) => {
+      const productTour: ProductTour = args.payload;
+      setProductTour(productTour);
+    });
+
+    const getProductTourRes = ipcRendererManager.sendSync(
+      IpcEvents.SYNC_GET_PRODUCT_TOUR,
+    );
+    if (getProductTourRes.status) {
+      setProductTour(getProductTourRes.payload);
+    }
 
     const checkServiceHealth = async (
       url: string,
@@ -94,6 +113,7 @@ export default function Dashboard() {
         setBrowserExtensionConnected(extensions);
       }
     };
+
     checkBrowserExtensionHealth();
     const extensionsIntervalId = setInterval(() => {
       checkBrowserExtensionHealth();
@@ -104,6 +124,53 @@ export default function Dashboard() {
       clearInterval(extensionsIntervalId);
     };
   }, []);
+
+  function updateCurrentStep() {
+    if (productTour?.finished) {
+      setOpen(false);
+      return;
+    }
+
+    let step = 0;
+    if (
+      webAppHealthStatus !== HealthStatus.UP ||
+      searchEngineHealthStatus !== HealthStatus.UP
+    ) {
+      step = 0;
+    } else {
+      if (
+        webAppHealthStatus === HealthStatus.UP &&
+        searchEngineHealthStatus === HealthStatus.UP
+      ) {
+        step = 1;
+      }
+      if (
+        productTour?.steps?.installExtension?.finished ||
+        browserExtensionConnected.length > 0
+      ) {
+        step = 2;
+      }
+      if (productTour?.steps?.importBookmarks?.finished) {
+        step = 3;
+      }
+      if (productTour?.steps?.search?.finished) {
+        step = 4;
+      }
+    }
+    setCurrentStep(step);
+    if (step < 3) {
+      setOpen(true);
+    }
+  }
+
+  useEffect(() => {
+    updateCurrentStep();
+  }, [
+    webAppHealthStatus,
+    searchEngineHealthStatus,
+    productTour,
+    browserExtensionConnected,
+  ]);
 
   const extensionDownHowToFix = (
     extensionInfo: BrowserExtensionConnectedData,
@@ -172,7 +239,7 @@ export default function Dashboard() {
       );
     }
     return (
-      <Col span={6} style={{ minWidth: 300 }}>
+      <Col span={6} style={{ minWidth: cardMinWidth }}>
         <Card actions={actions} hoverable className="browser-extension">
           <Meta
             avatar={getBadge(status)}
@@ -268,9 +335,71 @@ export default function Dashboard() {
     }
   };
 
+  const servicesRef = useRef(null);
+  const extensionsRef = useRef(null);
+  const tourSteps: TourProps["steps"] = [
+    {
+      title: "Services Health",
+      description: (
+        <div> {getBadge(HealthStatus.UP)} means service is health </div>
+      ),
+      target: () => servicesRef.current,
+    },
+    {
+      title: "Install the browser extension",
+      description: (
+        <div>
+          <ol>
+            <li>Click button to install SeekBot browser extension</li>
+            <li>After installed, back to the SeekBot desktop application</li>
+            <li>
+              Waiting for about 20 seconds, SeekBot browser extension should
+              automatically connect to SeekBot desktop application
+            </li>
+          </ol>
+        </div>
+      ),
+      target: () => extensionsRef.current,
+    },
+  ];
+
+  const getSearchStepDescription = () => {
+    return <div></div>;
+  };
+
   return (
     <div style={{ padding: "0 24px" }}>
       <Title level={4}>Dashboard</Title>
+      <Card title="Get started">
+        <Title level={5} style={{ margin: 0 }}>
+          Welcome!
+        </Title>
+        <Paragraph>
+          Take just two minutes to begin with a brief tour of our product
+        </Paragraph>
+        <Steps
+          style={{ marginTop: "10px" }}
+          direction="vertical"
+          size="small"
+          current={currentStep}
+          items={[
+            {
+              title: "Check the health of Services",
+              description:
+                "Only when API Server and Search Engine are running, you can use SeekBot",
+            },
+            { title: "Install the browser extension", description: "" },
+            {
+              title: "Import bookmarks",
+              description: "",
+            },
+            {
+              title: "Search",
+              description: "",
+            },
+          ]}
+        />
+      </Card>
       <Row>
         <Title level={5}>
           Browser Extensions{" "}
@@ -283,7 +412,7 @@ export default function Dashboard() {
           </Tooltip>
         </Title>
       </Row>
-      <Row gutter={16}>
+      <Row gutter={[16, 16]}>
         {browserExtensionConnected.length ? (
           browserExtensionConnected.map((extension) =>
             getBrowserExtensionCard(extension),
@@ -299,7 +428,7 @@ export default function Dashboard() {
               type="warning"
               message="You must install SeekBot browser extension"
               description={
-                <ul style={{ padding: "0 0 0 10px" }}>
+                <ul style={{ padding: "0 0 0 10px" }} ref={extensionsRef}>
                   <li>
                     <Paragraph
                       copyable={{
@@ -311,7 +440,7 @@ export default function Dashboard() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Install Chrome SeekBot Extension
+                        Chrome SeekBot Extension
                       </Button>
                     </Paragraph>
                   </li>
@@ -326,7 +455,7 @@ export default function Dashboard() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Install Edge SeekBot Extension
+                        Edge SeekBot Extension
                       </Button>
                     </Paragraph>
                   </li>
@@ -347,8 +476,8 @@ export default function Dashboard() {
       <Row>
         <Title level={5}>Services</Title>
       </Row>
-      <Row gutter={16}>
-        <Col span={6} style={{ minWidth: 300 }}>
+      <Row gutter={[16, 16]} ref={servicesRef}>
+        <Col span={6} style={{ minWidth: cardMinWidth }}>
           <Card hoverable>
             <Meta
               avatar={getBadge(webAppHealthStatus)}
@@ -360,7 +489,7 @@ export default function Dashboard() {
             ></Meta>
           </Card>
         </Col>
-        <Col span={6} style={{ minWidth: 300 }}>
+        <Col span={6} style={{ minWidth: cardMinWidth }}>
           <Card hoverable>
             <Meta
               avatar={getBadge(searchEngineHealthStatus)}
@@ -373,6 +502,12 @@ export default function Dashboard() {
           </Card>
         </Col>
       </Row>
+      <Tour
+        open={open}
+        current={currentStep}
+        onClose={() => setOpen(false)}
+        steps={tourSteps}
+      />
     </div>
   );
 }

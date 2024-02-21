@@ -71,7 +71,7 @@ export function AppLayout(): JSX.Element {
 
     // Update the body's height on window resize
     const handleResize = () => {
-      document.body.style.height = `${window.innerHeight}px`;
+      document.body.style.minHeight = `${window.innerHeight}px`;
     };
 
     window.addEventListener("resize", handleResize);

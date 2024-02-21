@@ -1,7 +1,7 @@
 // Setup Event Listeners
 
 import { IpcEvents } from "../ipc-events";
-import type { AppConfig, AppPreferences } from "../types";
+import type { AppConfig, AppPreferences, Tour } from "../types";
 import type { BrowserExtensionConnectedData } from "../web-app/src/types";
 import {
   getBrowserExtensions,
@@ -9,6 +9,7 @@ import {
 } from "./helpers/browserExtensions";
 import { getAppConfig } from "./helpers/config";
 import logger from "./helpers/logger";
+import { getTour } from "./helpers/tour";
 import { ipcMainManager } from "./ipc";
 import { hideSettings } from "./menu";
 import { openSearchWindow } from "./windows";
@@ -87,6 +88,30 @@ export function setUpEventListeners() {
         event.returnValue = {
           status: true,
           payload: browserExtensions ?? [],
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_GET_PRODUCT_TOUR,
+    async (event: {
+      returnValue: {
+        status: boolean;
+        payload?: Tour;
+        error?: unknown;
+      };
+    }) => {
+      try {
+        const tour = await getTour();
+        event.returnValue = {
+          status: true,
+          payload: tour,
         };
       } catch (err) {
         event.returnValue = {
