@@ -1,9 +1,21 @@
+import { CHECK_SERVICE_HEALTH_INTERVAL_VALUE } from "../../../bitskyLibs/shared";
 import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig } from "../../../types";
 import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
-import { getFullDateString } from "../../helpers";
+import { getFullDateString, isVersionLessThan } from "../../helpers";
 import ipcRendererManager from "../../ipc";
-import { Badge, Card, Col, Collapse, Row, Typography } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Col,
+  Collapse,
+  Row,
+  Tooltip,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import "./style.css";
 
@@ -29,16 +41,6 @@ export default function Dashboard() {
   >([]);
 
   useEffect(() => {
-    const getExtensionsResponse = ipcRendererManager.sendSync(
-      IpcEvents.SYNC_GET_EXTENSIONS,
-    );
-
-    if (getExtensionsResponse.status) {
-      const extensions: BrowserExtensionConnectedData[] =
-        getExtensionsResponse?.payload;
-      setBrowserExtensionConnected(extensions);
-    }
-
     ipcRendererManager.on(IpcEvents.EXTENSION_CONNECTED, (event, args) => {
       const extensions: BrowserExtensionConnectedData[] = args.payload;
       setBrowserExtensionConnected(extensions);
@@ -81,7 +83,26 @@ export default function Dashboard() {
       checkServiceHealthStatus();
     }, 30 * 1000);
 
-    return () => clearInterval(intervalId);
+    const checkBrowserExtensionHealth = async () => {
+      const getExtensionsResponse = ipcRendererManager.sendSync(
+        IpcEvents.SYNC_GET_EXTENSIONS,
+      );
+
+      if (getExtensionsResponse.status) {
+        const extensions: BrowserExtensionConnectedData[] =
+          getExtensionsResponse?.payload;
+        setBrowserExtensionConnected(extensions);
+      }
+    };
+    checkBrowserExtensionHealth();
+    const extensionsIntervalId = setInterval(() => {
+      checkBrowserExtensionHealth();
+    }, CHECK_SERVICE_HEALTH_INTERVAL_VALUE);
+
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(extensionsIntervalId);
+    };
   }, []);
 
   const extensionDownHowToFix = (
@@ -94,11 +115,17 @@ export default function Dashboard() {
         children: (
           <ul>
             <li>
-              Make sure {extensionInfo.browserName} is running and the SeekBot
-              Browser Extension is enabled
+              Make sure {extensionInfo.browserName} is running and the browser
+              extension is enabled
             </li>
-            <li>Wait for a few seconds, the extension will try to reconnect</li>
-            <li>If all above steps don&apos;t work, you can remove it</li>
+            <li>
+              Wait for a few seconds, the browser extension will try to
+              reconnect
+            </li>
+            <li>
+              All above steps don&apos;t work, you can remove it and re-install
+              the browser extension
+            </li>
           </ul>
         ),
       },
@@ -121,7 +148,12 @@ export default function Dashboard() {
     browserExtension: BrowserExtensionConnectedData,
   ) => {
     let status = HealthStatus.DOWN;
-    if (Date.now() - browserExtension.lastConnectedAt < 1.5 * 60 * 1000) {
+    let unHealthTime = CHECK_SERVICE_HEALTH_INTERVAL_VALUE * 2;
+    if (isVersionLessThan(browserExtension.extensionVersion, "0.3.0")) {
+      // make sure back compatible, if extension version less than 0.3.0, we will set unHealthTime to 1.5 minutes
+      unHealthTime = 1.5 * 60 * 1000;
+    }
+    if (Date.now() - browserExtension.lastConnectedAt < unHealthTime) {
       status = HealthStatus.UP;
     }
     const onRemoveExtension = () => {
@@ -131,19 +163,20 @@ export default function Dashboard() {
       );
       setBrowserExtensionConnected(res?.payload);
     };
+    const actions: React.ReactNode[] = [];
+    if (status === HealthStatus.DOWN) {
+      actions.push(
+        <a key="remove" href="#" onClick={onRemoveExtension}>
+          Remove
+        </a>,
+      );
+    }
     return (
-      <Col span={4} style={{ minWidth: 300 }}>
-        <Card
-          actions={[
-            <a key="remove" href="#" onClick={onRemoveExtension}>
-              Remove
-            </a>,
-          ]}
-          hoverable
-        >
+      <Col span={6} style={{ minWidth: 300 }}>
+        <Card actions={actions} hoverable className="browser-extension">
           <Meta
             avatar={getBadge(status)}
-            title={browserExtension.browserName}
+            title={browserExtension.browserName ?? "Unknown Browser"}
             description={getExtensionDescription(status, browserExtension)}
           ></Meta>
         </Card>
@@ -158,7 +191,9 @@ export default function Dashboard() {
     const updatedAt = getFullDateString(checkedTime);
     const commonFields = (
       <>
-        <p>Last checked time: {updatedAt}</p>
+        <p>
+          Last checked time <br /> {updatedAt}
+        </p>
       </>
     );
     switch (healthStatus) {
@@ -197,8 +232,14 @@ export default function Dashboard() {
     const updatedAt = getFullDateString(checkedTime);
     const commonFields = (
       <>
-        <p>Extension Version: {extensionInfo.extensionVersion}</p>
-        <p>Last connection time: {updatedAt}</p>
+        <p>
+          Extension Version
+          <br /> {extensionInfo.extensionVersion}
+        </p>
+        <p>
+          Last connection time
+          <br /> {updatedAt}
+        </p>
       </>
     );
     switch (healthStatus) {
@@ -231,10 +272,83 @@ export default function Dashboard() {
     <div style={{ padding: "0 24px" }}>
       <Title level={4}>Dashboard</Title>
       <Row>
+        <Title level={5}>
+          Browser Extensions{" "}
+          <Tooltip title="The browser extension actively collects data while you are browsing and securely transmits it to SeekBot, which then securely stores it locally. To make use of SeekBot, the installation and activation of this browser extension are required.">
+            <Button
+              type="text"
+              shape="circle"
+              icon={<QuestionCircleOutlined />}
+            />
+          </Tooltip>
+        </Title>
+      </Row>
+      <Row gutter={16}>
+        {browserExtensionConnected.length ? (
+          browserExtensionConnected.map((extension) =>
+            getBrowserExtensionCard(extension),
+          )
+        ) : (
+          <div style={{ padding: "0 10px" }}>
+            <Paragraph>
+              <Text type="secondary">
+                SeekBot browser extension is not connected.
+              </Text>
+            </Paragraph>
+            <Alert
+              type="warning"
+              message="You must install SeekBot browser extension"
+              description={
+                <ul style={{ padding: "0 0 0 10px" }}>
+                  <li>
+                    <Paragraph
+                      copyable={{
+                        text: "https://chromewebstore.google.com/detail/kgipojdgplnnehpaoiobioagckhkdckh",
+                      }}
+                    >
+                      <Button
+                        href="https://chromewebstore.google.com/detail/kgipojdgplnnehpaoiobioagckhkdckh"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Install Chrome SeekBot Extension
+                      </Button>
+                    </Paragraph>
+                  </li>
+                  <li>
+                    <Paragraph
+                      copyable={{
+                        text: "https://chromewebstore.google.com/detail/kgipojdgplnnehpaoiobioagckhkdckh",
+                      }}
+                    >
+                      <Button
+                        href="https://chromewebstore.google.com/detail/kgipojdgplnnehpaoiobioagckhkdckh"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Install Edge SeekBot Extension
+                      </Button>
+                    </Paragraph>
+                  </li>
+                </ul>
+              }
+              showIcon
+            />
+            <Paragraph style={{ marginTop: "10px" }}>
+              <Text type="secondary">
+                If the browser extension has been installed, please ensure that
+                the browser in which the extension was installed is open and
+                that the extension itself is activated.
+              </Text>
+            </Paragraph>
+          </div>
+        )}
+      </Row>
+      <Row>
         <Title level={5}>Services</Title>
       </Row>
       <Row gutter={16}>
-        <Col span={4} style={{ minWidth: 300 }}>
+        <Col span={6} style={{ minWidth: 300 }}>
           <Card hoverable>
             <Meta
               avatar={getBadge(webAppHealthStatus)}
@@ -246,7 +360,7 @@ export default function Dashboard() {
             ></Meta>
           </Card>
         </Col>
-        <Col span={4} style={{ minWidth: 300 }}>
+        <Col span={6} style={{ minWidth: 300 }}>
           <Card hoverable>
             <Meta
               avatar={getBadge(searchEngineHealthStatus)}
@@ -258,24 +372,6 @@ export default function Dashboard() {
             ></Meta>
           </Card>
         </Col>
-      </Row>
-      <Row>
-        <Title level={5}>Browser Extensions</Title>
-      </Row>
-      <Row gutter={16}>
-        {browserExtensionConnected.length ? (
-          browserExtensionConnected.map((extension) =>
-            getBrowserExtensionCard(extension),
-          )
-        ) : (
-          <>
-            <Paragraph>
-              <Text type="secondary">
-                No connected SeekBot browser extensions.
-              </Text>
-            </Paragraph>
-          </>
-        )}
       </Row>
     </div>
   );

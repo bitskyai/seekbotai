@@ -24,3 +24,17 @@ export function getFullDateString(date: Date) {
   const second = addZero(date.getSeconds());
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
+
+export function isVersionLessThan(version, compareVersion = "0.3.0") {
+  const [major, minor, patch] = version.split(".").map(Number);
+  const [compareMajor, compareMinor, comparePatch] = compareVersion
+    .split(".")
+    .map(Number);
+
+  if (major < compareMajor) return true;
+  if (major > compareMajor) return false;
+  if (minor < compareMinor) return true;
+  if (minor > compareMinor) return false;
+  if (patch < comparePatch) return true;
+  return false;
+}

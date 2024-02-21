@@ -11,6 +11,7 @@ import { useRef, useState } from "react"
 
 // import { useNavigate } from "react-router-dom"
 
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import LoseConnection from "~components/LoseConnection"
@@ -20,10 +21,25 @@ export default function Search() {
   // const navigate = useNavigate()
   const iframeElem = useRef(null)
   const [connected, setConnected] = useState(true)
-  const [protocol] = useStorage(StorageKeys.ServiceProtocol)
-  const [hostName] = useStorage(StorageKeys.ServiceHostName)
+  const [protocol] = useStorage({
+    key: StorageKeys.ServiceProtocol,
+    instance: new Storage({
+      area: "local"
+    })
+  })
+  const [hostName] = useStorage({
+    key: StorageKeys.ServiceHostName,
+    instance: new Storage({
+      area: "local"
+    })
+  })
 
-  const [port] = useStorage(StorageKeys.ServicePort)
+  const [port] = useStorage({
+    key: StorageKeys.ServicePort,
+    instance: new Storage({
+      area: "local"
+    })
+  })
   const url = `${protocol ?? DEFAULT_PROTOCOL}://${
     hostName ?? DEFAULT_HOST_NAME
   }:${port}`

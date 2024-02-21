@@ -40,7 +40,9 @@ const logFormat = new LogFormat("storage")
 
 // Service Relative Configuration
 export const getExtensionUUID = async (): Promise<string> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   let extensionUUID = (await storage.get(StorageKeys.ExtensionUUID)) as string
   if (!extensionUUID) {
     extensionUUID = uuidv4()
@@ -52,7 +54,9 @@ export const getExtensionUUID = async (): Promise<string> => {
 }
 
 export const setExtensionUUID = async (extensionUUID: string) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ExtensionUUID, extensionUUID)
   console.debug(...logFormat.formatArgs("setExtensionUUID", extensionUUID))
   releaseMemory(storage)
@@ -60,7 +64,9 @@ export const setExtensionUUID = async (extensionUUID: string) => {
 }
 
 export const getServiceHostName = async (): Promise<string> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const hostName = (await storage.get(StorageKeys.ServiceHostName)) as string
   console.debug(...logFormat.formatArgs("getServiceHostName", hostName))
   releaseMemory(storage)
@@ -68,7 +74,9 @@ export const getServiceHostName = async (): Promise<string> => {
 }
 
 export const setServiceHostName = async (hostName: string) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ServiceHostName, hostName)
   console.debug(...logFormat.formatArgs("setServiceHostName", hostName))
   releaseMemory(storage)
@@ -76,7 +84,9 @@ export const setServiceHostName = async (hostName: string) => {
 }
 
 export const getServiceProtocol = async (): Promise<string> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const protocol = (await storage.get(StorageKeys.ServiceProtocol)) as string
   console.debug(...logFormat.formatArgs("getServiceProtocol", protocol))
   releaseMemory(storage)
@@ -84,7 +94,9 @@ export const getServiceProtocol = async (): Promise<string> => {
 }
 
 export const setServiceProtocol = async (protocol: string) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ServiceProtocol, protocol)
   console.debug(...logFormat.formatArgs("setServiceProtocol", protocol))
   releaseMemory(storage)
@@ -92,7 +104,9 @@ export const setServiceProtocol = async (protocol: string) => {
 }
 
 export const getServiceAPIKey = async (): Promise<string> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const apiKey = (await storage.get(StorageKeys.ServiceAPIKey)) as string
   console.debug(...logFormat.formatArgs("getServiceAPIKey", apiKey))
   releaseMemory(storage)
@@ -100,7 +114,9 @@ export const getServiceAPIKey = async (): Promise<string> => {
 }
 
 export const setServiceAPIKey = async (apiKey: string) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ServiceAPIKey, apiKey)
   console.debug(...logFormat.formatArgs("setServiceAPIKey", apiKey))
   releaseMemory(storage)
@@ -108,7 +124,9 @@ export const setServiceAPIKey = async (apiKey: string) => {
 }
 
 export const getServicePort = async (): Promise<number> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const port = (await storage.get(StorageKeys.ServicePort)) as number
   console.debug(...logFormat.formatArgs("getServicePort", port))
   releaseMemory(storage)
@@ -116,7 +134,9 @@ export const getServicePort = async (): Promise<number> => {
 }
 
 export const setServicePort = async (port: number) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ServicePort, port)
   console.debug(...logFormat.formatArgs("setServicePort", port))
   releaseMemory(storage)
@@ -124,7 +144,9 @@ export const setServicePort = async (port: number) => {
 }
 
 export const getServiceDiscoverStatus = async (): Promise<ServiceStatus> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const status = (await storage.get(
     StorageKeys.ServiceDiscoverStatus
   )) as ServiceStatus
@@ -134,7 +156,9 @@ export const getServiceDiscoverStatus = async (): Promise<ServiceStatus> => {
 }
 
 export const setServiceDiscoverStatus = async (status: ServiceStatus) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ServiceDiscoverStatus, status)
   console.debug(...logFormat.formatArgs("setServiceDiscoverStatus", status))
   releaseMemory(storage)
@@ -142,7 +166,9 @@ export const setServiceDiscoverStatus = async (status: ServiceStatus) => {
 }
 
 export const getServiceHealthStatus = async (): Promise<ServiceStatus> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const status = (await storage.get(
     StorageKeys.ServiceHealthStatus
   )) as ServiceStatus
@@ -152,7 +178,9 @@ export const getServiceHealthStatus = async (): Promise<ServiceStatus> => {
 }
 
 export const setServiceHealthStatus = async (status: ServiceStatus) => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   await storage.set(StorageKeys.ServiceHealthStatus, status)
   console.debug(...logFormat.formatArgs("setServiceHealthStatus", status))
   releaseMemory(storage)
@@ -184,7 +212,9 @@ export const DEFAULT_IMPORT_SUMMARY: ImportSummary = {
 }
 
 export const cleanAllBookmarks = async () => {
-  const storageSummary = new Storage()
+  const storageSummary = new Storage({
+    area: "local"
+  })
   await storageSummary.remove(StorageKeys.ImportBookmarksSummary)
   const storage = new Storage({ area: "local" })
   await storage.remove(StorageKeys.ImportBookmarksInProgress)
@@ -198,7 +228,9 @@ export const getImportSummary = async ({
 }: {
   key: StorageKeys
 }): Promise<ImportSummary> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const importSummary =
     ((await storage.get(key)) as ImportSummary) ?? DEFAULT_IMPORT_SUMMARY
   console.debug(...logFormat.formatArgs("getImportSummary", importSummary))
@@ -212,7 +244,9 @@ export const updateImportSummary = async ({
   key: StorageKeys
   summary: Partial<ImportSummary>
 }): Promise<boolean> => {
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const importSummary = await getImportSummary({ key })
   const updateImportSummary = { ...importSummary, ...summary }
   if (updateImportSummary.inProgressCount === 0) {
@@ -736,7 +770,9 @@ export const stopImportBookmarks = async (): Promise<boolean> => {
 }
 
 export const cleanAllHistory = async () => {
-  const storageSummary = new Storage()
+  const storageSummary = new Storage({
+    area: "local"
+  })
   await storageSummary.remove(StorageKeys.ImportHistorySummary)
   const storage = new Storage({ area: "local" })
   await storage.remove(StorageKeys.ImportHistoryInProgress)

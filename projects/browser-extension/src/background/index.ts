@@ -8,6 +8,7 @@ const logFormat = new LogFormat("background")
 
 const init = async () => {
   console.info(...logFormat.formatArgs("init"))
+
   // when background is loaded, init service discover to find the server
   await initServiceDiscover({ timeout: 1000 })
   // init apis

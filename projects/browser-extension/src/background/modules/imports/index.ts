@@ -58,7 +58,9 @@ export const cleanImportHistory = async () => {
 
 export const init = async () => {
   console.info(...logFormat.formatArgs("init"))
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const storageWatchList = {
     [StorageKeys.ServiceHealthStatus]: async () => {
       const serviceHealthStatus = await storage.get(

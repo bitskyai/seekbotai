@@ -1,5 +1,3 @@
-import _ from "lodash"
-
 import { Storage } from "@plasmohq/storage"
 
 import { createOrUpdatePages } from "~background/modules/apis/createOrUpdatePages"
@@ -91,7 +89,9 @@ export const init = async () => {
   // init interval check background sync up list
   _checkBackgroundSyncUpList()
   // watch service health status
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const storageWatchList = {
     [StorageKeys.ServiceHealthStatus]: _checkBackgroundSyncUpList
   }
