@@ -3,13 +3,13 @@ import type { AppConfig } from "../../../types";
 import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
 import { getFullDateString } from "../../helpers";
 import ipcRendererManager from "../../ipc";
-import { Badge, Card, Col, Row, Typography } from "antd";
+import { Badge, Card, Col, Collapse, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import "./style.css";
 
 const { Meta } = Card;
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 enum HealthStatus {
   CHECKING = "CHECKING",
   UP = "UP",
@@ -84,6 +84,28 @@ export default function Dashboard() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const extensionDownHowToFix = (
+    extensionInfo: BrowserExtensionConnectedData,
+  ) => {
+    const items = [
+      {
+        key: 1,
+        label: "How to fix",
+        children: (
+          <ul>
+            <li>
+              Make sure {extensionInfo.browserName} is running and the SeekBot
+              Browser Extension is enabled
+            </li>
+            <li>Wait for a few seconds, the extension will try to reconnect</li>
+            <li>If all above steps don&apos;t work, you can remove it</li>
+          </ul>
+        ),
+      },
+    ];
+    return <Collapse ghost items={items} />;
+  };
+
   const getBadge = (healthStatus: HealthStatus) => {
     switch (healthStatus) {
       case HealthStatus.CHECKING:
@@ -102,9 +124,23 @@ export default function Dashboard() {
     if (Date.now() - browserExtension.lastConnectedAt < 1.5 * 60 * 1000) {
       status = HealthStatus.UP;
     }
+    const onRemoveExtension = () => {
+      const res = ipcRendererManager.sendSync(
+        IpcEvents.SYNC_REMOVE_EXTENSION,
+        browserExtension,
+      );
+      setBrowserExtensionConnected(res?.payload);
+    };
     return (
       <Col span={4} style={{ minWidth: 300 }}>
-        <Card hoverable>
+        <Card
+          actions={[
+            <a key="remove" href="#" onClick={onRemoveExtension}>
+              Remove
+            </a>,
+          ]}
+          hoverable
+        >
           <Meta
             avatar={getBadge(status)}
             title={browserExtension.browserName}
@@ -114,6 +150,7 @@ export default function Dashboard() {
       </Col>
     );
   };
+
   const getDisplayHealthStatus = (
     healthStatus: HealthStatus,
     checkedTime: Date,
@@ -182,15 +219,14 @@ export default function Dashboard() {
       case HealthStatus.DOWN:
         return (
           <>
-            <p>
-              Down. Check whether {extensionInfo.browserName} is running or
-              whether SeekBot Browser Extension is disabled
-            </p>
+            <p>Down</p>
             {commonFields}
+            {extensionDownHowToFix(extensionInfo)}
           </>
         );
     }
   };
+
   return (
     <div style={{ padding: "0 24px" }}>
       <Title level={4}>Dashboard</Title>
@@ -233,12 +269,11 @@ export default function Dashboard() {
           )
         ) : (
           <>
-            <Text type="secondary">
-              No connected SeekBot browser extensions. If you already opened the
-              browser that installed SeekBot extension, please wait a minute,
-              SeekBot browser extension will automatically connect SeekBot API
-              Server.
-            </Text>
+            <Paragraph>
+              <Text type="secondary">
+                No connected SeekBot browser extensions.
+              </Text>
+            </Paragraph>
           </>
         )}
       </Row>

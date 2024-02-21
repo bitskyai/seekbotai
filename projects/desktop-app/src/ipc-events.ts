@@ -6,6 +6,7 @@ export enum IpcEvents {
   SYNC_OPEN_SEARCH_WINDOW = "SYNC_OPEN_SEARCH_WINDOW",
   SYNC_GET_EXTENSIONS = "SYNC_GET_EXTENSIONS",
   EXTENSION_CONNECTED = "EXTENSION_CONNECTED",
+  SYNC_REMOVE_EXTENSION = "SYNC_REMOVE_EXTENSION",
 }
 
 // message send to main
@@ -16,6 +17,7 @@ export const ipcMainEvents = [
   IpcEvents.SYNC_UPDATE_PREFERENCES_JSON,
   IpcEvents.SYNC_OPEN_SEARCH_WINDOW,
   IpcEvents.SYNC_GET_EXTENSIONS,
+  IpcEvents.SYNC_REMOVE_EXTENSION,
 ];
 
 // message send to renderer

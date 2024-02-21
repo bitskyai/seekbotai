@@ -45,3 +45,19 @@ export async function setBrowserExtension(
   // remove
   return extensions;
 }
+
+export async function removeBrowserExtension(
+  extension: BrowserExtensionConnectedData,
+): Promise<BrowserExtensionConnectedData[]> {
+  const extensions = await getBrowserExtensions();
+  const uuid = getBrowserExtensionUUID(extension);
+  const index = extensions.findIndex(
+    (item) => getBrowserExtensionUUID(item) === uuid,
+  );
+  if (index > -1) {
+    extensions.splice(index, 1);
+  }
+  const config = await getAppConfig();
+  writeJSONSync(config.DESKTOP_APP_EXTENSIONS_PATH, extensions);
+  return extensions;
+}
