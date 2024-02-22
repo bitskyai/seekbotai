@@ -1,5 +1,8 @@
-mutation createOrUpdatePages($pages: [PageCreateOrUpdatePayload!]!) {
-  createOrUpdatePages(pages: $pages) {
+mutation createOrUpdatePages(
+  $pages: [PageCreateOrUpdatePayload!]!
+  $operationName: String = "createOrUpdatePages"
+) {
+  createOrUpdatePages(pages: $pages, operationName: $operationName) {
     url
     status
     id

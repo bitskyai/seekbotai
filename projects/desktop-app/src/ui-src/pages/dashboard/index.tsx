@@ -2,6 +2,9 @@ import { CHECK_SERVICE_HEALTH_INTERVAL_VALUE } from "../../../bitskyLibs/shared"
 import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig, Tour as ProductTour } from "../../../types";
 import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
+import importBookmarks1Img from "../../assets/tour/import-bookmarks-1.png";
+import openSettingsImg from "../../assets/tour/open-settings.png";
+import pinImg from "../../assets/tour/pin.png";
 import { getFullDateString, isVersionLessThan } from "../../helpers";
 import ipcRendererManager from "../../ipc";
 import { QuestionCircleOutlined } from "@ant-design/icons";
@@ -13,6 +16,7 @@ import {
   Card,
   Col,
   Collapse,
+  Image,
   Row,
   Steps,
   Tooltip,
@@ -54,8 +58,7 @@ export default function Dashboard() {
     });
 
     ipcRendererManager.on(IpcEvents.SYNC_UPDATE_PRODUCT_TOUR, (event, args) => {
-      const productTour: ProductTour = args.payload;
-      setProductTour(productTour);
+      setProductTour(args.payload);
     });
 
     const getProductTourRes = ipcRendererManager.sendSync(
@@ -125,7 +128,7 @@ export default function Dashboard() {
     };
   }, []);
 
-  function updateCurrentStep() {
+  useEffect(() => {
     if (productTour?.finished) {
       setOpen(false);
       return;
@@ -161,10 +164,6 @@ export default function Dashboard() {
     if (step < 3) {
       setOpen(true);
     }
-  }
-
-  useEffect(() => {
-    updateCurrentStep();
   }, [
     webAppHealthStatus,
     searchEngineHealthStatus,
@@ -363,12 +362,44 @@ export default function Dashboard() {
     },
   ];
 
+  const getImportBookmarksStepDescription = () => {
+    if (currentStep === 2) {
+      return (
+        <div>
+          <Paragraph>
+            <Text type="secondary">
+              Pin the browser extension to your browser toolbar
+            </Text>
+            <br />
+            <Image width={250} src={pinImg} />
+          </Paragraph>
+          <Paragraph>
+            <Text type="secondary">Open settings</Text>
+            <br />
+            <Image width={250} src={openSettingsImg} />
+          </Paragraph>
+          <Paragraph>
+            <Text type="secondary">
+              Click on the Import Bookmarks button and then click Start Import
+            </Text>
+            <br />
+            <Image width={250} src={importBookmarks1Img} />
+          </Paragraph>
+        </div>
+      );
+    }
+    return <div></div>;
+  };
+
   const getSearchStepDescription = () => {
+    if (currentStep === 3) {
+      return <div>add search steps</div>;
+    }
     return <div></div>;
   };
 
   return (
-    <div style={{ padding: "0 24px" }}>
+    <div style={{ padding: "0 24px 24px 24px" }}>
       <Title level={4}>Dashboard</Title>
       <Card title="Get started">
         <Title level={5} style={{ margin: 0 }}>
@@ -382,6 +413,7 @@ export default function Dashboard() {
           direction="vertical"
           size="small"
           current={currentStep}
+          status={productTour?.finished ? "finish" : "process"}
           items={[
             {
               title: "Check the health of Services",
@@ -391,11 +423,11 @@ export default function Dashboard() {
             { title: "Install the browser extension", description: "" },
             {
               title: "Import bookmarks",
-              description: "",
+              description: getImportBookmarksStepDescription(),
             },
             {
               title: "Search",
-              description: "",
+              description: getSearchStepDescription(),
             },
           ]}
         />

@@ -541,7 +541,9 @@ export const updateImportBookmarks = async (pagesData: PageData[]) => {
   })
 
   // send request to backend
-  await createOrUpdatePages(bookmarks)
+  await createOrUpdatePages(bookmarks, false, {
+    operationName: "import_bookmarks"
+  })
   releaseMemory(bookmarks) // release memory
 }
 

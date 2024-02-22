@@ -1,0 +1,6 @@
+mutation userInteraction($userInteraction: UserInteractionPayload!) {
+  userInteraction(userInteraction: $userInteraction) {
+    success
+    message
+  }
+}

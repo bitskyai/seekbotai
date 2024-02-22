@@ -8,6 +8,7 @@ import SimpleObjectsPlugin from "@pothos/plugin-simple-objects";
 import {
   DateResolver,
   DateTimeResolver,
+  JSONResolver,
   URLResolver,
   UUIDResolver,
 } from "graphql-scalars";
@@ -23,6 +24,7 @@ let _schemaBuilder:
           DateTime: { Input: Date; Output: Date };
           URL: { Input: string; Output: string };
           UUID: { Input: string; Output: string };
+          JSON: { Input: any; Output: any };
         };
         PrismaTypes: PrismaTypes;
         Context: GQLContext;
@@ -43,6 +45,7 @@ export function getSchemaBuilder() {
       DateTime: { Input: Date; Output: Date };
       URL: { Input: string; Output: string };
       UUID: { Input: string; Output: string };
+      JSON: { Input: string; Output: string };
     };
     PrismaTypes: PrismaTypes;
     Context: GQLContext;
@@ -58,6 +61,7 @@ export function getSchemaBuilder() {
   _schemaBuilder.addScalarType("DateTime", DateTimeResolver, {});
   _schemaBuilder.addScalarType("URL", URLResolver, {});
   _schemaBuilder.addScalarType("UUID", UUIDResolver, {});
+  _schemaBuilder.addScalarType("JSON", JSONResolver, {});
 
   // We create empty root query, mutation, and subscription
   // because we'll define individual nodes in other files

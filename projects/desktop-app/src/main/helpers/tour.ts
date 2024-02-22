@@ -3,11 +3,12 @@ import type { Tour } from "../../types";
 import { ipcMainManager } from "../ipc";
 import { getAppConfig } from "./config";
 import { pathExistsSync, readJSONSync, writeJSONSync } from "fs-extra";
+import _ from "lodash";
 
 const defaultTour = { finished: false, updatedAt: Date.now(), steps: {} };
-
+let _tour_in_memory: Tour;
 function isFinishedAllSteps(tour: Tour) {
-  return (
+  return !!(
     tour.steps.installExtension?.finished &&
     tour.steps.importBookmarks?.finished &&
     tour.steps.search?.finished
@@ -15,10 +16,15 @@ function isFinishedAllSteps(tour: Tour) {
 }
 
 export async function getTour(): Promise<Tour> {
+  if (_tour_in_memory) {
+    return _tour_in_memory;
+  }
+
   const config = await getAppConfig();
   if (pathExistsSync(config.DESKTOP_APP_TOUR_PATH)) {
     const tour = readJSONSync(config.DESKTOP_APP_TOUR_PATH);
     tour.finished = isFinishedAllSteps(tour);
+    _tour_in_memory = tour;
   } else {
     return defaultTour;
   }
@@ -51,8 +57,10 @@ export async function setTour(tour: Tour): Promise<Tour> {
   if (tour?.steps?.search) {
     tour.steps.search.updatedAt = Date.now();
   }
-  const updatedTour = { ...currTour, ...tour };
+  const updatedTour = _.merge({}, currTour, tour);
   updatedTour.finished = isFinishedAllSteps(updatedTour);
+  _tour_in_memory = updatedTour;
+  console.log("desktop updatedTour", updatedTour);
   const config = await getAppConfig();
   writeJSONSync(config.DESKTOP_APP_TOUR_PATH, updatedTour);
   ipcMainManager.send(IpcEvents.SYNC_UPDATE_PRODUCT_TOUR, [

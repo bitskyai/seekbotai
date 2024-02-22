@@ -5,7 +5,11 @@ import { setBrowserExtension } from "./browserExtensions";
 import { getAppConfig, updateProcessEnvs } from "./config";
 import { DEFAULT_APP_OPTIONS } from "./constants";
 import logger from "./logger";
-import { finishedInstallExtensionStep } from "./tour";
+import {
+  finishedImportBookmarksStep,
+  finishedInstallExtensionStep,
+  finishedSearchStep,
+} from "./tour";
 import { dialog } from "electron";
 import path from "path";
 
@@ -25,8 +29,12 @@ class WebApp {
       logger.info("starting SeekBot...");
       // Why need to dynamic import here?
       // The reason is we need to setup environment variables before import web-app and search-engine
-      const { startWebAppAndSearchEngine, listenBrowserExtensionConnected } =
-        await import("../../web-app");
+      const {
+        startWebAppAndSearchEngine,
+        listenBrowserExtensionConnected,
+        listenImportBookmarks,
+        listenSearch,
+      } = await import("../../web-app");
 
       await startWebAppAndSearchEngine();
       listenBrowserExtensionConnected(async (data) => {
@@ -38,6 +46,14 @@ class WebApp {
             { status: "success", payload: await setBrowserExtension(data) },
           ]);
         }
+      });
+      listenImportBookmarks(async (pages) => {
+        logger.debug("import bookmarks desktop", { pages: pages });
+        finishedImportBookmarksStep();
+      });
+      listenSearch(async () => {
+        logger.debug("Search");
+        finishedSearchStep();
       });
       logger.info("SeekBot successfully started.");
       process.env.BITSKY_BASE_URL = `http://${appConfig.WEB_APP_HOST_NAME}:${this.port}`;

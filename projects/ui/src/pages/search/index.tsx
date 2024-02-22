@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { Layout, Space } from "antd";
 import "instantsearch.css/themes/satellite.css";
@@ -5,6 +6,7 @@ import { DEFAULT_MEILISEARCH_MASTER_KEY } from "../../../../shared";
 import Panel from "../../components/AisPanel";
 import Refresh from "../../components/Refresh";
 import { usePageEffect } from "../../core/page.js";
+import { UserInteractionDocument } from "../../graphql/generated";
 import { subscribe } from "../../helpers/event";
 import HitItem, { HIT_ITEM_REFRESH } from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
@@ -62,6 +64,20 @@ const SearchPage = () => {
     onRefresh();
   });
 
+  const [useInteractionMutation] = useMutation(UserInteractionDocument);
+
+  const queryHook = (query: string, search: (value: string) => void) => {
+    useInteractionMutation({
+      variables: {
+        userInteraction: {
+          type: "search",
+          data: { query },
+        },
+      },
+    });
+    search(query);
+  };
+
   return (
     <div className="search-container">
       <InstantSearch
@@ -112,7 +128,7 @@ const SearchPage = () => {
           <Layout>
             <Content className="search-content">
               <div className="search-bar">
-                <SearchBox autoFocus />
+                <SearchBox autoFocus queryHook={queryHook} />
                 <div className="search-items">
                   <Space size="small">
                     <HitsPerPage

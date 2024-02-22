@@ -1,34 +1,35 @@
 import { getPrismaClient } from "../../db";
+import { emitImportBookmarks } from "../../event";
 import normalizeUrl from "../../forkRepos/normalize-url";
 import getLogger from "../../helpers/logger";
 import {
   extractPageContent,
-  saveRawPage,
-  saveScreenshot,
   removeRawPage,
   removeScreenshot,
+  saveRawPage,
+  saveScreenshot,
 } from "../../helpers/pageExtraction";
 import {
   addDocumentsToPagesIndexByIds,
   removeDocumentsFromPagesIndexByIds,
 } from "../../searchEngine";
 import { GQLContext } from "../../types";
-import { type MutationResShape, MutationResShapeBM } from "../common.type";
+import { MutationResShapeBM, type MutationResShape } from "../common.type";
 import { getSchemaBuilder } from "../gql-builder";
 import {
-  PageCreateOrUpdatePayloadBM,
   CreateOrUpdatePageResBM,
-  UpdatePageTagShapeBM,
+  DeletePageShapeBM,
+  PageCreateOrUpdatePayloadBM,
   PageMetadataBM,
   UpdatablePageMetadataShapeBM,
-  DeletePageShapeBM,
+  UpdatePageTagShapeBM,
 } from "./schema.type";
 import type {
   CreateOrUpdatePageRes,
-  PageCreateOrUpdateShape,
-  UpdatePageTagShape,
-  UpdatablePageMetadataShape,
   DeletePageShape,
+  PageCreateOrUpdateShape,
+  UpdatablePageMetadataShape,
+  UpdatePageTagShape,
 } from "./types";
 import { PageMetadata } from "@prisma/client";
 import _ from "lodash";
@@ -38,13 +39,16 @@ getSchemaBuilder().mutationField("createOrUpdatePages", (t) =>
     type: [CreateOrUpdatePageResBM],
     args: {
       pages: t.arg({ type: [PageCreateOrUpdatePayloadBM], required: true }),
+      operationName: t.arg({ type: "String", required: false }),
     },
     resolve: async (root, args, ctx) => {
       const res = await createOrUpdatePages({
         ctx,
         pages: args.pages,
       });
-
+      if (args.operationName === "import_bookmarks") {
+        emitImportBookmarks(args.pages);
+      }
       return res;
     },
   }),

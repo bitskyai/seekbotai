@@ -7,7 +7,7 @@ import helmet from "helmet";
 import path from "path";
 import "./entities";
 import { getSchemaBuilder } from "./entities";
-import { emitBrowserExtensionConnected } from "./event";
+import { emitBrowserExtensionConnected, emitSearch } from "./event";
 import { getAppConfig } from "./helpers/config";
 import getLogger from "./helpers/logger";
 import printGraphqlSchema from "./helpers/printSchema";
@@ -93,6 +93,16 @@ export async function createApp() {
       });
     }
 
+    if (
+      req.url.includes("/multi-search") &&
+      req.method.toLowerCase() === "post"
+    ) {
+      const query = req.body && req.body.queries && req.body.queries[0];
+      if (query?.q?.length > 0 && query?.indexUid === "pages") {
+        emitSearch(query);
+      }
+    }
+
     // Continue to the next middleware or route handler
     next();
   });
@@ -105,11 +115,9 @@ export async function createApp() {
   app.use("/heartbeat", (req, res) => {
     res.send(DEFAULT_SELF_IDENTIFICATION);
   });
-
   app.use("/agent", (req, res) => {
     res.send(DEFAULT_SELF_IDENTIFICATION);
   });
-
   const yoga = createYoga({
     schema: getSchemaBuilder().toSchema({}),
     context: () => {
@@ -128,7 +136,6 @@ export async function createApp() {
   app.use(express.static(path.join(config.WEB_APP_HOME_PATH)));
   app.use("/graphql", yoga);
   await setupProxy(app);
-
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname + "/ui/index.html"));
   });
