@@ -3,9 +3,8 @@ import type { Tour } from "../../types";
 import { ipcMainManager } from "../ipc";
 import { getAppConfig } from "./config";
 import { pathExistsSync, readJSONSync, writeJSONSync } from "fs-extra";
-import _ from "lodash";
 
-const defaultTour = { finished: false, updatedAt: Date.now(), steps: {} };
+const defaultTour = { steps: {} };
 let _tour_in_memory: Tour;
 function isFinishedAllSteps(tour: Tour) {
   return !!(
@@ -31,42 +30,59 @@ export async function getTour(): Promise<Tour> {
 }
 
 export async function finishedInstallExtensionStep() {
-  return await setTour({ steps: { installExtension: { finished: true } } });
+  return await finishedStep("installExtension");
 }
 
 export async function finishedImportBookmarksStep() {
-  return await setTour({ steps: { importBookmarks: { finished: true } } });
+  return await finishedStep("importBookmarks");
 }
 
 export async function finishedSearchStep() {
-  return await setTour({ steps: { search: { finished: true } } });
+  return await finishedStep("search");
+}
+
+export async function finishedTour() {
+  const currTour = await getTour();
+  currTour.notShow = true;
+  return await setTour(currTour);
+}
+
+export async function finishedStep(step: string) {
+  const currTour = await getTour();
+  if (currTour.finished) {
+    return;
+  }
+  if (
+    step === "installExtension" &&
+    !currTour.steps?.installExtension?.finished
+  ) {
+    currTour.steps.installExtension = { finished: true, updatedAt: Date.now() };
+  } else if (
+    step === "importBookmarks" &&
+    currTour.steps?.installExtension?.finished &&
+    !currTour.steps?.importBookmarks?.finished
+  ) {
+    currTour.steps.importBookmarks = { finished: true, updatedAt: Date.now() };
+  } else if (
+    step === "search" &&
+    currTour.steps?.importBookmarks?.finished &&
+    !currTour.steps?.search?.finished
+  ) {
+    currTour.steps.search = { finished: true, updatedAt: Date.now() };
+  } else {
+    return currTour;
+  }
+  return await setTour(currTour);
 }
 
 export async function setTour(tour: Tour): Promise<Tour> {
-  const currTour = await getTour();
-  if (!tour) {
-    return currTour;
-  }
-  tour.updatedAt = Date.now();
-  if (tour?.steps?.importBookmarks) {
-    tour.steps.importBookmarks.updatedAt = Date.now();
-  }
-  if (tour?.steps?.installExtension) {
-    tour.steps.installExtension.updatedAt = Date.now();
-  }
-  if (tour?.steps?.search) {
-    tour.steps.search.updatedAt = Date.now();
-  }
-  const updatedTour = _.merge({}, currTour, tour);
-  updatedTour.finished = isFinishedAllSteps(updatedTour);
-  _tour_in_memory = updatedTour;
-  console.log("desktop updatedTour", updatedTour);
+  _tour_in_memory = tour;
   const config = await getAppConfig();
-  writeJSONSync(config.DESKTOP_APP_TOUR_PATH, updatedTour);
-  ipcMainManager.send(IpcEvents.SYNC_UPDATE_PRODUCT_TOUR, [
-    { status: "success", payload: updatedTour },
+  writeJSONSync(config.DESKTOP_APP_TOUR_PATH, tour);
+  ipcMainManager.send(IpcEvents.SYNC_PRODUCT_TOUR_UPDATED, [
+    { status: "success", payload: tour },
   ]);
-  return updatedTour;
+  return tour;
 }
 
 export async function resetTour(): Promise<Tour> {

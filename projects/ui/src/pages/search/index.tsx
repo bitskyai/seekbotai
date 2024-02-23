@@ -21,6 +21,7 @@ import {
   InstantSearch,
   RefinementList,
   SearchBox,
+  SearchBoxProps,
   SortBy,
   Stats,
   ToggleRefinement,
@@ -66,7 +67,8 @@ const SearchPage = () => {
 
   const [useInteractionMutation] = useMutation(UserInteractionDocument);
 
-  const queryHook = (query: string, search: (value: string) => void) => {
+  const queryHook: SearchBoxProps["queryHook"] = (query, search) => {
+    search(query);
     useInteractionMutation({
       variables: {
         userInteraction: {
@@ -75,7 +77,6 @@ const SearchPage = () => {
         },
       },
     });
-    search(query);
   };
 
   return (

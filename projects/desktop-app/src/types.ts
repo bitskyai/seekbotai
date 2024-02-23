@@ -99,9 +99,10 @@ export interface TourStep {
 }
 
 export interface Tour {
+  notShow?: boolean;
   finished?: boolean;
   updatedAt?: number;
-  steps: {
+  steps?: {
     installExtension?: TourStep;
     importBookmarks?: TourStep;
     search?: TourStep;

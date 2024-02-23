@@ -3,8 +3,10 @@ import { IpcEvents } from "../../../ipc-events";
 import type { AppConfig, Tour as ProductTour } from "../../../types";
 import type { BrowserExtensionConnectedData } from "../../../web-app/src/types";
 import importBookmarks1Img from "../../assets/tour/import-bookmarks-1.png";
+import openSearchImg from "../../assets/tour/open-search.png";
 import openSettingsImg from "../../assets/tour/open-settings.png";
 import pinImg from "../../assets/tour/pin.png";
+import searchImg from "../../assets/tour/search.png";
 import { getFullDateString, isVersionLessThan } from "../../helpers";
 import ipcRendererManager from "../../ipc";
 import { QuestionCircleOutlined } from "@ant-design/icons";
@@ -38,7 +40,7 @@ const cardMinWidth = 400;
 
 export default function Dashboard() {
   const [open, setOpen] = useState<boolean>(false);
-  const [productTour, setProductTour] = useState<ProductTour>();
+  const [productTour, setProductTour] = useState<ProductTour>({ steps: {} });
   const [webAppHealthStatus, setWebAppHealthStatus] =
     React.useState<HealthStatus>(HealthStatus.CHECKING);
   const [searchEngineHealthStatus, setSearchEngineHealthStatus] =
@@ -57,9 +59,12 @@ export default function Dashboard() {
       setBrowserExtensionConnected(extensions);
     });
 
-    ipcRendererManager.on(IpcEvents.SYNC_UPDATE_PRODUCT_TOUR, (event, args) => {
-      setProductTour(args.payload);
-    });
+    ipcRendererManager.on(
+      IpcEvents.SYNC_PRODUCT_TOUR_UPDATED,
+      (event, args) => {
+        setProductTour(args.payload);
+      },
+    );
 
     const getProductTourRes = ipcRendererManager.sendSync(
       IpcEvents.SYNC_GET_PRODUCT_TOUR,
@@ -130,6 +135,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (productTour?.finished) {
+      setCurrentStep(4);
       setOpen(false);
       return;
     }
@@ -142,26 +148,20 @@ export default function Dashboard() {
       step = 0;
     } else {
       if (
-        webAppHealthStatus === HealthStatus.UP &&
-        searchEngineHealthStatus === HealthStatus.UP
+        !productTour?.steps?.installExtension?.finished ||
+        !browserExtensionConnected.length
       ) {
         step = 1;
-      }
-      if (
-        productTour?.steps?.installExtension?.finished ||
-        browserExtensionConnected.length > 0
-      ) {
+      } else if (!productTour?.steps?.importBookmarks?.finished) {
         step = 2;
-      }
-      if (productTour?.steps?.importBookmarks?.finished) {
+      } else if (!productTour?.steps?.search?.finished) {
         step = 3;
-      }
-      if (productTour?.steps?.search?.finished) {
+      } else {
         step = 4;
       }
     }
     setCurrentStep(step);
-    if (step < 3) {
+    if (step < 2) {
       setOpen(true);
     }
   }, [
@@ -393,7 +393,23 @@ export default function Dashboard() {
 
   const getSearchStepDescription = () => {
     if (currentStep === 3) {
-      return <div>add search steps</div>;
+      return (
+        <div>
+          <Paragraph>
+            <Text type="secondary">Open Search</Text>
+            <br />
+            <Image width={250} src={openSearchImg} />
+          </Paragraph>
+          <Paragraph>
+            <Text type="secondary">
+              Click on the search box and try to search bookmarks you imported
+              before
+            </Text>
+            <br />
+            <Image width={250} src={searchImg} />
+          </Paragraph>
+        </div>
+      );
     }
     return <div></div>;
   };
@@ -401,7 +417,10 @@ export default function Dashboard() {
   return (
     <div style={{ padding: "0 24px 24px 24px" }}>
       <Title level={4}>Dashboard</Title>
-      <Card title="Get started">
+      <Card
+        title="Get started"
+        style={{ display: productTour?.notShow ? "none" : "block" }}
+      >
         <Title level={5} style={{ margin: 0 }}>
           Welcome!
         </Title>
@@ -431,6 +450,28 @@ export default function Dashboard() {
             },
           ]}
         />
+        {currentStep === 4 ? (
+          <div>
+            <Paragraph>
+              <Text>
+                Congratulations! You&apos;ve completed the product tour. Now, as
+                you browse, you can utilize SeekBot to effortlessly search
+                through your bookmarks and history using any keywords.
+              </Text>
+            </Paragraph>
+            <Button
+              type="primary"
+              onClick={() => {
+                ipcRendererManager.send(IpcEvents.SYNC_FINISH_PRODUCT_TOUR);
+                setOpen(false);
+              }}
+            >
+              Close
+            </Button>
+          </div>
+        ) : (
+          <></>
+        )}
       </Card>
       <Row>
         <Title level={5}>
