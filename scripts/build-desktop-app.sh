@@ -22,11 +22,11 @@ cd $TARGET_PATH
 print "Remove previous build"
 rm -rf ./dist
 
+bash ${ROOT_DIR}/copy-libs.sh
+
 # Build desktop app UI
 print "Build desktop app UI"
 npm run build:ui
-
-bash ${ROOT_DIR}/copy-libs.sh
 
 print "Complie Typescript"
 npm run tsc
