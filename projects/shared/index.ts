@@ -24,3 +24,4 @@ export const DEFAULT_MEILISEARCH_PORT = 47700;
 export const HISTORY_TAG = "History";
 export const WEB_APP_SCREENSHOT_PREVIEW_CROP_HEIGHT = 250;
 export const WEB_APP_SCREENSHOT_PREVIEW_CROP_WIDTH = 405;
+export const CHECK_SERVICE_HEALTH_INTERVAL_VALUE = 1000 * 10; // 10s, if you change this, make sure you also update the not health logic in desktop app

@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import { Layout, Space } from "antd";
 import "instantsearch.css/themes/satellite.css";
@@ -5,10 +6,11 @@ import { DEFAULT_MEILISEARCH_MASTER_KEY } from "../../../../shared";
 import Panel from "../../components/AisPanel";
 import Refresh from "../../components/Refresh";
 import { usePageEffect } from "../../core/page.js";
+import { UserInteractionDocument } from "../../graphql/generated";
 import { subscribe } from "../../helpers/event";
 import HitItem, { HIT_ITEM_REFRESH } from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ClearRefinements,
@@ -39,6 +41,7 @@ const searchClient = instantMeiliSearch(url, DEFAULT_MEILISEARCH_MASTER_KEY, {
 const SearchPage = () => {
   const { t } = useTranslation();
   usePageEffect({ title: "Search" });
+  const searchBoxRef = useRef(null);
   const [infiniteHitsKey, setInfiniteHitsKey] = useState(0);
   const transformBooleanToReadableValue = (
     refinements: CurrentRefinementsConnectorParamsRefinement[],
@@ -61,6 +64,23 @@ const SearchPage = () => {
   subscribe(HIT_ITEM_REFRESH, () => {
     onRefresh();
   });
+
+  const [useInteractionMutation] = useMutation(UserInteractionDocument);
+  let typeSetTimeOutHandler: NodeJS.Timeout;
+  const typeSearch = () => {
+    clearTimeout(typeSetTimeOutHandler);
+    typeSetTimeOutHandler = setTimeout(() => {
+      searchBoxRef;
+      useInteractionMutation({
+        variables: {
+          userInteraction: {
+            type: "search",
+            data: {},
+          },
+        },
+      });
+    }, 1000);
+  };
 
   return (
     <div className="search-container">
@@ -112,7 +132,9 @@ const SearchPage = () => {
           <Layout>
             <Content className="search-content">
               <div className="search-bar">
-                <SearchBox autoFocus />
+                <div onKeyDown={typeSearch}>
+                  <SearchBox autoFocus ref={searchBoxRef} />
+                </div>
                 <div className="search-items">
                   <Space size="small">
                     <HitsPerPage

@@ -10,7 +10,7 @@
     "electron:start": "electron-forge start",
     "dev": "npm run build:webapp && npm run dev:watch",
     "dev:ui": "vite serve --port 7777",
-    "dev:watch": "cross-env WATCH=true && bash ../../scripts/copy-libs.sh && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && cp -rf ./src/ui ./dist/ && npm run electron:start",
+    "dev:watch": "cross-env WATCH=true && bash ../../scripts/copy-libs.sh && rimraf ./dist && npm run tsc && cp -rf ./src/web-app ./dist/ && cp -rf ./src/ui ./dist/ && dotenv -e ../../env/.env -c -- npm run electron:start",
     "build": "bash ../../scripts/build-desktop-app.sh",
     "build:ui": "tsc --project ./tsconfig-ui.json && vite build",
     "build:webapp": "bash ../../scripts/build-web-app-to-desktop-app.sh",

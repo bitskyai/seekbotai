@@ -13,6 +13,7 @@ export type Scalars = {
   Float: number;
   Date: any;
   DateTime: any;
+  JSON: any;
   URL: any;
   UUID: any;
 };
@@ -40,10 +41,12 @@ export type Mutation = {
   deletePages: MutationRes;
   updatePageMetadata: PageMetadata;
   updatePageTags: MutationRes;
+  userInteraction: MutationRes;
 };
 
 
 export type MutationCreateOrUpdatePagesArgs = {
+  operationName?: InputMaybe<Scalars['String']>;
   pages: Array<PageCreateOrUpdatePayload>;
 };
 
@@ -67,6 +70,11 @@ export type MutationUpdatePageMetadataArgs = {
 export type MutationUpdatePageTagsArgs = {
   pageId: Scalars['String'];
   pageTags: Array<UpdatePageTagPayload>;
+};
+
+
+export type MutationUserInteractionArgs = {
+  userInteraction: UserInteractionPayload;
 };
 
 export type MutationRes = {
@@ -274,6 +282,11 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type UserInteractionPayload = {
+  data: Scalars['JSON'];
+  type: Scalars['String'];
+};
+
 export type DeleteIgnoreUrlPayload = {
   id: Scalars['String'];
 };
@@ -340,6 +353,13 @@ export type UpdatePageTagsMutationVariables = Exact<{
 
 export type UpdatePageTagsMutation = { __typename?: 'Mutation', updatePageTags: { __typename?: 'MutationRes', success: boolean, message?: string | null } };
 
+export type UserInteractionMutationVariables = Exact<{
+  userInteraction: UserInteractionPayload;
+}>;
+
+
+export type UserInteractionMutation = { __typename?: 'Mutation', userInteraction: { __typename?: 'MutationRes', success: boolean, message?: string | null } };
+
 
 export const DeleteIgnoreUrLsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteIgnoreURLs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteIgnoreURLs"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"deleteIgnoreURLPayload"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteIgnoreURLs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"deleteIgnoreURLs"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteIgnoreURLs"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeleteIgnoreUrLsMutation, DeleteIgnoreUrLsMutationVariables>;
 export const DeletePagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deletePages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pages"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeletePagePayload"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pages"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pages"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<DeletePagesMutation, DeletePagesMutationVariables>;
@@ -349,3 +369,4 @@ export const GetPagesDocument = {"kind":"Document","definitions":[{"kind":"Opera
 export const GetTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isSystem"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetTagsQuery, GetTagsQueryVariables>;
 export const UpdatePageMetadataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePageMetadata"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageMetadata"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdatablePageMetadataPayload"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePageMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pageId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageId"}}},{"kind":"Argument","name":{"kind":"Name","value":"pageMetadata"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageMetadata"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdatePageMetadataMutation, UpdatePageMetadataMutationVariables>;
 export const UpdatePageTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePageTags"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageTags"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdatePageTagPayload"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePageTags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pageId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageId"}}},{"kind":"Argument","name":{"kind":"Name","value":"pageTags"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageTags"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UpdatePageTagsMutation, UpdatePageTagsMutationVariables>;
+export const UserInteractionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"userInteraction"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userInteraction"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInteractionPayload"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userInteraction"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userInteraction"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userInteraction"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]} as unknown as DocumentNode<UserInteractionMutation, UserInteractionMutationVariables>;

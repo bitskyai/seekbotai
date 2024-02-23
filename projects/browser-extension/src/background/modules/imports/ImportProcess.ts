@@ -5,7 +5,7 @@ import { releaseMemory } from "~helpers/util"
 import ImportThread from "./ImportThread"
 
 export class ImportProcess {
-  static MAX_CONCURRENT = 50
+  static MAX_CONCURRENT = 10
   static DEFAULT_TIMEOUT = 0.5 * 60 * 1000 // 30 minute
   private skipGetPageData = false // skip to get page data, this only import metadata: url, name, tags
   private stopped = true
@@ -13,15 +13,17 @@ export class ImportProcess {
   protected importThreads: ImportThread[] = []
   protected jobIndex = 0
   protected logFormat = new LogFormat("modules/imports/ImportProcess")
-  protected concurrent = 50
+  protected concurrent = 10
   protected timeout: number = ImportProcess.DEFAULT_TIMEOUT
 
   constructor({
     concurrent,
-    timeout
+    timeout,
+    skipGetPageData
   }: {
     concurrent?: number
     timeout?: number
+    skipGetPageData?: boolean
   }) {
     console.debug(
       ...this.logFormat.formatArgs("constructor", { concurrent, timeout })
@@ -36,6 +38,7 @@ export class ImportProcess {
     if (timeout) {
       this.timeout = timeout
     }
+    this.skipGetPageData = !!skipGetPageData
     // this.init()
     console.debug(...this.logFormat.formatArgs("constructor finished"))
   }

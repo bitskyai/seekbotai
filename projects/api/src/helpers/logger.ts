@@ -8,7 +8,6 @@ let logger: Logger;
 export default function getLogger() {
   try {
     if (logger) {
-      console.log("logger already created.");
       return logger;
     }
     const config = getAppConfig();

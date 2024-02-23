@@ -68,6 +68,8 @@ export interface DesktopAppOptions
   DESKTOP_APP_HOME_PATH: string;
   DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME: string;
   DESKTOP_APP_LOG_FILES_FOLDER: string;
+  DESKTOP_APP_EXTENSIONS_PATH: string;
+  DESKTOP_APP_TOUR_PATH: string;
 }
 
 // user configurable preferences for app
@@ -88,4 +90,21 @@ export interface AppConfig extends AppOptions {
   DESKTOP_APP_FIRST_TIME_RUN_FILE_PATH: string; // DESKTOP_APP_USER_DATA_HOME_PATH/DESKTOP_APP_FIRST_TIME_RUN_FILE_NAME
   WEB_APP_HOME_PATH: string; // DESKTOP_APP_USER_DATA_HOME_PATH/WEB_APP_NAME
   SEARCH_ENGINE_HOME_PATH: string; // DESKTOP_APP_HOME_PATH/SEARCH_ENGINE_NAME
+}
+
+export interface TourStep {
+  finished: boolean;
+  title?: string;
+  updatedAt?: number;
+}
+
+export interface Tour {
+  notShow?: boolean;
+  finished?: boolean;
+  updatedAt?: number;
+  steps?: {
+    installExtension?: TourStep;
+    importBookmarks?: TourStep;
+    search?: TourStep;
+  };
 }

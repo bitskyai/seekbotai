@@ -13,6 +13,7 @@ import type { ColumnsType } from "antd/es/table"
 import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { MessageSubject } from "~background/messages"
@@ -50,9 +51,12 @@ export default function ExtensionSettingsImport() {
     })
   }
 
-  const [importBookmarksSummary] = useStorage<ImportSummary>(
-    StorageKeys.ImportBookmarksSummary
-  )
+  const [importBookmarksSummary] = useStorage<ImportSummary>({
+    key: StorageKeys.ImportBookmarksSummary,
+    instance: new Storage({
+      area: "local"
+    })
+  })
 
   console.debug(
     ...logFormat.formatArgs("importBookmarksSummary", importBookmarksSummary)

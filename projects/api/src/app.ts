@@ -7,7 +7,7 @@ import helmet from "helmet";
 import path from "path";
 import "./entities";
 import { getSchemaBuilder } from "./entities";
-import { emitBrowserExtensionConnected } from "./event";
+import { emitBrowserExtensionConnected, emitSearch } from "./event";
 import { getAppConfig } from "./helpers/config";
 import getLogger from "./helpers/logger";
 import printGraphqlSchema from "./helpers/printSchema";
@@ -34,6 +34,10 @@ export async function createApp() {
       req.method.toLowerCase() === "get" &&
       req.headers["x-seekbot-extension-id"]
     ) {
+      let uuid = req.headers["x-seekbot-extension-uuid"];
+      if (Array.isArray(uuid)) {
+        uuid = uuid[0];
+      }
       let extensionId = req.headers["x-seekbot-extension-id"];
       if (Array.isArray(extensionId)) {
         extensionId = extensionId[0];
@@ -54,14 +58,49 @@ export async function createApp() {
         browserName = browserName[0];
       }
 
+      let browserVersion = req.headers["x-seekbot-browser-version"];
+      if (Array.isArray(browserVersion)) {
+        browserVersion = browserVersion[0];
+      }
+
+      let browserUserAgent = req.headers["x-seekbot-browser-user-agent"];
+      if (Array.isArray(browserUserAgent)) {
+        browserUserAgent = browserUserAgent[0];
+      }
+
+      let os = req.headers["x-seekbot-os"];
+      if (Array.isArray(os)) {
+        os = os[0];
+      }
+
+      let osArch = req.headers["x-seekbot-os-arch"];
+      if (Array.isArray(osArch)) {
+        osArch = osArch[0];
+      }
+
       // this is a browser extension request
       emitBrowserExtensionConnected({
+        uuid: uuid ?? "",
         extensionId: extensionId,
         extensionVersion: extensionVersion ?? "",
         lastConnectedAt: Date.now(),
         optionsUrl: optionsUrl ?? "",
         browserName: browserName ?? "",
+        browserVersion: browserVersion ?? "",
+        browserUserAgent: browserUserAgent ?? "",
+        os: os ?? "",
+        osArch: osArch ?? "",
       });
+    }
+
+    if (
+      req.url.includes("/multi-search") &&
+      req.method.toLowerCase() === "post"
+    ) {
+      const query = req.body && req.body.queries && req.body.queries[0];
+      if (query?.q?.length > 0 && query?.indexUid === "pages") {
+        emitSearch(query);
+      }
     }
 
     // Continue to the next middleware or route handler
@@ -76,11 +115,9 @@ export async function createApp() {
   app.use("/heartbeat", (req, res) => {
     res.send(DEFAULT_SELF_IDENTIFICATION);
   });
-
   app.use("/agent", (req, res) => {
     res.send(DEFAULT_SELF_IDENTIFICATION);
   });
-
   const yoga = createYoga({
     schema: getSchemaBuilder().toSchema({}),
     context: () => {
@@ -99,7 +136,6 @@ export async function createApp() {
   app.use(express.static(path.join(config.WEB_APP_HOME_PATH)));
   app.use("/graphql", yoga);
   await setupProxy(app);
-
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname + "/ui/index.html"));
   });

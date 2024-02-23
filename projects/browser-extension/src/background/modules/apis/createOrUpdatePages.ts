@@ -14,7 +14,7 @@ const logFormat = new LogFormat("apis/createOrUpdatePages")
 export async function createOrUpdatePages(
   pages: PageCreateOrUpdatePayload[],
   skipAddToBackgroundSyncUp = false,
-  options?: { checkWhetherIgnore?: boolean }
+  options?: { checkWhetherIgnore?: boolean; operationName?: string }
 ) {
   console.info(...logFormat.formatArgs("createOrUpdatePages", { pages }))
   const apolloClient = await getApolloClient()
@@ -43,7 +43,7 @@ export async function createOrUpdatePages(
 
   const result = await apolloClient.mutate({
     mutation: CreateOrUpdatePagesDocument,
-    variables: { pages: filteredPages },
+    variables: { pages: filteredPages, operationName: options?.operationName },
     fetchPolicy: "no-cache"
   })
   console.debug(

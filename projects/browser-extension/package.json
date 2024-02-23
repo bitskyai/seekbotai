@@ -1,8 +1,8 @@
 {
-  "name": "bi-browser-extension",
-  "displayName": "SeekBot - Make Life Productive",
+  "name": "seekbot-browser-extension",
+  "displayName": "SeekBot",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Your personal data assistant who organize your browser information, making your data accessible through AI-powered search engine",
   "author": "help.bitskyai@gmail.com",
   "license": "GPL-3.0",

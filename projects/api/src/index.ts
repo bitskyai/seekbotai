@@ -1,6 +1,10 @@
 import getEventEmitter, {
   emitBrowserExtensionConnected,
+  emitImportBookmarks,
+  emitSearch,
   listenBrowserExtensionConnected,
+  listenImportBookmarks,
+  listenSearch,
 } from "./event";
 import {
   startWebAppAndSearchEngine,
@@ -18,8 +22,12 @@ import {
 // if you don't want to use default app config, make sure you set the env variables before calling these functions and use dynamic import
 export {
   emitBrowserExtensionConnected,
+  emitImportBookmarks,
+  emitSearch,
   getEventEmitter,
   listenBrowserExtensionConnected,
+  listenImportBookmarks,
+  listenSearch,
   startWebAppAndSearchEngine,
   stopWebAppAndSearchEngine,
 };

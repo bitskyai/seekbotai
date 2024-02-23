@@ -13,6 +13,7 @@ import type { ColumnsType } from "antd/es/table"
 import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { MessageSubject } from "~background/messages"
@@ -52,9 +53,12 @@ export default function ExtensionSettingImportHistory() {
     })
   }
 
-  const [importHistorySummary] = useStorage<ImportSummary>(
-    StorageKeys.ImportHistorySummary
-  )
+  const [importHistorySummary] = useStorage<ImportSummary>({
+    key: StorageKeys.ImportHistorySummary,
+    instance: new Storage({
+      area: "local"
+    })
+  })
 
   console.debug(
     ...logFormat.formatArgs("importHistorySummary", importHistorySummary)

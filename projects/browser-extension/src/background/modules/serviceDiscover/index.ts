@@ -22,6 +22,7 @@ const logFormat = new LogFormat("modules/serviceDiscover")
 const _check_service_health_interval_value =
   SERVICE_DISCOVER_CONSTANTS.CHECK_SERVICE_HEALTH_INTERVAL_VALUE // half minutes
 let _interval_check_service_health_handler = null
+let _checking_service_health = false
 // scan ports to find backend service, if found, return true, otherwise return false
 export const discoverService = async (
   timeout = 1000,
@@ -106,6 +107,10 @@ export const discoverService = async (
 export const checkServiceHealth = async (
   timeout = 1000
 ): Promise<ServiceStatus> => {
+  if (_checking_service_health) {
+    return ServiceStatus.Checking
+  }
+  _checking_service_health = true
   let status = ServiceStatus.Checking
   await setServiceHealthStatus(ServiceStatus.Checking)
   try {
@@ -146,8 +151,10 @@ export const checkServiceHealth = async (
       // update ignoreURLs
       await getIgnoreURLs()
     }
+    _checking_service_health = false
     return status
   } catch (error) {
+    _checking_service_health = false
     console.error(
       ...logFormat.formatArgs(
         `checkServiceHealth failed, error:${error.message}}`

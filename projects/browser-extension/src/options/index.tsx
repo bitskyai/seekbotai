@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { RouterProvider } from "react-router-dom"
 
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import LoseConnection from "~components/LoseConnection"
@@ -14,7 +15,12 @@ import "./index.css"
 import { router } from "./routes"
 
 function Options() {
-  const [serviceHealthStatus] = useStorage(StorageKeys.ServiceHealthStatus)
+  const [serviceHealthStatus] = useStorage({
+    key: StorageKeys.ServiceHealthStatus,
+    instance: new Storage({
+      area: "local"
+    })
+  })
   const [status, setStatus] = useState(ServiceStatus.Failed)
 
   const getContent = (status) => {

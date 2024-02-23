@@ -2,6 +2,7 @@ import { DEFAULT_HOST_NAME, DEFAULT_PROTOCOL } from "@bitsky/shared"
 import { Result } from "antd"
 import { useRef } from "react"
 
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { StorageKeys } from "~storage"
@@ -11,11 +12,31 @@ import "./style.css"
 
 function IndexNewtab() {
   const iframeElem = useRef(null)
-  const [protocol] = useStorage(StorageKeys.ServiceProtocol)
-  const [hostName] = useStorage(StorageKeys.ServiceHostName)
-  const [serviceHealthStatus] = useStorage(StorageKeys.ServiceHealthStatus)
+  const [protocol] = useStorage({
+    key: StorageKeys.ServiceProtocol,
+    instance: new Storage({
+      area: "local"
+    })
+  })
+  const [hostName] = useStorage({
+    key: StorageKeys.ServiceHostName,
+    instance: new Storage({
+      area: "local"
+    })
+  })
+  const [serviceHealthStatus] = useStorage({
+    key: StorageKeys.ServiceHealthStatus,
+    instance: new Storage({
+      area: "local"
+    })
+  })
 
-  const [port] = useStorage(StorageKeys.ServicePort)
+  const [port] = useStorage({
+    key: StorageKeys.ServicePort,
+    instance: new Storage({
+      area: "local"
+    })
+  })
   const url = `${protocol ?? DEFAULT_PROTOCOL}://${
     hostName ?? DEFAULT_HOST_NAME
   }:${port}`

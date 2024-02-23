@@ -67,11 +67,11 @@ export function AppLayout(): JSX.Element {
 
   useEffect(() => {
     // Set the body's height to the browser's height on mount
-    document.body.style.height = `${window.innerHeight}px`;
+    document.body.style.minHeight = `${window.innerHeight}px`;
 
     // Update the body's height on window resize
     const handleResize = () => {
-      document.body.style.height = `${window.innerHeight}px`;
+      document.body.style.minHeight = `${window.innerHeight}px`;
     };
 
     window.addEventListener("resize", handleResize);

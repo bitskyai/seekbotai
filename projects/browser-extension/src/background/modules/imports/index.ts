@@ -22,7 +22,7 @@ let _importHistory
 
 export const startImportBookmarks = async () => {
   console.info(...logFormat.formatArgs("startImportBookmarks"))
-  _importBookmarks = new ImportBookmarks({})
+  _importBookmarks = new ImportBookmarks({ skipGetPageData: true })
   _importBookmarks?.start()
 }
 
@@ -58,7 +58,9 @@ export const cleanImportHistory = async () => {
 
 export const init = async () => {
   console.info(...logFormat.formatArgs("init"))
-  const storage = new Storage()
+  const storage = new Storage({
+    area: "local"
+  })
   const storageWatchList = {
     [StorageKeys.ServiceHealthStatus]: async () => {
       const serviceHealthStatus = await storage.get(

@@ -1,9 +1,15 @@
 // Setup Event Listeners
 
 import { IpcEvents } from "../ipc-events";
-import type { AppConfig, AppPreferences } from "../types";
+import type { AppConfig, AppPreferences, Tour } from "../types";
+import type { BrowserExtensionConnectedData } from "../web-app/src/types";
+import {
+  getBrowserExtensions,
+  removeBrowserExtension,
+} from "./helpers/browserExtensions";
 import { getAppConfig } from "./helpers/config";
 import logger from "./helpers/logger";
+import { finishedTour, getTour } from "./helpers/tour";
 import { ipcMainManager } from "./ipc";
 import { hideSettings } from "./menu";
 import { openSearchWindow } from "./windows";
@@ -31,6 +37,105 @@ export function setUpEventListeners() {
         event.returnValue = {
           status: true,
           payload: { config: config },
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_GET_EXTENSIONS,
+    async (event: {
+      returnValue: {
+        status: boolean;
+        payload?: BrowserExtensionConnectedData[];
+        error?: unknown;
+      };
+    }) => {
+      try {
+        const browserExtensions = await getBrowserExtensions();
+        event.returnValue = {
+          status: true,
+          payload: browserExtensions ?? [],
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_REMOVE_EXTENSION,
+    async (
+      event: {
+        returnValue: {
+          status: boolean;
+          payload?: BrowserExtensionConnectedData[];
+          error?: unknown;
+        };
+      },
+      extension: BrowserExtensionConnectedData,
+    ) => {
+      try {
+        const browserExtensions = await removeBrowserExtension(extension);
+        event.returnValue = {
+          status: true,
+          payload: browserExtensions ?? [],
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_GET_PRODUCT_TOUR,
+    async (event: {
+      returnValue: {
+        status: boolean;
+        payload?: Tour;
+        error?: unknown;
+      };
+    }) => {
+      try {
+        const tour = await getTour();
+        event.returnValue = {
+          status: true,
+          payload: tour,
+        };
+      } catch (err) {
+        event.returnValue = {
+          status: false,
+          error: err,
+        };
+      }
+    },
+  );
+
+  ipcMainManager.on(
+    IpcEvents.SYNC_FINISH_PRODUCT_TOUR,
+    async (event: {
+      returnValue: {
+        status: boolean;
+        payload?: Tour;
+        error?: unknown;
+      };
+    }) => {
+      try {
+        const tour = await finishedTour();
+        event.returnValue = {
+          status: true,
+          payload: tour,
         };
       } catch (err) {
         event.returnValue = {

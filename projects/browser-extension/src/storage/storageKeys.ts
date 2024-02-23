@@ -18,5 +18,6 @@ export enum StorageKeys {
   BackgroundSyncUpKeyAPICreateOrUpdatePages = "BackgroundSyncUpKeyAPICreateOrUpdatePages", // `apis/createBookmarks`
   BackgroundSyncUpKeyAPICreateOrUpdatePagesInProgress = "BackgroundSyncUpKeyAPICreateOrUpdatePagesInProgress",
   IgnoreURLs = "IgnoreURLs",
-  IgnoreURLsHistory = "IgnoreURLsHistory"
+  IgnoreURLsHistory = "IgnoreURLsHistory",
+  ExtensionUUID = "ExtensionUUID"
 }
