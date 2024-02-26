@@ -31,7 +31,13 @@ const config: ForgeConfig = {
       /^\/vite\.config\.ts/,
       /^\/playwright\.config\.ts/,
     ],
-    osxSign: {},
+    osxSign: {
+      optionsForFile() {
+        return {
+          entitlements: path.resolve(__dirname, "entitlements.plist"),
+        };
+      },
+    },
     osxNotarize: {
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
