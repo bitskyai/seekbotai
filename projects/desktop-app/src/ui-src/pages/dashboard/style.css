@@ -15,3 +15,11 @@
 .browser-extension .ant-collapse-content-box ul {
   padding-left: 0px !important;
 }
+
+.seek-bot-tour-disable-next-step .ant-tour-footer .ant-tour-next-btn {
+  display: none !important;
+}
+
+.seek-bot-tour-enable-next-step .ant-tour-footer .ant-tour-next-btn {
+  display: inline-block !important;
+}

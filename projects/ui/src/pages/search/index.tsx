@@ -10,7 +10,7 @@ import { UserInteractionDocument } from "../../graphql/generated";
 import { subscribe } from "../../helpers/event";
 import HitItem, { HIT_ITEM_REFRESH } from "./HitItem";
 import { CurrentRefinementsConnectorParamsRefinement } from "instantsearch.js/es/connectors/current-refinements/connectCurrentRefinements";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ClearRefinements,
@@ -41,7 +41,6 @@ const searchClient = instantMeiliSearch(url, DEFAULT_MEILISEARCH_MASTER_KEY, {
 const SearchPage = () => {
   const { t } = useTranslation();
   usePageEffect({ title: "Search" });
-  const searchBoxRef = useRef(null);
   const [infiniteHitsKey, setInfiniteHitsKey] = useState(0);
   const transformBooleanToReadableValue = (
     refinements: CurrentRefinementsConnectorParamsRefinement[],
@@ -70,12 +69,17 @@ const SearchPage = () => {
   const typeSearch = () => {
     clearTimeout(typeSetTimeOutHandler);
     typeSetTimeOutHandler = setTimeout(() => {
-      searchBoxRef;
+      const searchBox = document.querySelector(
+        ".search-bar input.ais-SearchBox-input",
+      );
+      const searchValue = searchBox?.getAttribute("value");
       useInteractionMutation({
         variables: {
           userInteraction: {
             type: "search",
-            data: {},
+            data: {
+              query: searchValue,
+            },
           },
         },
       });
@@ -133,7 +137,7 @@ const SearchPage = () => {
             <Content className="search-content">
               <div className="search-bar">
                 <div onKeyDown={typeSearch}>
-                  <SearchBox autoFocus ref={searchBoxRef} />
+                  <SearchBox autoFocus />
                 </div>
                 <div className="search-items">
                   <Space size="small">
