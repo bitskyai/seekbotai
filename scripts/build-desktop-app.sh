@@ -21,6 +21,7 @@ bash ./build-web-app-to-desktop-app.sh
 cd $TARGET_PATH
 print "Remove previous build"
 rm -rf ./dist
+rm -rf ./out
 
 bash ${ROOT_DIR}/copy-libs.sh
 
