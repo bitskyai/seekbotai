@@ -1,7 +1,7 @@
 {
   "name": "seekbot",
   "displayName": "SeekBot",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "description": "Automate capture bookmark website screenshots, save bookmark website content, and easy-to-find bookmarks with powerful search engine",
   "repository": "https://github.com/bitskyai/smart-bookmarks.git",
   "author": "help.bitskyai@gmail.com",

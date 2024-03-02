@@ -65,12 +65,18 @@ export function AppLayout(): JSX.Element {
   };
 
   useEffect(() => {
-    // Set the body's height to the browser's height on mount
-    document.body.style.height = `${window.innerHeight}px`;
-
+    const appRootContainer = document.getElementById("app-root-container");
+    appRootContainer?.style.setProperty(
+      "min-height",
+      `${window.innerHeight}px`,
+    );
     // Update the body's height on window resize
     const handleResize = () => {
-      document.body.style.height = `${window.innerHeight}px`;
+      const appRootContainer = document.getElementById("app-root-container");
+      appRootContainer?.style.setProperty(
+        "min-height",
+        `${window.innerHeight}px`,
+      );
     };
 
     window.addEventListener("resize", handleResize);
@@ -83,7 +89,7 @@ export function AppLayout(): JSX.Element {
 
   return (
     <Fragment>
-      <Layout className="full-height">
+      <Layout className="full-height" id="app-root-container">
         <Sider
           breakpoint="lg"
           collapsedWidth="0"
