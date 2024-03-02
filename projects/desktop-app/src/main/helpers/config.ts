@@ -127,7 +127,6 @@ export function updateProcessEnvs(appConfig: AppConfig): boolean {
   try {
     _.forOwn(appConfig, function (value, key) {
       process.env[key.toUpperCase()] = value.toString();
-      console.debug(`process.env.${key.toUpperCase()}: `, value);
     });
     return true;
   } catch (err) {

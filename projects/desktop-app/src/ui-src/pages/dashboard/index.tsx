@@ -150,10 +150,14 @@ export default function Dashboard() {
 
     if (productTour?.steps?.importBookmarks?.finished) {
       setImportedBookmarks(true);
+    } else {
+      setImportedBookmarks(false);
     }
 
     if (productTour?.steps?.search?.finished) {
       setSearched(true);
+    } else {
+      setSearched(false);
     }
   }, [productTour]);
 
@@ -234,7 +238,11 @@ export default function Dashboard() {
       );
     }
     return (
-      <Col span={6} style={{ minWidth: cardMinWidth }}>
+      <Col
+        key={browserExtension.uuid}
+        span={6}
+        style={{ minWidth: cardMinWidth }}
+      >
         <Card actions={actions} hoverable className="browser-extension">
           <Meta
             avatar={getBadge(status)}
@@ -530,7 +538,7 @@ export default function Dashboard() {
         IpcEvents.SYNC_RESET_PRODUCT_TOUR,
       );
       setProductTour(response.payload);
-      setCurrentStep(-1);
+      setCurrentStep(0);
     } else {
       setCurrentStep(stepInLocalStorage);
     }
@@ -616,7 +624,7 @@ export default function Dashboard() {
               setOpen(false);
             }}
           >
-            {currentStep === 4 ? "Finish" : "Skip tour"}
+            {currentStep === 4 ? "Close Tour" : "Skip tour"}
           </Button>
         </div>
       </Card>

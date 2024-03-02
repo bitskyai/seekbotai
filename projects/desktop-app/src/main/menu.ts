@@ -68,8 +68,6 @@ function getPreferencesItems(): Array<MenuItemConstructorOptions> {
       label: "AppConfig",
       accelerator: "CmdOrCtrl+,",
       click() {
-        // console.log('send message: ', IpcEvents.OPEN_SETTINGS);
-        // ipcMainManager.send(IpcEvents.OPEN_SETTINGS);
         showSettings();
       },
     },

@@ -23,7 +23,6 @@ async function openSelectFolderDialog() {
 
   if (!result.canceled && result.filePaths.length > 0) {
     const selectedFolderPath = result.filePaths[0];
-    console.log("Selected Folder Path:", selectedFolderPath);
     await updateUserDataPath(selectedFolderPath);
   }
 }

@@ -4,7 +4,6 @@ import { ipcMainManager } from "../ipc";
 import { getAppConfig } from "./config";
 import { pathExistsSync, readJSONSync, writeJSONSync } from "fs-extra";
 
-const defaultTour = { steps: {} };
 let _tour_in_memory: Tour;
 function isFinishedAllSteps(tour: Tour) {
   return !!(
@@ -25,7 +24,7 @@ export async function getTour(): Promise<Tour> {
     tour.finished = isFinishedAllSteps(tour);
     _tour_in_memory = tour;
   } else {
-    return defaultTour;
+    return { steps: {} };
   }
 }
 
@@ -87,6 +86,7 @@ export async function setTour(tour: Tour): Promise<Tour> {
 
 export async function resetTour(): Promise<Tour> {
   const config = await getAppConfig();
-  writeJSONSync(config.DESKTOP_APP_TOUR_PATH, defaultTour);
-  return defaultTour;
+  writeJSONSync(config.DESKTOP_APP_TOUR_PATH, { steps: {} });
+  _tour_in_memory = { steps: {} };
+  return { steps: {} };
 }

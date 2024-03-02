@@ -58,7 +58,6 @@ export function AppLayout(): JSX.Element {
   ];
 
   const clickMenu = (e: any) => {
-    console.log(e);
     if (e.key === "search") {
       e?.domEvent?.preventDefault();
       ipcRendererManager.sendSync(IpcEvents.SYNC_OPEN_SEARCH_WINDOW);
@@ -67,11 +66,11 @@ export function AppLayout(): JSX.Element {
 
   useEffect(() => {
     // Set the body's height to the browser's height on mount
-    document.body.style.minHeight = `${window.innerHeight}px`;
+    document.body.style.height = `${window.innerHeight}px`;
 
     // Update the body's height on window resize
     const handleResize = () => {
-      document.body.style.minHeight = `${window.innerHeight}px`;
+      document.body.style.height = `${window.innerHeight}px`;
     };
 
     window.addEventListener("resize", handleResize);

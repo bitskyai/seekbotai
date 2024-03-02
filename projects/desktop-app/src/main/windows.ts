@@ -20,7 +20,7 @@ export function getMainWindowOptions(): Electron.BrowserWindowConstructorOptions
   const preload = resolve(__dirname, "../preload/index.js");
   return {
     width: 1200,
-    height: 800,
+    height: 900,
     minHeight: 600,
     minWidth: 600,
     // titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,

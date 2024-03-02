@@ -29,7 +29,6 @@ export async function onReady() {
     try {
       await webApp.start();
     } catch (err) {
-      console.log(`start web app error: `, err);
       logger.error("start webApp file. error: ", err);
     }
 
